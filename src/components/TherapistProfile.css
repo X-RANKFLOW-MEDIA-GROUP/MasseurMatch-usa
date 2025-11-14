@@ -698,26 +698,38 @@
   font-size: 0.95rem;
 }
 
-/* ---------- Sticky Footer ---------- */
+/* ---------- Sticky Footer (compacto à direita) ---------- */
 
 .tp-sticky {
   position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 0.65rem 0.4rem 0.65rem;
+  bottom: 1.25rem;          /* grudadinho perto do final da página */
   margin-top: 2.25rem;
+  margin-right: 0;
+  margin-left: auto;        /* empurra para a direita */
+  width: fit-content;       /* só o tamanho dos botões */
+  padding: 0.4rem 0.6rem;
   background: linear-gradient(
-    to top,
-    rgba(15, 23, 42, 0.98),
-    rgba(76, 29, 149, 0.95)
+    90deg,
+    rgba(249, 115, 22, 0.95),
+    rgba(236, 72, 153, 0.98),
+    rgba(129, 140, 248, 0.98)
   );
-  border-top: 1px solid rgba(236, 72, 153, 0.8);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: flex-end;
+  border-radius: 999px;
+  border: 1px solid rgba(236, 72, 153, 0.9);
+  display: flex;            /* não mais inline-flex */
+  align-items: center;
+  gap: 0.45rem;
   z-index: 20;
+}
+
+/* Em telas pequenas: centraliza pra não ficar cortado */
+@media (max-width: 720px) {
+  .tp-sticky {
+    left: 50%;
+    transform: translateX(-50%);
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 /* ---------- "Perfil Bloqueado" (Gate) ---------- */

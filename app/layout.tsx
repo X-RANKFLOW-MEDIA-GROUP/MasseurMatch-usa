@@ -1,18 +1,30 @@
-import "./globals.css";
-import "../src/components/TherapistProfile.css"; // 👈 ADICIONE ESTA LINHA
-import Header from "@/src/components/Header";
+// app/layout.tsx
+import type { Metadata } from "next";
+import React from "react";
 
-export const metadata = {
+import "./globals.css";
+import "@/src/components/TherapistProfile.css"; // estilos globais do profile
+
+import Header from "@/src/components/Header";
+import { ProfileProvider } from "@/src/context/ProfileContext";
+
+export const metadata: Metadata = {
   title: "MasseurMatch",
   description: "Find real massage therapists. Connect with confidence.",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
-        <Header />
-        {children}
+        <ProfileProvider>
+          <Header />
+          <main>{children}</main>
+        </ProfileProvider>
       </body>
     </html>
   );
