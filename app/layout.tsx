@@ -1,4 +1,5 @@
 import "./globals.css";
+import "../src/components/TherapistProfile.css"; // 👈 ADICIONE ESTA LINHA
 import Header from "@/src/components/Header";
 
 export const metadata = {
