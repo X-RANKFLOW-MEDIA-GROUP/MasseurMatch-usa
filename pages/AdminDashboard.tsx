@@ -1,6 +1,6 @@
 // src/pages/AdminDashboard.tsx
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../src/lib/supabase";
 import "./admin.css";
 
 type TherapistRow = {
