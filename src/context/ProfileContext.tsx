@@ -1,132 +1,87 @@
 "use client";
 
-import React, {
+import {
   createContext,
   useContext,
   useEffect,
   useState,
   type ReactNode,
 } from "react";
-
-// ===== Tipos básicos =====
-export type Status = "online" | "away" | "busy" | "offline";
-
-export type Rate = {
-  name: string;
-  duration: string;
-  price: string;
-  notes?: string;
-};
-
-export type Availability = {
-  day: string;
-  // para compatibilizar com versões antigas e novas
-  hours?: string;
-  incallHours?: string;
-  mobileHours?: string;
-};
-
-export type Review = {
-  id?: string;
-  author: string;
-  rating: number;
-  text: string;
-};
-
-// ===== Tipo principal do terapeuta =====
-export type Therapist = {
-  id?: string;
-  name?: string;
-  title?: string;
-  rating?: number;
-  ratingCount?: number;
-  status?: Status;
-
-  locationCityState?: string;
-  services?: string;
-  specialties?: string;
-  startingAt?: string;
-
-  visitingFrom?: string;
-  address?: string;
-  accessNotes?: string;
-
-  rates?: Rate[];
-  availability?: Availability[];
-  reviews?: Review[];
-  bio?: string;
-
-  profilePhoto?: string;
-  // vamos trabalhar com lista de URLs aqui
-  gallery?: string[];
-
-  // ===== Campos extras usados no EditProfile =====
-  philosophy?: string[];
-  techniques?: string[];
-  mobileRadius?: string;
-  zipCode?: string;
-  promocoes?: string;
-
-  massageSetup?: string;
-  studioAmenities?: string[];
-  mobileExtras?: string[];
-  additionalServices?: string[];
-  productsUsed?: string[];
-
-  payments?: {
-    visa: boolean;
-    mastercard: boolean;
-    amex: boolean;
-    discover: boolean;
-    cash: boolean;
-    venmo: boolean;
-    zelle: boolean;
-  };
-  discounts?: { regular?: string; weekday?: string; weekly?: string };
-  discountGroups?: string[];
-  rateDisclaimers?: string[];
-
-  languagesSpoken?: string[];
-  degrees?: string[];
-  affiliations?: string[];
-  startDate?: string;
-  businessTrips?: string[];
-};
+import { supabase } from "@/src/lib/supabase";
+import type { Therapist } from "@/src/components/TherapistProfile"; // se quiser, pode mover o tipo pra cá depois
 
 type ProfileContextType = {
-  profile: Therapist | null;
-  setProfile: React.Dispatch<React.SetStateAction<Therapist | null>>;
+  therapist: Therapist | null;
+  loading: boolean;
+  refreshProfile: () => Promise<void>;
 };
 
-const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
+const ProfileContext = createContext<ProfileContextType>({
+  therapist: null,
+  loading: true,
+  refreshProfile: async () => {},
+});
 
 export function ProfileProvider({ children }: { children: ReactNode }) {
-  const [profile, setProfile] = useState<Therapist | null>(null);
+  const [therapist, setTherapist] = useState<Therapist | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Carrega do localStorage (se existir) quando o app inicializa
-  useEffect(() => {
+  async function loadProfile() {
     try {
-      const raw = localStorage.getItem("mm_profile");
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        setProfile(parsed);
+      setLoading(true);
+
+      const { data: auth } = await supabase.auth.getUser();
+      const uid = auth?.user?.id;
+      if (!uid) {
+        setTherapist(null);
+        return;
       }
-    } catch {
-      // se der erro, só ignora
+
+      const { data, error } = await supabase
+        .from("therapists")
+        .select("*")
+        .eq("user_id", uid)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Erro ao carregar therapist:", error);
+        setTherapist(null);
+        return;
+      }
+
+      if (!data) {
+        setTherapist(null);
+        return;
+      }
+
+      // aqui você pode reaproveitar a lógica dbToUi se quiser,
+      // ou fazer um map simples:
+      const ui: Therapist = {
+        ...data, // se os campos já baterem com o tipo Therapist
+        // ou mapeia manualmente: name, title, profilePhoto etc.
+      } as Therapist;
+
+      setTherapist(ui);
+    } finally {
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
+    loadProfile();
   }, []);
 
+  async function refreshProfile() {
+    await loadProfile();
+  }
+
   return (
-    <ProfileContext.Provider value={{ profile, setProfile }}>
+    <ProfileContext.Provider value={{ therapist, loading, refreshProfile }}>
       {children}
     </ProfileContext.Provider>
   );
 }
 
 export function useProfile() {
-  const ctx = useContext(ProfileContext);
-  if (!ctx) {
-    throw new Error("useProfile deve ser usado dentro de um ProfileProvider");
-  }
-  return ctx;
+  return useContext(ProfileContext);
 }
