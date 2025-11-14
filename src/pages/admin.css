@@ -1,0 +1,340 @@
+/* ===============================
+   admin.css
+   Painel Admin - MasseurMatch
+   =============================== */
+
+/* ---------- Layout base ---------- */
+
+.admin-shell {
+  min-height: 100vh;
+  margin-top: 50px;
+  padding: 2.5rem 1.5rem 3rem;
+  box-sizing: border-box;
+  color: #f9fafb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top, #26001f 0, #050114 45%, #020006 100%);
+}
+
+/* ---------- Títulos / textos ---------- */
+
+.title {
+  font-size: clamp(1.7rem, 2vw + 1rem, 2.1rem);
+  font-weight: 700;
+  margin: 0 0 0.3rem;
+  background: linear-gradient(
+    90deg,
+    #f97316,
+    #ec4899,
+    #8b5cf6,
+    #22c55e
+  );
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: #e5e7eb;
+  margin: 0 0 1.4rem;
+}
+
+.muted {
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+/* ---------- Botões ---------- */
+
+.btn {
+  border-radius: 999px;
+  border: 1px solid rgba(248, 113, 113, 0.6);
+  background: rgba(15, 23, 42, 0.92);
+  padding: 0.45rem 1.15rem;
+  font-size: 0.9rem;
+  color: #f9fafb;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+  transition: background 0.16s ease, border-color 0.16s ease,
+    transform 0.12s ease, box-shadow 0.15s ease, color 0.16s ease;
+}
+
+.btn:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(244, 114, 182, 0.25),
+    rgba(125, 211, 252, 0.12)
+  );
+  border-color: rgba(251, 113, 133, 0.9);
+  box-shadow: 0 10px 26px rgba(244, 114, 182, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn:disabled,
+.btn[aria-busy="true"] {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Botões de ação específicos */
+
+.btn-approve {
+  border-color: rgba(34, 197, 94, 0.8);
+  background: rgba(6, 78, 59, 0.9);
+}
+
+.btn-approve:hover {
+  background: rgba(22, 163, 74, 0.95);
+  border-color: rgba(74, 222, 128, 1);
+  box-shadow: 0 10px 26px rgba(34, 197, 94, 0.6);
+}
+
+.btn-reject {
+  border-color: rgba(248, 113, 113, 0.9);
+  background: rgba(127, 29, 29, 0.9);
+}
+
+.btn-reject:hover {
+  background: rgba(220, 38, 38, 0.95);
+  border-color: rgba(254, 202, 202, 1);
+  box-shadow: 0 10px 26px rgba(248, 113, 113, 0.6);
+}
+
+/* ---------- Tabela ---------- */
+
+.table-wrap {
+  margin-top: 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: radial-gradient(
+    circle at top left,
+    rgba(76, 29, 149, 0.95),
+    rgba(15, 23, 42, 0.95)
+  );
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 1);
+}
+
+/* Scroll horizontal em telas menores */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 720px;
+}
+
+.table thead {
+  background: linear-gradient(
+    90deg,
+    rgba(236, 72, 153, 0.98),
+    rgba(59, 130, 246, 0.95)
+  );
+}
+
+.table thead th {
+  text-align: left;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #fef9c3;
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  border-top: 1px solid rgba(31, 41, 55, 0.9);
+}
+
+.table tbody tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.98);
+}
+
+.table tbody tr:nth-child(odd) {
+  background: rgba(17, 24, 39, 0.98);
+}
+
+.table td {
+  padding: 0.6rem 0.9rem;
+  vertical-align: middle;
+}
+
+.table td.bold {
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.table td.actions {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+/* Coluna Actions */
+.col-actions {
+  text-align: right;
+}
+
+.table td.actions {
+  justify-content: flex-end;
+}
+
+/* ---------- Chips de plano ---------- */
+
+.plan {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  color: #f9fafb;
+  background: rgba(15, 23, 42, 0.95);
+}
+
+/* Estilos por plano (names comuns) */
+.plan-free {
+  background: rgba(30, 64, 175, 0.9);
+  border-color: rgba(129, 140, 248, 1);
+}
+
+.plan-basic {
+  background: rgba(59, 130, 246, 0.9);
+  border-color: rgba(191, 219, 254, 1);
+}
+
+.plan-standard,
+.plan-std {
+  background: rgba(96, 165, 250, 0.9);
+  border-color: rgba(191, 219, 254, 1);
+}
+
+.plan-pro,
+.plan-premium {
+  background: linear-gradient(
+    120deg,
+    rgba(236, 72, 153, 0.95),
+    rgba(129, 140, 248, 0.95)
+  );
+  border-color: rgba(251, 207, 232, 1);
+}
+
+/* Fallback genérico */
+.plan-plan {
+  background: rgba(76, 29, 149, 0.9);
+}
+
+/* ---------- Status de pagamento ---------- */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  gap: 0.25rem;
+}
+
+.pill span {
+  white-space: nowrap;
+}
+
+/* Pago OK */
+.pill-ok {
+  background: rgba(22, 163, 74, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.9);
+  color: #bbf7d0;
+}
+
+/* Expirado */
+.pill-expired {
+  background: rgba(127, 29, 29, 0.2);
+  border: 1px solid rgba(248, 113, 113, 0.95);
+  color: #fecaca;
+}
+
+/* Pendente / não pago */
+.pill-pending {
+  background: rgba(30, 64, 175, 0.18);
+  border: 1px solid rgba(129, 140, 248, 0.95);
+  color: #e0e7ff;
+}
+
+.pill-sub {
+  font-weight: 400;
+  font-size: 0.76rem;
+  color: #e5e7eb;
+}
+
+/* ---------- Skeleton loading ---------- */
+
+.skeleton .sk {
+  height: 16px;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(75, 85, 99, 0.4),
+    rgba(156, 163, 175, 0.2),
+    rgba(75, 85, 99, 0.4)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -120% 0;
+  }
+  100% {
+    background-position: 120% 0;
+  }
+}
+
+/* ---------- Responsividade ---------- */
+
+@media (max-width: 768px) {
+  .admin-shell {
+    padding-inline: 1rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .table-wrap {
+    border-radius: 0.75rem;
+  }
+
+  .table {
+    min-width: 640px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-shell {
+    padding-inline: 0.75rem;
+  }
+
+  .table {
+    min-width: 560px;
+  }
+}
