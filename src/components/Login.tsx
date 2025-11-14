@@ -13,7 +13,6 @@ export default function Login() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Pegamos redirectTo e planKey via query string
   const redirectToParam = searchParams.get("redirectTo") || undefined;
   const planKeyParam = (searchParams.get("planKey") as PlanKey | null) || undefined;
 
@@ -38,8 +37,10 @@ export default function Login() {
 
     (async () => {
       const { data } = await supabase.auth.getSession();
-      if (!cancelled && data.session) {
-        const redirectTo = redirectToParam || "/therapist";
+      if (!cancelled && data.session?.user) {
+        // ✨ CORRIGIDO: Inclui o ID do usuário
+        const userId = data.session.user.id;
+        const redirectTo = redirectToParam || `/therapist/${userId}`;
         router.replace(redirectTo);
       }
     })();
@@ -75,6 +76,9 @@ export default function Login() {
       if (signErr) throw signErr;
       if (!data.user) throw new Error("Usuário não encontrado.");
 
+      // ✨ Guarda o ID do usuário
+      const userId = data.user.id;
+
       if (typeof window !== "undefined") {
         if (remember) {
           localStorage.setItem("massur:last-email", email);
@@ -91,8 +95,8 @@ export default function Login() {
         return;
       }
 
-      // Caso contrário, segue destino padrão
-      const redirectTo = redirectToParam || "/therapist";
+      // ✨ CORRIGIDO: Redireciona para o perfil com ID
+      const redirectTo = redirectToParam || `/therapist/${userId}`;
       router.replace(redirectTo);
     } catch (err: any) {
       console.error(err);
@@ -123,7 +127,6 @@ export default function Login() {
           )}
 
           <form onSubmit={handleSubmit} className={styles["login-form"]}>
-            {/* Email */}
             <label className={styles["login-label"]}>
               <span className={styles["label-text"]}>Email Address</span>
               <div className={styles["input-wrap"]}>
@@ -143,7 +146,6 @@ export default function Login() {
               </div>
             </label>
 
-            {/* Password */}
             <label className={styles["login-label"]}>
               <span className={styles["label-text"]}>Password</span>
               <div
@@ -178,7 +180,6 @@ export default function Login() {
               </div>
             </label>
 
-            {/* Remember + forgot */}
             <div className={styles["row-between"]}>
               <label className={styles["checkbox-label"]}>
                 <input
@@ -195,7 +196,6 @@ export default function Login() {
               </Link>
             </div>
 
-            {/* Botão submit */}
             <button
               type="submit"
               disabled={loading}
@@ -207,14 +207,12 @@ export default function Login() {
               </span>
             </button>
 
-            {/* Divider */}
             <div className={styles.divider}>
               <span className={styles.line} />
               <span className={styles["divider-text"]}>or</span>
               <span className={styles.line} />
             </div>
 
-            {/* Sign up link */}
             <p className={styles["signup-text"]}>
               Don&apos;t have an account?{" "}
               <Link href="/join" className={styles["link-strong"]}>
