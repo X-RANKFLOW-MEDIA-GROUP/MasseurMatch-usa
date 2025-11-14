@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import styles from "./Login.module.css";
@@ -11,10 +11,22 @@ type PlanKey = "free" | "standard" | "pro" | "elite" | "testedecompra";
 
 export default function Login() {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  const redirectToParam = searchParams.get("redirectTo") || undefined;
-  const planKeyParam = (searchParams.get("planKey") as PlanKey | null) || undefined;
+  // Agora os params vêm do window.location (somente client-side)
+  const [redirectToParam, setRedirectToParam] = useState<string | undefined>();
+  const [planKeyParam, setPlanKeyParam] = useState<PlanKey | undefined>();
+
+  // Lê os parâmetros da URL no client
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get("redirectTo") || undefined;
+    const plan = (params.get("planKey") as PlanKey | null) ?? undefined;
+
+    setRedirectToParam(redirect);
+    setPlanKeyParam(plan);
+  }, []);
 
   const [email, setEmail] = useState<string>(() => {
     if (typeof window === "undefined") return "";
@@ -38,7 +50,6 @@ export default function Login() {
     (async () => {
       const { data } = await supabase.auth.getSession();
       if (!cancelled && data.session?.user) {
-        // ✨ CORRIGIDO: Inclui o ID do usuário
         const userId = data.session.user.id;
         const redirectTo = redirectToParam || `/therapist/${userId}`;
         router.replace(redirectTo);
@@ -76,7 +87,6 @@ export default function Login() {
       if (signErr) throw signErr;
       if (!data.user) throw new Error("Usuário não encontrado.");
 
-      // ✨ Guarda o ID do usuário
       const userId = data.user.id;
 
       if (typeof window !== "undefined") {
@@ -95,7 +105,7 @@ export default function Login() {
         return;
       }
 
-      // ✨ CORRIGIDO: Redireciona para o perfil com ID
+      // Redireciona para o perfil com ID
       const redirectTo = redirectToParam || `/therapist/${userId}`;
       router.replace(redirectTo);
     } catch (err: any) {
@@ -112,7 +122,9 @@ export default function Login() {
       <div className={styles["login-container"]}>
         <header className={styles["login-header"]}>
           <h1 className={styles["login-title"]}>Welcome Back</h1>
-          <p className={styles["login-subtitle"]}>Log in to access your account</p>
+          <p className={styles["login-subtitle"]}>
+            Log in to access your account
+          </p>
         </header>
 
         <main className={styles["login-card"]}>

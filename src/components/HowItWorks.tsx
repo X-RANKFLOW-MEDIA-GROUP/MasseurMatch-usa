@@ -1,5 +1,6 @@
 "use client";
 
+import React, { ReactNode } from "react";
 import { Search, MessageSquare, Shield } from "lucide-react";
 import styles from "./HowItWorks.module.css";
 
@@ -7,7 +8,7 @@ type StepColor = "purple" | "pink" | "blue";
 
 interface Step {
   id: number;
-  icon: JSX.Element;
+  icon: ReactNode; // ✅ em vez de JSX.Element
   title: string;
   description: string;
   color: StepColor;
@@ -51,9 +52,7 @@ export default function HowItWorks() {
           {steps.map((step) => (
             <div key={step.id} className={styles["step-card"]}>
               <div
-                className={`${styles.icon} ${
-                  styles[`icon-${step.color}`]
-                }`}
+                className={`${styles.icon} ${styles[`icon-${step.color}`]}`}
               >
                 {step.icon}
               </div>

@@ -1,87 +1,120 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/src/lib/supabase";
-import type { Therapist } from "@/src/components/TherapistProfile"; // se quiser, pode mover o tipo pra cá depois
 
-type ProfileContextType = {
-  therapist: Therapist | null;
-  loading: boolean;
-  refreshProfile: () => Promise<void>;
+/** Tipo do terapeuta (usado no perfil e no Edit-Profile) */
+export type Therapist = {
+  id: string;
+  user_id: string;
+
+  full_name?: string | null;
+  headline?: string | null;
+  about?: string | null;
+
+  city?: string | null;
+  state?: string | null;
+  country?: string | null;
+  neighborhood?: string | null;
+  address?: string | null;
+  latitude?: string | null;
+  longitude?: string | null;
+
+  rate_60?: string | null;
+  rate_90?: string | null;
+  rate_outcall?: string | null;
+
+  studio_amenities?: string[] | null;
+  payment_methods?: string[] | null;
+  languages?: string[] | null;
+
+  website?: string | null;
+  instagram?: string | null;
+  whatsapp?: string | null;
+
+  birthdate?: string | null;
+  years_experience?: string | null;
+  rating?: number | null;
+
+  gallery?: string[] | null;
+  travel_radius?: string | null;
+  accepts_first_timers?: boolean | null;
+  prefers_lgbtq_clients?: boolean | null;
+
+  // Qualquer campo extra da tabela
+  [key: string]: any;
 };
 
-const ProfileContext = createContext<ProfileContextType>({
-  therapist: null,
-  loading: true,
-  refreshProfile: async () => {},
-});
+export interface ProfileContextType {
+  therapist: Therapist | null;
+  loading: boolean;
+  error: string | null;
+  refreshProfile: () => Promise<void>;
+}
 
-export function ProfileProvider({ children }: { children: ReactNode }) {
+const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
+
+export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [therapist, setTherapist] = useState<Therapist | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  async function loadProfile() {
+  const fetchProfile = async () => {
     try {
       setLoading(true);
+      setError(null);
 
-      const { data: auth } = await supabase.auth.getUser();
-      const uid = auth?.user?.id;
-      if (!uid) {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) throw userError;
+
+      if (!user) {
         setTherapist(null);
         return;
       }
 
-      const { data, error } = await supabase
+      const { data, error: tError } = await supabase
         .from("therapists")
         .select("*")
-        .eq("user_id", uid)
-        .maybeSingle();
+        .eq("user_id", user.id)
+        .single();
 
-      if (error) {
-        console.error("Erro ao carregar therapist:", error);
-        setTherapist(null);
-        return;
+      if (tError && tError.code !== "PGRST116") {
+        throw tError;
       }
 
-      if (!data) {
-        setTherapist(null);
-        return;
-      }
-
-      // aqui você pode reaproveitar a lógica dbToUi se quiser,
-      // ou fazer um map simples:
-      const ui: Therapist = {
-        ...data, // se os campos já baterem com o tipo Therapist
-        // ou mapeia manualmente: name, title, profilePhoto etc.
-      } as Therapist;
-
-      setTherapist(ui);
+      setTherapist((data as Therapist) ?? null);
+    } catch (err) {
+      console.error("Error loading therapist profile:", err);
+      setError("Failed to load therapist profile.");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    loadProfile();
+    fetchProfile();
   }, []);
 
-  async function refreshProfile() {
-    await loadProfile();
-  }
+  const value: ProfileContextType = {
+    therapist,
+    loading,
+    error,
+    refreshProfile: fetchProfile,
+  };
 
   return (
-    <ProfileContext.Provider value={{ therapist, loading, refreshProfile }}>
-      {children}
-    </ProfileContext.Provider>
+    <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>
   );
 }
 
-export function useProfile() {
-  return useContext(ProfileContext);
+export function useProfile(): ProfileContextType {
+  const ctx = useContext(ProfileContext);
+  if (!ctx) {
+    throw new Error("useProfile must be used within a ProfileProvider");
+  }
+  return ctx;
 }
