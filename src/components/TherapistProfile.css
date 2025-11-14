@@ -74,6 +74,7 @@
 }
 
 .tp-hero--mock {
+  margin-top: 35px;
   background: radial-gradient(circle at top left, #1b0226 0, #060013 55%);
   border-radius: 1.5rem;
   padding: 1.75rem 1.75rem 1.5rem;
@@ -105,12 +106,12 @@
   gap: 1.3rem;
 }
 
-/* Avatar with circular text */
+/* Avatar with circular text (DESKTOP) */
 
 .tp-avatar {
   position: relative;
-  width: 190px;
-  height: 190px;
+  width: 260px;
+  height: 260px;
   border-radius: 999px;
   display: flex;
   align-items: center;
@@ -130,13 +131,13 @@
 
 .tp-circletxt {
   position: absolute;
-  width: 170px;
-  height: 170px;
+  width: 230px;
+  height: 230px;
   fill: none;
   stroke: none;
-  font-size: 11px;
+  font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 4px;
   font-weight: 600;
   color: #f9a8d4;
   transform-origin: center;
@@ -148,13 +149,14 @@
 }
 
 .tp-avatar__clip {
-  width: 140px;
-  height: 140px;
+  width: 190px;
+  height: 190px;
   border-radius: 999px;
   overflow: hidden;
-  border: 3px solid rgba(15, 23, 42, 0.7);
-  box-shadow: 0 0 0 5px rgba(236, 72, 153, 0.8),
-    0 18px 40px rgba(15, 23, 42, 0.95);
+  border: 4px solid rgba(15, 23, 42, 0.7);
+  box-shadow:
+    0 0 0 6px rgba(236, 72, 153, 0.8),
+    0 25px 60px rgba(15, 23, 42, 0.95);
 }
 
 .tp-avatar__clip img {
@@ -698,15 +700,15 @@
   font-size: 0.95rem;
 }
 
-/* ---------- Sticky Footer (compacto à direita) ---------- */
+/* ---------- Sticky Footer ---------- */
 
 .tp-sticky {
   position: sticky;
-  bottom: 1.25rem;          /* grudadinho perto do final da página */
+  bottom: 1.25rem;
   margin-top: 2.25rem;
   margin-right: 0;
-  margin-left: auto;        /* empurra para a direita */
-  width: fit-content;       /* só o tamanho dos botões */
+  margin-left: auto;
+  width: fit-content;
   padding: 0.4rem 0.6rem;
   background: linear-gradient(
     90deg,
@@ -716,20 +718,10 @@
   );
   border-radius: 999px;
   border: 1px solid rgba(236, 72, 153, 0.9);
-  display: flex;            /* não mais inline-flex */
+  display: flex;
   align-items: center;
   gap: 0.45rem;
   z-index: 20;
-}
-
-/* Em telas pequenas: centraliza pra não ficar cortado */
-@media (max-width: 720px) {
-  .tp-sticky {
-    left: 50%;
-    transform: translateX(-50%);
-    margin-left: 0;
-    margin-right: 0;
-  }
 }
 
 /* ---------- "Perfil Bloqueado" (Gate) ---------- */
@@ -744,15 +736,18 @@
   .tp-hero {
     grid-template-columns: minmax(0, 1fr);
   }
+
   .tp-hero-left {
     order: 1;
     flex-direction: row;
     justify-content: flex-start;
     gap: 1.5rem;
   }
+
   .tp-hero-right {
     order: 2;
   }
+
   .tp-cards {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -762,44 +757,102 @@
   .tp.container {
     padding-inline: 0.75rem;
   }
+
   .tp-hero--mock {
     padding: 1.1rem 1rem;
   }
+
   .tp-two-col,
   .tp-as-grid,
   .tp-rev-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+
   .tp-as-grid > .tp-box:nth-child(3) {
     grid-column: auto;
   }
+
   .tp-hero-left {
     flex-direction: column;
     align-items: center;
   }
+
   .tp-sticky {
+    left: 50%;
+    transform: translateX(-50%);
+    margin-left: 0;
+    margin-right: 0;
     justify-content: center;
   }
+
   .tp-portfolio__table .tp-ptable__head,
   .tp-portfolio__table .tp-ptable__row {
     grid-template-columns: 1.2fr 0.9fr;
   }
+
   .tp-portfolio__table .tp-ptable__row span:last-child {
     display: none;
   }
 }
 
+/* MOBILE: iPhone etc */
 @media (max-width: 480px) {
+  .page {
+    padding: 1.25rem 0.75rem 4rem;
+  }
+
+  .tp-hero--mock {
+    margin-top: 20px;
+    padding: 1.2rem 0.9rem 1.3rem;
+  }
+
+  .tp-hero-left {
+    gap: 1rem;
+  }
+
+  /* Avatar menor, mas ainda destaque */
   .tp-avatar {
+    width: 210px;
+    height: 210px;
+  }
+
+  .tp-circletxt {
+    width: 190px;
+    height: 190px;
+    font-size: 10px;
+    letter-spacing: 3px;
+  }
+
+  .tp-avatar__clip {
     width: 160px;
     height: 160px;
   }
-  .tp-avatar__clip {
-    width: 120px;
-    height: 120px;
+
+  .tp-rating-under {
+    margin-top: 0.25rem;
   }
-  .tp-circletxt {
-    width: 150px;
-    height: 150px;
+
+  .tp-title {
+    font-size: 1.4rem;
+    line-height: 1.2;
+  }
+
+  /* Footer compacto e centralizado */
+  .tp-sticky {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    padding: 0.45rem 0.6rem;
+    justify-content: center;
+    gap: 0.4rem;
+    border-radius: 16px;
+  }
+
+  .tp-sticky .btn {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.82rem;
+    white-space: nowrap;
   }
 }

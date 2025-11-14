@@ -11,12 +11,23 @@ export type Status = "online" | "away" | "busy" | "offline";
 export type GalleryItem = { id: string; url: string };
 
 type Payments = {
-  visa: boolean; mastercard: boolean; amex: boolean; discover: boolean;
-  cash: boolean; venmo: boolean; zelle: boolean;
+  visa: boolean;
+  mastercard: boolean;
+  amex: boolean;
+  discover: boolean;
+  cash: boolean;
+  venmo: boolean;
+  zelle: boolean;
 };
-type Discounts = { regular?: string; weekday?: string; weekly?: string; };
+
+type Discounts = { regular?: string; weekday?: string; weekly?: string };
+
 type AvailabilitySimple = { day: string; hours: string };
-export type AvailabilityExtended = { day: string; incallHours: string; mobileHours: string };
+export type AvailabilityExtended = {
+  day: string;
+  incallHours: string;
+  mobileHours: string;
+};
 export type Review = { id: string; author: string; rating: number; text: string };
 
 /** ===== Storage ===== */
@@ -105,32 +116,78 @@ const SAMPLE: Therapist = {
     { day: "Sun", hours: "10 a.m. – 8 p.m." },
   ],
   reviews: [
-    { id: "r1", author: "J.B., Dallas, TX", rating: 5, text: "Bruno is incredibly professional and intuitive. Studio was clean and calming." },
-    { id: "r2", author: "M.R., Rio de Janeiro, BR", rating: 5, text: "Relaxing and therapeutic. Excellent communication." },
-    { id: "r3", author: "A.S., Dallas, TX", rating: 5, text: "Great pressure and technique. I felt new afterwards." },
+    {
+      id: "r1",
+      author: "J.B., Dallas, TX",
+      rating: 5,
+      text: "Bruno is incredibly professional and intuitive. Studio was clean and calming.",
+    },
+    {
+      id: "r2",
+      author: "M.R., Rio de Janeiro, BR",
+      rating: 5,
+      text: "Relaxing and therapeutic. Excellent communication.",
+    },
+    {
+      id: "r3",
+      author: "A.S., Dallas, TX",
+      rating: 5,
+      text: "Great pressure and technique. I felt new afterwards.",
+    },
   ],
   bio: "I believe every massage should be more than a service – it's an exchange of presence, trust, and energy...",
-  profilePhoto: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1600&auto=format&fit=crop",
+  profilePhoto:
+    "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1600&auto=format&fit=crop",
   gallery: [
-    { id: "g1", url: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1600&auto=format&fit=crop" },
-    { id: "g2", url: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1600&auto=format&fit=crop" },
+    {
+      id: "g1",
+      url: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1600&auto=format&fit=crop",
+    },
+    {
+      id: "g2",
+      url: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1600&auto=format&fit=crop",
+    },
   ],
   philosophy: [
     "Over 6 years of professional experience...",
     "Certified in integrated bodywork...",
     "Dedicated to creating a safe environment...",
   ],
-  techniques: ["Deep Tissue", "Shiatsu", "Swedish (Relaxing)", "Sports Massage", "Trigger Point Therapy", "Eastern Bodywork"],
+  techniques: [
+    "Deep Tissue",
+    "Shiatsu",
+    "Swedish (Relaxing)",
+    "Sports Massage",
+    "Trigger Point Therapy",
+    "Eastern Bodywork",
+  ],
   mobileRadius: "15 miles from Dallas city center",
   mobileMiles: 15,
   massageSetup: "Private studio with adjustable massage table...",
-  studioAmenities: ["Hot Towels", "Refreshments (Water, Tea)", "Private Shower available", "Comfortable waiting area"],
+  studioAmenities: [
+    "Hot Towels",
+    "Refreshments (Water, Tea)",
+    "Private Shower available",
+    "Comfortable waiting area",
+  ],
   mobileExtras: ["Portable speaker for ambiance", "Essential oil diffuser"],
   additionalServices: ["Cupping", "Aromatherapy"],
   productsUsed: ["Organic massage oils", "Premium lotions"],
   policies: "Please arrive on time...",
-  payments: { visa: true, mastercard: true, amex: true, discover: true, cash: true, venmo: false, zelle: true },
-  discounts: { regular: "Senior, student, and package discounts available.", weekday: "Check Tuesday & Wednesday specials.", weekly: "See this week's featured offers." },
+  payments: {
+    visa: true,
+    mastercard: true,
+    amex: true,
+    discover: true,
+    cash: true,
+    venmo: false,
+    zelle: true,
+  },
+  discounts: {
+    regular: "Senior, student, and package discounts available.",
+    weekday: "Check Tuesday & Wednesday specials.",
+    weekly: "See this week's featured offers.",
+  },
   degrees: [
     "Certified Massage Therapist (CMT) - Brazilian Massage Academy (2017)",
     "Bachelor's Degree in Kinesiology - Federal University of Rio (2015)",
@@ -149,17 +206,21 @@ const SAMPLE: Therapist = {
 
 /** ===== Utils ===== */
 function asArray(val: unknown): string[] {
-  if (Array.isArray(val)) return val.filter(v => typeof v === "string") as string[];
+  if (Array.isArray(val)) return val.filter((v) => typeof v === "string") as string[];
   if (val == null) return [];
   if (typeof val === "string") {
     try {
       const parsed = JSON.parse(val);
-      if (Array.isArray(parsed)) return parsed.filter(v => typeof v === "string");
-    } catch {}
-    return val.split(",").map(s => s.trim()).filter(Boolean);
+      if (Array.isArray(parsed)) return parsed.filter((v) => typeof v === "string");
+    } catch { }
+    return val
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
   }
   return [];
 }
+
 function coerceGallery(g: unknown): GalleryItem[] {
   if (!g) return SAMPLE.gallery;
   if (Array.isArray(g)) {
@@ -178,25 +239,66 @@ type DbTherapist = {
   display_name: string | null;
   email: string | null;
   phone: string | null;
+
+  // localização antiga + nova
   location: string | null;
+  locationCityState?: string | null;
+
+  // línguas
   languages: string[] | string | null;
+  languagesSpoken?: string[] | null;
+
+  // serviços
   services: string[] | string | null;
+  services_headline?: string | null;
+  specialties?: string | null;
+  promocoes?: string | null;
+
+  // cabeçalho extra
+  zip_code?: string | null;
+  address?: string | null;
+
+  // título / bio / mídia
+  title?: string | null;
+  bio?: string | null;
+  profile_photo?: string | null;
+  gallery?: string[] | { id: string; url: string }[] | null;
+
+  // campos de perfil avançado (jsonb/text)
+  philosophy?: string[] | null;
+  techniques?: string[] | null;
+  massageSetup?: string | null;
+  studioAmenities?: string[] | null;
+  mobileExtras?: string[] | null;
+  additionalServices?: string[] | null;
+  productsUsed?: string[] | null;
+  policies?: string | null;
+  payments?: Payments | null;
+  discounts?: Discounts | null;
+  discountGroups?: string[] | null;
+  rateDisclaimers?: string[] | null;
+  availability?: AvailabilityExtended[] | AvailabilitySimple[] | null;
+  rates?: { name: string; duration: string; price: string; notes?: string }[] | null;
+  degrees?: string[] | null;
+  affiliations?: string[] | null;
+  startDate?: string | null;
+  businessTrips?: string[] | null;
+  reviews?: Review[] | null;
+  ratingCount?: number | null;
+  accessNotes?: string | null;
+  mobileMiles?: number | null;
+
+  // termos / planos
   agree_terms?: boolean | null;
   plan?: string | null;
   plan_name?: string | null;
   price_monthly?: number | null;
   updated_at?: string | null;
-  title?: string | null;
-  bio?: string | null;
-  zip_code?: string | null;
-  address?: string | null;
-  profile_photo?: string | null;
-  gallery?: string[] | { id: string; url: string }[] | null;
 
-  // gate
+  // gate / billing
   status?: "pending" | "active" | "rejected" | string | null;
   paid_until?: string | null;
-  subscription_status?: string | null; // active|trialing|past_due|canceled
+  subscription_status?: string | null;
   stripe_current_period_end?: string | null;
 };
 
@@ -204,6 +306,7 @@ type DbTherapist = {
 function isAdminApproved(row?: DbTherapist | null) {
   return (row?.status ?? "").toLowerCase() === "active";
 }
+
 function isPaymentOkByTherapists(row?: DbTherapist | null) {
   const plan = (row?.plan || "").toLowerCase();
   if (plan === "free") return true;
@@ -213,7 +316,9 @@ function isPaymentOkByTherapists(row?: DbTherapist | null) {
 
   const now = Date.now();
   const paidUntil = row?.paid_until ? Date.parse(row.paid_until) : undefined;
-  const periodEnd = row?.stripe_current_period_end ? Date.parse(row.stripe_current_period_end) : undefined;
+  const periodEnd = row?.stripe_current_period_end
+    ? Date.parse(row.stripe_current_period_end)
+    : undefined;
   if (typeof paidUntil === "number" && paidUntil > now) return true;
   if (typeof periodEnd === "number" && periodEnd > now) return true;
 
@@ -267,18 +372,42 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
   const base = { ...SAMPLE };
   if (!row) return base;
 
+  // services + specialties
+  const servicesHeadline = row.services_headline?.trim() || null;
   const servicesArr = asArray(row.services);
-  const languagesArr = asArray(row.languages);
+  const servicesText =
+    servicesHeadline ||
+    (servicesArr.length ? servicesArr.join(", ") : base.services);
+
+  const specialtiesText =
+    row.specialties?.trim() ||
+    (servicesArr.length ? servicesArr.join(", ") : base.specialties);
+
+  // línguas – prioriza coluna nova languagesSpoken
+  const languagesFromNew = Array.isArray(row.languagesSpoken)
+    ? row.languagesSpoken.filter(Boolean)
+    : [];
+  const languagesFromOld = asArray(row.languages);
+  const languagesArr = languagesFromNew.length ? languagesFromNew : languagesFromOld;
 
   const name =
     row.display_name?.trim() ||
     row.full_name?.trim() ||
     base.name;
 
-  const locationCityState = row.location?.trim() || base.locationCityState;
+  const locationCityState =
+    row.locationCityState?.trim() ||
+    row.location?.trim() ||
+    base.locationCityState;
+
+  const mobileMiles =
+    typeof row.mobileMiles === "number" && !Number.isNaN(row.mobileMiles)
+      ? row.mobileMiles
+      : base.mobileMiles;
 
   const ui: Therapist = {
     ...base,
+
     id: row.user_id || base.id,
     name,
     title: row.title?.trim() || base.title,
@@ -286,11 +415,42 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
     locationCityState,
     zipCode: row.zip_code || base.zipCode,
     address: row.address || base.address,
+
     profilePhoto: row.profile_photo || base.profilePhoto,
     gallery: coerceGallery(row.gallery ?? base.gallery),
-    services: servicesArr.length ? servicesArr.join(", ") : base.services,
-    specialties: servicesArr.length ? servicesArr.join(", ") : base.specialties,
+
+    services: servicesText,
+    specialties: specialtiesText,
+    promocoes: row.promocoes ?? base.promocoes,
     languagesSpoken: languagesArr.length ? languagesArr : base.languagesSpoken,
+
+    mobileMiles,
+    mobileRadius:
+      typeof mobileMiles === "number" ? `${mobileMiles} miles` : base.mobileRadius,
+
+    philosophy: row.philosophy ?? base.philosophy,
+    techniques: row.techniques ?? base.techniques,
+    massageSetup: row.massageSetup ?? base.massageSetup,
+    studioAmenities: row.studioAmenities ?? base.studioAmenities,
+    mobileExtras: row.mobileExtras ?? base.mobileExtras,
+    additionalServices: row.additionalServices ?? base.additionalServices,
+    productsUsed: row.productsUsed ?? base.productsUsed,
+
+    policies: row.policies ?? base.policies,
+    payments: row.payments ?? base.payments,
+    discounts: row.discounts ?? base.discounts,
+    availability: row.availability ?? base.availability,
+    rates: row.rates ?? base.rates,
+
+    degrees: row.degrees ?? base.degrees,
+    affiliations: row.affiliations ?? base.affiliations,
+    startDate: row.startDate ?? base.startDate,
+    businessTrips: row.businessTrips ?? base.businessTrips,
+
+    reviews: row.reviews ?? base.reviews,
+    ratingCount: row.ratingCount ?? base.ratingCount,
+
+    accessNotes: row.accessNotes ?? base.accessNotes,
 
     statusRaw: row.status ?? null,
     planRaw: row.plan ?? null,
@@ -310,8 +470,8 @@ export default function TherapistProfile() {
     typeof routeIdRaw === "string"
       ? routeIdRaw
       : Array.isArray(routeIdRaw)
-      ? routeIdRaw[0]
-      : undefined;
+        ? routeIdRaw[0]
+        : undefined;
 
   const [data, setData] = useState<Therapist>(SAMPLE);
   const [status] = useState<Status>("online");
@@ -449,7 +609,9 @@ export default function TherapistProfile() {
       }
     })();
 
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [routeId, router]);
 
   // ===== Polling leve para liberar logo após pagamento/webhook
@@ -488,12 +650,15 @@ export default function TherapistProfile() {
           setData(dbToUi(rowData || null));
           setShouldPoll(false);
         }
-      } catch {}
+      } catch { }
     };
 
     const id = setInterval(tick, 8000);
     tick();
-    return () => { canceled = true; clearInterval(id); };
+    return () => {
+      canceled = true;
+      clearInterval(id);
+    };
   }, [shouldPoll, routeId]);
 
   /** ===== Persistir profilePhoto e gallery no DB (apenas dono) ===== */
@@ -507,7 +672,7 @@ export default function TherapistProfile() {
     try {
       const payload: Partial<DbTherapist> = {
         profile_photo: partial.profilePhoto ?? data.profilePhoto,
-        gallery: (partial.gallery ?? data.gallery).map(g =>
+        gallery: (partial.gallery ?? data.gallery).map((g) =>
           typeof g === "string" ? g : (g as any).url
         ),
         updated_at: new Date().toISOString(),
@@ -520,17 +685,22 @@ export default function TherapistProfile() {
 
       if (error) throw error;
 
-      setData(prev => ({
+      setData((prev) => ({
         ...prev,
         profilePhoto: payload.profile_photo || prev.profilePhoto,
-        gallery: ((payload.gallery as any[]) || prev.gallery).map((url: string) => ({ id: rid(), url })),
+        gallery: ((payload.gallery as any[]) || prev.gallery).map((url: string) => ({
+          id: rid(),
+          url,
+        })),
       }));
 
       if (isOwner) {
         const cached = {
           ...data,
           profilePhoto: payload.profile_photo || data.profilePhoto,
-          gallery: ((payload.gallery as any[]) || data.gallery).map((url: string) => ({ id: rid(), url })),
+          gallery: ((payload.gallery as any[]) || data.gallery).map(
+            (url: string) => ({ id: rid(), url })
+          ),
         };
         localStorage.setItem("mm_profile", JSON.stringify(cached));
       }
@@ -566,9 +736,9 @@ export default function TherapistProfile() {
         })
       );
 
-      const newGallery = [...data.gallery.map(g => g.url), ...urls];
+      const newGallery = [...data.gallery.map((g) => g.url), ...urls];
       await saveProfile({
-        gallery: newGallery.map(url => ({ id: rid(), url })),
+        gallery: newGallery.map((url) => ({ id: rid(), url })),
       });
     } catch {
       alert("Falha ao enviar imagens. Tente novamente.");
@@ -584,7 +754,7 @@ export default function TherapistProfile() {
 
   function removeFromGallery(id: string) {
     if (!isOwner) return;
-    const remaining = data.gallery.filter(g => g.id !== id);
+    const remaining = data.gallery.filter((g) => g.id !== id);
     saveProfile({ gallery: remaining }).catch(() => {
       alert("Falha ao remover imagem.");
     });
@@ -608,9 +778,13 @@ export default function TherapistProfile() {
   /** ===== UI Helpers ===== */
   const overallRating = useMemo(() => {
     if (!data.reviews?.length) return data.rating;
-    const avg = data.reviews.reduce((acc, r) => acc + (r.rating || 0), 0) / data.reviews.length;
+    const avg =
+      data.reviews.reduce((acc, r) => acc + (r.rating || 0), 0) /
+      data.reviews.length;
     return Math.round(avg * 10) / 10;
   }, [data.reviews, data.rating]);
+  const roundedRating = Math.round(overallRating); // ex.: 4.9 -> 5, 4.3 -> 4
+
 
   const textCircleId = useId();
   const textOffsetDeg = 10;
@@ -625,11 +799,15 @@ export default function TherapistProfile() {
   }, [data.address, data.locationCityState, data.zipCode]);
 
   const mapEmbedSrc = mapQuery
-    ? `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`
+    ? `https://www.google.com/maps?q=${encodeURIComponent(
+      mapQuery
+    )}&output=embed`
     : undefined;
 
   const mapDirectionsHref = mapQuery
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      mapQuery
+    )}`
     : undefined;
 
   const mobileRadiusText = useMemo(() => {
@@ -660,13 +838,18 @@ export default function TherapistProfile() {
 
   if (!unlocked) {
     const reasons: string[] = [];
-    if (!adminApproved) reasons.push("seu perfil ainda está em análise pelo time (status: pending).");
-    if (adminApproved && !paymentOk) reasons.push("seu pagamento/assinatura não está ativa no momento.");
+    if (!adminApproved)
+      reasons.push("seu perfil ainda está em análise pelo time (status: pending).");
+    if (adminApproved && !paymentOk)
+      reasons.push("seu pagamento/assinatura não está ativa no momento.");
 
     const planLabel = (data.planRaw || "—").toString();
-    const validity =
-      data.paidUntilRaw ? `Válido até: ${new Date(data.paidUntilRaw).toLocaleString()}` : null;
-    const subStatus = data.subStatusRaw ? `Status da assinatura: ${data.subStatusRaw}` : null;
+    const validity = data.paidUntilRaw
+      ? `Válido até: ${new Date(data.paidUntilRaw).toLocaleString()}`
+      : null;
+    const subStatus = data.subStatusRaw
+      ? `Status da assinatura: ${data.subStatusRaw}`
+      : null;
 
     return (
       <main className="tp container">
@@ -674,15 +857,24 @@ export default function TherapistProfile() {
           <h2 className="tp-block__title">Perfil Bloqueado</h2>
           <article className="tp-box tp-box--wide">
             <p className="tp-p">
-              O perfil deste profissional ainda não está público porque {reasons.join(" e ")}
+              O perfil deste profissional ainda não está público porque{" "}
+              {reasons.join(" e ")}
             </p>
 
             <ul className="tp-list" style={{ marginTop: 8 }}>
-              <li><strong>Plano:</strong> {planLabel}</li>
+              <li>
+                <strong>Plano:</strong> {planLabel}
+              </li>
               {validity && <li>{validity}</li>}
               {subStatus && <li>{subStatus}</li>}
-              {!adminApproved && <li>Quando aprovado, o status mudará para <b>active</b>.</li>}
-              {adminApproved && !paymentOk && <li>Ative ou renove sua assinatura para liberar o perfil.</li>}
+              {!adminApproved && (
+                <li>
+                  Quando aprovado, o status mudará para <b>active</b>.
+                </li>
+              )}
+              {adminApproved && !paymentOk && (
+                <li>Ative ou renove sua assinatura para liberar o perfil.</li>
+              )}
             </ul>
 
             <div className="tp-actions-row" style={{ marginTop: 12 }}>
@@ -694,11 +886,17 @@ export default function TherapistProfile() {
                     </button>
                   )}
                   {!paymentOk && (
-                    <button className="btn btn--accent" onClick={() => router.push("/join")}>
+                    <button
+                      className="btn btn--accent"
+                      onClick={() => router.push("/join")}
+                    >
                       Ir para planos / pagamento
                     </button>
                   )}
-                  <button className="btn btn--ghost" onClick={() => router.push("/edit-profile")}>
+                  <button
+                    className="btn btn--ghost"
+                    onClick={() => router.push("/edit-profile")}
+                  >
                     Editar informações
                   </button>
                 </>
@@ -718,7 +916,9 @@ export default function TherapistProfile() {
                 >
                   Reverificar agora
                 </button>
-                {shouldPoll && <span className="tp-muted">Verificando atualizações…</span>}
+                {shouldPoll && (
+                  <span className="tp-muted">Verificando atualizações…</span>
+                )}
               </div>
             )}
           </article>
@@ -773,7 +973,9 @@ export default function TherapistProfile() {
               aria-label={`Rating ${overallRating.toFixed(1)} out of 5`}
             >
               {Array.from({ length: Math.floor(overallRating) }).map((_, i) => (
-                <span key={`sf-${i}`} className="star star--full">★</span>
+                <span key={`sf-${i}`} className="star star--full">
+                  ★
+                </span>
               ))}
               {overallRating - Math.floor(overallRating) >= 0.5 && (
                 <span className="star star--half">★</span>
@@ -784,11 +986,13 @@ export default function TherapistProfile() {
                   Math.floor(overallRating) -
                   (overallRating - Math.floor(overallRating) >= 0.5 ? 1 : 0),
               }).map((_, i) => (
-                <span key={`se-${i}`} className="star star--empty">☆</span>
+                <span key={`se-${i}`} className="star star--empty">
+                  ☆
+                </span>
               ))}
             </div>
             <div className="tp-rating-text">
-              <b>{overallRating.toFixed(1)}</b>
+              <b>{roundedRating}/5</b>
               {data.ratingCount ? (
                 <span className="tp-muted">
                   {" "}
@@ -807,9 +1011,13 @@ export default function TherapistProfile() {
             <div className="tp-card">
               <div className="tp-card__title">Location</div>
               <div className="tp-card__value">{data.locationCityState}</div>
-              {data.zipCode && <div className="tp-card__muted">ZIP {data.zipCode}</div>}
+              {data.zipCode && (
+                <div className="tp-card__muted">ZIP {data.zipCode}</div>
+              )}
               {data.visitingFrom && (
-                <div className="tp-card__muted">Visiting from {data.visitingFrom}</div>
+                <div className="tp-card__muted">
+                  Visiting from {data.visitingFrom}
+                </div>
               )}
             </div>
 
@@ -876,7 +1084,9 @@ export default function TherapistProfile() {
             >
               <div className="tp-add-plus">＋</div>
               <div className="tp-add-text">Add photo</div>
-              <div className="tp-add-count">{data.gallery.length}/{MAX_GALLERY}</div>
+              <div className="tp-add-count">
+                {data.gallery.length}/{MAX_GALLERY}
+              </div>
             </button>
           </>
         )}
@@ -886,9 +1096,8 @@ export default function TherapistProfile() {
           return (
             <div
               key={g.id}
-              className={`tp-thumb tp-thumb--fixed ${
-                isOwner && isActive ? "is-active" : ""
-              }`}
+              className={`tp-thumb tp-thumb--fixed ${isOwner && isActive ? "is-active" : ""
+                }`}
             >
               <img
                 src={g.url}
@@ -928,21 +1137,34 @@ export default function TherapistProfile() {
             <h4>My Philosophy &amp; Approach</h4>
             {data.philosophy?.length ? (
               <ul className="tp-list">
-                {data.philosophy.map((p, i) => (<li key={i}>{p}</li>))}
+                {data.philosophy.map((p, i) => (
+                  <li key={i}>{p}</li>
+                ))}
               </ul>
-            ) : <p className="tp-muted">Add your approach points in Edit Profile.</p>}
+            ) : (
+              <p className="tp-muted">
+                Add your approach points in Edit Profile.
+              </p>
+            )}
           </article>
 
           <article className="tp-box">
             <h4>Languages &amp; Credentials</h4>
             {data.languagesSpoken?.length ? (
-              <p><strong>Languages:</strong> {data.languagesSpoken.join(", ")}</p>
-            ) : <p className="tp-muted">—</p>}
+              <p>
+                <strong>Languages:</strong>{" "}
+                {data.languagesSpoken.join(", ")}
+              </p>
+            ) : (
+              <p className="tp-muted">—</p>
+            )}
             {data.affiliations?.length && (
               <>
                 <h5 className="tp-sub">Affiliations</h5>
                 <ul className="tp-list">
-                  {data.affiliations.map((a, i) => <li key={i}>{a}</li>)}
+                  {data.affiliations.map((a, i) => (
+                    <li key={i}>{a}</li>
+                  ))}
                 </ul>
               </>
             )}
@@ -957,15 +1179,43 @@ export default function TherapistProfile() {
 
         <div className="tp-two-col">
           <article className="tp-box">
-            <p><strong>Location & Service Area</strong><br />{data.locationCityState}</p>
-            {data.zipCode && <p><strong>ZIP:</strong> {data.zipCode}</p>}
-            {data.visitingFrom && <p><strong>Visiting From:</strong> {data.visitingFrom}</p>}
-            {data.address && <p><strong>Nearest Intersection:</strong> {data.address}</p>}
-            {mobileRadiusText && <p><strong>Mobile Service Radius:</strong> {mobileRadiusText}</p>}
-            {data.accessNotes && <p className="tp-muted">{data.accessNotes}</p>}
-            <p><strong>Services:</strong> {data.services}</p>
-            <p><strong>Specialties:</strong> {data.specialties}</p>
-            <p><strong>Starting at:</strong> {data.startingAt}</p>
+            <p>
+              <strong>Location & Service Area</strong>
+              <br />
+              {data.locationCityState}
+            </p>
+            {data.zipCode && (
+              <p>
+                <strong>ZIP:</strong> {data.zipCode}
+              </p>
+            )}
+            {data.visitingFrom && (
+              <p>
+                <strong>Visiting From:</strong> {data.visitingFrom}
+              </p>
+            )}
+            {data.address && (
+              <p>
+                <strong>Nearest Intersection:</strong> {data.address}
+              </p>
+            )}
+            {mobileRadiusText && (
+              <p>
+                <strong>Mobile Service Radius:</strong> {mobileRadiusText}
+              </p>
+            )}
+            {data.accessNotes && (
+              <p className="tp-muted">{data.accessNotes}</p>
+            )}
+            <p>
+              <strong>Services:</strong> {data.services}
+            </p>
+            <p>
+              <strong>Specialties:</strong> {data.specialties}
+            </p>
+            <p>
+              <strong>Starting at:</strong> {data.startingAt}
+            </p>
           </article>
 
           <article className="tp-box tp-box--map">
@@ -981,7 +1231,8 @@ export default function TherapistProfile() {
               </div>
             ) : (
               <p className="tp-muted">
-                Add City/State, ZIP or Nearest Intersection to show the map.
+                Add City/State, ZIP or Nearest Intersection to show the
+                map.
               </p>
             )}
             {mapDirectionsHref && (
@@ -1003,7 +1254,9 @@ export default function TherapistProfile() {
           <article className="tp-box tp-box--wide">
             <h4>Upcoming Business Trips</h4>
             <ul className="tp-list">
-              {data.businessTrips.map((b, i) => <li key={i}>{b}</li>)}
+              {data.businessTrips.map((b, i) => (
+                <li key={i}>{b}</li>
+              ))}
             </ul>
           </article>
         ) : null}
@@ -1018,17 +1271,23 @@ export default function TherapistProfile() {
             {data.rates?.length ? (
               <div className="tp-portfolio__table">
                 <div className="tp-ptable__head">
-                  <span>SESSION (MIN)</span><span>INCALL RATE</span><span>OUTCALL RATE</span>
+                  <span>SESSION (MIN)</span>
+                  <span>INCALL RATE</span>
+                  <span>OUTCALL RATE</span>
                 </div>
                 {data.rates.map((r, i) => (
                   <div key={i} className="tp-ptable__row">
                     <span>{r.duration}</span>
                     <span className="tp-ptable__price">{r.price}</span>
-                    <span className="tp-ptable__notes">{r.notes ?? "Consultation"}</span>
+                    <span className="tp-ptable__notes">
+                      {r.notes ?? "Consultation"}
+                    </span>
                   </div>
                 ))}
               </div>
-            ) : <p className="tp-muted">Add your pricing in Edit Profile.</p>}
+            ) : (
+              <p className="tp-muted">Add your pricing in Edit Profile.</p>
+            )}
           </article>
 
           <article className="tp-box">
@@ -1036,22 +1295,35 @@ export default function TherapistProfile() {
               <>
                 <h4>Payment Methods</h4>
                 <ul className="tp-tags">
-                  {Object.entries(data.payments).filter(([, on]) => on).map(([k]) => (
-                    <li key={k} className="tp-tag">{k.toUpperCase()}</li>
-                  ))}
+                  {Object.entries(data.payments)
+                    .filter(([, on]) => on)
+                    .map(([k]) => (
+                      <li key={k} className="tp-tag">
+                        {k.toUpperCase()}
+                      </li>
+                    ))}
                 </ul>
               </>
             )}
-            {data.discounts && (data.discounts.regular || data.discounts.weekday || data.discounts.weekly) && (
-              <>
-                <h4 style={{ marginTop: 12 }}>Discounts</h4>
-                <ul className="tp-list">
-                  {data.discounts.regular && <li>{data.discounts.regular}</li>}
-                  {data.discounts.weekday && <li>{data.discounts.weekday}</li>}
-                  {data.discounts.weekly && <li>{data.discounts.weekly}</li>}
-                </ul>
-              </>
-            )}
+            {data.discounts &&
+              (data.discounts.regular ||
+                data.discounts.weekday ||
+                data.discounts.weekly) && (
+                <>
+                  <h4 style={{ marginTop: 12 }}>Discounts</h4>
+                  <ul className="tp-list">
+                    {data.discounts.regular && (
+                      <li>{data.discounts.regular}</li>
+                    )}
+                    {data.discounts.weekday && (
+                      <li>{data.discounts.weekday}</li>
+                    )}
+                    {data.discounts.weekly && (
+                      <li>{data.discounts.weekly}</li>
+                    )}
+                  </ul>
+                </>
+              )}
             {data.policies && (
               <>
                 <h4 style={{ marginTop: 12 }}>Policies</h4>
@@ -1070,15 +1342,21 @@ export default function TherapistProfile() {
           <article className="tp-box">
             <h4>Hours</h4>
             {Array.isArray(data.availability) &&
-            (data.availability as any)[0] &&
-            "incallHours" in (data.availability as any)[0] ? (
+              (data.availability as any)[0] &&
+              "incallHours" in (data.availability as any)[0] ? (
               <div className="tp-ptable tp-ptable--avail">
                 <div className="tp-ptable__head">
-                  <span>in-studio hours</span><span>outcall hours</span>
+                  <span>in-studio hours</span>
+                  <span>outcall hours</span>
                 </div>
                 {(data.availability as AvailabilityExtended[]).map((a, i) => (
-                  <div key={i} className="tp-ptable__row tp-ptable__row--2">
-                    <span><b>{a.day}:</b> {a.incallHours}</span>
+                  <div
+                    key={i}
+                    className="tp-ptable__row tp-ptable__row--2"
+                  >
+                    <span>
+                      <b>{a.day}:</b> {a.incallHours}
+                    </span>
                     <span>{a.mobileHours}</span>
                   </div>
                 ))}
@@ -1086,7 +1364,9 @@ export default function TherapistProfile() {
             ) : (
               <ul className="tp-list">
                 {(data.availability as AvailabilitySimple[]).map((a, i) => (
-                  <li key={i}><strong>{a.day}</strong> — {a.hours}</li>
+                  <li key={i}>
+                    <strong>{a.day}</strong> — {a.hours}
+                  </li>
                 ))}
               </ul>
             )}
@@ -1096,19 +1376,27 @@ export default function TherapistProfile() {
             <h4>Techniques Offered</h4>
             {data.techniques?.length ? (
               <ul className="tp-list">
-                {data.techniques.map((t, i) => <li key={i}>{t}</li>)}
+                {data.techniques.map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
               </ul>
-            ) : <p className="tp-muted">Add techniques in Edit Profile.</p>}
+            ) : (
+              <p className="tp-muted">Add techniques in Edit Profile.</p>
+            )}
           </article>
 
           <article className="tp-box">
             <h4>Incall Setup / Mobile</h4>
-            {data.massageSetup && <p className="tp-p">{data.massageSetup}</p>}
+            {data.massageSetup && (
+              <p className="tp-p">{data.massageSetup}</p>
+            )}
             {data.studioAmenities?.length && (
               <>
                 <h5 className="tp-sub">Studio (Incall) Amenities</h5>
                 <ul className="tp-list">
-                  {data.studioAmenities.map((a, i) => <li key={i}>{a}</li>)}
+                  {data.studioAmenities.map((a, i) => (
+                    <li key={i}>{a}</li>
+                  ))}
                 </ul>
               </>
             )}
@@ -1116,7 +1404,9 @@ export default function TherapistProfile() {
               <>
                 <h5 className="tp-sub">Add-ons (Mobile)</h5>
                 <ul className="tp-list">
-                  {data.mobileExtras.map((m, i) => <li key={i}>{m}</li>)}
+                  {data.mobileExtras.map((m, i) => (
+                    <li key={i}>{m}</li>
+                  ))}
                 </ul>
               </>
             )}
@@ -1124,7 +1414,9 @@ export default function TherapistProfile() {
               <>
                 <h5 className="tp-sub">Additional Services</h5>
                 <ul className="tp-list">
-                  {data.additionalServices.map((s, i) => <li key={i}>{s}</li>)}
+                  {data.additionalServices.map((s, i) => (
+                    <li key={i}>{s}</li>
+                  ))}
                 </ul>
               </>
             )}
@@ -1132,7 +1424,9 @@ export default function TherapistProfile() {
               <>
                 <h5 className="tp-sub">Products</h5>
                 <ul className="tp-list">
-                  {data.productsUsed.map((p, i) => <li key={i}>{p}</li>)}
+                  {data.productsUsed.map((p, i) => (
+                    <li key={i}>{p}</li>
+                  ))}
                 </ul>
               </>
             )}
@@ -1150,7 +1444,9 @@ export default function TherapistProfile() {
                 <article key={rv.id} className="tp-box">
                   <div className="tp-list__head">
                     <strong>{rv.author}</strong>
-                    <span className="tp-stars">{"★".repeat(rv.rating)}</span>
+                    <span className="tp-stars">
+                      {"★".repeat(rv.rating)}
+                    </span>
                   </div>
                   <p className="tp-p">{rv.text}</p>
                 </article>
@@ -1158,13 +1454,18 @@ export default function TherapistProfile() {
             </div>
             <article className="tp-box tp-box--wide">
               <h4>
-                Overall Rating: {overallRating.toFixed(1)} out of 5 stars{" "}
+                Overall Rating: {overallRating.toFixed(1)} out of 5
+                stars{" "}
                 {data.ratingCount ? (
-                  <span className="tp-muted">(Based on {data.ratingCount} reviews)</span>
+                  <span className="tp-muted">
+                    (Based on {data.ratingCount} reviews)
+                  </span>
                 ) : null}
               </h4>
               <div className="tp-actions-row">
-                <button className="btn btn--ghost btn--pill">Write a Review</button>
+                <button className="btn btn--ghost btn--pill">
+                  Write a Review
+                </button>
               </div>
             </article>
           </>
