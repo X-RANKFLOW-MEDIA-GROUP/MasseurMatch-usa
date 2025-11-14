@@ -1,0 +1,148 @@
+/* ===== Scoped CTA Section ===== */
+.cta-section {
+  position: relative;
+  padding: 4rem 1.5rem 5rem;
+  background: #0f0f1a;
+  color: #fff;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* subtle top divider glow (como no figma) */
+.cta-section::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(139, 92, 246, 0.35),
+    rgba(236, 72, 153, 0.35),
+    rgba(59, 130, 246, 0.35)
+  );
+  opacity: 0.35;
+}
+
+.cta-wrap {
+  margin: 0 auto;
+  max-width: 960px;
+  background: rgba(0, 0, 0, 0);
+  padding: 0 1rem;
+}
+
+/* título principal */
+.cta-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, #cbd5ff, #a78bfa, #93c5fd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cta-sub {
+  color: #a3a3b2;
+  font-size: 0.98rem;
+  margin-bottom: 1.6rem;
+}
+
+/* Actions */
+.cta-actions {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition:
+    transform 0.15s ease,
+    filter 0.2s ease,
+    box-shadow 0.2s ease;
+  border: 1px solid transparent;
+}
+
+/* Primary (gradient) */
+.cta-primary {
+  color: #fff;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.35);
+}
+
+.cta-primary:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.cta-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary (dark) */
+.cta-secondary {
+  color: #e5e7eb;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.cta-secondary:hover {
+  background: rgba(255, 255, 255, 0.085);
+}
+
+.cta-secondary:active {
+  transform: translateY(1px);
+}
+
+/* Keyboard focus */
+.cta-btn:focus-visible {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 3px;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .cta-title {
+    font-size: 1.6rem;
+  }
+
+  .cta-sub {
+    font-size: 0.92rem;
+  }
+
+  .cta-actions {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 420px) {
+  .cta-actions {
+    width: 100%;
+  }
+
+  .cta-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .cta-primary span {
+    white-space: nowrap;
+  }
+}
+
+/* Menos animação para quem prefere redução de movimento */
+@media (prefers-reduced-motion: reduce) {
+  .cta-btn {
+    transition: none;
+  }
+}
