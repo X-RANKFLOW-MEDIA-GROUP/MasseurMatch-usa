@@ -15,7 +15,7 @@ type Payments = {
   mastercard: boolean;
   amex: boolean;
   discover: boolean;
-  cash: boolean;
+  cash: boolean;  
   venmo: boolean;
   zelle: boolean;
 };
