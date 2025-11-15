@@ -1,10 +1,10 @@
 /* ===========================
    EDIT PROFILE — LGBT+ PREMIUM
-   Força máxima de aplicação
+   Complete & Adapted Styles
    =========================== */
 
-/* CRÍTICO: Sobrescrever o wrapper do Next.js */
-body:has(.edit-page) {
+/* CRITICAL: Override Next.js wrapper */
+body:has(.min-h-screen.bg-gradient-to-br) {
   background: 
     radial-gradient(circle at top left, rgba(168, 85, 247, 0.35), transparent 55%),
     radial-gradient(circle at top right, rgba(236, 72, 153, 0.25), transparent 55%),
@@ -12,8 +12,8 @@ body:has(.edit-page) {
     #030312 !important;
 }
 
-/* Variáveis LGBT+ */
-.edit-page {
+/* LGBT+ Color Variables */
+:root {
   --edit-purple: #a855f7;
   --edit-pink: #ec4899;
   --edit-blue: #3b82f6;
@@ -24,21 +24,16 @@ body:has(.edit-page) {
 }
 
 /* ===========================
-   WRAPPER PRINCIPAL
+   MAIN WRAPPER
    =========================== */
 
-main.edit-page {
-  min-height: 100vh !important;
-  padding: 32px 16px 40px !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: flex-start !important;
+main.min-h-screen.bg-gradient-to-br {
   background: transparent !important;
-  color: #f9f5ff !important;
+  padding: 32px 16px 40px !important;
 }
 
-.edit-page .edit-container {
-  width: 100% !important;
+/* Container */
+main.min-h-screen > .container {
   max-width: 1120px !important;
   background: radial-gradient(circle at top left, #181830, #090915) !important;
   border-radius: 24px !important;
@@ -50,8 +45,8 @@ main.edit-page {
   position: relative !important;
 }
 
-/* Grade decorativa */
-.edit-page .edit-container::before {
+/* Decorative grid */
+main.min-h-screen > .container::before {
   content: "" !important;
   position: absolute !important;
   inset: 0 !important;
@@ -66,22 +61,33 @@ main.edit-page {
 }
 
 /* ===========================
-   HEADER COM GRADIENTE
+   NOTIFICATION TOASTS
    =========================== */
 
-.edit-page .edit-header {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 16px !important;
-  margin-bottom: 24px !important;
+.fixed.top-4.right-4 {
+  z-index: 9999 !important;
+}
+
+.fixed.top-4.right-4 > div {
+  background: rgba(15, 15, 30, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 16px !important;
+  box-shadow: 
+    0 0 30px rgba(168, 85, 247, 0.4),
+    0 15px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* ===========================
+   HEADER WITH GRADIENT
+   =========================== */
+
+header.mb-8 {
   position: relative !important;
   z-index: 1 !important;
 }
 
-.edit-page .edit-header h1 {
-  margin: 0 !important;
-  font-size: clamp(1.5rem, 4vw, 2rem) !important;
+header.mb-8 h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem) !important;
   font-weight: 900 !important;
   letter-spacing: -0.02em !important;
   background: var(--edit-gradient-strong) !important;
@@ -90,52 +96,61 @@ main.edit-page {
   background-clip: text !important;
   filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.8)) !important;
   line-height: 1.2 !important;
+  margin: 0 !important;
+}
+
+header.mb-8 > p {
+  color: #b5b2d9 !important;
+  font-weight: 500 !important;
+  margin-top: 8px !important;
 }
 
 /* ===========================
-   BOTÕES PREMIUM
+   PREMIUM BUTTONS
    =========================== */
 
-.edit-page .edit-back-btn,
-.edit-page .edit-save-btn {
+/* Back button */
+header button:has(svg):first-child,
+footer button:first-child {
   height: 42px !important;
   padding: 0 20px !important;
   border-radius: 999px !important;
   font-size: 0.95rem !important;
   font-weight: 700 !important;
-  cursor: pointer !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  white-space: nowrap !important;
-  transition: all 0.2s ease !important;
-  border: none !important;
-}
-
-.edit-page .edit-back-btn {
   background: transparent !important;
   border: 2px solid rgba(148, 163, 184, 0.4) !important;
   color: #b5b2d9 !important;
+  transition: all 0.2s ease !important;
 }
 
-.edit-page .edit-back-btn:hover {
+header button:has(svg):first-child:hover,
+footer button:first-child:hover {
   background: rgba(30, 41, 59, 0.5) !important;
   border-color: rgba(168, 85, 247, 0.6) !important;
   color: #f9f5ff !important;
   transform: translateY(-1px) !important;
 }
 
-.edit-page .edit-save-btn {
+/* Save/Submit button */
+header button:has(svg):last-child,
+footer button:last-child {
+  height: 42px !important;
+  padding: 0 24px !important;
+  border-radius: 999px !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
   background: var(--edit-gradient-main) !important;
   color: #ffffff !important;
+  border: none !important;
   box-shadow: 
     0 0 30px rgba(236, 72, 153, 0.6),
     0 10px 25px rgba(0, 0, 0, 0.4) !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.2s ease !important;
 }
 
-.edit-page .edit-save-btn:hover {
+header button:has(svg):last-child:hover:not(:disabled),
+footer button:last-child:hover:not(:disabled) {
   background: var(--edit-gradient-strong) !important;
   transform: translateY(-2px) !important;
   box-shadow: 
@@ -143,7 +158,8 @@ main.edit-page {
     0 15px 35px rgba(0, 0, 0, 0.5) !important;
 }
 
-.edit-page .edit-save-btn:disabled {
+header button:disabled,
+footer button:disabled {
   opacity: 0.4 !important;
   cursor: not-allowed !important;
   transform: none !important;
@@ -151,43 +167,49 @@ main.edit-page {
 }
 
 /* ===========================
-   ALERTS VIBRANTES
+   STATUS BADGES
    =========================== */
 
-.edit-page .edit-alert {
-  padding: 12px 18px !important;
+.flex.items-center.gap-2.text-blue-400,
+.flex.items-center.gap-2.text-green-400,
+.flex.items-center.gap-2.text-red-400 {
+  padding: 8px 16px !important;
   border-radius: 999px !important;
-  font-size: 0.9rem !important;
+  background: rgba(15, 15, 30, 0.8) !important;
+  border: 2px solid currentColor !important;
   font-weight: 700 !important;
-  margin-bottom: 16px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-.edit-page .edit-alert--error {
-  background: rgba(239, 68, 68, 0.2) !important;
-  border: 2px solid #ef4444 !important;
-  color: #fecaca !important;
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4) !important;
-}
-
-.edit-page .edit-alert--success {
-  background: rgba(34, 197, 94, 0.2) !important;
-  border: 2px solid #22c55e !important;
-  color: #bbf7d0 !important;
-  box-shadow: 0 0 20px rgba(34, 197, 94, 0.4) !important;
+  box-shadow: 0 0 20px currentColor !important;
 }
 
 /* ===========================
-   SECTIONS COM GLOW
+   ALERT BANNERS
    =========================== */
 
-.edit-page .edit-section {
+.mb-6.p-4.bg-blue-500\/10,
+.mb-6.p-4.bg-yellow-500\/10 {
+  border-radius: 16px !important;
+  border-width: 2px !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+.mb-6.p-4.bg-blue-500\/10 {
+  background: rgba(59, 130, 246, 0.15) !important;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+.mb-6.p-4.bg-yellow-500\/10 {
+  background: rgba(234, 179, 8, 0.15) !important;
+  border-color: rgba(234, 179, 8, 0.5) !important;
+}
+
+/* ===========================
+   SECTIONS WITH GLOW
+   =========================== */
+
+section.bg-gradient-to-br {
   margin-bottom: 24px !important;
-  padding: 20px !important;
+  padding: 24px !important;
   border-radius: 20px !important;
   background: 
     radial-gradient(circle at top left, rgba(168, 85, 247, 0.08), transparent),
@@ -200,37 +222,45 @@ main.edit-page {
   z-index: 1 !important;
 }
 
-.edit-page .edit-section h2 {
-  margin: 0 0 16px !important;
-  font-size: 1.1rem !important;
-  letter-spacing: 0.15em !important;
+/* Section headers */
+section h2 {
+  margin: 0 0 8px !important;
+  font-size: 1.15rem !important;
+  letter-spacing: 0.05em !important;
   text-transform: uppercase !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
   color: #f9a8ff !important;
   font-weight: 800 !important;
 }
 
-.edit-page .edit-section h2 svg {
+section h2 + p {
+  color: #8b7da8 !important;
+  font-size: 0.875rem !important;
+  margin-bottom: 20px !important;
+}
+
+/* Icon containers in headers */
+section h2 .p-2 {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2)) !important;
+  border: 1px solid rgba(168, 85, 247, 0.4) !important;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3) !important;
+}
+
+section h2 svg {
   color: var(--edit-orange) !important;
   filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.6)) !important;
 }
 
-/* Grid de campos */
-.edit-page .edit-grid {
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
-  gap: 16px !important;
-}
+/* ===========================
+   FORM FIELDS
+   =========================== */
 
-.edit-page .edit-field {
+label.flex.flex-col {
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
 }
 
-.edit-page .edit-field span {
+label span {
   font-size: 0.875rem !important;
   font-weight: 700 !important;
   color: #b5b2d9 !important;
@@ -238,13 +268,14 @@ main.edit-page {
   letter-spacing: 0.05em !important;
 }
 
-.edit-page .edit-field--full {
-  grid-column: 1 / -1 !important;
-}
-
-/* Inputs estilizados */
-.edit-page .edit-section input,
-.edit-page .edit-section textarea {
+/* Input fields */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="email"],
+input[type="url"],
+textarea {
   width: 100% !important;
   border-radius: 12px !important;
   border: 2px solid rgba(51, 65, 85, 0.5) !important;
@@ -257,14 +288,14 @@ main.edit-page {
   transition: all 0.2s ease !important;
 }
 
-.edit-page .edit-section input:hover,
-.edit-page .edit-section textarea:hover {
+input:hover,
+textarea:hover {
   background: #1c1c34 !important;
   border-color: rgba(168, 85, 247, 0.4) !important;
 }
 
-.edit-page .edit-section input:focus,
-.edit-page .edit-section textarea:focus {
+input:focus,
+textarea:focus {
   border-color: var(--edit-purple) !important;
   background: #1c1c34 !important;
   box-shadow: 
@@ -272,45 +303,40 @@ main.edit-page {
     0 0 20px rgba(168, 85, 247, 0.3) !important;
 }
 
-.edit-page .edit-section textarea {
-  resize: vertical !important;
-  min-height: 120px !important;
+input::placeholder,
+textarea::placeholder {
+  color: #6b6b8a !important;
+  opacity: 1 !important;
 }
 
-.edit-page .edit-section input::placeholder,
-.edit-page .edit-section textarea::placeholder {
-  color: #6b6b8a !important;
+textarea {
+  resize: vertical !important;
+  min-height: 100px !important;
+}
+
+input:disabled,
+textarea:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
 }
 
 /* ===========================
-   CHIPS COLORIDOS
+   COLORFUL CHIPS
    =========================== */
 
-.edit-page .chip-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
-  gap: 10px !important;
-  margin-top: 8px !important;
-}
-
-.edit-page .chip {
+.flex.flex-wrap.gap-2 button {
   border-radius: 999px !important;
   border: 2px solid rgba(100, 116, 139, 0.4) !important;
   background: rgba(30, 41, 59, 0.5) !important;
   color: #b5b2d9 !important;
-  font-size: 0.85rem !important;
-  padding: 10px 14px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  cursor: pointer !important;
+  font-size: 0.875rem !important;
+  padding: 10px 16px !important;
   font-weight: 700 !important;
   transition: all 0.2s ease !important;
   text-transform: capitalize !important;
 }
 
-.edit-page .chip:hover {
+.flex.flex-wrap.gap-2 button:hover {
   background: rgba(59, 130, 246, 0.3) !important;
   border-color: rgba(59, 130, 246, 0.8) !important;
   color: #e0f2fe !important;
@@ -318,7 +344,8 @@ main.edit-page {
   box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3) !important;
 }
 
-.edit-page .chip--active {
+/* Active chips */
+.flex.flex-wrap.gap-2 button.bg-purple-500 {
   background: var(--edit-gradient-chip) !important;
   border-color: transparent !important;
   color: #ffffff !important;
@@ -328,7 +355,7 @@ main.edit-page {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
-.edit-page .chip--active:hover {
+.flex.flex-wrap.gap-2 button.bg-purple-500:hover {
   transform: translateY(-2px) scale(1.02) !important;
   box-shadow: 
     0 0 35px rgba(236, 72, 153, 0.8),
@@ -336,57 +363,69 @@ main.edit-page {
 }
 
 /* ===========================
+   AVAILABILITY SCHEDULE
+   =========================== */
+
+.p-4.bg-gray-800\/30 {
+  background: rgba(15, 15, 30, 0.6) !important;
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
+}
+
+.p-4.bg-gray-800\/30 h4 {
+  color: #f9a8ff !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  margin-bottom: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* ===========================
    GALLERY
    =========================== */
 
-.edit-page .gallery-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+/* Gallery grid */
+.grid.grid-cols-2.md\:grid-cols-4 {
   gap: 14px !important;
-  margin-top: 12px !important;
 }
 
-.edit-page .gallery-item {
-  position: relative !important;
+/* Gallery items */
+.relative.aspect-square.rounded-lg.overflow-hidden {
   border-radius: 16px !important;
-  overflow: hidden !important;
   border: 2px solid rgba(148, 163, 184, 0.3) !important;
   background: #020617 !important;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5) !important;
-  aspect-ratio: 1 !important;
+  overflow: hidden !important;
 }
 
-.edit-page .gallery-item img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  display: block !important;
+.relative.aspect-square img {
+  transition: transform 0.3s ease !important;
 }
 
-.edit-page .gallery-remove {
-  position: absolute !important;
-  top: 8px !important;
-  right: 8px !important;
+.relative.aspect-square:hover img {
+  transform: scale(1.05) !important;
+}
+
+/* Remove button */
+.absolute.top-2.right-2 {
   border-radius: 999px !important;
-  border: none !important;
-  padding: 6px 8px !important;
+  padding: 8px !important;
   background: rgba(239, 68, 68, 0.95) !important;
-  color: #ffffff !important;
-  cursor: pointer !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transition: all 0.2s ease !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  transition: all 0.2s ease !important;
 }
 
-.edit-page .gallery-remove:hover {
+.absolute.top-2.right-2:hover {
   background: #dc2626 !important;
   transform: scale(1.15) !important;
   box-shadow: 0 0 20px rgba(239, 68, 68, 0.8) !important;
 }
 
-.edit-page .gallery-add {
+/* Add photo button */
+.aspect-square.border-2.border-dashed {
   border-radius: 16px !important;
   border: 3px dashed var(--edit-pink) !important;
   background: 
@@ -394,21 +433,10 @@ main.edit-page {
     #0a0a18 !important;
   color: #f9f5ff !important;
   padding: 20px !important;
-  min-height: 140px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  cursor: pointer !important;
-  font-size: 0.9rem !important;
-  font-weight: 700 !important;
-  text-align: center !important;
   transition: all 0.2s ease !important;
-  aspect-ratio: 1 !important;
 }
 
-.edit-page .gallery-add:hover {
+.aspect-square.border-2.border-dashed:hover:not(:disabled) {
   border-style: solid !important;
   border-color: var(--edit-purple) !important;
   background: 
@@ -421,59 +449,151 @@ main.edit-page {
 }
 
 /* ===========================
+   CHECKBOXES
+   =========================== */
+
+label.flex.items-center.gap-3.p-4 {
+  background: rgba(15, 15, 30, 0.6) !important;
+  border: 2px solid rgba(148, 163, 184, 0.3) !important;
+  border-radius: 16px !important;
+  transition: all 0.2s ease !important;
+}
+
+label.flex.items-center.gap-3.p-4:hover {
+  border-color: rgba(168, 85, 247, 0.5) !important;
+  background: rgba(15, 15, 30, 0.8) !important;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.2) !important;
+}
+
+input[type="checkbox"] {
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 6px !important;
+  border: 2px solid rgba(148, 163, 184, 0.5) !important;
+  background: #15152a !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  position: relative !important;
+  transition: all 0.2s ease !important;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--edit-gradient-main) !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.6) !important;
+}
+
+input[type="checkbox"]:checked::after {
+  content: "✓" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+
+/* ===========================
    FOOTER
    =========================== */
 
-.edit-page .edit-footer {
-  margin-top: 24px !important;
-  padding-top: 20px !important;
-  border-top: 2px solid rgba(148, 163, 184, 0.2) !important;
-  display: flex !important;
-  justify-content: flex-end !important;
-  gap: 12px !important;
+footer.mt-12 {
+  margin-top: 32px !important;
   position: relative !important;
   z-index: 1 !important;
 }
 
+footer > div {
+  background: rgba(10, 10, 24, 0.8) !important;
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+footer p {
+  color: #f9f5ff !important;
+}
+
+footer p.text-sm {
+  color: #8b7da8 !important;
+}
+
 /* ===========================
-   RESPONSIVO
+   RESPONSIVE
    =========================== */
 
-@media (max-width: 900px) {
-  .edit-page .edit-grid {
-    grid-template-columns: 1fr !important;
+@media (max-width: 768px) {
+  main.min-h-screen > .container {
+    padding: 20px !important;
+    border-radius: 20px !important;
   }
 
-  .edit-page .edit-header {
-    flex-direction: column !important;
-    align-items: stretch !important;
+  header.mb-8 h1 {
+    font-size: 1.75rem !important;
+  }
+
+  section.bg-gradient-to-br {
+    padding: 20px !important;
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-2,
+  .grid.grid-cols-1.md\:grid-cols-3,
+  .grid.grid-cols-2.md\:grid-cols-4 {
+    grid-template-columns: 1fr !important;
   }
 }
 
 @media (max-width: 640px) {
-  main.edit-page {
+  main.min-h-screen {
     padding: 16px 12px !important;
   }
 
-  .edit-page .edit-container {
+  main.min-h-screen > .container {
     padding: 16px !important;
-    border-radius: 20px !important;
   }
 
-  .edit-page .edit-header h1 {
-    font-size: 1.5rem !important;
-  }
-
-  .edit-page .edit-back-btn,
-  .edit-page .edit-save-btn {
+  header button,
+  footer button {
     width: 100% !important;
+    justify-content: center !important;
   }
 
-  .edit-page .edit-footer {
-    flex-direction: column-reverse !important;
-  }
-
-  .edit-page .chip-grid {
+  .flex.flex-wrap.gap-2 {
+    display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
   }
+
+  footer > div {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  footer .flex.gap-3 {
+    flex-direction: column-reverse !important;
+    width: 100% !important;
+  }
+}
+
+/* ===========================
+   ANIMATIONS
+   =========================== */
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(236, 72, 153, 0.6);
+  }
+}
+
+section.bg-gradient-to-br:hover {
+  animation: pulse-glow 3s ease-in-out infinite !important;
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
