@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../src/lib/supabase";
 import "./admin.css";
+import { CheckCircle, XCircle, Clock, Eye, User, Edit } from "lucide-react";
 
 type TherapistRow = {
   id: string;
@@ -14,11 +15,31 @@ type TherapistRow = {
   status: "pending" | "active" | "rejected" | string;
   created_at: string | null;
   updated_at: string | null;
-
-  // campos de pagamento/acesso
   subscription_status: string | null;
   paid_until: string | null;
 };
+
+type ProfileEdit = {
+  id: string;
+  therapist_id: string;
+  edited_data: any;
+  pending_profile_photo?: string;
+  pending_gallery?: string[];
+  original_data: any;
+  original_profile_photo?: string;
+  original_gallery?: string[];
+  status: 'pending' | 'approved' | 'rejected';
+  admin_notes?: string;
+  reviewed_by?: string;
+  reviewed_at?: string;
+  submitted_at: string;
+  therapist?: {
+    full_name: string;
+    email: string;
+  };
+};
+
+type TabType = 'approvals' | 'edits';
 
 function PlanBadge({
   plan,
@@ -34,12 +55,6 @@ function PlanBadge({
   return <span className={`plan plan-${key}`}>{label}</span>;
 }
 
-/**
- * Componente de status de pagamento só para visualização no painel.
- * Baseado em:
- * - subscription_status
- * - paid_until
- */
 function PaymentStatus({ row }: { row: TherapistRow }) {
   const now = Date.now();
   const sub = (row.subscription_status || "").toLowerCase();
@@ -82,12 +97,141 @@ function PaymentStatus({ row }: { row: TherapistRow }) {
   );
 }
 
+// Componente para modal de revisão de edições
+function EditReviewModal({
+  edit,
+  onClose,
+  onApprove,
+  onReject,
+  processing,
+}: {
+  edit: ProfileEdit;
+  onClose: () => void;
+  onApprove: (editId: string) => void;
+  onReject: (editId: string, reason: string) => void;
+  processing: boolean;
+}) {
+  const [rejectReason, setRejectReason] = useState("");
+
+  const renderFieldComparison = (field: string, oldValue: any, newValue: any) => {
+    const oldStr = JSON.stringify(oldValue, null, 2);
+    const newStr = JSON.stringify(newValue, null, 2);
+
+    if (oldStr === newStr) return null;
+
+    return (
+      <div key={field} className="field-comparison">
+        <h4>{field}</h4>
+        <div className="comparison-columns">
+          <div className="old-value">
+            <strong>Original:</strong>
+            <pre>{oldStr}</pre>
+          </div>
+          <div className="new-value">
+            <strong>Novo:</strong>
+            <pre>{newStr}</pre>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const handleReject = () => {
+    if (!rejectReason.trim()) {
+      alert("Por favor, forneça um motivo para a rejeição");
+      return;
+    }
+    if (confirm("Rejeitar estas edições?")) {
+      onReject(edit.id, rejectReason);
+    }
+  };
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-large" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>Revisar Edições</h2>
+          <p className="modal-subtitle">
+            Terapeuta: {edit.therapist?.full_name || "N/A"}
+          </p>
+          <button className="modal-close" onClick={onClose}>
+            ✕
+          </button>
+        </div>
+
+        <div className="modal-body">
+          {Object.keys(edit.edited_data).map((field) =>
+            renderFieldComparison(
+              field,
+              edit.original_data[field],
+              edit.edited_data[field]
+            )
+          )}
+
+          {edit.pending_gallery && edit.pending_gallery.length > 0 && (
+            <div className="field-comparison">
+              <h4>Galeria de Fotos</h4>
+              <div style={{ padding: "1rem" }}>
+                <strong>Novas fotos:</strong>
+                <div className="gallery-comparison">
+                  {edit.pending_gallery.map((url: string, i: number) => (
+                    <img key={i} src={url} alt={`Gallery ${i + 1}`} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="reject-section">
+            <label>Motivo da rejeição (se aplicável):</label>
+            <textarea
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              placeholder="Descreva o motivo da rejeição..."
+              rows={4}
+            />
+          </div>
+        </div>
+
+        <div className="modal-footer">
+          <button className="btn btn-ghost" onClick={onClose}>
+            Fechar
+          </button>
+          <button
+            className="btn btn-approve"
+            onClick={() => confirm("Aprovar estas edições?") && onApprove(edit.id)}
+            disabled={processing}
+          >
+            <CheckCircle size={16} />
+            Aprovar
+          </button>
+          <button
+            className="btn btn-reject"
+            onClick={handleReject}
+            disabled={processing || !rejectReason.trim()}
+          >
+            <XCircle size={16} />
+            Rejeitar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [rows, setRows] = useState<TherapistRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+
+  // Estados para edições de perfil
+  const [activeTab, setActiveTab] = useState<TabType>('approvals');
+  const [profileEdits, setProfileEdits] = useState<ProfileEdit[]>([]);
+  const [selectedEdit, setSelectedEdit] = useState<ProfileEdit | null>(null);
+  const [processingEdit, setProcessingEdit] = useState(false);
+  const [adminId, setAdminId] = useState<string>("");
 
   // ---- Gate: apenas admin
   useEffect(() => {
@@ -99,6 +243,8 @@ export default function AdminDashboard() {
         return;
       }
       const uid = sessionData.session.user.id;
+      if (mounted) setAdminId(uid);
+      
       const { data, error } = await supabase
         .from("profiles")
         .select("is_admin")
@@ -142,9 +288,66 @@ export default function AdminDashboard() {
     setLoading(false);
   }
 
+  // ---- Buscar edições pendentes
+  async function fetchPendingEdits() {
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await supabase
+      .from("profile_edits")
+      .select(`
+        *,
+        therapist:therapists!profile_edits_therapist_id_fkey (
+          full_name,
+          email
+        )
+      `)
+      .eq("status", "pending")
+      .order("submitted_at", { ascending: false });
+
+    if (error) {
+      setError(error.message);
+      setProfileEdits([]);
+    } else {
+      setProfileEdits(data as ProfileEdit[] || []);
+    }
+    setLoading(false);
+  }
+
   useEffect(() => {
-    if (isAdmin === true) fetchPending();
-  }, [isAdmin]);
+    if (isAdmin === true) {
+      if (activeTab === 'approvals') {
+        fetchPending();
+      } else {
+        fetchPendingEdits();
+      }
+    }
+  }, [isAdmin, activeTab]);
+
+  // ---- Subscribe to real-time changes
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    const channel = supabase
+      .channel('admin-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'profile_edits',
+          filter: 'status=eq.pending'
+        },
+        () => {
+          if (activeTab === 'edits') fetchPendingEdits();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [isAdmin, activeTab]);
 
   // ---- Atualiza status com fallback se colunas não existirem
   async function safeUpdateStatus(
@@ -156,7 +359,6 @@ export default function AdminDashboard() {
       data: { session },
     } = await supabase.auth.getSession();
 
-    // 1ª tentativa: com campos de revisão
     const fullPayload: any = {
       status,
       reviewed_at: new Date().toISOString(),
@@ -173,7 +375,6 @@ export default function AdminDashboard() {
 
     if (!tryFull.error) return;
 
-    // 2ª tentativa: apenas status (para ambientes sem colunas reviewed_*/rejection_reason)
     await supabase.from("therapists").update({ status }).eq("id", id);
   }
 
@@ -187,7 +388,6 @@ export default function AdminDashboard() {
     setBusy(id);
     try {
       await safeUpdateStatus(id, status, reason);
-      // Otimismo no UI
       setRows((prev) => prev.filter((r) => r.id !== id));
     } catch (e: any) {
       alert("Erro ao atualizar: " + (e?.message || "tente novamente."));
@@ -196,12 +396,124 @@ export default function AdminDashboard() {
     }
   }
 
+  // ---- Funções para gerenciar edições de perfil
+  async function approveEdit(editId: string) {
+    setProcessingEdit(true);
+    try {
+      const edit = profileEdits.find((e) => e.id === editId);
+      if (!edit) throw new Error("Edit not found");
+
+      // Apply changes to therapist profile
+      const updateData: any = { ...edit.edited_data };
+
+      if (edit.pending_profile_photo) {
+        updateData.profile_photo = edit.pending_profile_photo;
+      }
+
+      if (edit.pending_gallery) {
+        updateData.gallery = edit.pending_gallery;
+      }
+
+      const { error: updateError } = await supabase
+        .from("therapists")
+        .update(updateData)
+        .eq("user_id", edit.therapist_id);
+
+      if (updateError) throw updateError;
+
+      // Update edit status
+      const { error: statusError } = await supabase
+        .from("profile_edits")
+        .update({
+          status: "approved",
+          reviewed_by: adminId,
+          reviewed_at: new Date().toISOString(),
+        })
+        .eq("id", editId);
+
+      if (statusError) throw statusError;
+
+      // Create notification
+      await supabase.from("edit_notifications").insert({
+        therapist_id: edit.therapist_id,
+        edit_id: editId,
+        type: "approved",
+        message: "Suas edições foram aprovadas e publicadas no seu perfil!",
+      });
+
+      // Remove from list
+      setProfileEdits((prev) => prev.filter((e) => e.id !== editId));
+      setSelectedEdit(null);
+      alert("Edições aprovadas com sucesso!");
+    } catch (error: any) {
+      console.error("Error approving edit:", error);
+      alert("Erro ao aprovar edições: " + error.message);
+    } finally {
+      setProcessingEdit(false);
+    }
+  }
+
+  async function rejectEdit(editId: string, reason: string) {
+    setProcessingEdit(true);
+    try {
+      const edit = profileEdits.find((e) => e.id === editId);
+      if (!edit) throw new Error("Edit not found");
+
+      const { error } = await supabase
+        .from("profile_edits")
+        .update({
+          status: "rejected",
+          admin_notes: reason,
+          reviewed_by: adminId,
+          reviewed_at: new Date().toISOString(),
+        })
+        .eq("id", editId);
+
+      if (error) throw error;
+
+      // Create notification
+      await supabase.from("edit_notifications").insert({
+        therapist_id: edit.therapist_id,
+        edit_id: editId,
+        type: "rejected",
+        message: `Suas edições foram rejeitadas. Motivo: ${reason}`,
+      });
+
+      // Remove from list
+      setProfileEdits((prev) => prev.filter((e) => e.id !== editId));
+      setSelectedEdit(null);
+      alert("Edições rejeitadas");
+    } catch (error: any) {
+      console.error("Error rejecting edit:", error);
+      alert("Erro ao rejeitar edições: " + error.message);
+    } finally {
+      setProcessingEdit(false);
+    }
+  }
+
   const emptyState = useMemo(
     () =>
       !loading &&
       !error &&
-      rows.length === 0 && <p className="muted">No pending approvals 🎉</p>,
-    [loading, error, rows.length]
+      rows.length === 0 && 
+      activeTab === 'approvals' && (
+        <p className="muted">No pending approvals 🎉</p>
+      ),
+    [loading, error, rows.length, activeTab]
+  );
+
+  const emptyEditsState = useMemo(
+    () =>
+      !loading &&
+      !error &&
+      profileEdits.length === 0 && 
+      activeTab === 'edits' && (
+        <div className="empty-state">
+          <CheckCircle size={64} style={{ opacity: 0.3, margin: '0 auto' }} />
+          <p className="muted">Nenhuma edição pendente no momento 🎉</p>
+        </div>
+      ),
+    [loading, error, profileEdits.length, activeTab]
   );
 
   if (isAdmin === false) {
@@ -215,105 +527,210 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin-shell">
-      <h1 className="title">Admin • Pending Profiles</h1>
-      <p className="subtitle">Aprove ou rejeite novos cadastros de terapeutas.</p>
+      <h1 className="title">Admin Dashboard</h1>
+      <p className="subtitle">Gerencie aprovações e edições de perfil.</p>
 
+      {/* Tabs */}
+      <div className="admin-tabs">
+        <button
+          className={`admin-tab ${activeTab === 'approvals' ? 'active' : ''}`}
+          onClick={() => setActiveTab('approvals')}
+        >
+          <User size={18} />
+          Novos Cadastros
+          {rows.length > 0 && <span className="badge">{rows.length}</span>}
+        </button>
+        <button
+          className={`admin-tab ${activeTab === 'edits' ? 'active' : ''}`}
+          onClick={() => setActiveTab('edits')}
+        >
+          <Edit size={18} />
+          Edições de Perfil
+          {profileEdits.length > 0 && <span className="badge">{profileEdits.length}</span>}
+        </button>
+      </div>
+
+      {/* Botão de atualizar */}
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-        <button className="btn" onClick={fetchPending} disabled={loading}>
+        <button
+          className="btn"
+          onClick={activeTab === 'approvals' ? fetchPending : fetchPendingEdits}
+          disabled={loading}
+        >
           {loading ? "Atualizando..." : "Atualizar lista"}
         </button>
       </div>
 
-      {error ? (
-        <p style={{ color: "tomato" }}>{error}</p>
-      ) : loading ? (
-        <div className="table-wrap">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>E-mail</th>
-                <th>Local</th>
-                <th>Plan</th>
-                <th>Payment</th>
-                <th>Created</th>
-                <th className="col-actions">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({ length: 3 }).map((_, i) => (
-                <tr key={`skeleton-${i}`} className="skeleton">
-                  <td colSpan={7}>
-                    <div className="sk" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : emptyState ? (
-        emptyState
-      ) : (
-        <div className="table-wrap">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>E-mail</th>
-                <th>Local</th>
-                <th>Plan</th>
-                <th>Payment</th>
-                <th>Created</th>
-                <th className="col-actions">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => {
-                const when =
-                  r.created_at || r.updated_at
-                    ? new Date(
-                        r.created_at || r.updated_at!
-                      ).toLocaleString()
-                    : "—";
-                const nome = r.full_name || "—";
-                const loc = r.location || "—";
-                const isBusy = busy === r.id;
+      {error && <p style={{ color: "tomato" }}>{error}</p>}
 
-                return (
-                  <tr key={r.id}>
-                    <td className="bold">{nome}</td>
-                    <td className="muted">{r.email || "—"}</td>
-                    <td className="muted">{loc}</td>
-                    <td>
-                      <PlanBadge plan={r.plan} planName={r.plan_name} />
-                    </td>
-                    <td>
-                      <PaymentStatus row={r} />
-                    </td>
-                    <td className="muted">{when}</td>
-                    <td className="actions">
-                      <button
-                        className="btn btn-approve"
-                        onClick={() => moderate(r.id, "approve")}
-                        disabled={isBusy}
-                        aria-busy={isBusy}
-                      >
-                        {isBusy ? "..." : "Approve"}
-                      </button>
-                      <button
-                        className="btn btn-reject"
-                        onClick={() => moderate(r.id, "reject")}
-                        disabled={isBusy}
-                      >
-                        Reject
-                      </button>
-                    </td>
+      {/* APROVAÇÕES DE NOVOS CADASTROS */}
+      {activeTab === 'approvals' && (
+        <>
+          {loading ? (
+            <div className="table-wrap">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>E-mail</th>
+                    <th>Local</th>
+                    <th>Plan</th>
+                    <th>Payment</th>
+                    <th>Created</th>
+                    <th className="col-actions">Actions</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                </thead>
+                <tbody>
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <tr key={`skeleton-${i}`} className="skeleton">
+                      <td colSpan={7}>
+                        <div className="sk" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : emptyState ? (
+            emptyState
+          ) : (
+            <div className="table-wrap">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>E-mail</th>
+                    <th>Local</th>
+                    <th>Plan</th>
+                    <th>Payment</th>
+                    <th>Created</th>
+                    <th className="col-actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((r) => {
+                    const when =
+                      r.created_at || r.updated_at
+                        ? new Date(
+                            r.created_at || r.updated_at!
+                          ).toLocaleString()
+                        : "—";
+                    const nome = r.full_name || "—";
+                    const loc = r.location || "—";
+                    const isBusy = busy === r.id;
+
+                    return (
+                      <tr key={r.id}>
+                        <td className="bold">{nome}</td>
+                        <td className="muted">{r.email || "—"}</td>
+                        <td className="muted">{loc}</td>
+                        <td>
+                          <PlanBadge plan={r.plan} planName={r.plan_name} />
+                        </td>
+                        <td>
+                          <PaymentStatus row={r} />
+                        </td>
+                        <td className="muted">{when}</td>
+                        <td className="actions">
+                          <button
+                            className="btn btn-approve"
+                            onClick={() => moderate(r.id, "approve")}
+                            disabled={isBusy}
+                            aria-busy={isBusy}
+                          >
+                            {isBusy ? "..." : "Approve"}
+                          </button>
+                          <button
+                            className="btn btn-reject"
+                            onClick={() => moderate(r.id, "reject")}
+                            disabled={isBusy}
+                          >
+                            Reject
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* EDIÇÕES DE PERFIL */}
+      {activeTab === 'edits' && (
+        <>
+          {loading ? (
+            <div className="edits-loading">
+              <Clock size={32} style={{ opacity: 0.3 }} />
+              <p>Carregando edições...</p>
+            </div>
+          ) : emptyEditsState ? (
+            emptyEditsState
+          ) : (
+            <div className="edits-grid">
+              {profileEdits.map((edit) => (
+                <div key={edit.id} className="edit-card">
+                  <div className="edit-card-header">
+                    <div className="edit-info">
+                      <h3>
+                        <User size={18} />
+                        {edit.therapist?.full_name || "Terapeuta"}
+                      </h3>
+                      <p className="edit-meta">
+                        <span>Enviado: {new Date(edit.submitted_at).toLocaleString("pt-BR")}</span>
+                        <span>ID: {edit.therapist_id.slice(0, 8)}...</span>
+                      </p>
+                    </div>
+                    <span className="status-badge pending">
+                      <Clock size={14} />
+                      Pendente
+                    </span>
+                  </div>
+                  <div className="edit-card-actions">
+                    <button
+                      className="btn btn-ghost"
+                      onClick={() => setSelectedEdit(edit)}
+                    >
+                      <Eye size={16} />
+                      Revisar
+                    </button>
+                    <button
+                      className="btn btn-approve"
+                      onClick={() =>
+                        confirm("Aprovar estas edições?") && approveEdit(edit.id)
+                      }
+                      disabled={processingEdit}
+                    >
+                      <CheckCircle size={16} />
+                      Aprovar
+                    </button>
+                    <button
+                      className="btn btn-reject"
+                      onClick={() => setSelectedEdit(edit)}
+                      disabled={processingEdit}
+                    >
+                      <XCircle size={16} />
+                      Rejeitar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Modal de revisão */}
+      {selectedEdit && (
+        <EditReviewModal
+          edit={selectedEdit}
+          onClose={() => setSelectedEdit(null)}
+          onApprove={approveEdit}
+          onReject={rejectEdit}
+          processing={processingEdit}
+        />
       )}
     </div>
   );

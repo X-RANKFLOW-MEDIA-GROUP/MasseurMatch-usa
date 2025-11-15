@@ -1,109 +1,131 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 import { supabase } from "@/src/lib/supabase";
 
-/** Tipo do terapeuta (usado no perfil e no Edit-Profile) */
+/** Ajusta esse tipo conforme as colunas reais da tabela therapists */
 export type Therapist = {
   id: string;
-  user_id: string;
-
-  full_name?: string | null;
-  headline?: string | null;
-  about?: string | null;
-
-  city?: string | null;
-  state?: string | null;
-  country?: string | null;
-  neighborhood?: string | null;
-  address?: string | null;
-  latitude?: string | null;
-  longitude?: string | null;
-
-  rate_60?: string | null;
-  rate_90?: string | null;
-  rate_outcall?: string | null;
-
-  studio_amenities?: string[] | null;
-  payment_methods?: string[] | null;
-  languages?: string[] | null;
-
-  website?: string | null;
-  instagram?: string | null;
-  whatsapp?: string | null;
-
-  birthdate?: string | null;
-  years_experience?: string | null;
-  rating?: number | null;
-
-  gallery?: string[] | null;
-  travel_radius?: string | null;
-  accepts_first_timers?: boolean | null;
-  prefers_lgbtq_clients?: boolean | null;
-
-  // Qualquer campo extra da tabela
-  [key: string]: any;
+  auth_user_id: string;
+  full_name: string | null;
+  headline: string | null;
+  about: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  neighborhood: string | null;
+  address: string | null;
+  latitude: string | null;
+  longitude: string | null;
+  rate_60: string | null;
+  rate_90: string | null;
+  rate_outcall: string | null;
+  studio_amenities: string[] | null;
+  payment_methods: string[] | null;
+  languages: string[] | null;
+  website: string | null;
+  instagram: string | null;
+  whatsapp: string | null;
+  birthdate: string | null;
+  years_experience: number | null;
+  rating: number | null;
+  gallery: string[] | null;
+  travel_radius: string | null;
+  accepts_first_timers: boolean | null;
+  prefers_lgbtq_clients: boolean | null;
+  // ... se tiver mais campos, adiciona aqui
 };
 
-export interface ProfileContextType {
+type ProfileContextType = {
   therapist: Therapist | null;
   loading: boolean;
-  error: string | null;
   refreshProfile: () => Promise<void>;
-}
+};
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
-export function ProfileProvider({ children }: { children: React.ReactNode }) {
+export function ProfileProvider({ children }: { children: ReactNode }) {
   const [therapist, setTherapist] = useState<Therapist | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchProfile = async () => {
+  async function loadProfile() {
+    setLoading(true);
     try {
-      setLoading(true);
-      setError(null);
-
+      // ✅ Primeiro tenta pegar a sessão de forma segura
       const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
 
-      if (userError) throw userError;
+      if (sessionError) {
+        console.error("Error getting session:", sessionError);
+      }
 
+      const user = session?.user;
+
+      // 🔒 Se não tiver usuário logado, não chama getUser/getSession de novo
       if (!user) {
         setTherapist(null);
         return;
       }
 
-      const { data, error: tError } = await supabase
+      // Busca o therapist associado ao auth_user_id
+      const { data, error } = await supabase
         .from("therapists")
         .select("*")
         .eq("user_id", user.id)
+
         .single();
 
-      if (tError && tError.code !== "PGRST116") {
-        throw tError;
+      if (error) {
+        // Se for "no rows" só deixa null, sem explodir
+        if (error.code !== "PGRST116") {
+          console.error("Error loading therapist profile:", error);
+        }
+        setTherapist(null);
+        return;
       }
 
-      setTherapist((data as Therapist) ?? null);
+      setTherapist(data as Therapist);
     } catch (err) {
-      console.error("Error loading therapist profile:", err);
-      setError("Failed to load therapist profile.");
+      console.error("Unexpected error loading profile:", err);
+      setTherapist(null);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   useEffect(() => {
-    fetchProfile();
+    loadProfile();
+
+    // opcional: escutar mudanças de auth e recarregar
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session?.user) {
+        setTherapist(null);
+        setLoading(false);
+      } else {
+        loadProfile();
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value: ProfileContextType = {
     therapist,
     loading,
-    error,
-    refreshProfile: fetchProfile,
+    refreshProfile: loadProfile,
   };
 
   return (

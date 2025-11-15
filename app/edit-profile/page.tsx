@@ -2,7 +2,10 @@
 "use client";
 
 import React from "react";
-import EditProfile from "@/src/components/Edit-Profile"; // caminho do seu componente
+import EditProfile from "@/src/components/Edit-Profile";
+
+// Importar o CSS da página de edição
+import "@/src/styles/edit-profile.css";
 
 export default function EditProfilePage() {
   return <EditProfile />;
