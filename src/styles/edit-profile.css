@@ -5,7 +5,7 @@
 
 /* CRITICAL: Override Next.js wrapper & body background */
 body {
-  background: 
+  background:
     radial-gradient(circle at 20% 10%, rgba(168, 85, 247, 0.35), transparent 50%),
     radial-gradient(circle at 80% 10%, rgba(236, 72, 153, 0.25), transparent 50%),
     radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.2), transparent 55%),
@@ -39,13 +39,13 @@ main.min-h-screen.bg-gradient-to-br {
 /* Container Premium */
 main.min-h-screen > .container {
   max-width: 1140px !important;
-  background: 
+  background:
     radial-gradient(circle at 15% 15%, rgba(139, 92, 246, 0.08), transparent 40%),
     radial-gradient(circle at 85% 15%, rgba(236, 72, 153, 0.06), transparent 40%),
     #0a0a18 !important;
   border-radius: 28px !important;
   border: 1px solid rgba(168, 85, 247, 0.5) !important;
-  box-shadow: 
+  box-shadow:
     0 0 60px rgba(168, 85, 247, 0.35),
     0 20px 50px rgba(0, 0, 0, 0.8),
     inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
@@ -71,8 +71,13 @@ main.min-h-screen > .container::before {
 }
 
 @keyframes grid-pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.25; }
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.25;
+  }
 }
 
 /* Glow effect on hover */
@@ -108,7 +113,7 @@ main.min-h-screen > .container:hover::after {
   backdrop-filter: blur(24px) saturate(180%) !important;
   border-radius: 20px !important;
   border-width: 2px !important;
-  box-shadow: 
+  box-shadow:
     0 0 40px currentColor,
     0 20px 50px rgba(0, 0, 0, 0.7) !important;
   animation: toast-slide-in 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
@@ -152,7 +157,8 @@ header.mb-8 h1 {
 }
 
 @keyframes title-glow {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.9));
   }
   50% {
@@ -210,7 +216,7 @@ footer button[class*="bg-purple-500"] {
   background: var(--edit-gradient-main) !important;
   color: #ffffff !important;
   border: none !important;
-  box-shadow: 
+  box-shadow:
     0 0 40px rgba(236, 72, 153, 0.7),
     0 15px 35px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
@@ -229,7 +235,12 @@ footer button[class*="bg-purple-500"]::before {
   left: -100% !important;
   width: 100% !important;
   height: 100% !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  ) !important;
   transition: left 0.5s ease !important;
 }
 
@@ -242,7 +253,7 @@ header button[class*="bg-purple-500"]:hover:not(:disabled),
 footer button[class*="bg-purple-500"]:hover:not(:disabled) {
   background: var(--edit-gradient-strong) !important;
   transform: translateY(-3px) scale(1.02) !important;
-  box-shadow: 
+  box-shadow:
     0 0 50px rgba(168, 85, 247, 0.9),
     0 20px 45px rgba(0, 0, 0, 0.6) !important;
 }
@@ -269,7 +280,7 @@ footer button:disabled {
   border: 2px solid currentColor !important;
   font-weight: 800 !important;
   font-size: 0.9rem !important;
-  box-shadow: 
+  box-shadow:
     0 0 25px currentColor,
     0 10px 25px rgba(0, 0, 0, 0.4) !important;
   backdrop-filter: blur(12px) !important;
@@ -277,7 +288,8 @@ footer button:disabled {
 }
 
 @keyframes status-pulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 25px currentColor, 0 10px 25px rgba(0, 0, 0, 0.4);
   }
   50% {
@@ -294,7 +306,7 @@ footer button:disabled {
   border-radius: 20px !important;
   border-width: 2px !important;
   backdrop-filter: blur(16px) !important;
-  box-shadow: 
+  box-shadow:
     0 0 30px currentColor,
     0 12px 30px rgba(0, 0, 0, 0.4) !important;
   position: relative !important;
@@ -330,12 +342,12 @@ section[class*="bg-gradient-to-br"] {
   margin-bottom: 28px !important;
   padding: 28px !important;
   border-radius: 24px !important;
-  background: 
+  background:
     radial-gradient(circle at 10% 10%, rgba(168, 85, 247, 0.06), transparent 60%),
     radial-gradient(circle at 90% 90%, rgba(236, 72, 153, 0.04), transparent 60%),
     #0f0f1f !important;
   border: 1px solid rgba(148, 163, 184, 0.25) !important;
-  box-shadow: 
+  box-shadow:
     0 0 35px rgba(168, 85, 247, 0.08),
     0 15px 35px rgba(0, 0, 0, 0.6) !important;
   position: relative !important;
@@ -345,7 +357,7 @@ section[class*="bg-gradient-to-br"] {
 
 section[class*="bg-gradient-to-br"]:hover {
   border-color: rgba(168, 85, 247, 0.4) !important;
-  box-shadow: 
+  box-shadow:
     0 0 45px rgba(168, 85, 247, 0.15),
     0 20px 40px rgba(0, 0, 0, 0.7) !important;
   transform: translateY(-2px) !important;
@@ -374,11 +386,15 @@ section h2 + p {
 /* Icon containers in headers */
 section h2 .p-2,
 section h2 > div[class*="bg-purple"] {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(236, 72, 153, 0.25)) !important;
+  background: linear-gradient(
+      135deg,
+      rgba(168, 85, 247, 0.25),
+      rgba(236, 72, 153, 0.25)
+    ) !important;
   border: 1px solid rgba(168, 85, 247, 0.5) !important;
   border-radius: 12px !important;
   padding: 10px !important;
-  box-shadow: 
+  box-shadow:
     0 0 20px rgba(168, 85, 247, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
@@ -427,42 +443,43 @@ textarea {
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
 }
 
-input[type="checkbox"]:hover {
-  border-color: rgba(168, 85, 247, 0.6) !important;
-  background: #1c1c34 !important;
+input:hover,
+textarea:hover {
+  background: rgba(20, 20, 40, 0.9) !important;
+  border-color: rgba(168, 85, 247, 0.5) !important;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(168, 85, 247, 0.2) !important;
 }
 
-input[type="checkbox"]:checked {
-  background: var(--edit-gradient-main) !important;
-  border-color: transparent !important;
-  box-shadow: 
-    0 0 20px rgba(168, 85, 247, 0.7),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-  animation: checkbox-pop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+input:focus,
+textarea:focus {
+  border-color: var(--edit-purple) !important;
+  background: rgba(20, 20, 40, 1) !important;
+  box-shadow:
+    0 0 0 3px rgba(168, 85, 247, 0.2),
+    0 0 25px rgba(168, 85, 247, 0.4),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
 }
 
-@keyframes checkbox-pop {
-  0% {
-    transform: scale(0.8);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
 }
 
-input[type="checkbox"]:checked::after {
-  content: "✓" !important;
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  color: white !important;
-  font-size: 16px !important;
-  font-weight: 900 !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+textarea {
+  resize: vertical !important;
+  min-height: 110px !important;
+  line-height: 1.6 !important;
+}
+
+input:disabled,
+textarea:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(50%) !important;
 }
 
 /* ===========================
@@ -476,13 +493,17 @@ footer.mt-12 {
 }
 
 footer > div {
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.08), transparent 60%),
+  background:
+    radial-gradient(
+      circle at 20% 50%,
+      rgba(139, 92, 246, 0.08),
+      transparent 60%
+    ),
     rgba(10, 10, 24, 0.9) !important;
   border: 1px solid rgba(148, 163, 184, 0.3) !important;
   border-radius: 24px !important;
   padding: 28px !important;
-  box-shadow: 
+  box-shadow:
     0 0 40px rgba(168, 85, 247, 0.15),
     0 12px 35px rgba(0, 0, 0, 0.5) !important;
   backdrop-filter: blur(16px) !important;
@@ -544,7 +565,8 @@ footer .flex.gap-3 {
    =========================== */
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 25px rgba(168, 85, 247, 0.2);
   }
   50% {
@@ -553,7 +575,8 @@ footer .flex.gap-3 {
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -992,46 +1015,6 @@ body {
   -moz-osx-font-smoothing: grayscale !important;
   text-rendering: optimizeLegibility !important;
 }
-}
-
-input:hover,
-textarea:hover {
-  background: rgba(20, 20, 40, 0.9) !important;
-  border-color: rgba(168, 85, 247, 0.5) !important;
-  box-shadow: 
-    inset 0 2px 4px rgba(0, 0, 0, 0.3),
-    0 0 15px rgba(168, 85, 247, 0.2) !important;
-}
-
-input:focus,
-textarea:focus {
-  border-color: var(--edit-purple) !important;
-  background: rgba(20, 20, 40, 1) !important;
-  box-shadow: 
-    0 0 0 3px rgba(168, 85, 247, 0.2),
-    0 0 25px rgba(168, 85, 247, 0.4),
-    inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: #6b7280 !important;
-  opacity: 1 !important;
-  font-weight: 500 !important;
-}
-
-textarea {
-  resize: vertical !important;
-  min-height: 110px !important;
-  line-height: 1.6 !important;
-}
-
-input:disabled,
-textarea:disabled {
-  opacity: 0.4 !important;
-  cursor: not-allowed !important;
-  filter: grayscale(50%) !important;
-}
 
 /* ===========================
    COLORFUL CHIPS - VIBRANT
@@ -1060,7 +1043,11 @@ textarea:disabled {
   content: "" !important;
   position: absolute !important;
   inset: 0 !important;
-  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.4), transparent 70%) !important;
+  background: radial-gradient(
+      circle at center,
+      rgba(59, 130, 246, 0.4),
+      transparent 70%
+    ) !important;
   opacity: 0 !important;
   transition: opacity 0.3s ease !important;
 }
@@ -1074,7 +1061,7 @@ textarea:disabled {
   border-color: rgba(59, 130, 246, 0.8) !important;
   color: #e0f2fe !important;
   transform: translateY(-3px) scale(1.03) !important;
-  box-shadow: 
+  box-shadow:
     0 0 25px rgba(59, 130, 246, 0.4),
     0 12px 25px rgba(0, 0, 0, 0.3) !important;
 }
@@ -1084,7 +1071,7 @@ textarea:disabled {
   background: var(--edit-gradient-chip) !important;
   border-color: transparent !important;
   color: #ffffff !important;
-  box-shadow: 
+  box-shadow:
     0 0 30px rgba(236, 72, 153, 0.7),
     0 12px 25px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
@@ -1093,7 +1080,7 @@ textarea:disabled {
 
 .flex.flex-wrap.gap-2 button[class*="bg-purple-500"]:hover {
   transform: translateY(-3px) scale(1.05) !important;
-  box-shadow: 
+  box-shadow:
     0 0 40px rgba(236, 72, 153, 0.9),
     0 15px 35px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
@@ -1140,7 +1127,7 @@ textarea:disabled {
   border-radius: 20px !important;
   border: 2px solid rgba(148, 163, 184, 0.25) !important;
   background: #020617 !important;
-  box-shadow: 
+  box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   overflow: hidden !important;
@@ -1149,7 +1136,7 @@ textarea:disabled {
 
 .relative.aspect-square[class*="rounded-lg"]:hover {
   border-color: rgba(168, 85, 247, 0.5) !important;
-  box-shadow: 
+  box-shadow:
     0 0 30px rgba(168, 85, 247, 0.3),
     0 15px 40px rgba(0, 0, 0, 0.7) !important;
   transform: translateY(-4px) scale(1.02) !important;
@@ -1170,7 +1157,7 @@ button[class*="absolute.top-2.right-2"],
   padding: 10px !important;
   background: rgba(239, 68, 68, 0.95) !important;
   border: 2px solid rgba(255, 255, 255, 0.4) !important;
-  box-shadow: 
+  box-shadow:
     0 0 20px rgba(239, 68, 68, 0.6),
     0 6px 15px rgba(0, 0, 0, 0.6) !important;
   transition: all 0.2s ease !important;
@@ -1181,7 +1168,7 @@ button[class*="absolute.top-2.right-2"]:hover,
 .absolute.top-2.right-2:hover {
   background: #dc2626 !important;
   transform: scale(1.2) rotate(90deg) !important;
-  box-shadow: 
+  box-shadow:
     0 0 30px rgba(239, 68, 68, 0.9),
     0 8px 20px rgba(0, 0, 0, 0.7) !important;
 }
@@ -1190,7 +1177,7 @@ button[class*="absolute.top-2.right-2"]:hover,
 .aspect-square[class*="border-2"][class*="border-dashed"] {
   border-radius: 20px !important;
   border: 3px dashed var(--edit-pink) !important;
-  background: 
+  background:
     radial-gradient(circle at center, rgba(168, 85, 247, 0.12), transparent 70%),
     #0a0a18 !important;
   color: #f1f5f9 !important;
@@ -1204,7 +1191,11 @@ button[class*="absolute.top-2.right-2"]:hover,
   content: "" !important;
   position: absolute !important;
   inset: 0 !important;
-  background: radial-gradient(circle at center, rgba(168, 85, 247, 0.2), transparent 70%) !important;
+  background: radial-gradient(
+      circle at center,
+      rgba(168, 85, 247, 0.2),
+      transparent 70%
+    ) !important;
   opacity: 0 !important;
   transition: opacity 0.3s ease !important;
 }
@@ -1212,16 +1203,22 @@ button[class*="absolute.top-2.right-2"]:hover,
 .aspect-square[class*="border-2"][class*="border-dashed"]:hover:not(:disabled) {
   border-style: solid !important;
   border-color: var(--edit-purple) !important;
-  background: 
-    radial-gradient(circle at center, rgba(168, 85, 247, 0.2), transparent 70%),
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(168, 85, 247, 0.2),
+      transparent 70%
+    ),
     #0f0f1f !important;
   transform: translateY(-4px) scale(1.02) !important;
-  box-shadow: 
+  box-shadow:
     0 0 35px rgba(168, 85, 247, 0.6),
     0 15px 35px rgba(0, 0, 0, 0.5) !important;
 }
 
-.aspect-square[class*="border-2"][class*="border-dashed"]:hover:not(:disabled)::before {
+.aspect-square[class*="border-2"][class*="border-dashed"]:hover:not(
+    :disabled
+  )::before {
   opacity: 1 !important;
 }
 
@@ -1256,3 +1253,42 @@ input[type="checkbox"] {
   position: relative !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+input[type="checkbox"]:hover {
+  border-color: rgba(168, 85, 247, 0.6) !important;
+  background: #1c1c34 !important;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--edit-gradient-main) !important;
+  border-color: transparent !important;
+  box-shadow:
+    0 0 20px rgba(168, 85, 247, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  animation: checkbox-pop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+}
+
+@keyframes checkbox-pop {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+input[type="checkbox"]:checked::after {
+  content: "✓" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  color: white !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}

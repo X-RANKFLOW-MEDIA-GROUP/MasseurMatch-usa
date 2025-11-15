@@ -4,56 +4,135 @@ import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/src/lib/supabase";
 import { useProfile } from "@/src/context/ProfileContext";
-import type { Therapist } from "@/src/context/ProfileContext";
+
 import {
-  User, MapPin, Wrench, BadgeDollarSign, Plus, Trash2, 
-  Images, Link as LinkIcon, CreditCard, Star, Building2, 
-  Umbrella, PackageOpen, Plane, Languages, Info, Clock, 
-  Award, Percent, Bell, X, AlertCircle, CheckCircle, 
-  Loader, Save, ArrowLeft
+  User,
+  MapPin,
+  Wrench,
+  BadgeDollarSign,
+  Plus,
+  Trash2,
+  Images,
+  Link as LinkIcon,
+  CreditCard,
+  Star,
+  Building2,
+  Umbrella,
+  PackageOpen,
+  Plane,
+  Languages,
+  Info,
+  Clock,
+  Award,
+  Percent,
+  X,
+  AlertCircle,
+  CheckCircle,
+  Loader,
+  Save,
+  ArrowLeft,
 } from "lucide-react";
-import 
 
 /* ============================================
    CONSTANTES
 ============================================ */
 const MASSAGE_TECHNIQUES = [
-  "Swedish", "Deep Tissue", "Sports", "Thai", "Hot Stone",
-  "Prenatal", "Aromatherapy", "Shiatsu", "Reflexology", "Trigger Point"
+  "Swedish",
+  "Deep Tissue",
+  "Sports",
+  "Thai",
+  "Hot Stone",
+  "Prenatal",
+  "Aromatherapy",
+  "Shiatsu",
+  "Reflexology",
+  "Trigger Point",
 ];
 
 const STUDIO_AMENITIES = [
-  "Aromatherapy Enhanced", "Bottled Water", "Candles", "Drinking Water",
-  "Free Parking", "Fully Handicapped Accessible", "Heated Massage Table",
-  "Hot Towels", "Massage Table", "Metered Parking", "Music", "Pool",
-  "Private Parking", "Private Restroom", "Sauna", "Secured Entrance/Doorman",
-  "Shower", "Soft Drinks", "Spa/Hot Tub", "Tea", "Wine"
+  "Aromatherapy Enhanced",
+  "Bottled Water",
+  "Candles",
+  "Drinking Water",
+  "Free Parking",
+  "Fully Handicapped Accessible",
+  "Heated Massage Table",
+  "Hot Towels",
+  "Massage Table",
+  "Metered Parking",
+  "Music",
+  "Pool",
+  "Private Parking",
+  "Private Restroom",
+  "Sauna",
+  "Secured Entrance/Doorman",
+  "Shower",
+  "Soft Drinks",
+  "Spa/Hot Tub",
+  "Tea",
+  "Wine",
 ];
 
 const MOBILE_EXTRAS = [
-  "Aromatherapy Enhanced", "Candles", "Heated Massage Table",
-  "Hot Towels", "Massage Table", "Music"
+  "Aromatherapy Enhanced",
+  "Candles",
+  "Heated Massage Table",
+  "Hot Towels",
+  "Massage Table",
+  "Music",
 ];
 
 const ADDITIONAL_SERVICES = [
-  "Acupuncture", "Body scrubs", "Cupping", "Facials", "Fitness training",
-  "Hair styling", "Hydrotherapy", "Manicures", "Meditation coaching",
-  "Nutrition consulting", "Pedicures", "Personal coaching", "Waxing", "Yoga instruction"
+  "Acupuncture",
+  "Body scrubs",
+  "Cupping",
+  "Facials",
+  "Fitness training",
+  "Hair styling",
+  "Hydrotherapy",
+  "Manicures",
+  "Meditation coaching",
+  "Nutrition consulting",
+  "Pedicures",
+  "Personal coaching",
+  "Waxing",
+  "Yoga instruction",
 ];
 
 const PAYMENT_METHODS = [
-  "Visa", "MasterCard", "Amex", "Discover", "Cash", "Venmo", "Zelle"
+  "Visa",
+  "MasterCard",
+  "Amex",
+  "Discover",
+  "Cash",
+  "Venmo",
+  "Zelle",
 ];
 
 const LANGUAGES = [
-  "English", "Portuguese", "Spanish", "French", "Italian",
-  "German", "Japanese", "Chinese", "Korean"
+  "English",
+  "Portuguese",
+  "Spanish",
+  "French",
+  "Italian",
+  "German",
+  "Japanese",
+  "Chinese",
+  "Korean",
 ];
 
 const SPECIAL_DISCOUNT_GROUPS = [
-  "first-time clients", "military veterans", "students", "active military",
-  "law enforcement", "repeat clients", "dancers", "entertainment industry",
-  "massage therapists", "senior citizens", "bodybuilders"
+  "first-time clients",
+  "military veterans",
+  "students",
+  "active military",
+  "law enforcement",
+  "repeat clients",
+  "dancers",
+  "entertainment industry",
+  "massage therapists",
+  "senior citizens",
+  "bodybuilders",
 ];
 
 const AFFILIATIONS = [
@@ -62,36 +141,32 @@ const AFFILIATIONS = [
   "American Organization for Bodywork Therapies of Asia",
   "Associated Bodywork and Massage Professionals",
   "National Certification Board for Therapeutic Massage & Bodywork",
-  "American Massage Therapy Association"
+  "American Massage Therapy Association",
 ];
 
 const DAYS_OF_WEEK = [
-  "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
 ];
 
 /* ============================================
    TIPOS
 ============================================ */
-type EditStatus = 'idle' | 'saving' | 'success' | 'error';
+type EditStatus = "idle" | "saving" | "success" | "error";
 
 type Notification = {
   id: string;
-  type: 'info' | 'success' | 'warning' | 'error';
+  type: "info" | "success" | "warning" | "error";
   message: string;
   autoClose?: boolean;
 };
 
 type FormData = Record<string, any>;
-
-type EditNotification = {
-  id: string;
-  therapist_id: string;
-  edit_id?: string;
-  type: 'pending' | 'approved' | 'rejected';
-  message: string;
-  read: boolean;
-  created_at: string;
-};
 
 /* ============================================
    HELPERS
@@ -103,8 +178,13 @@ function ensureArray(value: any): string[] {
     try {
       const parsed = JSON.parse(value);
       if (Array.isArray(parsed)) return parsed;
-    } catch {}
-    return value.split(",").map((s) => s.trim()).filter(Boolean);
+    } catch {
+      /* ignore */
+    }
+    return value
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
   }
   return [];
 }
@@ -116,42 +196,44 @@ function generateId() {
 /* ============================================
    COMPONENTES UI
 ============================================ */
-const NotificationToast = ({ 
-  notification, 
-  onClose 
-}: { 
-  notification: Notification; 
+const NotificationToast = ({
+  notification,
+  onClose,
+}: {
+  notification: Notification;
   onClose: () => void;
 }) => {
   const colors = {
-    info: 'bg-blue-500/10 border-blue-500/30 text-blue-300',
-    success: 'bg-green-500/10 border-green-500/30 text-green-300',
-    warning: 'bg-yellow-500/10 border-yellow-500/30 text-yellow-300',
-    error: 'bg-red-500/10 border-red-500/30 text-red-300'
+    info: "bg-blue-500/10 border-blue-500/30 text-blue-300",
+    success: "bg-green-500/10 border-green-500/30 text-green-300",
+    warning: "bg-yellow-500/10 border-yellow-500/30 text-yellow-300",
+    error: "bg-red-500/10 border-red-500/30 text-red-300",
   };
-  
+
   const icons = {
     info: Info,
     success: CheckCircle,
     warning: AlertCircle,
-    error: AlertCircle
+    error: AlertCircle,
   };
-  
+
   const Icon = icons[notification.type];
-  
+
   useEffect(() => {
     if (notification.autoClose !== false) {
       const timer = setTimeout(onClose, 5000);
       return () => clearTimeout(timer);
     }
   }, [notification.autoClose, onClose]);
-  
+
   return (
-    <div className={`fixed top-4 right-4 max-w-md p-4 rounded-lg border backdrop-blur-sm shadow-xl z-50 animate-slide-in ${colors[notification.type]}`}>
+    <div
+      className={`fixed top-4 right-4 max-w-md p-4 rounded-lg border backdrop-blur-sm shadow-xl z-50 animate-slide-in ${colors[notification.type]}`}
+    >
       <div className="flex items-start gap-3">
         <Icon size={20} className="flex-shrink-0 mt-0.5" />
         <p className="flex-1 text-sm font-medium">{notification.message}</p>
-        <button 
+        <button
           onClick={onClose}
           className="flex-shrink-0 hover:opacity-70 transition-opacity"
         >
@@ -164,31 +246,46 @@ const NotificationToast = ({
 
 const StatusBadge = ({ status }: { status: EditStatus }) => {
   const config = {
-    idle: { icon: null, text: '', color: '', spin: false },
-    saving: { icon: Loader, text: 'Saving changes...', color: 'text-blue-400', spin: true },
-    success: { icon: CheckCircle, text: 'Changes saved!', color: 'text-green-400', spin: false },
-    error: { icon: AlertCircle, text: 'Failed to save', color: 'text-red-400', spin: false }
-  };
-  
+    idle: { icon: null, text: "", color: "", spin: false },
+    saving: {
+      icon: Loader,
+      text: "Saving changes...",
+      color: "text-blue-400",
+      spin: true,
+    },
+    success: {
+      icon: CheckCircle,
+      text: "Changes saved!",
+      color: "text-green-400",
+      spin: false,
+    },
+    error: {
+      icon: AlertCircle,
+      text: "Failed to save",
+      color: "text-red-400",
+      spin: false,
+    },
+  } as const;
+
   const { icon: Icon, text, color, spin } = config[status];
   if (!Icon) return null;
-  
+
   return (
     <div className={`flex items-center gap-2 ${color}`}>
-      <Icon className={spin ? 'animate-spin' : ''} size={18} />
+      <Icon className={spin ? "animate-spin" : ""} size={18} />
       <span className="text-sm font-semibold">{text}</span>
     </div>
   );
 };
 
-const Section = ({ 
-  icon: Icon, 
-  title, 
+const Section = ({
+  icon: Icon,
+  title,
   children,
-  description
-}: { 
-  icon: any; 
-  title: string; 
+  description,
+}: {
+  icon: any;
+  title: string;
   children: React.ReactNode;
   description?: string;
 }) => (
@@ -208,18 +305,22 @@ const Section = ({
   </section>
 );
 
-const FormField = ({ 
-  label, 
-  children, 
+const FormField = ({
+  label,
+  children,
   fullWidth = false,
-  required = false
-}: { 
-  label: string; 
+  required = false,
+}: {
+  label: string;
   children: React.ReactNode;
   fullWidth?: boolean;
   required?: boolean;
 }) => (
-  <label className={`flex flex-col gap-2 ${fullWidth ? 'col-span-full' : ''}`}>
+  <label
+    className={`flex flex-col gap-2 ${
+      fullWidth ? "col-span-full" : ""
+    }`}
+  >
     <span className="text-sm font-semibold text-gray-200">
       {label}
       {required && <span className="text-red-400 ml-1">*</span>}
@@ -228,13 +329,13 @@ const FormField = ({
   </label>
 );
 
-const Input = ({ 
-  value, 
-  onChange, 
+const Input = ({
+  value,
+  onChange,
   placeholder = "",
   type = "text",
   name = "",
-  disabled = false
+  disabled = false,
 }: any) => (
   <input
     type={type}
@@ -247,12 +348,12 @@ const Input = ({
   />
 );
 
-const Textarea = ({ 
-  value, 
-  onChange, 
+const Textarea = ({
+  value,
+  onChange,
   placeholder = "",
   rows = 3,
-  name = ""
+  name = "",
 }: any) => (
   <textarea
     name={name}
@@ -264,13 +365,13 @@ const Textarea = ({
   />
 );
 
-const ChipGroup = ({ 
-  options, 
-  selected, 
-  onToggle 
-}: { 
-  options: string[]; 
-  selected: string[]; 
+const ChipGroup = ({
+  options,
+  selected,
+  onToggle,
+}: {
+  options: string[];
+  selected: string[];
   onToggle: (option: string) => void;
 }) => (
   <div className="flex flex-wrap gap-2">
@@ -283,8 +384,8 @@ const ChipGroup = ({
           onClick={() => onToggle(option)}
           className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
             isSelected
-              ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/30'
-              : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-gray-700'
+              ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30"
+              : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-gray-700"
           }`}
         >
           {option}
@@ -299,35 +400,35 @@ const ChipGroup = ({
 ============================================ */
 export default function EditProfile() {
   const router = useRouter();
-  const { therapist, loading: profileLoading, refreshProfile } = useProfile();
-  
+  const { therapist, loading: profileLoading } = useProfile();
+
   const [form, setForm] = useState<FormData>({});
-  const [status, setStatus] = useState<EditStatus>('idle');
+  const [status, setStatus] = useState<EditStatus>("idle");
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [pendingEdits, setPendingEdits] = useState<any[]>([]);
   const [uploadingGallery, setUploadingGallery] = useState(false);
-  
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   /* ============================================
      NOTIFICAÇÕES
   ============================================ */
   const addNotification = (
-    type: Notification['type'], 
-    message: string, 
+    type: Notification["type"],
+    message: string,
     autoClose = true
   ) => {
     const notification: Notification = {
       id: generateId(),
       type,
       message,
-      autoClose
+      autoClose,
     };
-    setNotifications(prev => [...prev, notification]);
+    setNotifications((prev) => [...prev, notification]);
   };
 
   const removeNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
 
   /* ============================================
@@ -341,7 +442,7 @@ export default function EditProfile() {
       headline: therapist.headline ?? "",
       about: therapist.about ?? "",
       philosophy: therapist.philosophy ?? "",
-      
+
       city: therapist.city ?? "",
       state: therapist.state ?? "",
       country: therapist.country ?? "",
@@ -349,43 +450,43 @@ export default function EditProfile() {
       address: therapist.address ?? "",
       zip_code: therapist.zip_code ?? "",
       nearest_intersection: therapist.nearest_intersection ?? "",
-      
+
       mobile_service_radius: therapist.mobile_service_radius ?? 0,
       services_headline: therapist.services_headline ?? "",
       specialties_headline: therapist.specialties_headline ?? "",
       promotions_headline: therapist.promotions_headline ?? "",
-      
+
       massage_techniques: ensureArray(therapist.massage_techniques),
       studio_amenities: ensureArray(therapist.studio_amenities),
       mobile_extras: ensureArray(therapist.mobile_extras),
       additional_services: ensureArray(therapist.additional_services),
       products_used: therapist.products_used ?? "",
-      
+
       rate_60: therapist.rate_60 ?? "",
       rate_90: therapist.rate_90 ?? "",
       rate_outcall: therapist.rate_outcall ?? "",
       payment_methods: ensureArray(therapist.payment_methods),
-      
+
       regular_discounts: therapist.regular_discounts ?? "",
       day_of_week_discount: therapist.day_of_week_discount ?? "",
       weekly_specials: therapist.weekly_specials ?? "",
       special_discount_groups: ensureArray(therapist.special_discount_groups),
-      
+
       availability: therapist.availability ?? {},
-      
+
       degrees: therapist.degrees ?? "",
       affiliations: ensureArray(therapist.affiliations),
       massage_start_date: therapist.massage_start_date ?? "",
       languages: ensureArray(therapist.languages),
       business_trips: therapist.business_trips ?? "",
-      
+
       rating: therapist.rating ?? 5,
       override_reviews_count: therapist.override_reviews_count ?? 0,
-      
+
       website: therapist.website ?? "",
       instagram: therapist.instagram ?? "",
       whatsapp: therapist.whatsapp ?? "",
-      
+
       birthdate: therapist.birthdate ?? "",
       years_experience: therapist.years_experience ?? "",
       gallery: Array.isArray(therapist.gallery) ? therapist.gallery : [],
@@ -402,20 +503,20 @@ export default function EditProfile() {
   ============================================ */
   useEffect(() => {
     if (!therapist?.id) return;
-    
+
     const loadPendingEdits = async () => {
       try {
         const { data, error } = await supabase
-          .from('profile_edits')
-          .select('*')
-          .eq('therapist_id', therapist.id)
-          .eq('status', 'pending')
-          .order('submitted_at', { ascending: false });
+          .from("profile_edits")
+          .select("*")
+          .eq("therapist_id", therapist.id)
+          .eq("status", "pending")
+          .order("submitted_at", { ascending: false });
 
         if (error) throw error;
         setPendingEdits(data || []);
       } catch (error) {
-        console.error('Error loading pending edits:', error);
+        console.error("Error loading pending edits:", error);
       }
     };
 
@@ -428,31 +529,80 @@ export default function EditProfile() {
   const hasUnsavedChanges = useMemo(() => {
     if (!therapist) return false;
     try {
-      return JSON.stringify(form) !== JSON.stringify({
-        full_name: therapist.full_name ?? "",
-        headline: therapist.headline ?? "",
-        // ... (resto dos campos)
-      });
+      return (
+        JSON.stringify(form) !==
+        JSON.stringify({
+          full_name: therapist.full_name ?? "",
+          headline: therapist.headline ?? "",
+          about: therapist.about ?? "",
+          philosophy: therapist.philosophy ?? "",
+          city: therapist.city ?? "",
+          state: therapist.state ?? "",
+          country: therapist.country ?? "",
+          neighborhood: therapist.neighborhood ?? "",
+          address: therapist.address ?? "",
+          zip_code: therapist.zip_code ?? "",
+          nearest_intersection: therapist.nearest_intersection ?? "",
+          mobile_service_radius: therapist.mobile_service_radius ?? 0,
+          services_headline: therapist.services_headline ?? "",
+          specialties_headline: therapist.specialties_headline ?? "",
+          promotions_headline: therapist.promotions_headline ?? "",
+          massage_techniques: ensureArray(therapist.massage_techniques),
+          studio_amenities: ensureArray(therapist.studio_amenities),
+          mobile_extras: ensureArray(therapist.mobile_extras),
+          additional_services: ensureArray(therapist.additional_services),
+          products_used: therapist.products_used ?? "",
+          rate_60: therapist.rate_60 ?? "",
+          rate_90: therapist.rate_90 ?? "",
+          rate_outcall: therapist.rate_outcall ?? "",
+          payment_methods: ensureArray(therapist.payment_methods),
+          regular_discounts: therapist.regular_discounts ?? "",
+          day_of_week_discount: therapist.day_of_week_discount ?? "",
+          weekly_specials: therapist.weekly_specials ?? "",
+          special_discount_groups: ensureArray(
+            therapist.special_discount_groups
+          ),
+          availability: therapist.availability ?? {},
+          degrees: therapist.degrees ?? "",
+          affiliations: ensureArray(therapist.affiliations),
+          massage_start_date: therapist.massage_start_date ?? "",
+          languages: ensureArray(therapist.languages),
+          business_trips: therapist.business_trips ?? "",
+          rating: therapist.rating ?? 5,
+          override_reviews_count: therapist.override_reviews_count ?? 0,
+          website: therapist.website ?? "",
+          instagram: therapist.instagram ?? "",
+          whatsapp: therapist.whatsapp ?? "",
+          birthdate: therapist.birthdate ?? "",
+          years_experience: therapist.years_experience ?? "",
+          gallery: Array.isArray(therapist.gallery) ? therapist.gallery : [],
+          travel_radius: therapist.travel_radius ?? "",
+          accepts_first_timers: therapist.accepts_first_timers ?? true,
+          prefers_lgbtq_clients: therapist.prefers_lgbtq_clients ?? true,
+        })
+      );
     } catch {
       return true;
     }
   }, [form, therapist]);
 
   const handleInputChange = (field: string, value: any) => {
-    setForm(prev => ({ ...prev, [field]: value }));
-    if (status === 'error') setStatus('idle');
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (status === "error") setStatus("idle");
   };
 
-  const handleSimpleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleSimpleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     handleInputChange(name, value);
   };
 
   const handleCheckboxGroup = (field: string, option: string) => {
-    setForm(prev => {
+    setForm((prev) => {
       const current = ensureArray(prev[field]);
       if (current.includes(option)) {
-        return { ...prev, [field]: current.filter(o => o !== option) };
+        return { ...prev, [field]: current.filter((o) => o !== option) };
       }
       return { ...prev, [field]: [...current, option] };
     });
@@ -464,13 +614,13 @@ export default function EditProfile() {
     field: "start" | "end",
     value: string
   ) => {
-    setForm(prev => {
+    setForm((prev) => {
       const availability = prev.availability || {};
       const daySchedule = availability[day] || {
         incall: { start: "", end: "" },
-        outcall: { start: "", end: "" }
+        outcall: { start: "", end: "" },
       };
-      
+
       return {
         ...prev,
         availability: {
@@ -494,7 +644,9 @@ export default function EditProfile() {
     fileInputRef.current?.click();
   };
 
-  const handleGalleryFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     if (!therapist) return;
@@ -508,7 +660,9 @@ export default function EditProfile() {
 
       for (const file of filesArray) {
         const ext = file.name.split(".").pop() || "jpg";
-        const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        const uniqueSuffix = `${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2)}`;
         const filePath = `pending/${therapist.id}/${uniqueSuffix}.${ext}`;
 
         const { error: uploadError } = await supabase.storage
@@ -520,7 +674,7 @@ export default function EditProfile() {
 
         if (uploadError) {
           console.error("Upload error:", uploadError);
-          addNotification('error', `Failed to upload ${file.name}`);
+          addNotification("error", `Failed to upload ${file.name}`);
           continue;
         }
 
@@ -534,29 +688,29 @@ export default function EditProfile() {
       }
 
       if (newUrls.length > 0) {
-        setForm(prev => {
+        setForm((prev) => {
           const gallery = Array.isArray(prev.gallery) ? prev.gallery : [];
           return { ...prev, gallery: [...gallery, ...newUrls] };
         });
-        addNotification('success', `${newUrls.length} photo(s) added successfully`);
+        addNotification("success", `${newUrls.length} photo(s) added successfully`);
       }
 
       e.target.value = "";
     } catch (err) {
       console.error("Gallery upload error:", err);
-      addNotification('error', 'Failed to upload photos. Please try again.');
+      addNotification("error", "Failed to upload photos. Please try again.");
     } finally {
       setUploadingGallery(false);
     }
   };
 
   const handleGalleryRemove = (index: number) => {
-    setForm(prev => {
+    setForm((prev) => {
       const gallery = Array.isArray(prev.gallery) ? [...prev.gallery] : [];
       gallery.splice(index, 1);
       return { ...prev, gallery };
     });
-    addNotification('info', 'Photo removed');
+    addNotification("info", "Photo removed");
   };
 
   /* ============================================
@@ -564,11 +718,10 @@ export default function EditProfile() {
   ============================================ */
   const handleSave = async () => {
     if (!therapist) return;
-    
-    setStatus('saving');
+
+    setStatus("saving");
 
     try {
-      // Preparar dados
       const editedData = {
         full_name: form.full_name,
         headline: form.headline,
@@ -623,7 +776,46 @@ export default function EditProfile() {
         philosophy: therapist.philosophy,
         city: therapist.city,
         state: therapist.state,
-        // ... resto dos campos originais
+        country: therapist.country,
+        neighborhood: therapist.neighborhood,
+        address: therapist.address,
+        zip_code: therapist.zip_code,
+        nearest_intersection: therapist.nearest_intersection,
+        mobile_service_radius: therapist.mobile_service_radius,
+        services_headline: therapist.services_headline,
+        specialties_headline: therapist.specialties_headline,
+        promotions_headline: therapist.promotions_headline,
+        massage_techniques: ensureArray(therapist.massage_techniques),
+        studio_amenities: ensureArray(therapist.studio_amenities),
+        mobile_extras: ensureArray(therapist.mobile_extras),
+        additional_services: ensureArray(therapist.additional_services),
+        products_used: therapist.products_used,
+        rate_60: therapist.rate_60,
+        rate_90: therapist.rate_90,
+        rate_outcall: therapist.rate_outcall,
+        payment_methods: ensureArray(therapist.payment_methods),
+        regular_discounts: therapist.regular_discounts,
+        day_of_week_discount: therapist.day_of_week_discount,
+        weekly_specials: therapist.weekly_specials,
+        special_discount_groups: ensureArray(
+          therapist.special_discount_groups
+        ),
+        availability: therapist.availability,
+        degrees: therapist.degrees,
+        affiliations: ensureArray(therapist.affiliations),
+        massage_start_date: therapist.massage_start_date,
+        languages: ensureArray(therapist.languages),
+        business_trips: therapist.business_trips,
+        rating: therapist.rating,
+        override_reviews_count: therapist.override_reviews_count,
+        website: therapist.website,
+        instagram: therapist.instagram,
+        whatsapp: therapist.whatsapp,
+        birthdate: therapist.birthdate,
+        years_experience: therapist.years_experience,
+        travel_radius: therapist.travel_radius,
+        accepts_first_timers: therapist.accepts_first_timers,
+        prefers_lgbtq_clients: therapist.prefers_lgbtq_clients,
       };
 
       const pendingPhotos: { gallery?: string[] } = {};
@@ -631,47 +823,49 @@ export default function EditProfile() {
         pendingPhotos.gallery = form.gallery.filter(Boolean);
       }
 
-      // Enviar para profile_edits
       const payload = {
         therapist_id: therapist.id,
         edited_data: editedData,
         original_data: originalData,
         pending_gallery: pendingPhotos.gallery || null,
         original_gallery: therapist.gallery || null,
-        status: 'pending',
-        submitted_at: new Date().toISOString()
+        status: "pending",
+        submitted_at: new Date().toISOString(),
       };
 
       const { data, error } = await supabase
-        .from('profile_edits')
+        .from("profile_edits")
         .insert(payload)
         .select()
         .single();
 
       if (error) throw error;
 
-      // Criar notificação
-      await supabase.from('edit_notifications').insert({
+      await supabase.from("edit_notifications").insert({
         therapist_id: therapist.id,
         edit_id: data.id,
-        type: 'pending',
-        message: 'Your profile changes have been submitted for review.'
+        type: "pending",
+        message: "Your profile changes have been submitted for review.",
       });
 
-      setStatus('success');
-      addNotification('success', '✓ Changes submitted successfully! You will be notified when reviewed.', false);
-      
-      // Atualizar lista de pendentes
-      setPendingEdits(prev => [data, ...prev]);
-      
-      setTimeout(() => setStatus('idle'), 3000);
-      
+      setStatus("success");
+      addNotification(
+        "success",
+        "✓ Changes submitted successfully! You will be notified when reviewed.",
+        false
+      );
+
+      setPendingEdits((prev) => [data, ...prev]);
+
+      setTimeout(() => setStatus("idle"), 3000);
     } catch (err: any) {
       console.error("Save error:", err);
-      setStatus('error');
-      addNotification('error', err.message || 'Failed to save changes. Please try again.');
-      
-      setTimeout(() => setStatus('idle'), 3000);
+      setStatus("error");
+      addNotification(
+        "error",
+        err?.message || "Failed to save changes. Please try again."
+      );
+      setTimeout(() => setStatus("idle"), 3000);
     }
   };
 
@@ -707,9 +901,11 @@ export default function EditProfile() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="mx-auto mb-4 text-red-400" size={48} />
-          <p className="text-white text-lg mb-4">No therapist profile found</p>
+          <p className="text-white text-lg mb-4">
+            No therapist profile found
+          </p>
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push("/")}
             className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors"
           >
             Go to Home
@@ -726,7 +922,7 @@ export default function EditProfile() {
     <main className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
       {/* Notificações */}
       <div className="fixed top-0 right-0 z-50 p-4 space-y-2">
-        {notifications.map(notification => (
+        {notifications.map((notification) => (
           <NotificationToast
             key={notification.id}
             notification={notification}
@@ -738,32 +934,37 @@ export default function EditProfile() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <header className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
             <button
               onClick={handleBack}
-              className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-white transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-white transition-colors w-fit"
             >
               <ArrowLeft size={20} />
               <span>Back</span>
             </button>
-            
-            <StatusBadge status={status} />
-            
-            <button
-              onClick={handleSave}
-              disabled={status === 'saving' || uploadingGallery || !hasUnsavedChanges}
-              className="flex items-center gap-2 px-6 py-3 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-all shadow-lg shadow-purple-500/30 disabled:shadow-none"
-            >
-              <Save size={20} />
-              {status === 'saving' ? 'Submitting...' : 'Submit for Approval'}
-            </button>
+
+            <div className="flex items-center justify-between gap-4">
+              <StatusBadge status={status} />
+
+              <button
+                onClick={handleSave}
+                disabled={
+                  status === "saving" || uploadingGallery || !hasUnsavedChanges
+                }
+                className="flex items-center gap-2 px-6 py-3 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-all shadow-lg shadow-purple-500/30 disabled:shadow-none"
+              >
+                <Save size={20} />
+                {status === "saving" ? "Submitting..." : "Submit for Approval"}
+              </button>
+            </div>
           </div>
-          
-          <h1 className="text-4xl font-bold text-white mb-2">
+
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
             Edit Your Profile
           </h1>
           <p className="text-gray-400">
-            Make changes to your therapist profile. All changes will be reviewed before going live.
+            Make changes to your therapist profile. All changes will be
+            reviewed before going live.
           </p>
         </header>
 
@@ -773,7 +974,8 @@ export default function EditProfile() {
             <Clock size={20} className="text-blue-400 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-blue-300 font-semibold">
-                You have {pendingEdits.length} pending edit{pendingEdits.length > 1 ? 's' : ''} awaiting approval
+                You have {pendingEdits.length} pending edit
+                {pendingEdits.length > 1 ? "s" : ""} awaiting approval
               </p>
               <p className="text-blue-400/70 text-sm mt-1">
                 New changes will be added to the review queue
@@ -784,8 +986,8 @@ export default function EditProfile() {
 
         <div className="space-y-6">
           {/* BASIC INFO */}
-          <Section 
-            icon={User} 
+          <Section
+            icon={User}
             title="Basic Information"
             description="Your professional identity and main profile details"
           >
@@ -831,8 +1033,8 @@ export default function EditProfile() {
           </Section>
 
           {/* LOCATION */}
-          <Section 
-            icon={MapPin} 
+          <Section
+            icon={MapPin}
             title="Location & Service Area"
             description="Where you practice and your service coverage"
           >
@@ -913,8 +1115,8 @@ export default function EditProfile() {
           </Section>
 
           {/* SERVICE OFFERINGS */}
-          <Section 
-            icon={Wrench} 
+          <Section
+            icon={Wrench}
             title="Service Offerings"
             description="Describe your services and specialties"
           >
@@ -949,60 +1151,68 @@ export default function EditProfile() {
           </Section>
 
           {/* MASSAGE TECHNIQUES */}
-          <Section 
-            icon={Award} 
+          <Section
+            icon={Award}
             title="Massage Techniques"
             description="Select the massage modalities you offer"
           >
             <ChipGroup
               options={MASSAGE_TECHNIQUES}
               selected={ensureArray(form.massage_techniques)}
-              onToggle={(option) => handleCheckboxGroup("massage_techniques", option)}
+              onToggle={(option) =>
+                handleCheckboxGroup("massage_techniques", option)
+              }
             />
           </Section>
 
           {/* STUDIO AMENITIES */}
-          <Section 
-            icon={Building2} 
+          <Section
+            icon={Building2}
             title="Studio Amenities"
             description="What amenities do you provide at your studio/incall location?"
           >
             <ChipGroup
               options={STUDIO_AMENITIES}
               selected={ensureArray(form.studio_amenities)}
-              onToggle={(option) => handleCheckboxGroup("studio_amenities", option)}
+              onToggle={(option) =>
+                handleCheckboxGroup("studio_amenities", option)
+              }
             />
           </Section>
 
           {/* MOBILE EXTRAS */}
-          <Section 
-            icon={Umbrella} 
+          <Section
+            icon={Umbrella}
             title="Mobile Service Extras"
             description="What do you bring for mobile/outcall sessions?"
           >
             <ChipGroup
               options={MOBILE_EXTRAS}
               selected={ensureArray(form.mobile_extras)}
-              onToggle={(option) => handleCheckboxGroup("mobile_extras", option)}
+              onToggle={(option) =>
+                handleCheckboxGroup("mobile_extras", option)
+              }
             />
           </Section>
 
           {/* ADDITIONAL SERVICES */}
-          <Section 
-            icon={PackageOpen} 
+          <Section
+            icon={PackageOpen}
             title="Additional Services"
             description="Other wellness services you provide"
           >
             <ChipGroup
               options={ADDITIONAL_SERVICES}
               selected={ensureArray(form.additional_services)}
-              onToggle={(option) => handleCheckboxGroup("additional_services", option)}
+              onToggle={(option) =>
+                handleCheckboxGroup("additional_services", option)
+              }
             />
           </Section>
 
           {/* PRODUCTS */}
-          <Section 
-            icon={Info} 
+          <Section
+            icon={Info}
             title="Products Used"
             description="Oils, lotions, and products you use in your sessions"
           >
@@ -1018,8 +1228,8 @@ export default function EditProfile() {
           </Section>
 
           {/* PRICING */}
-          <Section 
-            icon={BadgeDollarSign} 
+          <Section
+            icon={BadgeDollarSign}
             title="Rates & Pricing"
             description="Your session rates"
           >
@@ -1054,21 +1264,23 @@ export default function EditProfile() {
           </Section>
 
           {/* PAYMENT METHODS */}
-          <Section 
-            icon={CreditCard} 
+          <Section
+            icon={CreditCard}
             title="Payment Methods"
             description="How clients can pay you"
           >
             <ChipGroup
               options={PAYMENT_METHODS}
               selected={ensureArray(form.payment_methods)}
-              onToggle={(option) => handleCheckboxGroup("payment_methods", option)}
+              onToggle={(option) =>
+                handleCheckboxGroup("payment_methods", option)
+              }
             />
           </Section>
 
           {/* DISCOUNTS */}
-          <Section 
-            icon={Percent} 
+          <Section
+            icon={Percent}
             title="Discounts & Specials"
             description="Promotions and special offers"
           >
@@ -1104,19 +1316,23 @@ export default function EditProfile() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">Special Discount Groups</h3>
+                <h3 className="text-lg font-semibold text-white mb-3">
+                  Special Discount Groups
+                </h3>
                 <ChipGroup
                   options={SPECIAL_DISCOUNT_GROUPS}
                   selected={ensureArray(form.special_discount_groups)}
-                  onToggle={(option) => handleCheckboxGroup("special_discount_groups", option)}
+                  onToggle={(option) =>
+                    handleCheckboxGroup("special_discount_groups", option)
+                  }
                 />
               </div>
             </div>
           </Section>
 
           {/* AVAILABILITY */}
-          <Section 
-            icon={Clock} 
+          <Section
+            icon={Clock}
             title="Availability Schedule"
             description="Set your weekly availability for in-studio and mobile services"
           >
@@ -1124,42 +1340,73 @@ export default function EditProfile() {
               {DAYS_OF_WEEK.map((day) => {
                 const dayData = form.availability?.[day] || {
                   incall: { start: "", end: "" },
-                  outcall: { start: "", end: "" }
+                  outcall: { start: "", end: "" },
                 };
-                
+
                 return (
-                  <div key={day} className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                  <div
+                    key={day}
+                    className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50"
+                  >
                     <h4 className="text-white font-semibold mb-3">{day}</h4>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                       <FormField label="In-Studio Start">
                         <Input
                           type="time"
                           value={dayData.incall?.start || ""}
-                          onChange={(e: any) => handleAvailabilityChange(day, "incall", "start", e.target.value)}
+                          onChange={(e: any) =>
+                            handleAvailabilityChange(
+                              day,
+                              "incall",
+                              "start",
+                              e.target.value
+                            )
+                          }
                         />
                       </FormField>
-                      
+
                       <FormField label="In-Studio End">
                         <Input
                           type="time"
                           value={dayData.incall?.end || ""}
-                          onChange={(e: any) => handleAvailabilityChange(day, "incall", "end", e.target.value)}
+                          onChange={(e: any) =>
+                            handleAvailabilityChange(
+                              day,
+                              "incall",
+                              "end",
+                              e.target.value
+                            )
+                          }
                         />
                       </FormField>
-                      
+
                       <FormField label="Mobile Start">
                         <Input
                           type="time"
                           value={dayData.outcall?.start || ""}
-                          onChange={(e: any) => handleAvailabilityChange(day, "outcall", "start", e.target.value)}
+                          onChange={(e: any) =>
+                            handleAvailabilityChange(
+                              day,
+                              "outcall",
+                              "start",
+                              e.target.value
+                            )
+                          }
                         />
                       </FormField>
-                      
+
                       <FormField label="Mobile End">
                         <Input
                           type="time"
                           value={dayData.outcall?.end || ""}
-                          onChange={(e: any) => handleAvailabilityChange(day, "outcall", "end", e.target.value)}
+                          onChange={(e: any) =>
+                            handleAvailabilityChange(
+                              day,
+                              "outcall",
+                              "end",
+                              e.target.value
+                            )
+                          }
                         />
                       </FormField>
                     </div>
@@ -1170,8 +1417,8 @@ export default function EditProfile() {
           </Section>
 
           {/* CREDENTIALS */}
-          <Section 
-            icon={Award} 
+          <Section
+            icon={Award}
             title="Professional Credentials"
             description="Your certifications, education, and experience"
           >
@@ -1208,19 +1455,23 @@ export default function EditProfile() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">Professional Affiliations</h3>
+                <h3 className="text-lg font-semibold text-white mb-3">
+                  Professional Affiliations
+                </h3>
                 <ChipGroup
                   options={AFFILIATIONS}
                   selected={ensureArray(form.affiliations)}
-                  onToggle={(option) => handleCheckboxGroup("affiliations", option)}
+                  onToggle={(option) =>
+                    handleCheckboxGroup("affiliations", option)
+                  }
                 />
               </div>
             </div>
           </Section>
 
           {/* LANGUAGES */}
-          <Section 
-            icon={Languages} 
+          <Section
+            icon={Languages}
             title="Languages Spoken"
             description="Languages you can communicate with clients in"
           >
@@ -1232,8 +1483,8 @@ export default function EditProfile() {
           </Section>
 
           {/* BUSINESS TRIPS */}
-          <Section 
-            icon={Plane} 
+          <Section
+            icon={Plane}
             title="Business Travel"
             description="Locations and dates when you're traveling for work"
           >
@@ -1249,16 +1500,20 @@ export default function EditProfile() {
           </Section>
 
           {/* GALLERY */}
-          <Section 
-            icon={Images} 
+          <Section
+            icon={Images}
             title="Photo Gallery"
             description="Add photos of your studio, setup, or professional work environment"
           >
             <div className="mb-4 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
               <div className="flex items-start gap-3">
-                <Info size={20} className="text-yellow-400 flex-shrink-0 mt-0.5" />
+                <Info
+                  size={20}
+                  className="text-yellow-400 flex-shrink-0 mt-0.5"
+                />
                 <p className="text-yellow-300 text-sm">
-                  <strong>Note:</strong> New photos will be reviewed by our admin team before appearing on your public profile.
+                  <strong>Note:</strong> New photos will be reviewed by our
+                  admin team before appearing on your public profile.
                 </p>
               </div>
             </div>
@@ -1275,9 +1530,12 @@ export default function EditProfile() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {Array.isArray(form.gallery) &&
                 form.gallery.map((url: string, idx: number) => (
-                  <div key={`${url}-${idx}`} className="relative aspect-square rounded-lg overflow-hidden group">
-                    <img 
-                      src={url} 
+                  <div
+                    key={`${url}-${idx}`}
+                    className="relative aspect-square rounded-lg overflow-hidden group"
+                  >
+                    <img
+                      src={url}
                       alt={`Gallery ${idx + 1}`}
                       className="w-full h-full object-cover"
                     />
@@ -1299,7 +1557,10 @@ export default function EditProfile() {
               >
                 {uploadingGallery ? (
                   <>
-                    <Loader className="animate-spin text-purple-400" size={32} />
+                    <Loader
+                      className="animate-spin text-purple-400"
+                      size={32}
+                    />
                     <span className="text-sm text-gray-400">Uploading...</span>
                   </>
                 ) : (
@@ -1316,8 +1577,8 @@ export default function EditProfile() {
           </Section>
 
           {/* SOCIAL & CONTACT */}
-          <Section 
-            icon={LinkIcon} 
+          <Section
+            icon={LinkIcon}
             title="Social Media & Contact"
             description="Your online presence and contact information"
           >
@@ -1352,8 +1613,8 @@ export default function EditProfile() {
           </Section>
 
           {/* REVIEWS SETTINGS */}
-          <Section 
-            icon={Star} 
+          <Section
+            icon={Star}
             title="Client Reviews Settings"
             description="Manage your ratings display (admin use)"
           >
@@ -1383,8 +1644,8 @@ export default function EditProfile() {
           </Section>
 
           {/* CLIENT PREFERENCES */}
-          <Section 
-            icon={Info} 
+          <Section
+            icon={Info}
             title="Client Preferences"
             description="Your client acceptance policies"
           >
@@ -1393,12 +1654,21 @@ export default function EditProfile() {
                 <input
                   type="checkbox"
                   checked={form.accepts_first_timers ?? true}
-                  onChange={(e) => handleInputChange("accepts_first_timers", e.target.checked)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      "accepts_first_timers",
+                      e.target.checked
+                    )
+                  }
                   className="w-5 h-5 rounded border-gray-600 bg-gray-700 text-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-offset-0"
                 />
                 <div>
-                  <span className="text-white font-medium">Accept First-Time Clients</span>
-                  <p className="text-sm text-gray-400">Welcome new clients who haven't had a massage before</p>
+                  <span className="text-white font-medium">
+                    Accept First-Time Clients
+                  </span>
+                  <p className="text-sm text-gray-400">
+                    Welcome new clients who haven&apos;t had a massage before
+                  </p>
                 </div>
               </label>
 
@@ -1406,12 +1676,21 @@ export default function EditProfile() {
                 <input
                   type="checkbox"
                   checked={form.prefers_lgbtq_clients ?? true}
-                  onChange={(e) => handleInputChange("prefers_lgbtq_clients", e.target.checked)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      "prefers_lgbtq_clients",
+                      e.target.checked
+                    )
+                  }
                   className="w-5 h-5 rounded border-gray-600 bg-gray-700 text-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-offset-0"
                 />
                 <div>
-                  <span className="text-white font-medium">LGBTQ+ Friendly</span>
-                  <p className="text-sm text-gray-400">Welcoming and inclusive space for all clients</p>
+                  <span className="text-white font-medium">
+                    LGBTQ+ Friendly
+                  </span>
+                  <p className="text-sm text-gray-400">
+                    Welcoming and inclusive space for all clients
+                  </p>
                 </div>
               </label>
             </div>
@@ -1423,15 +1702,17 @@ export default function EditProfile() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 bg-gray-900/80 rounded-xl border border-gray-800">
             <div className="text-center sm:text-left">
               <p className="text-white font-semibold">
-                {hasUnsavedChanges ? 'You have unsaved changes' : 'No changes to save'}
+                {hasUnsavedChanges
+                  ? "You have unsaved changes"
+                  : "No changes to save"}
               </p>
               <p className="text-sm text-gray-400 mt-1">
-                {pendingEdits.length > 0 
-                  ? `${pendingEdits.length} edit(s) pending approval` 
-                  : 'All changes are reviewed before going live'}
+                {pendingEdits.length > 0
+                  ? `${pendingEdits.length} edit(s) pending approval`
+                  : "All changes are reviewed before going live"}
               </p>
             </div>
-            
+
             <div className="flex gap-3">
               <button
                 onClick={handleBack}
@@ -1439,30 +1720,34 @@ export default function EditProfile() {
               >
                 Cancel
               </button>
-              
-              <button
-                onClick={handleSave}
-                disabled={status === 'saving' || uploadingGallery || !hasUnsavedChanges}
-                className="flex items-center gap-2 px-8 py-3 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-all shadow-lg shadow-purple-500/30 disabled:shadow-none"
-              >
-                {status === 'saving' ? (
-                  <>
-                    <Loader className="animate-spin" size={20} />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    <Save size={20} />
-                    Submit for Approval
-                  </>
-                )}
-              </button>
+
+                <button
+                  onClick={handleSave}
+                  disabled={
+                    status === "saving" ||
+                    uploadingGallery ||
+                    !hasUnsavedChanges
+                  }
+                  className="flex items-center gap-2 px-8 py-3 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-all shadow-lg shadow-purple-500/30 disabled:shadow-none"
+                >
+                  {status === "saving" ? (
+                    <>
+                      <Loader className="animate-spin" size={20} />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Save size={20} />
+                      Submit for Approval
+                    </>
+                  )}
+                </button>
             </div>
           </div>
         </footer>
       </div>
 
-      {/* CSS personalizado */}
+      {/* CSS personalizado para animação do toast */}
       <style jsx global>{`
         @keyframes slide-in {
           from {
@@ -1474,7 +1759,7 @@ export default function EditProfile() {
             opacity: 1;
           }
         }
-        
+
         .animate-slide-in {
           animation: slide-in 0.3s ease-out;
         }
