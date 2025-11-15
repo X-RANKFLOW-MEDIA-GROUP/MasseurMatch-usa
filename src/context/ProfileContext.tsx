@@ -12,34 +12,80 @@ import { supabase } from "@/src/lib/supabase";
 /** Ajusta esse tipo conforme as colunas reais da tabela therapists */
 export type Therapist = {
   id: string;
-  auth_user_id: string;
+
+  // Basic Info
   full_name: string | null;
   headline: string | null;
   about: string | null;
+  philosophy: string | null;
+
+  // Location
   city: string | null;
   state: string | null;
   country: string | null;
   neighborhood: string | null;
   address: string | null;
-  latitude: string | null;
+  zip_code: string | null;
+  nearest_intersection: string | null;
+  latitude: string | null;   // pode ser string se você estiver salvando assim
   longitude: string | null;
+
+  // Service Info
+  mobile_service_radius: number | null;
+  services_headline: string | null;
+  specialties_headline: string | null;
+  promotions_headline: string | null;
+
+  // Massage Setup
+  massage_techniques: string[] | null;
+  studio_amenities: string[] | null;
+  mobile_extras: string[] | null;
+  additional_services: string[] | null;
+  products_used: string | null;
+
+  // Pricing
   rate_60: string | null;
   rate_90: string | null;
   rate_outcall: string | null;
-  studio_amenities: string[] | null;
   payment_methods: string[] | null;
+
+  // Discounts
+  regular_discounts: string | null;
+  day_of_week_discount: string | null;
+  weekly_specials: string | null;
+  special_discount_groups: string[] | null;
+
+  // Availability (pode refinar depois se quiser)
+  availability: any | null;
+
+  // Professional Credentials
+  degrees: string | null;
+  affiliations: string[] | null;
+  massage_start_date: string | null;
   languages: string[] | null;
+  business_trips: string | null;
+
+  // Reviews
+  rating: number | null;
+  override_reviews_count: number | null;
+
+  // Social & Contact
   website: string | null;
   instagram: string | null;
   whatsapp: string | null;
+
+  // Personal / Meta
   birthdate: string | null;
   years_experience: number | null;
-  rating: number | null;
+
+  // Media
+  profile_photo: string | null;
   gallery: string[] | null;
+
+  // Other
   travel_radius: string | null;
   accepts_first_timers: boolean | null;
   prefers_lgbtq_clients: boolean | null;
-  // ... se tiver mais campos, adiciona aqui
 };
 
 type ProfileContextType = {

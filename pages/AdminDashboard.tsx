@@ -1,3 +1,5 @@
+"use client";
+
 // src/pages/AdminDashboard.tsx
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../src/lib/supabase";
