@@ -15,7 +15,7 @@ type Payments = {
   mastercard: boolean;
   amex: boolean;
   discover: boolean;
-  cash: boolean;  
+  cash: boolean;
   venmo: boolean;
   zelle: boolean;
 };
@@ -87,6 +87,10 @@ export type Therapist = {
   planRaw?: string | null;
   paidUntilRaw?: string | null;
   subStatusRaw?: string | null;
+
+  // indicadores de edições
+  hasPendingEdits?: boolean;
+  pendingEditsCount?: number;
 };
 
 /** ===== Fallback visual ===== */
@@ -212,7 +216,7 @@ function asArray(val: unknown): string[] {
     try {
       const parsed = JSON.parse(val);
       if (Array.isArray(parsed)) return parsed.filter((v) => typeof v === "string");
-    } catch { }
+    } catch {}
     return val
       .split(",")
       .map((s) => s.trim())
@@ -232,75 +236,176 @@ function coerceGallery(g: unknown): GalleryItem[] {
   return SAMPLE.gallery;
 }
 
-/** ===== Tipo cru do DB ===== */
+/** ===== Tipo cru do DB (tabela therapists) ===== */
 type DbTherapist = {
   user_id: string;
-  full_name: string | null;
-  display_name: string | null;
-  email: string | null;
-  phone: string | null;
 
-  // localização antiga + nova
-  location: string | null;
+  // Básico
+  full_name: string | null;
+  display_name?: string | null;
+  headline: string | null;
+  about: string | null;
+  philosophy: string | null;
+
+  email?: string | null;
+  phone?: string | null;
+
+  // Localização nova
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  neighborhood: string | null;
+  address: string | null;
+  zip_code: string | null;
+  nearest_intersection: string | null;
+  latitude?: string | null;
+  longitude?: string | null;
+  mobile_service_radius: number | null;
+
+  // Localização antiga (fallback)
+  location?: string | null;
   locationCityState?: string | null;
 
-  // línguas
+  // Services / cabeçalhos
+  services_headline: string | null;
+  specialties_headline: string | null;
+  promotions_headline: string | null;
+
+  // Serviços detalhados (arrays)
+  services?: string[] | string | null;
+  massage_techniques: string[] | string | null;
+  studio_amenities: string[] | string | null;
+  mobile_extras: string[] | string | null;
+  additional_services: string[] | string | null;
+  products_used: string | null;
+
+  // Preços
+  rate_60: string | null;
+  rate_90: string | null;
+  rate_outcall: string | null;
+  payment_methods: string[] | string | null;
+
+  // Descontos
+  regular_discounts: string | null;
+  day_of_week_discount: string | null;
+  weekly_specials: string | null;
+  special_discount_groups: string[] | string | null;
+
+  // Disponibilidade (JSON vindo do Edit-Profile)
+  availability: any | null;
+
+  // Credenciais
+  degrees: string | null;
+  affiliations: string[] | string | null;
+  massage_start_date: string | null;
   languages: string[] | string | null;
-  languagesSpoken?: string[] | null;
+  business_trips: string | string[] | null;
 
-  // serviços
-  services: string[] | string | null;
-  services_headline?: string | null;
-  specialties?: string | null;
-  promocoes?: string | null;
-
-  // cabeçalho extra
-  zip_code?: string | null;
-  address?: string | null;
-
-  // título / bio / mídia
-  title?: string | null;
-  bio?: string | null;
-  profile_photo?: string | null;
-  gallery?: string[] | { id: string; url: string }[] | null;
-
-  // campos de perfil avançado (jsonb/text)
-  philosophy?: string[] | null;
-  techniques?: string[] | null;
-  massageSetup?: string | null;
-  studioAmenities?: string[] | null;
-  mobileExtras?: string[] | null;
-  additionalServices?: string[] | null;
-  productsUsed?: string[] | null;
-  policies?: string | null;
-  payments?: Payments | null;
-  discounts?: Discounts | null;
-  discountGroups?: string[] | null;
-  rateDisclaimers?: string[] | null;
-  availability?: AvailabilityExtended[] | AvailabilitySimple[] | null;
-  rates?: { name: string; duration: string; price: string; notes?: string }[] | null;
-  degrees?: string[] | null;
-  affiliations?: string[] | null;
-  startDate?: string | null;
-  businessTrips?: string[] | null;
+  // Reviews / rating
+  rating: number | null;
+  override_reviews_count: number | null;
   reviews?: Review[] | null;
-  ratingCount?: number | null;
+
+  // Social
+  website: string | null;
+  instagram: string | null;
+  whatsapp: string | null;
+
+  // Meta
+  birthdate: string | null;
+  years_experience: number | null;
+
+  // Mídia
+  profile_photo: string | null;
+  gallery: string[] | { id: string; url: string }[] | null;
+
+  // Outros
+  travel_radius: string | null;
+  accepts_first_timers: boolean | null;
+  prefers_lgbtq_clients: boolean | null;
   accessNotes?: string | null;
   mobileMiles?: number | null;
 
-  // termos / planos
+  // Plano / billing / gate
   agree_terms?: boolean | null;
   plan?: string | null;
   plan_name?: string | null;
   price_monthly?: number | null;
   updated_at?: string | null;
 
-  // gate / billing
-  status?: "pending" | "active" | "rejected" | string | null;
+  status?: string | null;
   paid_until?: string | null;
   subscription_status?: string | null;
   stripe_current_period_end?: string | null;
+
+  // Fallbacks antigos pra manter compatibilidade
+  promocoes?: string | null;
+  title?: string | null;
+  bio?: string | null;
+  languagesSpoken?: string[] | null;
+  studioAmenities?: string[] | null;
+  mobileExtras?: string[] | null;
+  additionalServices?: string[] | null;
+  productsUsedArr?: string[] | null;
+  policies?: string | null;
+  payments?: Payments | null;
+  discounts?: Discounts | null;
+  discountGroups?: string[] | null;
+  rateDisclaimers?: string[] | null;
+  rates?: Therapist["rates"] | null;
+  degreesArr?: string[] | null;
+  affiliationsArr?: string[] | null;
+  startDate?: string | null;
+  businessTripsArr?: string[] | null;
+  ratingCount?: number | null;
 };
+
+/** ===== NOVO: contador de edições pendentes ===== */
+async function loadPendingEditsCount(therapistId: string) {
+  try {
+    const { count, error } = await supabase
+      .from("profile_edits")
+      .select("*", { count: "exact", head: true })
+      .eq("therapist_id", therapistId)
+      .eq("status", "pending");
+
+    if (error) {
+      return 0;
+    }
+
+    return count || 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** ===== Helpers de disponibilidade (JSON -> UI) ===== */
+function mapAvailabilityFromJson(av: any): Therapist["availability"] {
+  if (!av || typeof av !== "object") return SAMPLE.availability;
+
+  const result: AvailabilityExtended[] = [];
+
+  for (const day of Object.keys(av)) {
+    const info = av[day] || {};
+    const incall = info.incall || {};
+    const outcall = info.outcall || {};
+
+    const incallStr =
+      incall.start && incall.end ? `${incall.start} – ${incall.end}` : "";
+    const outcallStr =
+      outcall.start && outcall.end ? `${outcall.start} – ${outcall.end}` : "";
+
+    if (!incallStr && !outcallStr) continue;
+
+    result.push({
+      day,
+      incallHours: incallStr || "—",
+      mobileHours: outcallStr || "—",
+    });
+  }
+
+  return result.length ? result : SAMPLE.availability;
+}
 
 /** ===== Gate helpers (therapists) ===== */
 function isAdminApproved(row?: DbTherapist | null) {
@@ -372,37 +477,129 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
   const base = { ...SAMPLE };
   if (!row) return base;
 
-  // services + specialties
-  const servicesHeadline = row.services_headline?.trim() || null;
-  const servicesArr = asArray(row.services);
-  const servicesText =
-    servicesHeadline ||
-    (servicesArr.length ? servicesArr.join(", ") : base.services);
+  // Nome
+  const name = row.display_name?.trim() || row.full_name?.trim() || base.name;
 
-  const specialtiesText =
-    row.specialties?.trim() ||
-    (servicesArr.length ? servicesArr.join(", ") : base.specialties);
-
-  // línguas – prioriza coluna nova languagesSpoken
-  const languagesFromNew = Array.isArray(row.languagesSpoken)
-    ? row.languagesSpoken.filter(Boolean)
-    : [];
-  const languagesFromOld = asArray(row.languages);
-  const languagesArr = languagesFromNew.length ? languagesFromNew : languagesFromOld;
-
-  const name =
-    row.display_name?.trim() ||
-    row.full_name?.trim() ||
-    base.name;
-
-  const locationCityState =
+  // Localização
+  const locCityState =
+    [row.city, row.state].filter(Boolean).join(", ") ||
     row.locationCityState?.trim() ||
     row.location?.trim() ||
     base.locationCityState;
 
+  // Sobre / bio
+  const bio = row.about?.trim() || row.bio?.trim() || base.bio;
+
+  // Línguas
+  const langsNew = Array.isArray(row.languages)
+    ? row.languages.filter(Boolean).map(String)
+    : asArray(row.languages);
+  const langsArr =
+    (langsNew && langsNew.length ? langsNew : row.languagesSpoken) ||
+    base.languagesSpoken;
+
+  // services + specialties
+  const servicesHeadline = row.services_headline?.trim() || null;
+  const servicesArr = asArray(row.services);
+  const servicesText =
+    servicesHeadline || (servicesArr.length ? servicesArr.join(", ") : base.services);
+
+  const specialtiesText =
+    row.specialties_headline?.trim() ||
+    (servicesArr.length ? servicesArr.join(", ") : base.specialties);
+
+  // Técnicas / setup
+  const techniquesArr = asArray(row.massage_techniques);
+  const studioAmenitiesArr = asArray(row.studio_amenities);
+  const mobileExtrasArr = asArray(row.mobile_extras);
+  const additionalServicesArr = asArray(row.additional_services);
+
+  let productsUsedArr: string[] = [];
+  if (Array.isArray(row.products_used)) {
+    productsUsedArr = (row.products_used as any[]).map(String);
+  } else if (typeof row.products_used === "string") {
+    productsUsedArr = row.products_used
+      .split(/\r?\n/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+
+  // Payment methods (array -> objeto)
+  const pmArray = asArray(row.payment_methods);
+  let payments: Payments;
+  if (pmArray.length) {
+    payments = {
+      visa: pmArray.some((p) => /visa/i.test(p)),
+      mastercard: pmArray.some((p) => /master/i.test(p)),
+      amex: pmArray.some((p) => /(amex|american)/i.test(p)),
+      discover: pmArray.some((p) => /discover/i.test(p)),
+      cash: pmArray.some((p) => /cash/i.test(p)),
+      venmo: pmArray.some((p) => /venmo/i.test(p)),
+      zelle: pmArray.some((p) => /zelle/i.test(p)),
+    };
+  } else {
+    payments = row.payments ?? base.payments!;
+  }
+
+  // Descontos
+  const discounts: Discounts = {
+    regular: row.regular_discounts || row.discounts?.regular || base.discounts?.regular,
+    weekday:
+      row.day_of_week_discount || row.discounts?.weekday || base.discounts?.weekday,
+    weekly: row.weekly_specials || row.discounts?.weekly || base.discounts?.weekly,
+  };
+
+  // Disponibilidade
+  const availability = mapAvailabilityFromJson(row.availability);
+
+  // Trips (textarea => lista)
+  let businessTrips: string[] | undefined;
+  if (Array.isArray(row.business_trips)) {
+    businessTrips = row.business_trips.filter(Boolean).map(String);
+  } else if (typeof row.business_trips === "string") {
+    businessTrips = row.business_trips
+      .split(/\r?\n/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  } else {
+    businessTrips = row.businessTripsArr || base.businessTrips;
+  }
+
+  // Rates simples
+  const rates: Therapist["rates"] = [];
+  if (row.rate_60) {
+    rates.push({
+      name: "Session",
+      duration: "60 min",
+      price: row.rate_60,
+      notes: row.rate_outcall ? `Outcall: ${row.rate_outcall}` : undefined,
+    });
+  }
+  if (row.rate_90) {
+    rates.push({
+      name: "Session",
+      duration: "90 min",
+      price: row.rate_90,
+      notes: row.rate_outcall ? `Outcall: ${row.rate_outcall}` : undefined,
+    });
+  }
+
+  // Filosofia
+  const philosophyArr = row.philosophy ? [row.philosophy] : base.philosophy;
+
+  // Data início
+  const startDate =
+    row.massage_start_date
+      ? `Practicing since: ${new Date(row.massage_start_date).toLocaleDateString()}`
+      : row.startDate ?? base.startDate;
+
+  // Mobile miles
   const mobileMiles =
     typeof row.mobileMiles === "number" && !Number.isNaN(row.mobileMiles)
       ? row.mobileMiles
+      : typeof row.mobile_service_radius === "number" &&
+        !Number.isNaN(row.mobile_service_radius)
+      ? row.mobile_service_radius
       : base.mobileMiles;
 
   const ui: Therapist = {
@@ -410,51 +607,59 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
 
     id: row.user_id || base.id,
     name,
-    title: row.title?.trim() || base.title,
-    bio: row.bio?.trim() || base.bio,
-    locationCityState,
+    title: row.headline?.trim() || row.title?.trim() || base.title,
+    bio,
+    locationCityState: locCityState,
     zipCode: row.zip_code || base.zipCode,
-    address: row.address || base.address,
+    address: row.nearest_intersection || row.address || base.address,
 
     profilePhoto: row.profile_photo || base.profilePhoto,
     gallery: coerceGallery(row.gallery ?? base.gallery),
 
     services: servicesText,
     specialties: specialtiesText,
-    promocoes: row.promocoes ?? base.promocoes,
-    languagesSpoken: languagesArr.length ? languagesArr : base.languagesSpoken,
+    promocoes: row.promotions_headline ?? row.promocoes ?? base.promocoes,
+
+    languagesSpoken: (langsArr && langsArr.length ? langsArr : base.languagesSpoken)!,
 
     mobileMiles,
     mobileRadius:
-      typeof mobileMiles === "number" ? `${mobileMiles} miles` : base.mobileRadius,
+      typeof mobileMiles === "number"
+        ? `${mobileMiles} miles`
+        : row.travel_radius ||
+          (row.mobile_service_radius
+            ? `${row.mobile_service_radius} miles`
+            : base.mobileRadius),
 
-    philosophy: row.philosophy ?? base.philosophy,
-    techniques: row.techniques ?? base.techniques,
+    philosophy: philosophyArr,
+    techniques: techniquesArr.length ? techniquesArr : base.techniques,
     massageSetup: row.massageSetup ?? base.massageSetup,
-    studioAmenities: row.studioAmenities ?? base.studioAmenities,
-    mobileExtras: row.mobileExtras ?? base.mobileExtras,
-    additionalServices: row.additionalServices ?? base.additionalServices,
-    productsUsed: row.productsUsed ?? base.productsUsed,
+    studioAmenities: studioAmenitiesArr.length ? studioAmenitiesArr : base.studioAmenities,
+    mobileExtras: mobileExtrasArr.length ? mobileExtrasArr : base.mobileExtras,
+    additionalServices:
+      additionalServicesArr.length ? additionalServicesArr : base.additionalServices,
+    productsUsed: productsUsedArr.length ? productsUsedArr : base.productsUsed,
 
     policies: row.policies ?? base.policies,
-    payments: row.payments ?? base.payments,
-    discounts: row.discounts ?? base.discounts,
-    availability: row.availability ?? base.availability,
-    rates: row.rates ?? base.rates,
+    payments,
+    discounts,
+    availability,
+    rates: rates && rates.length ? rates : row.rates ?? base.rates,
 
-    degrees: row.degrees ?? base.degrees,
-    affiliations: row.affiliations ?? base.affiliations,
-    startDate: row.startDate ?? base.startDate,
-    businessTrips: row.businessTrips ?? base.businessTrips,
+    degrees: row.degrees ? asArray(row.degrees) : row.degreesArr ?? base.degrees,
+    affiliations: asArray(row.affiliations ?? row.affiliationsArr) || base.affiliations,
+    startDate,
+    businessTrips,
 
     reviews: row.reviews ?? base.reviews,
-    ratingCount: row.ratingCount ?? base.ratingCount,
+    rating: row.rating ?? base.rating,
+    ratingCount: row.override_reviews_count ?? row.ratingCount ?? base.ratingCount,
 
     accessNotes: row.accessNotes ?? base.accessNotes,
 
     statusRaw: row.status ?? null,
     planRaw: row.plan ?? null,
-    paidUntilRaw: row.paid_until ?? (row.stripe_current_period_end ?? null),
+    paidUntilRaw: row.paid_until ?? row.stripe_current_period_end ?? null,
     subStatusRaw: row.subscription_status ?? null,
   };
 
@@ -470,8 +675,8 @@ export default function TherapistProfile() {
     typeof routeIdRaw === "string"
       ? routeIdRaw
       : Array.isArray(routeIdRaw)
-        ? routeIdRaw[0]
-        : undefined;
+      ? routeIdRaw[0]
+      : undefined;
 
   const [data, setData] = useState<Therapist>(SAMPLE);
   const [status] = useState<Status>("online");
@@ -548,16 +753,25 @@ export default function TherapistProfile() {
         const owner = routeId ? uid === routeId : !!uid;
         if (mounted) setIsOwner(owner);
 
+        const therapistId = routeId || uid;
+        if (!therapistId) return;
+
         const q = supabase.from("therapists").select("*").limit(1);
         const { data: rowData, error } = routeId
           ? await q.eq("user_id", routeId)
           : await q.eq("user_id", uid as string);
+
         if (error) throw error;
         const row = (rowData?.[0] as DbTherapist) ?? null;
 
         const ui = dbToUi(row);
-        const approved = isAdminApproved(row);
 
+        // carregar contador de edições pendentes
+        const pendingCount = await loadPendingEditsCount(therapistId);
+        ui.hasPendingEdits = pendingCount > 0;
+        ui.pendingEditsCount = pendingCount;
+
+        const approved = isAdminApproved(row);
         const paidTherapists = isPaymentOkByTherapists(row);
         const paidPayments = await hasPaidOnPayments({ uid, email });
         const paid = paidTherapists || paidPayments;
@@ -583,6 +797,8 @@ export default function TherapistProfile() {
                 additionalServices: parsed.additionalServices ?? ui.additionalServices,
                 productsUsed: parsed.productsUsed ?? ui.productsUsed,
                 languagesSpoken: parsed.languagesSpoken ?? ui.languagesSpoken,
+                hasPendingEdits: ui.hasPendingEdits,
+                pendingEditsCount: ui.pendingEditsCount,
               };
               if (mounted) setData(merged);
             } catch {
@@ -614,7 +830,7 @@ export default function TherapistProfile() {
     };
   }, [routeId, router]);
 
-  // ===== Polling leve para liberar logo após pagamento/webhook
+  // ===== Polling leve para liberar logo após pagamento/webhook =====
   useEffect(() => {
     if (!shouldPoll) return;
     let canceled = false;
@@ -638,8 +854,10 @@ export default function TherapistProfile() {
           .eq("user_id", key)
           .maybeSingle<DbTherapist>();
 
-        const approved = isAdminApproved(rowData || undefined);
-        const paidTherapists = isPaymentOkByTherapists(rowData || undefined);
+        const row = rowData || null;
+
+        const approved = isAdminApproved(row || undefined);
+        const paidTherapists = isPaymentOkByTherapists(row || undefined);
         const paidPayments = await hasPaidOnPayments({ uid, email });
         const paid = paidTherapists || paidPayments;
 
@@ -647,10 +865,16 @@ export default function TherapistProfile() {
         setPaymentOk(paid);
 
         if (approved && paid) {
-          setData(dbToUi(rowData || null));
+          const ui = dbToUi(row || null);
+          const pendingCount = await loadPendingEditsCount(key);
+          ui.hasPendingEdits = pendingCount > 0;
+          ui.pendingEditsCount = pendingCount;
+          setData(ui);
           setShouldPoll(false);
         }
-      } catch { }
+      } catch {
+        // silencioso
+      }
     };
 
     const id = setInterval(tick, 8000);
@@ -698,9 +922,10 @@ export default function TherapistProfile() {
         const cached = {
           ...data,
           profilePhoto: payload.profile_photo || data.profilePhoto,
-          gallery: ((payload.gallery as any[]) || data.gallery).map(
-            (url: string) => ({ id: rid(), url })
-          ),
+          gallery: ((payload.gallery as any[]) || data.gallery).map((url: string) => ({
+            id: rid(),
+            url,
+          })),
         };
         localStorage.setItem("mm_profile", JSON.stringify(cached));
       }
@@ -779,12 +1004,10 @@ export default function TherapistProfile() {
   const overallRating = useMemo(() => {
     if (!data.reviews?.length) return data.rating;
     const avg =
-      data.reviews.reduce((acc, r) => acc + (r.rating || 0), 0) /
-      data.reviews.length;
+      data.reviews.reduce((acc, r) => acc + (r.rating || 0), 0) / data.reviews.length;
     return Math.round(avg * 10) / 10;
   }, [data.reviews, data.rating]);
-  const roundedRating = Math.round(overallRating); // ex.: 4.9 -> 5, 4.3 -> 4
-
+  const roundedRating = Math.round(overallRating);
 
   const textCircleId = useId();
   const textOffsetDeg = 10;
@@ -799,15 +1022,11 @@ export default function TherapistProfile() {
   }, [data.address, data.locationCityState, data.zipCode]);
 
   const mapEmbedSrc = mapQuery
-    ? `https://www.google.com/maps?q=${encodeURIComponent(
-      mapQuery
-    )}&output=embed`
+    ? `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`
     : undefined;
 
   const mapDirectionsHref = mapQuery
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      mapQuery
-    )}`
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`
     : undefined;
 
   const mobileRadiusText = useMemo(() => {
@@ -931,6 +1150,48 @@ export default function TherapistProfile() {
   return (
     <main className={`tp container status-${status}`}>
       <div className="tp-grid" aria-hidden />
+
+      {/* Banner de edições pendentes */}
+      {isOwner && data.hasPendingEdits && (
+        <div
+          style={{
+            background:
+              "radial-gradient(circle at top left, rgba(234, 179, 8, 0.2), rgba(15, 23, 42, 0.95))",
+            border: "1px solid rgba(234, 179, 8, 0.5)",
+            borderRadius: "1.1rem",
+            padding: "1.125rem 1.25rem",
+            marginBottom: "1.5rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "1rem",
+            boxShadow: "0 14px 32px rgba(15, 23, 42, 1)",
+          }}
+        >
+          <span style={{ fontSize: "24px" }}>⏳</span>
+          <div>
+            <p
+              style={{
+                margin: 0,
+                fontWeight: 600,
+                color: "#fde68a",
+                fontSize: "0.95rem",
+              }}
+            >
+              {data.pendingEditsCount}{" "}
+              {data.pendingEditsCount === 1 ? "edição pendente" : "edições pendentes"}
+            </p>
+            <p
+              style={{
+                margin: 0,
+                fontSize: "0.875rem",
+                color: "rgba(253, 230, 138, 0.7)",
+              }}
+            >
+              Suas alterações estão aguardando aprovação do admin
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* HERO */}
       <section className="tp-hero tp-hero--mock">
@@ -1096,8 +1357,9 @@ export default function TherapistProfile() {
           return (
             <div
               key={g.id}
-              className={`tp-thumb tp-thumb--fixed ${isOwner && isActive ? "is-active" : ""
-                }`}
+              className={`tp-thumb tp-thumb--fixed ${
+                isOwner && isActive ? "is-active" : ""
+              }`}
             >
               <img
                 src={g.url}
@@ -1142,9 +1404,7 @@ export default function TherapistProfile() {
                 ))}
               </ul>
             ) : (
-              <p className="tp-muted">
-                Add your approach points in Edit Profile.
-              </p>
+              <p className="tp-muted">Add your approach points in Edit Profile.</p>
             )}
           </article>
 
@@ -1152,8 +1412,7 @@ export default function TherapistProfile() {
             <h4>Languages &amp; Credentials</h4>
             {data.languagesSpoken?.length ? (
               <p>
-                <strong>Languages:</strong>{" "}
-                {data.languagesSpoken.join(", ")}
+                <strong>Languages:</strong> {data.languagesSpoken.join(", ")}
               </p>
             ) : (
               <p className="tp-muted">—</p>
@@ -1204,9 +1463,7 @@ export default function TherapistProfile() {
                 <strong>Mobile Service Radius:</strong> {mobileRadiusText}
               </p>
             )}
-            {data.accessNotes && (
-              <p className="tp-muted">{data.accessNotes}</p>
-            )}
+            {data.accessNotes && <p className="tp-muted">{data.accessNotes}</p>}
             <p>
               <strong>Services:</strong> {data.services}
             </p>
@@ -1214,8 +1471,7 @@ export default function TherapistProfile() {
               <strong>Specialties:</strong> {data.specialties}
             </p>
             <p>
-              <strong>Starting at:</strong> {data.startingAt}
-            </p>
+              <strong>Starting at:</strong> {data.startingAt}</p>
           </article>
 
           <article className="tp-box tp-box--map">
@@ -1231,8 +1487,7 @@ export default function TherapistProfile() {
               </div>
             ) : (
               <p className="tp-muted">
-                Add City/State, ZIP or Nearest Intersection to show the
-                map.
+                Add City/State, ZIP or Nearest Intersection to show the map.
               </p>
             )}
             {mapDirectionsHref && (
@@ -1312,15 +1567,9 @@ export default function TherapistProfile() {
                 <>
                   <h4 style={{ marginTop: 12 }}>Discounts</h4>
                   <ul className="tp-list">
-                    {data.discounts.regular && (
-                      <li>{data.discounts.regular}</li>
-                    )}
-                    {data.discounts.weekday && (
-                      <li>{data.discounts.weekday}</li>
-                    )}
-                    {data.discounts.weekly && (
-                      <li>{data.discounts.weekly}</li>
-                    )}
+                    {data.discounts.regular && <li>{data.discounts.regular}</li>}
+                    {data.discounts.weekday && <li>{data.discounts.weekday}</li>}
+                    {data.discounts.weekly && <li>{data.discounts.weekly}</li>}
                   </ul>
                 </>
               )}
@@ -1342,18 +1591,15 @@ export default function TherapistProfile() {
           <article className="tp-box">
             <h4>Hours</h4>
             {Array.isArray(data.availability) &&
-              (data.availability as any)[0] &&
-              "incallHours" in (data.availability as any)[0] ? (
+            (data.availability as any)[0] &&
+            "incallHours" in (data.availability as any)[0] ? (
               <div className="tp-ptable tp-ptable--avail">
                 <div className="tp-ptable__head">
                   <span>in-studio hours</span>
                   <span>outcall hours</span>
                 </div>
                 {(data.availability as AvailabilityExtended[]).map((a, i) => (
-                  <div
-                    key={i}
-                    className="tp-ptable__row tp-ptable__row--2"
-                  >
+                  <div key={i} className="tp-ptable__row tp-ptable__row--2">
                     <span>
                       <b>{a.day}:</b> {a.incallHours}
                     </span>
@@ -1387,9 +1633,7 @@ export default function TherapistProfile() {
 
           <article className="tp-box">
             <h4>Incall Setup / Mobile</h4>
-            {data.massageSetup && (
-              <p className="tp-p">{data.massageSetup}</p>
-            )}
+            {data.massageSetup && <p className="tp-p">{data.massageSetup}</p>}
             {data.studioAmenities?.length && (
               <>
                 <h5 className="tp-sub">Studio (Incall) Amenities</h5>
@@ -1444,9 +1688,7 @@ export default function TherapistProfile() {
                 <article key={rv.id} className="tp-box">
                   <div className="tp-list__head">
                     <strong>{rv.author}</strong>
-                    <span className="tp-stars">
-                      {"★".repeat(rv.rating)}
-                    </span>
+                    <span className="tp-stars">{"★".repeat(rv.rating)}</span>
                   </div>
                   <p className="tp-p">{rv.text}</p>
                 </article>
@@ -1454,8 +1696,7 @@ export default function TherapistProfile() {
             </div>
             <article className="tp-box tp-box--wide">
               <h4>
-                Overall Rating: {overallRating.toFixed(1)} out of 5
-                stars{" "}
+                Overall Rating: {overallRating.toFixed(1)} out of 5 stars{" "}
                 {data.ratingCount ? (
                   <span className="tp-muted">
                     (Based on {data.ratingCount} reviews)
@@ -1463,9 +1704,7 @@ export default function TherapistProfile() {
                 ) : null}
               </h4>
               <div className="tp-actions-row">
-                <button className="btn btn--ghost btn--pill">
-                  Write a Review
-                </button>
+                <button className="btn btn--ghost btn--pill">Write a Review</button>
               </div>
             </article>
           </>

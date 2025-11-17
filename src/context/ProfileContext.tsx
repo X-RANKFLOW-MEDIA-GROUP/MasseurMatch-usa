@@ -9,9 +9,14 @@ import React, {
 } from "react";
 import { supabase } from "@/src/lib/supabase";
 
-/** Ajusta esse tipo conforme as colunas reais da tabela therapists */
+/**
+ * Ajusta esse tipo conforme as colunas reais da tabela `therapists`.
+ * Coloquei vários campos opcionais para não quebrar caso a tabela ainda
+ * não tenha todas as colunas.
+ */
 export type Therapist = {
   id: string;
+  user_id: string;
 
   // Basic Info
   full_name: string | null;
@@ -27,7 +32,7 @@ export type Therapist = {
   address: string | null;
   zip_code: string | null;
   nearest_intersection: string | null;
-  latitude: string | null;   // pode ser string se você estiver salvando assim
+  latitude: string | null;
   longitude: string | null;
 
   // Service Info
@@ -55,7 +60,7 @@ export type Therapist = {
   weekly_specials: string | null;
   special_discount_groups: string[] | null;
 
-  // Availability (pode refinar depois se quiser)
+  // Availability
   availability: any | null;
 
   // Professional Credentials
@@ -86,6 +91,9 @@ export type Therapist = {
   travel_radius: string | null;
   accepts_first_timers: boolean | null;
   prefers_lgbtq_clients: boolean | null;
+
+  // Qualquer outro campo extra que exista na tabela
+  [key: string]: any;
 };
 
 type ProfileContextType = {
@@ -100,45 +108,71 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   const [therapist, setTherapist] = useState<Therapist | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  /**
+   * Garante que exista um registro na tabela `therapists`
+   * para o usuário logado. Se não existir, cria.
+   */
+  async function ensureTherapistForUser(): Promise<Therapist | null> {
+    // 1. Pega a sessão atual
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError) {
+      console.error("Error getting session:", sessionError);
+      return null;
+    }
+
+    const user = session?.user;
+    if (!user) {
+      // Não logado
+      return null;
+    }
+
+    // 2. Tenta buscar o therapist pelo user_id
+    const { data, error } = await supabase
+      .from("therapists")
+      .select("*")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error loading therapist profile:", error);
+      return null;
+    }
+
+    // 3. Se já existir, retorna
+    if (data) {
+      return data as Therapist;
+    }
+
+    // 4. Se NÃO existir, cria um novo registro básico
+    const { data: inserted, error: insertError } = await supabase
+      .from("therapists")
+      .insert({
+        user_id: user.id,
+        full_name: null,
+        headline: null,
+        about: null,
+        philosophy: null,
+      })
+      .select("*")
+      .single();
+
+    if (insertError) {
+      console.error("Error creating therapist profile:", insertError);
+      return null;
+    }
+
+    return inserted as Therapist;
+  }
+
   async function loadProfile() {
     setLoading(true);
     try {
-      // ✅ Primeiro tenta pegar a sessão de forma segura
-      const {
-        data: { session },
-        error: sessionError,
-      } = await supabase.auth.getSession();
-
-      if (sessionError) {
-        console.error("Error getting session:", sessionError);
-      }
-
-      const user = session?.user;
-
-      // 🔒 Se não tiver usuário logado, não chama getUser/getSession de novo
-      if (!user) {
-        setTherapist(null);
-        return;
-      }
-
-      // Busca o therapist associado ao auth_user_id
-      const { data, error } = await supabase
-        .from("therapists")
-        .select("*")
-        .eq("user_id", user.id)
-
-        .single();
-
-      if (error) {
-        // Se for "no rows" só deixa null, sem explodir
-        if (error.code !== "PGRST116") {
-          console.error("Error loading therapist profile:", error);
-        }
-        setTherapist(null);
-        return;
-      }
-
-      setTherapist(data as Therapist);
+      const therapistData = await ensureTherapistForUser();
+      setTherapist(therapistData);
     } catch (err) {
       console.error("Unexpected error loading profile:", err);
       setTherapist(null);
@@ -148,9 +182,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
+    // Carrega no primeiro render
     loadProfile();
 
-    // opcional: escutar mudanças de auth e recarregar
+    // Escuta mudanças de autenticação
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {

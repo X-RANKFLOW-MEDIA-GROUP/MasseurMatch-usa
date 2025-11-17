@@ -1,9 +1,18 @@
 "use client";
 
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+  ChangeEvent,
+} from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/src/lib/supabase";
 import { useProfile } from "@/src/context/ProfileContext";
+
+// CSS global
+import "@/src/styles/edit-profile.css";
 
 import {
   User,
@@ -177,9 +186,9 @@ function ensureArray(value: any): string[] {
   if (typeof value === "string") {
     try {
       const parsed = JSON.parse(value);
-      if (Array.isArray(parsed)) return parsed;
+      if (Array.isArray(parsed)) return parsed.map(String);
     } catch {
-      /* ignore */
+      // ignore
     }
     return value
       .split(",")
@@ -203,13 +212,6 @@ const NotificationToast = ({
   notification: Notification;
   onClose: () => void;
 }) => {
-  const colors = {
-    info: "bg-blue-500/10 border-blue-500/30 text-blue-300",
-    success: "bg-green-500/10 border-green-500/30 text-green-300",
-    warning: "bg-yellow-500/10 border-yellow-500/30 text-yellow-300",
-    error: "bg-red-500/10 border-red-500/30 text-red-300",
-  };
-
   const icons = {
     info: Info,
     success: CheckCircle,
@@ -227,16 +229,11 @@ const NotificationToast = ({
   }, [notification.autoClose, onClose]);
 
   return (
-    <div
-      className={`fixed top-4 right-4 max-w-md p-4 rounded-lg border backdrop-blur-sm shadow-xl z-50 animate-slide-in ${colors[notification.type]}`}
-    >
-      <div className="flex items-start gap-3">
-        <Icon size={20} className="flex-shrink-0 mt-0.5" />
-        <p className="flex-1 text-sm font-medium">{notification.message}</p>
-        <button
-          onClick={onClose}
-          className="flex-shrink-0 hover:opacity-70 transition-opacity"
-        >
+    <div className={`ep-toast ep-toast-${notification.type}`}>
+      <div className="ep-toast-inner">
+        <Icon size={20} className="ep-toast-icon" />
+        <p className="ep-toast-message">{notification.message}</p>
+        <button onClick={onClose} className="ep-toast-close">
           <X size={16} />
         </button>
       </div>
@@ -246,34 +243,31 @@ const NotificationToast = ({
 
 const StatusBadge = ({ status }: { status: EditStatus }) => {
   const config = {
-    idle: { icon: null, text: "", color: "", spin: false },
+    idle: { icon: null, text: "", spin: false },
     saving: {
       icon: Loader,
       text: "Saving changes...",
-      color: "text-blue-400",
       spin: true,
     },
     success: {
       icon: CheckCircle,
       text: "Changes saved!",
-      color: "text-green-400",
       spin: false,
     },
     error: {
       icon: AlertCircle,
       text: "Failed to save",
-      color: "text-red-400",
       spin: false,
     },
   } as const;
 
-  const { icon: Icon, text, color, spin } = config[status];
+  const { icon: Icon, text, spin } = config[status];
   if (!Icon) return null;
 
   return (
-    <div className={`flex items-center gap-2 ${color}`}>
-      <Icon className={spin ? "animate-spin" : ""} size={18} />
-      <span className="text-sm font-semibold">{text}</span>
+    <div className={`ep-status-badge ep-status-${status}`}>
+      <Icon className={`ep-status-icon ${spin ? "ep-spin" : ""}`} size={18} />
+      <span className="ep-status-text">{text}</span>
     </div>
   );
 };
@@ -289,19 +283,19 @@ const Section = ({
   children: React.ReactNode;
   description?: string;
 }) => (
-  <section className="bg-gradient-to-br from-gray-900/80 to-gray-900/40 rounded-xl p-6 border border-gray-800/50 backdrop-blur-sm">
-    <div className="mb-6">
-      <h2 className="flex items-center gap-3 text-xl font-bold text-white mb-2">
-        <div className="p-2 bg-purple-500/10 rounded-lg">
-          <Icon size={22} className="text-purple-400" />
+  <section className="ep-section">
+    <div className="ep-section-box">
+      <div className="ep-section-header">
+        <div className="ep-section-icon-wrapper">
+          <Icon size={22} className="ep-section-icon" />
         </div>
-        {title}
-      </h2>
-      {description && (
-        <p className="text-sm text-gray-400 ml-12">{description}</p>
-      )}
+        <div>
+          <h2 className="ep-section-title">{title}</h2>
+          {description && <p className="ep-section-desc">{description}</p>}
+        </div>
+      </div>
+      <div className="ep-section-body">{children}</div>
     </div>
-    {children}
   </section>
 );
 
@@ -316,14 +310,10 @@ const FormField = ({
   fullWidth?: boolean;
   required?: boolean;
 }) => (
-  <label
-    className={`flex flex-col gap-2 ${
-      fullWidth ? "col-span-full" : ""
-    }`}
-  >
-    <span className="text-sm font-semibold text-gray-200">
+  <label className={`ep-field ${fullWidth ? "ep-field-full" : ""}`}>
+    <span className="ep-field-label">
       {label}
-      {required && <span className="text-red-400 ml-1">*</span>}
+      {required && <span className="ep-field-required">*</span>}
     </span>
     {children}
   </label>
@@ -336,7 +326,14 @@ const Input = ({
   type = "text",
   name = "",
   disabled = false,
-}: any) => (
+}: {
+  value: any;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  type?: string;
+  name?: string;
+  disabled?: boolean;
+}) => (
   <input
     type={type}
     name={name}
@@ -344,7 +341,7 @@ const Input = ({
     onChange={onChange}
     placeholder={placeholder}
     disabled={disabled}
-    className="w-full px-4 py-2.5 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+    className="ep-input"
   />
 );
 
@@ -354,14 +351,20 @@ const Textarea = ({
   placeholder = "",
   rows = 3,
   name = "",
-}: any) => (
+}: {
+  value: any;
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  placeholder?: string;
+  rows?: number;
+  name?: string;
+}) => (
   <textarea
     name={name}
     value={value}
     onChange={onChange}
     placeholder={placeholder}
     rows={rows}
-    className="w-full px-4 py-2.5 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
+    className="ep-textarea"
   />
 );
 
@@ -374,7 +377,7 @@ const ChipGroup = ({
   selected: string[];
   onToggle: (option: string) => void;
 }) => (
-  <div className="flex flex-wrap gap-2">
+  <div className="ep-chip-group">
     {options.map((option) => {
       const isSelected = selected.includes(option);
       return (
@@ -382,11 +385,7 @@ const ChipGroup = ({
           key={option}
           type="button"
           onClick={() => onToggle(option)}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-            isSelected
-              ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30"
-              : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-gray-700"
-          }`}
+          className={`ep-chip ${isSelected ? "ep-chip-selected" : ""}`}
         >
           {option}
         </button>
@@ -499,7 +498,7 @@ export default function EditProfile() {
   }, [therapist]);
 
   /* ============================================
-     CARREGAR EDIÇÕES PENDENTES
+     CARREGAR EDIÇÕES PENDENTES (profile_edits)
   ============================================ */
   useEffect(() => {
     if (!therapist?.id) return;
@@ -529,58 +528,55 @@ export default function EditProfile() {
   const hasUnsavedChanges = useMemo(() => {
     if (!therapist) return false;
     try {
-      return (
-        JSON.stringify(form) !==
-        JSON.stringify({
-          full_name: therapist.full_name ?? "",
-          headline: therapist.headline ?? "",
-          about: therapist.about ?? "",
-          philosophy: therapist.philosophy ?? "",
-          city: therapist.city ?? "",
-          state: therapist.state ?? "",
-          country: therapist.country ?? "",
-          neighborhood: therapist.neighborhood ?? "",
-          address: therapist.address ?? "",
-          zip_code: therapist.zip_code ?? "",
-          nearest_intersection: therapist.nearest_intersection ?? "",
-          mobile_service_radius: therapist.mobile_service_radius ?? 0,
-          services_headline: therapist.services_headline ?? "",
-          specialties_headline: therapist.specialties_headline ?? "",
-          promotions_headline: therapist.promotions_headline ?? "",
-          massage_techniques: ensureArray(therapist.massage_techniques),
-          studio_amenities: ensureArray(therapist.studio_amenities),
-          mobile_extras: ensureArray(therapist.mobile_extras),
-          additional_services: ensureArray(therapist.additional_services),
-          products_used: therapist.products_used ?? "",
-          rate_60: therapist.rate_60 ?? "",
-          rate_90: therapist.rate_90 ?? "",
-          rate_outcall: therapist.rate_outcall ?? "",
-          payment_methods: ensureArray(therapist.payment_methods),
-          regular_discounts: therapist.regular_discounts ?? "",
-          day_of_week_discount: therapist.day_of_week_discount ?? "",
-          weekly_specials: therapist.weekly_specials ?? "",
-          special_discount_groups: ensureArray(
-            therapist.special_discount_groups
-          ),
-          availability: therapist.availability ?? {},
-          degrees: therapist.degrees ?? "",
-          affiliations: ensureArray(therapist.affiliations),
-          massage_start_date: therapist.massage_start_date ?? "",
-          languages: ensureArray(therapist.languages),
-          business_trips: therapist.business_trips ?? "",
-          rating: therapist.rating ?? 5,
-          override_reviews_count: therapist.override_reviews_count ?? 0,
-          website: therapist.website ?? "",
-          instagram: therapist.instagram ?? "",
-          whatsapp: therapist.whatsapp ?? "",
-          birthdate: therapist.birthdate ?? "",
-          years_experience: therapist.years_experience ?? "",
-          gallery: Array.isArray(therapist.gallery) ? therapist.gallery : [],
-          travel_radius: therapist.travel_radius ?? "",
-          accepts_first_timers: therapist.accepts_first_timers ?? true,
-          prefers_lgbtq_clients: therapist.prefers_lgbtq_clients ?? true,
-        })
-      );
+      const base = {
+        full_name: therapist.full_name ?? "",
+        headline: therapist.headline ?? "",
+        about: therapist.about ?? "",
+        philosophy: therapist.philosophy ?? "",
+        city: therapist.city ?? "",
+        state: therapist.state ?? "",
+        country: therapist.country ?? "",
+        neighborhood: therapist.neighborhood ?? "",
+        address: therapist.address ?? "",
+        zip_code: therapist.zip_code ?? "",
+        nearest_intersection: therapist.nearest_intersection ?? "",
+        mobile_service_radius: therapist.mobile_service_radius ?? 0,
+        services_headline: therapist.services_headline ?? "",
+        specialties_headline: therapist.specialties_headline ?? "",
+        promotions_headline: therapist.promotions_headline ?? "",
+        massage_techniques: ensureArray(therapist.massage_techniques),
+        studio_amenities: ensureArray(therapist.studio_amenities),
+        mobile_extras: ensureArray(therapist.mobile_extras),
+        additional_services: ensureArray(therapist.additional_services),
+        products_used: therapist.products_used ?? "",
+        rate_60: therapist.rate_60 ?? "",
+        rate_90: therapist.rate_90 ?? "",
+        rate_outcall: therapist.rate_outcall ?? "",
+        payment_methods: ensureArray(therapist.payment_methods),
+        regular_discounts: therapist.regular_discounts ?? "",
+        day_of_week_discount: therapist.day_of_week_discount ?? "",
+        weekly_specials: therapist.weekly_specials ?? "",
+        special_discount_groups: ensureArray(therapist.special_discount_groups),
+        availability: therapist.availability ?? {},
+        degrees: therapist.degrees ?? "",
+        affiliations: ensureArray(therapist.affiliations),
+        massage_start_date: therapist.massage_start_date ?? "",
+        languages: ensureArray(therapist.languages),
+        business_trips: therapist.business_trips ?? "",
+        rating: therapist.rating ?? 5,
+        override_reviews_count: therapist.override_reviews_count ?? 0,
+        website: therapist.website ?? "",
+        instagram: therapist.instagram ?? "",
+        whatsapp: therapist.whatsapp ?? "",
+        birthdate: therapist.birthdate ?? "",
+        years_experience: therapist.years_experience ?? "",
+        gallery: Array.isArray(therapist.gallery) ? therapist.gallery : [],
+        travel_radius: therapist.travel_radius ?? "",
+        accepts_first_timers: therapist.accepts_first_timers ?? true,
+        prefers_lgbtq_clients: therapist.prefers_lgbtq_clients ?? true,
+      };
+
+      return JSON.stringify(form) !== JSON.stringify(base);
     } catch {
       return true;
     }
@@ -692,7 +688,10 @@ export default function EditProfile() {
           const gallery = Array.isArray(prev.gallery) ? prev.gallery : [];
           return { ...prev, gallery: [...gallery, ...newUrls] };
         });
-        addNotification("success", `${newUrls.length} photo(s) added successfully`);
+        addNotification(
+          "success",
+          `${newUrls.length} photo(s) added successfully`
+        );
       }
 
       e.target.value = "";
@@ -714,7 +713,7 @@ export default function EditProfile() {
   };
 
   /* ============================================
-     SALVAR EDIÇÕES
+     SALVAR EDIÇÕES (profile_edits)
   ============================================ */
   const handleSave = async () => {
     if (!therapist) return;
@@ -797,9 +796,7 @@ export default function EditProfile() {
         regular_discounts: therapist.regular_discounts,
         day_of_week_discount: therapist.day_of_week_discount,
         weekly_specials: therapist.weekly_specials,
-        special_discount_groups: ensureArray(
-          therapist.special_discount_groups
-        ),
+        special_discount_groups: ensureArray(therapist.special_discount_groups),
         availability: therapist.availability,
         degrees: therapist.degrees,
         affiliations: ensureArray(therapist.affiliations),
@@ -841,6 +838,7 @@ export default function EditProfile() {
 
       if (error) throw error;
 
+      // notificação de edição pendente
       await supabase.from("edit_notifications").insert({
         therapist_id: therapist.id,
         edit_id: data.id,
@@ -887,10 +885,10 @@ export default function EditProfile() {
   ============================================ */
   if (profileLoading && !therapist) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 flex items-center justify-center">
-        <div className="flex items-center gap-3 text-white">
-          <Loader className="animate-spin" size={24} />
-          <p className="text-lg">Loading your profile...</p>
+      <div className="ep-fullscreen">
+        <div className="ep-fullscreen-content">
+          <Loader className="ep-spin" size={24} />
+          <p className="ep-fullscreen-text">Loading your profile...</p>
         </div>
       </div>
     );
@@ -898,16 +896,11 @@ export default function EditProfile() {
 
   if (!therapist) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <AlertCircle className="mx-auto mb-4 text-red-400" size={48} />
-          <p className="text-white text-lg mb-4">
-            No therapist profile found
-          </p>
-          <button
-            onClick={() => router.push("/")}
-            className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors"
-          >
+      <div className="ep-fullscreen">
+        <div className="ep-fullscreen-content ep-fullscreen-error">
+          <AlertCircle className="ep-fullscreen-icon" size={48} />
+          <p className="ep-fullscreen-text">No therapist profile found</p>
+          <button onClick={() => router.push("/")} className="ep-btn-primary">
             Go to Home
           </button>
         </div>
@@ -919,9 +912,12 @@ export default function EditProfile() {
      RENDER
   ============================================ */
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
+    <main className="ep-page">
+      {/* background grid */}
+      <div className="ep-grid" />
+
       {/* Notificações */}
-      <div className="fixed top-0 right-0 z-50 p-4 space-y-2">
+      <div className="ep-toast-container">
         {notifications.map((notification) => (
           <NotificationToast
             key={notification.id}
@@ -931,27 +927,23 @@ export default function EditProfile() {
         ))}
       </div>
 
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="ep-container">
         {/* Header */}
-        <header className="mb-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-            <button
-              onClick={handleBack}
-              className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-white transition-colors w-fit"
-            >
+        <header className="ep-header">
+          <div className="ep-header-top">
+            <button onClick={handleBack} className="ep-back-btn">
               <ArrowLeft size={20} />
               <span>Back</span>
             </button>
 
-            <div className="flex items-center justify-between gap-4">
+            <div className="ep-header-actions">
               <StatusBadge status={status} />
-
               <button
                 onClick={handleSave}
                 disabled={
                   status === "saving" || uploadingGallery || !hasUnsavedChanges
                 }
-                className="flex items-center gap-2 px-6 py-3 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-all shadow-lg shadow-purple-500/30 disabled:shadow-none"
+                className="ep-save-btn"
               >
                 <Save size={20} />
                 {status === "saving" ? "Submitting..." : "Submit for Approval"}
@@ -959,39 +951,37 @@ export default function EditProfile() {
             </div>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-            Edit Your Profile
-          </h1>
-          <p className="text-gray-400">
-            Make changes to your therapist profile. All changes will be
-            reviewed before going live.
+          <h1 className="ep-title">Edit Your Profile</h1>
+          <p className="ep-subtitle">
+            Make changes to your therapist profile. All changes will be reviewed
+            before going live.
           </p>
         </header>
 
         {/* Indicador de edições pendentes */}
         {pendingEdits.length > 0 && (
-          <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg flex items-start gap-3">
-            <Clock size={20} className="text-blue-400 flex-shrink-0 mt-0.5" />
+          <div className="ep-pending-banner">
+            <Clock size={20} className="ep-pending-icon" />
             <div>
-              <p className="text-blue-300 font-semibold">
+              <p className="ep-pending-main">
                 You have {pendingEdits.length} pending edit
                 {pendingEdits.length > 1 ? "s" : ""} awaiting approval
               </p>
-              <p className="text-blue-400/70 text-sm mt-1">
+              <p className="ep-pending-sub">
                 New changes will be added to the review queue
               </p>
             </div>
           </div>
         )}
 
-        <div className="space-y-6">
+        <div className="ep-sections">
           {/* BASIC INFO */}
           <Section
             icon={User}
             title="Basic Information"
             description="Your professional identity and main profile details"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="ep-grid-two">
               <FormField label="Full Name" required>
                 <Input
                   name="full_name"
@@ -1038,7 +1028,7 @@ export default function EditProfile() {
             title="Location & Service Area"
             description="Where you practice and your service coverage"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="ep-grid-two">
               <FormField label="City" required>
                 <Input
                   name="city"
@@ -1120,7 +1110,7 @@ export default function EditProfile() {
             title="Service Offerings"
             description="Describe your services and specialties"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="ep-grid-two">
               <FormField label="Services Headline">
                 <Input
                   name="services_headline"
@@ -1233,7 +1223,7 @@ export default function EditProfile() {
             title="Rates & Pricing"
             description="Your session rates"
           >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="ep-grid-three">
               <FormField label="60-min Session">
                 <Input
                   name="rate_60"
@@ -1284,7 +1274,7 @@ export default function EditProfile() {
             title="Discounts & Specials"
             description="Promotions and special offers"
           >
-            <div className="space-y-4">
+            <div className="ep-section-column">
               <FormField label="Regular Discounts" fullWidth>
                 <Textarea
                   name="regular_discounts"
@@ -1295,7 +1285,7 @@ export default function EditProfile() {
                 />
               </FormField>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="ep-grid-two">
                 <FormField label="Day of Week Special">
                   <Input
                     name="day_of_week_discount"
@@ -1315,10 +1305,8 @@ export default function EditProfile() {
                 </FormField>
               </div>
 
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-3">
-                  Special Discount Groups
-                </h3>
+              <div className="ep-subsection">
+                <h3 className="ep-subsection-title">Special Discount Groups</h3>
                 <ChipGroup
                   options={SPECIAL_DISCOUNT_GROUPS}
                   selected={ensureArray(form.special_discount_groups)}
@@ -1336,7 +1324,7 @@ export default function EditProfile() {
             title="Availability Schedule"
             description="Set your weekly availability for in-studio and mobile services"
           >
-            <div className="space-y-4">
+            <div className="ep-availability">
               {DAYS_OF_WEEK.map((day) => {
                 const dayData = form.availability?.[day] || {
                   incall: { start: "", end: "" },
@@ -1344,15 +1332,13 @@ export default function EditProfile() {
                 };
 
                 return (
-                  <div
-                    key={day}
-                    className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50"
-                  >
-                    <h4 className="text-white font-semibold mb-3">{day}</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div key={day} className="ep-day-block">
+                    <h4 className="ep-day-title">{day}</h4>
+                    <div className="ep-day-grid">
                       <FormField label="In-Studio Start">
                         <Input
                           type="time"
+                          name=""
                           value={dayData.incall?.start || ""}
                           onChange={(e: any) =>
                             handleAvailabilityChange(
@@ -1368,6 +1354,7 @@ export default function EditProfile() {
                       <FormField label="In-Studio End">
                         <Input
                           type="time"
+                          name=""
                           value={dayData.incall?.end || ""}
                           onChange={(e: any) =>
                             handleAvailabilityChange(
@@ -1383,6 +1370,7 @@ export default function EditProfile() {
                       <FormField label="Mobile Start">
                         <Input
                           type="time"
+                          name=""
                           value={dayData.outcall?.start || ""}
                           onChange={(e: any) =>
                             handleAvailabilityChange(
@@ -1398,6 +1386,7 @@ export default function EditProfile() {
                       <FormField label="Mobile End">
                         <Input
                           type="time"
+                          name=""
                           value={dayData.outcall?.end || ""}
                           onChange={(e: any) =>
                             handleAvailabilityChange(
@@ -1422,7 +1411,7 @@ export default function EditProfile() {
             title="Professional Credentials"
             description="Your certifications, education, and experience"
           >
-            <div className="space-y-4">
+            <div className="ep-section-column">
               <FormField label="Degrees & Certifications" fullWidth>
                 <Textarea
                   name="degrees"
@@ -1433,7 +1422,7 @@ export default function EditProfile() {
                 />
               </FormField>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="ep-grid-two">
                 <FormField label="Massage Start Date">
                   <Input
                     type="date"
@@ -1454,8 +1443,8 @@ export default function EditProfile() {
                 </FormField>
               </div>
 
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-3">
+              <div className="ep-subsection">
+                <h3 className="ep-subsection-title">
                   Professional Affiliations
                 </h3>
                 <ChipGroup
@@ -1505,13 +1494,10 @@ export default function EditProfile() {
             title="Photo Gallery"
             description="Add photos of your studio, setup, or professional work environment"
           >
-            <div className="mb-4 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-              <div className="flex items-start gap-3">
-                <Info
-                  size={20}
-                  className="text-yellow-400 flex-shrink-0 mt-0.5"
-                />
-                <p className="text-yellow-300 text-sm">
+            <div className="ep-warning-box">
+              <div className="ep-warning-inner">
+                <Info size={20} className="ep-warning-icon" />
+                <p className="ep-warning-text">
                   <strong>Note:</strong> New photos will be reviewed by our
                   admin team before appearing on your public profile.
                 </p>
@@ -1523,28 +1509,25 @@ export default function EditProfile() {
               type="file"
               accept="image/*"
               multiple
-              className="hidden"
+              className="ep-hidden-input"
               onChange={handleGalleryFileChange}
             />
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="ep-gallery-grid">
               {Array.isArray(form.gallery) &&
                 form.gallery.map((url: string, idx: number) => (
-                  <div
-                    key={`${url}-${idx}`}
-                    className="relative aspect-square rounded-lg overflow-hidden group"
-                  >
+                  <div key={`${url}-${idx}`} className="ep-gallery-item">
                     <img
                       src={url}
                       alt={`Gallery ${idx + 1}`}
-                      className="w-full h-full object-cover"
+                      className="ep-gallery-image"
                     />
                     <button
                       type="button"
                       onClick={() => handleGalleryRemove(idx)}
-                      className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="ep-gallery-remove"
                     >
-                      <Trash2 size={16} className="text-white" />
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 ))}
@@ -1553,21 +1536,20 @@ export default function EditProfile() {
                 type="button"
                 onClick={handleGalleryButtonClick}
                 disabled={uploadingGallery}
-                className="aspect-square border-2 border-dashed border-gray-700 hover:border-purple-500 rounded-lg flex flex-col items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`ep-gallery-add ${
+                  uploadingGallery ? "ep-gallery-add-disabled" : ""
+                }`}
               >
                 {uploadingGallery ? (
                   <>
-                    <Loader
-                      className="animate-spin text-purple-400"
-                      size={32}
-                    />
-                    <span className="text-sm text-gray-400">Uploading...</span>
+                    <Loader className="ep-spin" size={32} />
+                    <span className="ep-gallery-add-text">Uploading...</span>
                   </>
                 ) : (
                   <>
-                    <Plus className="text-gray-400" size={32} />
-                    <span className="text-sm text-gray-400">Add Photo</span>
-                    <span className="text-xs text-gray-500">
+                    <Plus size={32} className="ep-gallery-add-icon" />
+                    <span className="ep-gallery-add-text">Add Photo</span>
+                    <span className="ep-gallery-add-count">
                       {form.gallery?.length || 0}/10
                     </span>
                   </>
@@ -1582,7 +1564,7 @@ export default function EditProfile() {
             title="Social Media & Contact"
             description="Your online presence and contact information"
           >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="ep-grid-three">
               <FormField label="Website">
                 <Input
                   name="website"
@@ -1618,7 +1600,7 @@ export default function EditProfile() {
             title="Client Reviews Settings"
             description="Manage your ratings display (admin use)"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="ep-grid-two">
               <FormField label="Overall Rating (1-5)">
                 <Input
                   type="number"
@@ -1649,30 +1631,27 @@ export default function EditProfile() {
             title="Client Preferences"
             description="Your client acceptance policies"
           >
-            <div className="space-y-3">
-              <label className="flex items-center gap-3 p-4 bg-gray-800/30 rounded-lg border border-gray-700/50 cursor-pointer hover:border-purple-500/50 transition-colors">
+            <div className="ep-preferences">
+              <label className="ep-preference-item">
                 <input
                   type="checkbox"
                   checked={form.accepts_first_timers ?? true}
                   onChange={(e) =>
-                    handleInputChange(
-                      "accepts_first_timers",
-                      e.target.checked
-                    )
+                    handleInputChange("accepts_first_timers", e.target.checked)
                   }
-                  className="w-5 h-5 rounded border-gray-600 bg-gray-700 text-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-offset-0"
+                  className="ep-checkbox"
                 />
                 <div>
-                  <span className="text-white font-medium">
+                  <span className="ep-preference-title">
                     Accept First-Time Clients
                   </span>
-                  <p className="text-sm text-gray-400">
+                  <p className="ep-preference-desc">
                     Welcome new clients who haven&apos;t had a massage before
                   </p>
                 </div>
               </label>
 
-              <label className="flex items-center gap-3 p-4 bg-gray-800/30 rounded-lg border border-gray-700/50 cursor-pointer hover:border-purple-500/50 transition-colors">
+              <label className="ep-preference-item">
                 <input
                   type="checkbox"
                   checked={form.prefers_lgbtq_clients ?? true}
@@ -1682,13 +1661,11 @@ export default function EditProfile() {
                       e.target.checked
                     )
                   }
-                  className="w-5 h-5 rounded border-gray-600 bg-gray-700 text-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-offset-0"
+                  className="ep-checkbox"
                 />
                 <div>
-                  <span className="text-white font-medium">
-                    LGBTQ+ Friendly
-                  </span>
-                  <p className="text-sm text-gray-400">
+                  <span className="ep-preference-title">LGBTQ+ Friendly</span>
+                  <p className="ep-preference-desc">
                     Welcoming and inclusive space for all clients
                   </p>
                 </div>
@@ -1698,72 +1675,49 @@ export default function EditProfile() {
         </div>
 
         {/* Footer Actions */}
-        <footer className="mt-12 pb-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 bg-gray-900/80 rounded-xl border border-gray-800">
-            <div className="text-center sm:text-left">
-              <p className="text-white font-semibold">
+        <footer className="ep-footer">
+          <div className="ep-footer-box">
+            <div className="ep-footer-text">
+              <p className="ep-footer-main">
                 {hasUnsavedChanges
                   ? "You have unsaved changes"
                   : "No changes to save"}
               </p>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="ep-footer-sub">
                 {pendingEdits.length > 0
                   ? `${pendingEdits.length} edit(s) pending approval`
                   : "All changes are reviewed before going live"}
               </p>
             </div>
 
-            <div className="flex gap-3">
-              <button
-                onClick={handleBack}
-                className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors"
-              >
+            <div className="ep-footer-actions">
+              <button onClick={handleBack} className="ep-btn-secondary">
                 Cancel
               </button>
 
-                <button
-                  onClick={handleSave}
-                  disabled={
-                    status === "saving" ||
-                    uploadingGallery ||
-                    !hasUnsavedChanges
-                  }
-                  className="flex items-center gap-2 px-8 py-3 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-all shadow-lg shadow-purple-500/30 disabled:shadow-none"
-                >
-                  {status === "saving" ? (
-                    <>
-                      <Loader className="animate-spin" size={20} />
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      <Save size={20} />
-                      Submit for Approval
-                    </>
-                  )}
-                </button>
+              <button
+                onClick={handleSave}
+                disabled={
+                  status === "saving" || uploadingGallery || !hasUnsavedChanges
+                }
+                className="ep-save-btn"
+              >
+                {status === "saving" ? (
+                  <>
+                    <Loader className="ep-spin" size={20} />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <Save size={20} />
+                    Submit for Approval
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </footer>
       </div>
-
-      {/* CSS personalizado para animação do toast */}
-      <style jsx global>{`
-        @keyframes slide-in {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-
-        .animate-slide-in {
-          animation: slide-in 0.3s ease-out;
-        }
-      `}</style>
     </main>
   );
 }
