@@ -24,16 +24,16 @@ type TherapistRow = {
 type ProfileEdit = {
   id: string;
   therapist_id: string;
-  edited_data: any;
-  pending_profile_photo?: string;
-  pending_gallery?: string[];
-  original_data: any;
-  original_profile_photo?: string;
-  original_gallery?: string[];
-  status: 'pending' | 'approved' | 'rejected';
-  admin_notes?: string;
-  reviewed_by?: string;
-  reviewed_at?: string;
+  edited_data: Record<string, any>;
+  pending_profile_photo?: string | null;
+  pending_gallery?: string[] | null;
+  original_data: Record<string, any>;
+  original_profile_photo?: string | null;
+  original_gallery?: string[] | null;
+  status: "pending" | "approved" | "rejected";
+  admin_notes?: string | null;
+  reviewed_by?: string | null;
+  reviewed_at?: string | null;
   submitted_at: string;
   therapist?: {
     full_name: string;
@@ -41,7 +41,11 @@ type ProfileEdit = {
   };
 };
 
-type TabType = 'approvals' | 'edits';
+type TabType = "approvals" | "edits";
+
+/* =====================
+  Badges auxiliares
+===================== */
 
 function PlanBadge({
   plan,
@@ -99,7 +103,53 @@ function PaymentStatus({ row }: { row: TherapistRow }) {
   );
 }
 
-// Componente para modal de revisão de edições
+/* =====================
+  Helpers para normalizar payload
+===================== */
+
+function normalizeTherapistPayload(
+  payload: Record<string, any>
+): Record<string, any> {
+  const normalized: Record<string, any> = { ...payload };
+
+  // Campos date no Postgres – não podem receber ""
+  const dateFields = ["birthdate", "massage_start_date"];
+
+  // Campos numéricos opcionais: se vierem como "", mandamos null
+  const numericFields = [
+    "mobile_service_radius",
+    "years_experience",
+    "override_reviews_count",
+    "rating",
+    "travel_radius",
+  ];
+
+  for (const field of dateFields) {
+    if (normalized[field] === "" || typeof normalized[field] === "undefined") {
+      normalized[field] = null;
+    }
+  }
+
+  for (const field of numericFields) {
+    if (normalized[field] === "" || typeof normalized[field] === "undefined") {
+      normalized[field] = null;
+    }
+  }
+
+  // Remover chaves undefined para evitar ruído no update
+  Object.keys(normalized).forEach((key) => {
+    if (typeof normalized[key] === "undefined") {
+      delete normalized[key];
+    }
+  });
+
+  return normalized;
+}
+
+/* =====================
+  Modal de revisão
+===================== */
+
 function EditReviewModal({
   edit,
   onClose,
@@ -115,7 +165,11 @@ function EditReviewModal({
 }) {
   const [rejectReason, setRejectReason] = useState("");
 
-  const renderFieldComparison = (field: string, oldValue: any, newValue: any) => {
+  const renderFieldComparison = (
+    field: string,
+    oldValue: any,
+    newValue: any
+  ) => {
     const oldStr = JSON.stringify(oldValue, null, 2);
     const newStr = JSON.stringify(newValue, null, 2);
 
@@ -201,7 +255,9 @@ function EditReviewModal({
           </button>
           <button
             className="btn btn-approve"
-            onClick={() => confirm("Aprovar estas edições?") && onApprove(edit.id)}
+            onClick={() =>
+              confirm("Aprovar estas edições?") && onApprove(edit.id)
+            }
             disabled={processing}
           >
             <CheckCircle size={16} />
@@ -221,6 +277,10 @@ function EditReviewModal({
   );
 }
 
+/* =====================
+  Admin Dashboard
+===================== */
+
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
@@ -228,14 +288,14 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
-  // Estados para edições de perfil
-  const [activeTab, setActiveTab] = useState<TabType>('approvals');
+  // Edições de perfil
+  const [activeTab, setActiveTab] = useState<TabType>("approvals");
   const [profileEdits, setProfileEdits] = useState<ProfileEdit[]>([]);
   const [selectedEdit, setSelectedEdit] = useState<ProfileEdit | null>(null);
   const [processingEdit, setProcessingEdit] = useState(false);
   const [adminId, setAdminId] = useState<string>("");
 
-  // ---- Gate: apenas admin
+  /* ---- Gate: apenas admin ---- */
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -246,12 +306,13 @@ export default function AdminDashboard() {
       }
       const uid = sessionData.session.user.id;
       if (mounted) setAdminId(uid);
-      
+
       const { data, error } = await supabase
         .from("profiles")
         .select("is_admin")
         .eq("id", uid)
         .single();
+
       if (mounted) setIsAdmin(!error && !!data?.is_admin);
     })();
     return () => {
@@ -259,7 +320,7 @@ export default function AdminDashboard() {
     };
   }, []);
 
-  // ---- Buscar pendentes
+  /* ---- Buscar novos cadastros pendentes ---- */
   async function fetchPending() {
     setLoading(true);
     setError(null);
@@ -290,20 +351,22 @@ export default function AdminDashboard() {
     setLoading(false);
   }
 
-  // ---- Buscar edições pendentes
+  /* ---- Buscar edições de perfil pendentes ---- */
   async function fetchPendingEdits() {
     setLoading(true);
     setError(null);
 
     const { data, error } = await supabase
       .from("profile_edits")
-      .select(`
+      .select(
+        `
         *,
         therapist:therapists!profile_edits_therapist_id_fkey (
           full_name,
           email
         )
-      `)
+      `
+      )
       .eq("status", "pending")
       .order("submitted_at", { ascending: false });
 
@@ -311,14 +374,15 @@ export default function AdminDashboard() {
       setError(error.message);
       setProfileEdits([]);
     } else {
-      setProfileEdits(data as ProfileEdit[] || []);
+      setProfileEdits((data as ProfileEdit[]) || []);
     }
     setLoading(false);
   }
 
+  /* ---- Carregar dados ao entrar / trocar de aba ---- */
   useEffect(() => {
     if (isAdmin === true) {
-      if (activeTab === 'approvals') {
+      if (activeTab === "approvals") {
         fetchPending();
       } else {
         fetchPendingEdits();
@@ -326,22 +390,22 @@ export default function AdminDashboard() {
     }
   }, [isAdmin, activeTab]);
 
-  // ---- Subscribe to real-time changes
+  /* ---- Realtime para profile_edits ---- */
   useEffect(() => {
     if (!isAdmin) return;
 
     const channel = supabase
-      .channel('admin-changes')
+      .channel("admin-changes")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'profile_edits',
-          filter: 'status=eq.pending'
+          event: "*",
+          schema: "public",
+          table: "profile_edits",
+          filter: "status=eq.pending",
         },
         () => {
-          if (activeTab === 'edits') fetchPendingEdits();
+          if (activeTab === "edits") fetchPendingEdits();
         }
       )
       .subscribe();
@@ -351,7 +415,7 @@ export default function AdminDashboard() {
     };
   }, [isAdmin, activeTab]);
 
-  // ---- Atualiza status com fallback se colunas não existirem
+  /* ---- Atualizar status de novos cadastros ---- */
   async function safeUpdateStatus(
     id: string,
     status: "active" | "rejected",
@@ -377,6 +441,7 @@ export default function AdminDashboard() {
 
     if (!tryFull.error) return;
 
+    // fallback se colunas não existirem
     await supabase.from("therapists").update({ status }).eq("id", id);
   }
 
@@ -398,44 +463,60 @@ export default function AdminDashboard() {
     }
   }
 
-  // ---- Funções para gerenciar edições de perfil
-  async function approveEdit(editId: string) {
+  /* ---- Aprovar edição de perfil (aplica direto em therapists) ---- */
+  async function approveProfileEdit(editId: string) {
     setProcessingEdit(true);
     try {
       const edit = profileEdits.find((e) => e.id === editId);
       if (!edit) throw new Error("Edit not found");
 
-      // Apply changes to therapist profile
-      const updateData: any = { ...edit.edited_data };
+      const edited = edit.edited_data || {};
+      const original = edit.original_data || {};
+      const pendingGallery = edit.pending_gallery || null;
+      const originalGallery = edit.original_gallery || null;
 
-      if (edit.pending_profile_photo) {
-        updateData.profile_photo = edit.pending_profile_photo;
+      // Mescla dados originais + editados (editados sobrescrevem)
+      const mergedData: Record<string, any> = {
+        ...original,
+        ...edited,
+      };
+
+      // Tratar gallery
+      if (pendingGallery && pendingGallery.length > 0) {
+        mergedData.gallery = pendingGallery;
+      } else if (originalGallery) {
+        mergedData.gallery = originalGallery;
       }
 
-      if (edit.pending_gallery) {
-        updateData.gallery = edit.pending_gallery;
-      }
+      // Normalizar payload (datas, números, undefined, etc.)
+      const finalData = normalizeTherapistPayload(mergedData);
 
+      // Atualizar therapists com TODOS os campos de finalData
       const { error: updateError } = await supabase
         .from("therapists")
-        .update(updateData)
-        .eq("user_id", edit.therapist_id);
+        .update(finalData)
+        .eq("id", edit.therapist_id);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        throw updateError;
+      }
 
-      // Update edit status
+      // Atualizar status da edição
       const { error: statusError } = await supabase
         .from("profile_edits")
         .update({
           status: "approved",
-          reviewed_by: adminId,
+          admin_notes: edit.admin_notes || null,
+          reviewed_by: adminId || null,
           reviewed_at: new Date().toISOString(),
         })
         .eq("id", editId);
 
-      if (statusError) throw statusError;
+      if (statusError) {
+        throw statusError;
+      }
 
-      // Create notification
+      // Notificação para o terapeuta
       await supabase.from("edit_notifications").insert({
         therapist_id: edit.therapist_id,
         edit_id: editId,
@@ -443,19 +524,24 @@ export default function AdminDashboard() {
         message: "Suas edições foram aprovadas e publicadas no seu perfil!",
       });
 
-      // Remove from list
+      // Atualizar estado local
       setProfileEdits((prev) => prev.filter((e) => e.id !== editId));
       setSelectedEdit(null);
       alert("Edições aprovadas com sucesso!");
-    } catch (error: any) {
-      console.error("Error approving edit:", error);
-      alert("Erro ao aprovar edições: " + error.message);
+    } catch (err: any) {
+      console.error("Error approving edit:", err, JSON.stringify(err || {}));
+      const msg =
+        err?.message ||
+        err?.error_description ||
+        "Erro desconhecido ao aprovar edições.";
+      alert("Erro ao aprovar edições: " + msg);
     } finally {
       setProcessingEdit(false);
     }
   }
 
-  async function rejectEdit(editId: string, reason: string) {
+  /* ---- Rejeitar edição de perfil ---- */
+  async function rejectProfileEdit(editId: string, reason: string) {
     setProcessingEdit(true);
     try {
       const edit = profileEdits.find((e) => e.id === editId);
@@ -473,7 +559,6 @@ export default function AdminDashboard() {
 
       if (error) throw error;
 
-      // Create notification
       await supabase.from("edit_notifications").insert({
         therapist_id: edit.therapist_id,
         edit_id: editId,
@@ -481,24 +566,29 @@ export default function AdminDashboard() {
         message: `Suas edições foram rejeitadas. Motivo: ${reason}`,
       });
 
-      // Remove from list
       setProfileEdits((prev) => prev.filter((e) => e.id !== editId));
       setSelectedEdit(null);
       alert("Edições rejeitadas");
-    } catch (error: any) {
-      console.error("Error rejecting edit:", error);
-      alert("Erro ao rejeitar edições: " + error.message);
+    } catch (err: any) {
+      console.error("Error rejecting edit:", err, JSON.stringify(err || {}));
+      const msg =
+        err?.message ||
+        err?.error_description ||
+        "Erro desconhecido ao rejeitar edições.";
+      alert("Erro ao rejeitar edições: " + msg);
     } finally {
       setProcessingEdit(false);
     }
   }
 
+  /* ---- Empty states ---- */
+
   const emptyState = useMemo(
     () =>
       !loading &&
       !error &&
-      rows.length === 0 && 
-      activeTab === 'approvals' && (
+      rows.length === 0 &&
+      activeTab === "approvals" && (
         <p className="muted">No pending approvals 🎉</p>
       ),
     [loading, error, rows.length, activeTab]
@@ -508,10 +598,10 @@ export default function AdminDashboard() {
     () =>
       !loading &&
       !error &&
-      profileEdits.length === 0 && 
-      activeTab === 'edits' && (
+      profileEdits.length === 0 &&
+      activeTab === "edits" && (
         <div className="empty-state">
-          <CheckCircle size={64} style={{ opacity: 0.3, margin: '0 auto' }} />
+          <CheckCircle size={64} style={{ opacity: 0.3, margin: "0 auto" }} />
           <p className="muted">Nenhuma edição pendente no momento 🎉</p>
         </div>
       ),
@@ -527,6 +617,8 @@ export default function AdminDashboard() {
     );
   }
 
+  /* ---- Render ---- */
+
   return (
     <div className="admin-shell">
       <h1 className="title">Admin Dashboard</h1>
@@ -535,20 +627,24 @@ export default function AdminDashboard() {
       {/* Tabs */}
       <div className="admin-tabs">
         <button
-          className={`admin-tab ${activeTab === 'approvals' ? 'active' : ''}`}
-          onClick={() => setActiveTab('approvals')}
+          className={`admin-tab ${
+            activeTab === "approvals" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("approvals")}
         >
           <User size={18} />
           Novos Cadastros
           {rows.length > 0 && <span className="badge">{rows.length}</span>}
         </button>
         <button
-          className={`admin-tab ${activeTab === 'edits' ? 'active' : ''}`}
-          onClick={() => setActiveTab('edits')}
+          className={`admin-tab ${activeTab === "edits" ? "active" : ""}`}
+          onClick={() => setActiveTab("edits")}
         >
           <Edit size={18} />
           Edições de Perfil
-          {profileEdits.length > 0 && <span className="badge">{profileEdits.length}</span>}
+          {profileEdits.length > 0 && (
+            <span className="badge">{profileEdits.length}</span>
+          )}
         </button>
       </div>
 
@@ -556,7 +652,7 @@ export default function AdminDashboard() {
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
         <button
           className="btn"
-          onClick={activeTab === 'approvals' ? fetchPending : fetchPendingEdits}
+          onClick={activeTab === "approvals" ? fetchPending : fetchPendingEdits}
           disabled={loading}
         >
           {loading ? "Atualizando..." : "Atualizar lista"}
@@ -566,7 +662,7 @@ export default function AdminDashboard() {
       {error && <p style={{ color: "tomato" }}>{error}</p>}
 
       {/* APROVAÇÕES DE NOVOS CADASTROS */}
-      {activeTab === 'approvals' && (
+      {activeTab === "approvals" && (
         <>
           {loading ? (
             <div className="table-wrap">
@@ -614,7 +710,7 @@ export default function AdminDashboard() {
                     const when =
                       r.created_at || r.updated_at
                         ? new Date(
-                            r.created_at || r.updated_at!
+                            r.created_at || (r.updated_at as string)
                           ).toLocaleString()
                         : "—";
                     const nome = r.full_name || "—";
@@ -661,7 +757,7 @@ export default function AdminDashboard() {
       )}
 
       {/* EDIÇÕES DE PERFIL */}
-      {activeTab === 'edits' && (
+      {activeTab === "edits" && (
         <>
           {loading ? (
             <div className="edits-loading">
@@ -681,7 +777,10 @@ export default function AdminDashboard() {
                         {edit.therapist?.full_name || "Terapeuta"}
                       </h3>
                       <p className="edit-meta">
-                        <span>Enviado: {new Date(edit.submitted_at).toLocaleString("pt-BR")}</span>
+                        <span>
+                          Enviado:{" "}
+                          {new Date(edit.submitted_at).toLocaleString("pt-BR")}
+                        </span>
                         <span>ID: {edit.therapist_id.slice(0, 8)}...</span>
                       </p>
                     </div>
@@ -701,7 +800,8 @@ export default function AdminDashboard() {
                     <button
                       className="btn btn-approve"
                       onClick={() =>
-                        confirm("Aprovar estas edições?") && approveEdit(edit.id)
+                        confirm("Aprovar estas edições?") &&
+                        approveProfileEdit(edit.id)
                       }
                       disabled={processingEdit}
                     >
@@ -729,8 +829,8 @@ export default function AdminDashboard() {
         <EditReviewModal
           edit={selectedEdit}
           onClose={() => setSelectedEdit(null)}
-          onApprove={approveEdit}
-          onReject={rejectEdit}
+          onApprove={approveProfileEdit}
+          onReject={rejectProfileEdit}
           processing={processingEdit}
         />
       )}

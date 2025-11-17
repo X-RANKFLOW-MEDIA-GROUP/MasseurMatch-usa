@@ -684,11 +684,10 @@ export default function TherapistProfile() {
   const [err, setErr] = useState<string | null>(null);
   const [signingOut, setSigningOut] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [isOwner, setIsOwner] = useState(false);
 
+  const [isOwner, setIsOwner] = useState(false);
   const [adminApproved, setAdminApproved] = useState<boolean>(false);
   const [paymentOk, setPaymentOk] = useState<boolean>(false);
-
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   const [shouldPoll, setShouldPoll] = useState(false);
@@ -1007,6 +1006,7 @@ export default function TherapistProfile() {
       data.reviews.reduce((acc, r) => acc + (r.rating || 0), 0) / data.reviews.length;
     return Math.round(avg * 10) / 10;
   }, [data.reviews, data.rating]);
+
   const roundedRating = Math.round(overallRating);
 
   const textCircleId = useId();
@@ -1026,7 +1026,9 @@ export default function TherapistProfile() {
     : undefined;
 
   const mapDirectionsHref = mapQuery
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        mapQuery
+      )}`
     : undefined;
 
   const mobileRadiusText = useMemo(() => {
@@ -1044,6 +1046,7 @@ export default function TherapistProfile() {
       </main>
     );
   }
+
   if (err) {
     return (
       <main className="page">
@@ -1471,7 +1474,8 @@ export default function TherapistProfile() {
               <strong>Specialties:</strong> {data.specialties}
             </p>
             <p>
-              <strong>Starting at:</strong> {data.startingAt}</p>
+              <strong>Starting at:</strong> {data.startingAt}
+            </p>
           </article>
 
           <article className="tp-box tp-box--map">

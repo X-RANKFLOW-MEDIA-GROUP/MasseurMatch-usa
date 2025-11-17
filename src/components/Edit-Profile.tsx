@@ -438,6 +438,8 @@ export default function EditProfile() {
 
     const initial: FormData = {
       full_name: therapist.full_name ?? "",
+      // NOVO CAMPO: display_name
+      display_name: therapist.display_name ?? "",
       headline: therapist.headline ?? "",
       about: therapist.about ?? "",
       philosophy: therapist.philosophy ?? "",
@@ -530,6 +532,7 @@ export default function EditProfile() {
     try {
       const base = {
         full_name: therapist.full_name ?? "",
+        display_name: therapist.display_name ?? "",
         headline: therapist.headline ?? "",
         about: therapist.about ?? "",
         philosophy: therapist.philosophy ?? "",
@@ -723,6 +726,8 @@ export default function EditProfile() {
     try {
       const editedData = {
         full_name: form.full_name,
+        // NOVO: display_name vai para edited_data
+        display_name: form.display_name,
         headline: form.headline,
         about: form.about,
         philosophy: form.philosophy,
@@ -770,6 +775,7 @@ export default function EditProfile() {
 
       const originalData = {
         full_name: therapist.full_name,
+        display_name: therapist.display_name,
         headline: therapist.headline,
         about: therapist.about,
         philosophy: therapist.philosophy,
@@ -987,7 +993,20 @@ export default function EditProfile() {
                   name="full_name"
                   value={form.full_name || ""}
                   onChange={handleSimpleChange}
-                  placeholder="Your full name"
+                  placeholder="Your full legal name"
+                />
+              </FormField>
+
+              {/* NOVO CAMPO: DISPLAY NAME */}
+              <FormField
+                label="Display Name"
+                required
+              >
+                <Input
+                  name="display_name"
+                  value={form.display_name || ""}
+                  onChange={handleSimpleChange}
+                  placeholder="Name shown on your public profile"
                 />
               </FormField>
 
