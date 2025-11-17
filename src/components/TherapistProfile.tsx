@@ -216,7 +216,7 @@ function asArray(val: unknown): string[] {
     try {
       const parsed = JSON.parse(val);
       if (Array.isArray(parsed)) return parsed.filter((v) => typeof v === "string");
-    } catch {}
+    } catch { }
     return val
       .split(",")
       .map((s) => s.trim())
@@ -599,8 +599,8 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
       ? row.mobileMiles
       : typeof row.mobile_service_radius === "number" &&
         !Number.isNaN(row.mobile_service_radius)
-      ? row.mobile_service_radius
-      : base.mobileMiles;
+        ? row.mobile_service_radius
+        : base.mobileMiles;
 
   const ui: Therapist = {
     ...base,
@@ -627,17 +627,19 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
       typeof mobileMiles === "number"
         ? `${mobileMiles} miles`
         : row.travel_radius ||
-          (row.mobile_service_radius
-            ? `${row.mobile_service_radius} miles`
-            : base.mobileRadius),
+        (row.mobile_service_radius
+          ? `${row.mobile_service_radius} miles`
+          : base.mobileRadius),
 
     philosophy: philosophyArr,
     techniques: techniquesArr.length ? techniquesArr : base.techniques,
-    massageSetup: row.massageSetup ?? base.massageSetup,
+    // não existe coluna massageSetup no banco, então usamos só o default
+    massageSetup: base.massageSetup,
     studioAmenities: studioAmenitiesArr.length ? studioAmenitiesArr : base.studioAmenities,
     mobileExtras: mobileExtrasArr.length ? mobileExtrasArr : base.mobileExtras,
     additionalServices:
       additionalServicesArr.length ? additionalServicesArr : base.additionalServices,
+
     productsUsed: productsUsedArr.length ? productsUsedArr : base.productsUsed,
 
     policies: row.policies ?? base.policies,
@@ -675,8 +677,8 @@ export default function TherapistProfile() {
     typeof routeIdRaw === "string"
       ? routeIdRaw
       : Array.isArray(routeIdRaw)
-      ? routeIdRaw[0]
-      : undefined;
+        ? routeIdRaw[0]
+        : undefined;
 
   const [data, setData] = useState<Therapist>(SAMPLE);
   const [status] = useState<Status>("online");
@@ -1027,8 +1029,8 @@ export default function TherapistProfile() {
 
   const mapDirectionsHref = mapQuery
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        mapQuery
-      )}`
+      mapQuery
+    )}`
     : undefined;
 
   const mobileRadiusText = useMemo(() => {
@@ -1360,9 +1362,8 @@ export default function TherapistProfile() {
           return (
             <div
               key={g.id}
-              className={`tp-thumb tp-thumb--fixed ${
-                isOwner && isActive ? "is-active" : ""
-              }`}
+              className={`tp-thumb tp-thumb--fixed ${isOwner && isActive ? "is-active" : ""
+                }`}
             >
               <img
                 src={g.url}
@@ -1595,8 +1596,8 @@ export default function TherapistProfile() {
           <article className="tp-box">
             <h4>Hours</h4>
             {Array.isArray(data.availability) &&
-            (data.availability as any)[0] &&
-            "incallHours" in (data.availability as any)[0] ? (
+              (data.availability as any)[0] &&
+              "incallHours" in (data.availability as any)[0] ? (
               <div className="tp-ptable tp-ptable--avail">
                 <div className="tp-ptable__head">
                   <span>in-studio hours</span>

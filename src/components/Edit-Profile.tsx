@@ -326,6 +326,9 @@ const Input = ({
   type = "text",
   name = "",
   disabled = false,
+  min,
+  max,
+  step,
 }: {
   value: any;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -333,6 +336,9 @@ const Input = ({
   type?: string;
   name?: string;
   disabled?: boolean;
+  min?: number | string;
+  max?: number | string;
+  step?: number | string;
 }) => (
   <input
     type={type}
@@ -341,6 +347,9 @@ const Input = ({
     onChange={onChange}
     placeholder={placeholder}
     disabled={disabled}
+    min={min}
+    max={max}
+    step={step}
     className="ep-input"
   />
 );
@@ -438,8 +447,7 @@ export default function EditProfile() {
 
     const initial: FormData = {
       full_name: therapist.full_name ?? "",
-      // NOVO CAMPO: display_name
-      display_name: therapist.display_name ?? "",
+      display_name: therapist.display_name ?? "", // <-- novo campo
       headline: therapist.headline ?? "",
       about: therapist.about ?? "",
       philosophy: therapist.philosophy ?? "",
@@ -726,7 +734,6 @@ export default function EditProfile() {
     try {
       const editedData = {
         full_name: form.full_name,
-        // NOVO: display_name vai para edited_data
         display_name: form.display_name,
         headline: form.headline,
         about: form.about,
@@ -993,24 +1000,20 @@ export default function EditProfile() {
                   name="full_name"
                   value={form.full_name || ""}
                   onChange={handleSimpleChange}
-                  placeholder="Your full legal name"
+                  placeholder="Your full name"
                 />
               </FormField>
 
-              {/* NOVO CAMPO: DISPLAY NAME */}
-              <FormField
-                label="Display Name"
-                required
-              >
+              <FormField label="Display Name">
                 <Input
                   name="display_name"
                   value={form.display_name || ""}
                   onChange={handleSimpleChange}
-                  placeholder="Name shown on your public profile"
+                  placeholder="Name shown to clients (e.g., John M.)"
                 />
               </FormField>
 
-              <FormField label="Professional Title" required>
+              <FormField label="Professional Title" required fullWidth>
                 <Input
                   name="headline"
                   value={form.headline || ""}
