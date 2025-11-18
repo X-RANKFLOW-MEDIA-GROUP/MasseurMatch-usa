@@ -4,7 +4,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../src/lib/supabase";
 import "./admin.css";
-import { CheckCircle, XCircle, Clock, Eye, User, Edit } from "lucide-react";
+import {
+  CheckCircle,
+  XCircle,
+  Clock,
+  Eye,
+  User,
+  Edit,
+  ExternalLink,
+  FileText,
+} from "lucide-react";
 
 type TherapistRow = {
   id: string;
@@ -19,6 +28,11 @@ type TherapistRow = {
   updated_at: string | null;
   subscription_status: string | null;
   paid_until: string | null;
+  // 🔐 Novos campos de verificação / documentos
+  document_url?: string | null;
+  selfie_url?: string | null;
+  card_url?: string | null;
+  signed_term_url?: string | null;
 };
 
 type ProfileEdit = {
@@ -41,7 +55,7 @@ type ProfileEdit = {
   };
 };
 
-type TabType = "approvals" | "edits";
+type TabType = "approvals" | "edits" | "all";
 
 /* =====================
   Badges auxiliares
@@ -147,7 +161,7 @@ function normalizeTherapistPayload(
 }
 
 /* =====================
-  Modal de revisão
+  Modal de revisão (edições de perfil)
 ===================== */
 
 function EditReviewModal({
@@ -278,13 +292,154 @@ function EditReviewModal({
 }
 
 /* =====================
+  Modal de documentos dos novos cadastros
+===================== */
+
+function ApprovalDocsModal({
+  therapist,
+  onClose,
+}: {
+  therapist: TherapistRow;
+  onClose: () => void;
+}) {
+  const {
+    full_name,
+    email,
+    location,
+    document_url,
+    selfie_url,
+    card_url,
+    signed_term_url,
+  } = therapist;
+
+  const openProfile = () => {
+    // 🔗 Ajuste a rota se o seu perfil público for diferente
+    window.open(`/therapist/${therapist.id}`, "_blank");
+  };
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-large" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>Documentos de Verificação</h2>
+          <p className="modal-subtitle">
+            {full_name || "Sem nome"} · {email || "sem e-mail"}
+          </p>
+          <button className="modal-close" onClick={onClose}>
+            ✕
+          </button>
+        </div>
+
+        <div className="modal-body">
+          <div className="info-row">
+            <span className="label">Local:</span>
+            <span className="value">{location || "—"}</span>
+          </div>
+
+          <div className="docs-grid">
+            {document_url && (
+              <div className="doc-card">
+                <h4>Documento (ID)</h4>
+                <img src={document_url} alt="Documento" />
+                <a
+                  href={document_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="doc-link"
+                >
+                  <ExternalLink size={14} />
+                  Abrir em nova aba
+                </a>
+              </div>
+            )}
+
+            {selfie_url && (
+              <div className="doc-card">
+                <h4>Selfie com Documento</h4>
+                <img src={selfie_url} alt="Selfie com documento" />
+                <a
+                  href={selfie_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="doc-link"
+                >
+                  <ExternalLink size={14} />
+                  Abrir em nova aba
+                </a>
+              </div>
+            )}
+
+            {card_url && (
+              <div className="doc-card">
+                <h4>Foto do Cartão</h4>
+                <img src={card_url} alt="Cartão" />
+                <a
+                  href={card_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="doc-link"
+                >
+                  <ExternalLink size={14} />
+                  Abrir em nova aba
+                </a>
+              </div>
+            )}
+          </div>
+
+          {signed_term_url && (
+            <div className="field-comparison" style={{ marginTop: "1.5rem" }}>
+              <h4>Termo Assinado (PDF)</h4>
+              <div className="pdf-preview-wrapper">
+                {/* Tentativa de embed. Se não funcionar bem, admin usa o link abaixo */}
+                <iframe
+                  src={signed_term_url}
+                  title="Termo assinado"
+                  className="pdf-iframe"
+                />
+              </div>
+              <a
+                href={signed_term_url}
+                target="_blank"
+                rel="noreferrer"
+                className="doc-link"
+                style={{ marginTop: 8 }}
+              >
+                <FileText size={14} />
+                Abrir PDF em nova aba
+              </a>
+            </div>
+          )}
+
+          {!document_url && !selfie_url && !card_url && !signed_term_url && (
+            <p className="muted">
+              Nenhum documento foi encontrado para este cadastro.
+            </p>
+          )}
+        </div>
+
+        <div className="modal-footer">
+          <button className="btn btn-ghost" onClick={onClose}>
+            Fechar
+          </button>
+          <button className="btn" onClick={openProfile}>
+            <ExternalLink size={16} />
+            Ver perfil público
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =====================
   Admin Dashboard
 ===================== */
 
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [rows, setRows] = useState<TherapistRow[]>([]);
+  const [rows, setRows] = useState<TherapistRow[]>([]); // pendentes
+  const [allRows, setAllRows] = useState<TherapistRow[]>([]); // todos
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -294,6 +449,10 @@ export default function AdminDashboard() {
   const [selectedEdit, setSelectedEdit] = useState<ProfileEdit | null>(null);
   const [processingEdit, setProcessingEdit] = useState(false);
   const [adminId, setAdminId] = useState<string>("");
+
+  // Modal de documentos dos cadastros
+  const [selectedTherapist, setSelectedTherapist] =
+    useState<TherapistRow | null>(null);
 
   /* ---- Gate: apenas admin ---- */
   useEffect(() => {
@@ -340,7 +499,11 @@ export default function AdminDashboard() {
         subscription_status,
         paid_until,
         created_at,
-        updated_at
+        updated_at,
+        document_url,
+        selfie_url,
+        card_url,
+        signed_term_url
       `
       )
       .eq("status", "pending")
@@ -348,6 +511,40 @@ export default function AdminDashboard() {
 
     if (error) setError(error.message);
     setRows((data as TherapistRow[]) || []);
+    setLoading(false);
+  }
+
+  /* ---- Buscar TODOS os profissionais cadastrados ---- */
+  async function fetchAllTherapists() {
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await supabase
+      .from("therapists")
+      .select(
+        `
+        id,
+        user_id,
+        full_name,
+        email,
+        location,
+        plan,
+        plan_name,
+        status,
+        subscription_status,
+        paid_until,
+        created_at,
+        updated_at,
+        document_url,
+        selfie_url,
+        card_url,
+        signed_term_url
+      `
+      )
+      .order("created_at", { ascending: false });
+
+    if (error) setError(error.message);
+    setAllRows((data as TherapistRow[]) || []);
     setLoading(false);
   }
 
@@ -384,8 +581,10 @@ export default function AdminDashboard() {
     if (isAdmin === true) {
       if (activeTab === "approvals") {
         fetchPending();
-      } else {
+      } else if (activeTab === "edits") {
         fetchPendingEdits();
+      } else if (activeTab === "all") {
+        fetchAllTherapists();
       }
     }
   }, [isAdmin, activeTab]);
@@ -594,6 +793,17 @@ export default function AdminDashboard() {
     [loading, error, rows.length, activeTab]
   );
 
+  const emptyAllState = useMemo(
+    () =>
+      !loading &&
+      !error &&
+      allRows.length === 0 &&
+      activeTab === "all" && (
+        <p className="muted">Nenhum profissional cadastrado ainda.</p>
+      ),
+    [loading, error, allRows.length, activeTab]
+  );
+
   const emptyEditsState = useMemo(
     () =>
       !loading &&
@@ -617,12 +827,19 @@ export default function AdminDashboard() {
     );
   }
 
+  /* ---- Helpers de navegação ---- */
+
+  const openProfile = (row: TherapistRow) => {
+    // Ajuste a rota se o path do perfil for diferente
+    window.open(`/therapist/${row.id}`, "_blank");
+  };
+
   /* ---- Render ---- */
 
   return (
     <div className="admin-shell">
       <h1 className="title">Admin Dashboard</h1>
-      <p className="subtitle">Gerencie aprovações e edições de perfil.</p>
+      <p className="subtitle">Gerencie aprovações, edições e perfis.</p>
 
       {/* Tabs */}
       <div className="admin-tabs">
@@ -646,13 +863,27 @@ export default function AdminDashboard() {
             <span className="badge">{profileEdits.length}</span>
           )}
         </button>
+        <button
+          className={`admin-tab ${activeTab === "all" ? "active" : ""}`}
+          onClick={() => setActiveTab("all")}
+        >
+          <User size={18} />
+          Todos os Profissionais
+          {allRows.length > 0 && <span className="badge">{allRows.length}</span>}
+        </button>
       </div>
 
       {/* Botão de atualizar */}
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
         <button
           className="btn"
-          onClick={activeTab === "approvals" ? fetchPending : fetchPendingEdits}
+          onClick={
+            activeTab === "approvals"
+              ? fetchPending
+              : activeTab === "edits"
+              ? fetchPendingEdits
+              : fetchAllTherapists
+          }
           disabled={loading}
         >
           {loading ? "Atualizando..." : "Atualizar lista"}
@@ -675,13 +906,14 @@ export default function AdminDashboard() {
                     <th>Plan</th>
                     <th>Payment</th>
                     <th>Created</th>
+                    <th>Docs</th>
                     <th className="col-actions">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {Array.from({ length: 3 }).map((_, i) => (
                     <tr key={`skeleton-${i}`} className="skeleton">
-                      <td colSpan={7}>
+                      <td colSpan={8}>
                         <div className="sk" />
                       </td>
                     </tr>
@@ -702,6 +934,7 @@ export default function AdminDashboard() {
                     <th>Plan</th>
                     <th>Payment</th>
                     <th>Created</th>
+                    <th>Docs</th>
                     <th className="col-actions">Actions</th>
                   </tr>
                 </thead>
@@ -729,7 +962,29 @@ export default function AdminDashboard() {
                           <PaymentStatus row={r} />
                         </td>
                         <td className="muted">{when}</td>
+                        <td>
+                          {(r.document_url ||
+                            r.selfie_url ||
+                            r.card_url ||
+                            r.signed_term_url) && (
+                            <button
+                              className="btn btn-ghost"
+                              onClick={() => setSelectedTherapist(r)}
+                            >
+                              <Eye size={14} />
+                              Ver docs
+                            </button>
+                          )}
+                        </td>
                         <td className="actions">
+                          <button
+                            className="btn"
+                            onClick={() => openProfile(r)}
+                            disabled={isBusy}
+                          >
+                            <ExternalLink size={14} />
+                            Perfil
+                          </button>
                           <button
                             className="btn btn-approve"
                             onClick={() => moderate(r.id, "approve")}
@@ -744,6 +999,99 @@ export default function AdminDashboard() {
                             disabled={isBusy}
                           >
                             Reject
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* TODOS OS PROFISSIONAIS */}
+      {activeTab === "all" && (
+        <>
+          {loading ? (
+            <div className="table-wrap">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>E-mail</th>
+                    <th>Local</th>
+                    <th>Plan</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Created</th>
+                    <th>Profile</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <tr key={`skeleton-all-${i}`} className="skeleton">
+                      <td colSpan={8}>
+                        <div className="sk" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : emptyAllState ? (
+            emptyAllState
+          ) : (
+            <div className="table-wrap">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>E-mail</th>
+                    <th>Local</th>
+                    <th>Plan</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Created</th>
+                    <th>Profile</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allRows.map((r) => {
+                    const when =
+                      r.created_at || r.updated_at
+                        ? new Date(
+                            r.created_at || (r.updated_at as string)
+                          ).toLocaleString()
+                        : "—";
+                    const nome = r.full_name || "—";
+                    const loc = r.location || "—";
+
+                    return (
+                      <tr key={r.id}>
+                        <td className="bold">{nome}</td>
+                        <td className="muted">{r.email || "—"}</td>
+                        <td className="muted">{loc}</td>
+                        <td>
+                          <PlanBadge plan={r.plan} planName={r.plan_name} />
+                        </td>
+                        <td>
+                          <span className={`status-pill status-${r.status}`}>
+                            {r.status || "—"}
+                          </span>
+                        </td>
+                        <td>
+                          <PaymentStatus row={r} />
+                        </td>
+                        <td className="muted">{when}</td>
+                        <td className="actions">
+                          <button
+                            className="btn"
+                            onClick={() => openProfile(r)}
+                          >
+                            <ExternalLink size={14} />
+                            Ver perfil
                           </button>
                         </td>
                       </tr>
@@ -824,7 +1172,7 @@ export default function AdminDashboard() {
         </>
       )}
 
-      {/* Modal de revisão */}
+      {/* Modal de revisão de edições */}
       {selectedEdit && (
         <EditReviewModal
           edit={selectedEdit}
@@ -832,6 +1180,14 @@ export default function AdminDashboard() {
           onApprove={approveProfileEdit}
           onReject={rejectProfileEdit}
           processing={processingEdit}
+        />
+      )}
+
+      {/* Modal de documentos dos novos cadastros */}
+      {selectedTherapist && (
+        <ApprovalDocsModal
+          therapist={selectedTherapist}
+          onClose={() => setSelectedTherapist(null)}
         />
       )}
     </div>

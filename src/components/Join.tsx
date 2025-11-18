@@ -3,10 +3,22 @@
 import React, { useState } from "react";
 import { Check, Upload, Camera, AlertCircle, Loader2 } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import jsPDF from "jspdf";
 import "./Join.css";
 
 type PlanKey = "free" | "standard" | "pro" | "elite";
 type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+type VerificationStepData = {
+  documentFile: File | null;
+  selfieFile: File | null;
+  cardFile: File | null;
+  signature: string;
+  timestamp: string;
+  status: string;
+};
+
+const VERIFICATION_BUCKET = "verification-files"; // 🔹 bucket do Storage
 
 /* ===== Copy (English only) ===== */
 const TXT = {
@@ -145,16 +157,18 @@ const TXT = {
       "I understand this is a directory (no service/payment intermediation).",
     ],
 
-    verificationTitle: "Identity Verification",
+    verificationTitle: "Identity & Card Verification",
     verificationSubtitle:
-      "To ensure safety and trust, we need to verify your identity",
+      "To ensure safety and trust, we need to verify your identity and card ownership.",
     verificationInstructions: [
-      "Upload a photo of your official ID with photo (ID, Driver's License, or Passport)",
-      "Take a selfie holding the document next to your face",
-      "Make sure photos are clear and readable",
+      "Upload a photo of your official ID with photo (ID, Driver's License, or Passport).",
+      "Take a selfie holding the document next to your face.",
+      "Upload a clear photo of the card that will be used for payments (hide CVV).",
+      "Make sure all photos are clear and readable.",
     ],
-    uploadDocument: "Upload Document",
+    uploadDocument: "Upload ID Document",
     uploadSelfie: "Upload Selfie with Document",
+    uploadCard: "Upload Card Photo",
     verificationNote:
       "Your information will be kept confidential and used only for verification.",
     verificationPending: "Submitting for review...",
@@ -180,7 +194,7 @@ const TXT = {
     btnNext: "Continue",
     toastErr: "Fill all required fields.",
     continue: "Continue",
-    sendForReview: "Submit for Review",
+    sendForReview: "Confirm & Continue",
   },
 } as const;
 
@@ -208,6 +222,96 @@ const FREE_TRIAL_DAYS = 7;
 /* ===== Utils ===== */
 function priceLabel(price: number) {
   return `$${price.toFixed(2)}`;
+}
+
+function getExtFromMime(type: string): string {
+  const map: Record<string, string> = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+    "image/heic": "heic",
+    "application/pdf": "pdf",
+  };
+  return map[type] || "bin";
+}
+
+async function uploadToVerificationBucket(
+  userId: string,
+  file: File | Blob,
+  filename: string,
+  contentType?: string
+): Promise<string | null> {
+  try {
+    const ext =
+      file instanceof File
+        ? getExtFromMime(file.type)
+        : filename.split(".").pop() || "pdf";
+
+    const path = `verifications/${userId}/${filename}.${ext}`;
+
+    const { error: uploadErr } = await supabase.storage
+      .from(VERIFICATION_BUCKET)
+      .upload(path, file, {
+        upsert: true,
+        contentType: contentType || (file instanceof File ? file.type : "application/pdf"),
+      });
+
+    if (uploadErr) {
+      console.error("Error uploading verification file:", uploadErr);
+      return null;
+    }
+
+    const { data } = supabase.storage
+      .from(VERIFICATION_BUCKET)
+      .getPublicUrl(path);
+
+    return data?.publicUrl || null;
+  } catch (err) {
+    console.error("Unexpected error uploading file:", err);
+    return null;
+  }
+}
+
+async function generateSignedTermPDF(opts: {
+  fullName: string;
+  email: string;
+  planName: string;
+  signature: string;
+}): Promise<Blob> {
+  const { fullName, email, planName, signature } = opts;
+
+  const doc = new jsPDF();
+  let y = 20;
+
+  doc.setFontSize(18);
+  doc.text("Service Agreement & Verification Terms", 10, y);
+  y += 12;
+
+  doc.setFontSize(11);
+  const paragraphs = [
+    `Client: ${fullName}`,
+    `Email: ${email}`,
+    `Selected plan: ${planName}`,
+    "",
+    "By signing this document, I declare that:",
+    "- I am the legitimate owner or authorized user of the card provided.",
+    "- I authorize charges related to the selected plan on this platform.",
+    "- I understand that this platform is a directory and does not intermediate services or payments between professionals and clients.",
+    "- I agree to the Terms of Service, Privacy Policy, Community Guidelines and Disclaimer.",
+    "",
+    "This document is generated electronically and remains stored for verification and compliance purposes.",
+    "",
+    `Signature (typed): ${signature}`,
+    `Date: ${new Date().toLocaleString()}`,
+  ];
+
+  paragraphs.forEach((p) => {
+    const lines = doc.splitTextToSize(p, 180);
+    doc.text(lines, 10, y);
+    y += lines.length * 6;
+  });
+
+  return doc.output("blob");
 }
 
 /* ===== Auth + Profile ===== */
@@ -446,9 +550,7 @@ function RegistrationForm({
           type="text"
           placeholder={L.placeholders.fullName}
           value={form.fullName}
-          onChange={(e) =>
-            setForm({ ...form, fullName: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, fullName: e.target.value })}
           className="mb-12"
         />
         <input
@@ -464,9 +566,7 @@ function RegistrationForm({
           type="email"
           placeholder={L.placeholders.email}
           value={form.email}
-          onChange={(e) =>
-            setForm({ ...form, email: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
           className="mb-12"
         />
 
@@ -474,9 +574,7 @@ function RegistrationForm({
           type="password"
           placeholder={L.placeholders.password}
           value={form.password}
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
           className="mb-12"
         />
         <input
@@ -493,18 +591,14 @@ function RegistrationForm({
           type="tel"
           placeholder={L.placeholders.phone}
           value={form.phone}
-          onChange={(e) =>
-            setForm({ ...form, phone: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, phone: e.target.value })}
           className="mb-12"
         />
         <input
           type="text"
           placeholder={L.placeholders.location}
           value={form.location}
-          onChange={(e) =>
-            setForm({ ...form, location: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, location: e.target.value })}
           className="mb-12"
         />
         <input
@@ -542,9 +636,7 @@ function RegistrationForm({
           <input
             type="checkbox"
             checked={form.agree}
-            onChange={(e) =>
-              setForm({ ...form, agree: e.target.checked })
-            }
+            onChange={(e) => setForm({ ...form, agree: e.target.checked })}
           />
           <span className="small">{L.labels.agree}</span>
         </label>
@@ -679,47 +771,47 @@ function ComplianceChecklist({
   );
 }
 
-/* ===== Step 5: Identity Verification ===== */
+/* ===== Step 5: Identity + Card Verification + Signed Term ===== */
 function IdentityVerification({
   onBack,
   onContinue,
 }: {
   onBack: () => void;
-  onContinue: (data: any) => void;
+  onContinue: (data: VerificationStepData) => void;
 }) {
   const L = TXT.flow;
   const [documentFile, setDocumentFile] = useState<File | null>(null);
   const [selfieFile, setSelfieFile] = useState<File | null>(null);
+  const [cardFile, setCardFile] = useState<File | null>(null);
+  const [signature, setSignature] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 
-  const fileToBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const rd = new FileReader();
-      rd.onload = () => resolve(rd.result as string);
-      rd.onerror = reject;
-      rd.readAsDataURL(file);
-    });
-
   const handleSubmit = async () => {
-    if (!documentFile || !selfieFile) {
-      setError("Please upload both files.");
+    if (!documentFile || !selfieFile || !cardFile) {
+      setError("Please upload ID, selfie and card photo.");
       return;
     }
+    if (!signature.trim()) {
+      setError("Please type your full name as a signature.");
+      return;
+    }
+
     setUploading(true);
     setError("");
     try {
-      await new Promise((r) => setTimeout(r, 1200));
-      const documentData = await fileToBase64(documentFile);
-      const selfieData = await fileToBase64(selfieFile);
+      await new Promise((r) => setTimeout(r, 400));
+
       onContinue({
-        documentFile: documentData,
-        selfieFile: selfieData,
+        documentFile,
+        selfieFile,
+        cardFile,
+        signature: signature.trim(),
         timestamp: new Date().toISOString(),
         status: "pending_review",
       });
     } catch {
-      setError("Error uploading files. Try again.");
+      setError("Error processing data. Try again.");
     } finally {
       setUploading(false);
     }
@@ -788,9 +880,7 @@ function IdentityVerification({
             type="file"
             accept="image/*"
             capture="user"
-            onChange={(e) =>
-              setSelfieFile(e.target.files?.[0] || null)
-            }
+            onChange={(e) => setSelfieFile(e.target.files?.[0] || null)}
             className="mt-12"
             style={{
               maxWidth: 220,
@@ -799,6 +889,51 @@ function IdentityVerification({
             }}
           />
         </div>
+
+        <div className="upload-box">
+          <Upload size={28} />
+          <p className="mt-8" style={{ fontWeight: 700 }}>
+            {L.uploadCard}
+          </p>
+          <p className="hint">Click or drag card photo</p>
+          {cardFile && (
+            <p className="small mt-8" style={{ color: "#059669" }}>
+              ✓ {cardFile.name}
+            </p>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setCardFile(e.target.files?.[0] || null)}
+            className="mt-12"
+            style={{
+              maxWidth: 220,
+              marginInline: "auto",
+              display: "block",
+            }}
+          />
+          <p className="small mt-8" style={{ opacity: 0.8 }}>
+            Please cover the CVV and part of the card number. We only need to
+            confirm ownership.
+          </p>
+        </div>
+      </div>
+
+      <div className="card mt-16">
+        <h3>Card Authorization & Terms</h3>
+        <p className="small mt-8">
+          By signing below, you confirm that you are the legitimate holder or
+          authorized user of the card provided and authorize charges related to
+          the selected plan, according to our Terms of Service, Privacy Policy,
+          Community Guidelines and Disclaimer.
+        </p>
+        <input
+          type="text"
+          className="mt-12"
+          placeholder="Type your full name as a signature"
+          value={signature}
+          onChange={(e) => setSignature(e.target.value)}
+        />
       </div>
 
       {uploading && (
@@ -817,7 +952,7 @@ function IdentityVerification({
         </button>
         <button
           className="btn btn-primary"
-          disabled={uploading || !documentFile || !selfieFile}
+          disabled={uploading}
           onClick={handleSubmit}
         >
           {uploading ? "..." : L.sendForReview}
@@ -831,11 +966,13 @@ function IdentityVerification({
 function PaymentStep({
   plan,
   formData,
+  verificationData,
   onBack,
   onSuccess,
 }: {
   plan: PlanKey;
   formData: any;
+  verificationData: VerificationStepData | null;
   onBack: () => void;
   onSuccess: () => void;
 }) {
@@ -867,6 +1004,72 @@ function PaymentStep({
         planName,
         priceMonthly,
       });
+
+      // 🔹 Salvar arquivos de verificação + PDF no Storage + tabela verification_data
+      if (verificationData && userId) {
+        try {
+          const { documentFile, selfieFile, cardFile, signature } =
+            verificationData;
+
+          let document_url: string | null = null;
+          let selfie_url: string | null = null;
+          let card_url: string | null = null;
+          let signed_term_url: string | null = null;
+
+          if (documentFile) {
+            document_url = await uploadToVerificationBucket(
+              userId,
+              documentFile,
+              "document"
+            );
+          }
+          if (selfieFile) {
+            selfie_url = await uploadToVerificationBucket(
+              userId,
+              selfieFile,
+              "selfie"
+            );
+          }
+          if (cardFile) {
+            card_url = await uploadToVerificationBucket(
+              userId,
+              cardFile,
+              "card"
+            );
+          }
+          if (signature) {
+            const pdfBlob = await generateSignedTermPDF({
+              fullName: formData.fullName,
+              email: formData.email,
+              planName,
+              signature,
+            });
+            signed_term_url = await uploadToVerificationBucket(
+              userId,
+              pdfBlob,
+              "signed_term",
+              "application/pdf"
+            );
+          }
+
+          await supabase
+            .from("verification_data")
+            .upsert(
+              {
+                user_id: userId,
+                document_url,
+                selfie_url,
+                card_url,
+                signed_term_url,
+                status: "pending",
+              },
+              { onConflict: "user_id" }
+            );
+        } catch (verErr) {
+          console.error("Error storing verification data:", verErr);
+          // não bloqueia o pagamento, só loga
+        }
+      }
 
       if (isFree) {
         const trialEnds = new Date();
@@ -906,19 +1109,16 @@ function PaymentStep({
 
       let resp: Response;
       try {
-        resp = await fetch(
-          `${STRIPE_BACKEND}/create-checkout-session`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              planKey: plan,
-              userId,
-              customerEmail: formData.email,
-            }),
-            signal: controller.signal,
-          }
-        );
+        resp = await fetch(`${STRIPE_BACKEND}/create-checkout-session`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            planKey: plan,
+            userId,
+            customerEmail: formData.email,
+          }),
+          signal: controller.signal,
+        });
       } catch (err: any) {
         if (err.name === "AbortError") {
           throw new Error(
@@ -1066,7 +1266,8 @@ export default function JoinPage() {
   const [formData, setFormData] = useState<any>({});
   const [legalData, setLegalData] = useState<any>({});
   const [complianceData, setComplianceData] = useState<any>({});
-  const [verificationData, setVerificationData] = useState<any>({});
+  const [verificationData, setVerificationData] =
+    useState<VerificationStepData | null>(null);
 
   const L = TXT;
 
@@ -1106,7 +1307,9 @@ export default function JoinPage() {
                   style={{ display: "flex", alignItems: "center", gap: 6 }}
                 >
                   <Check size={18} />
-                  <span style={{ fontSize: 14, fontWeight: 700 }}>{stat}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700 }}>
+                    {stat}
+                  </span>
                 </div>
               ))}
             </div>
@@ -1174,7 +1377,7 @@ export default function JoinPage() {
       {step === 5 && (
         <IdentityVerification
           onBack={() => setStep(4)}
-          onContinue={(data: any) => {
+          onContinue={(data: VerificationStepData) => {
             setVerificationData(data);
             setStep(6);
           }}
@@ -1185,6 +1388,7 @@ export default function JoinPage() {
         <PaymentStep
           plan={selectedPlan}
           formData={formData}
+          verificationData={verificationData}
           onBack={() => setStep(5)}
           onSuccess={() => setStep(7)}
         />
