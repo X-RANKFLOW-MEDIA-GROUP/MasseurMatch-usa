@@ -1,12 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
-import { Check, Upload, Camera, AlertCircle, Loader2 } from "lucide-react";
+import { Check, AlertCircle, Loader2 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import "./Join.css";
 
 type PlanKey = "free" | "standard" | "pro" | "elite";
-type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+type Step = 1 | 2 | 3 | 4 | 5 | 6;
+
+/* ===== Idiomas principais ===== */
+const LANGUAGE_OPTIONS = [
+  "English",
+  "Spanish",
+  "Portuguese",
+  "French",
+  "German",
+  "Italian",
+  "Japanese",
+] as const;
 
 /* ===== Copy (English only) ===== */
 const TXT = {
@@ -105,8 +116,8 @@ const TXT = {
       displayName: "Display name",
       email: "Email",
       phone: "WhatsApp / Phone",
-      location: "ZIP Code",
-      languages: "Languages spoken",
+      location: "ZIP / Postal Code", // 🔹 ATUALIZADO
+      languages: "Languages spoken", // vai ser lista fixa
       servicesLegend: "Services offered",
       agree: "I accept the Terms and Privacy Policy.",
       password: "Password (min. 6)",
@@ -117,8 +128,8 @@ const TXT = {
       displayName: "Public display name",
       email: "you@example.com",
       phone: "(000) 000-0000",
-      location: "ZIP Code (e.g., 10001)",
-      languages: "English, Spanish",
+      location: "ZIP / Postal Code", // 🔹 ATUALIZADO
+      languages: "Select your main languages",
       password: "Create a password",
       password2: "Repeat the password",
     },
@@ -145,21 +156,6 @@ const TXT = {
       "I understand this is a directory (no service/payment intermediation).",
     ],
 
-    verificationTitle: "Identity Verification",
-    verificationSubtitle:
-      "To ensure safety and trust, we need to verify your identity",
-    verificationInstructions: [
-      "Upload a photo of your official ID with photo (ID, Driver's License, or Passport)",
-      "Take a selfie holding the document next to your face",
-      "Make sure photos are clear and readable",
-    ],
-    uploadDocument: "Upload Document",
-    uploadSelfie: "Upload Selfie with Document",
-    verificationNote:
-      "Your information will be kept confidential and used only for verification.",
-    verificationPending: "Submitting for review...",
-    verificationSuccess: "Documents submitted! Awaiting approval (24-48h).",
-
     paymentTitle: "Complete Payment",
     paymentSubtitle: "Final step to activate your account",
     paymentNote: "You'll be redirected to Stripe's secure checkout.",
@@ -180,7 +176,6 @@ const TXT = {
     btnNext: "Continue",
     toastErr: "Fill all required fields.",
     continue: "Continue",
-    sendForReview: "Submit for Review",
   },
 } as const;
 
@@ -205,17 +200,6 @@ const STRIPE_BACKEND =
 const POLICY_VERSION = "2025-11-11";
 const FREE_TRIAL_DAYS = 7;
 
-/* ===== Languages (7 principais idiomas mundiais) ===== */
-const LANGUAGE_OPTIONS = [
-  "English",
-  "Spanish",
-  "Portuguese",
-  "French",
-  "German",
-  "Italian",
-  "Arabic",
-] as const;
-
 /* ===== Utils ===== */
 function priceLabel(price: number) {
   return `$${price.toFixed(2)}`;
@@ -229,7 +213,7 @@ async function ensureAuthAndUpsertProfile(opts: {
   displayName: string;
   phone: string;
   location: string;
-  languages: string[]; // agora array de idiomas
+  languages: string[]; // 🔹 agora array de idiomas
   services: string[];
   agree: boolean;
   plan: PlanKey;
@@ -290,8 +274,8 @@ async function ensureAuthAndUpsertProfile(opts: {
     display_name: displayName.trim(),
     email: email.trim(),
     phone: phone.trim(),
-    location: location.trim(), // aqui você ainda salva ZIP Code nesse campo
-    languages, // já é array de strings
+    location: location.trim(), // aqui você pode guardar o ZIP
+    languages, // 🔹 já vai como array (text[] ou jsonb no Supabase)
     services,
     agree_terms: agree,
     plan,
@@ -307,7 +291,9 @@ async function ensureAuthAndUpsertProfile(opts: {
 
   if (upErr) throw upErr;
 
-  localStorage.setItem("mm_user", JSON.stringify({ email: email.trim() }));
+  if (typeof window !== "undefined") {
+    localStorage.setItem("mm_user", JSON.stringify({ email: email.trim() }));
+  }
 
   return { userId };
 }
@@ -401,13 +387,22 @@ function RegistrationForm({
     email: "",
     phone: "",
     location: "",
-    languages: [] as string[], // agora array
+    languages: [] as string[], // 🔹 agora é array
     services: [] as string[],
     agree: false,
     password: "",
     password2: "",
   });
   const [error, setError] = useState("");
+
+  const toggleLanguage = (lang: string) => {
+    setForm((prev) => ({
+      ...prev,
+      languages: prev.languages.includes(lang)
+        ? prev.languages.filter((l) => l !== lang)
+        : [...prev.languages, lang],
+    }));
+  };
 
   const handleSubmit = () => {
     if (
@@ -432,25 +427,16 @@ function RegistrationForm({
       setError("Invalid email.");
       return;
     }
-    if (form.languages.length === 0) {
-      setError("Select at least one language.");
-      return;
-    }
     if (form.services.length === 0) {
       setError("Select at least one service.");
       return;
     }
+    if (form.languages.length === 0) {
+      setError("Select at least one language.");
+      return;
+    }
     setError("");
     onContinue(form);
-  };
-
-  const toggleLanguage = (lang: string) => {
-    setForm((prev) => ({
-      ...prev,
-      languages: prev.languages.includes(lang)
-        ? prev.languages.filter((l) => l !== lang)
-        : [...prev.languages, lang],
-    }));
   };
 
   return (
@@ -467,9 +453,7 @@ function RegistrationForm({
           type="text"
           placeholder={L.placeholders.fullName}
           value={form.fullName}
-          onChange={(e) =>
-            setForm({ ...form, fullName: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, fullName: e.target.value })}
           className="mb-12"
         />
         <input
@@ -485,9 +469,7 @@ function RegistrationForm({
           type="email"
           placeholder={L.placeholders.email}
           value={form.email}
-          onChange={(e) =>
-            setForm({ ...form, email: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
           className="mb-12"
         />
 
@@ -495,9 +477,7 @@ function RegistrationForm({
           type="password"
           placeholder={L.placeholders.password}
           value={form.password}
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
           className="mb-12"
         />
         <input
@@ -514,9 +494,7 @@ function RegistrationForm({
           type="tel"
           placeholder={L.placeholders.phone}
           value={form.phone}
-          onChange={(e) =>
-            setForm({ ...form, phone: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, phone: e.target.value })}
           className="mb-12"
         />
         <input
@@ -529,9 +507,12 @@ function RegistrationForm({
           className="mb-12"
         />
 
-        {/* Idiomas - seleção de 7 principais */}
+        {/* 🔹 Seleção de idiomas fixos */}
         <fieldset className="mb-16">
           <legend>{L.labels.languages}</legend>
+          <p className="small muted mb-8">
+            Select one or more languages you speak.
+          </p>
           {LANGUAGE_OPTIONS.map((lang) => (
             <label key={lang} className="check-row">
               <input
@@ -552,12 +533,12 @@ function RegistrationForm({
                 type="checkbox"
                 checked={form.services.includes(svc)}
                 onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
+                  setForm({
+                    ...form,
                     services: e.target.checked
-                      ? [...prev.services, svc]
-                      : prev.services.filter((s) => s !== svc),
-                  }))
+                      ? [...form.services, svc]
+                      : form.services.filter((s) => s !== svc),
+                  })
                 }
               />
               <span>{svc}</span>
@@ -569,9 +550,7 @@ function RegistrationForm({
           <input
             type="checkbox"
             checked={form.agree}
-            onChange={(e) =>
-              setForm({ ...form, agree: e.target.checked })
-            }
+            onChange={(e) => setForm({ ...form, agree: e.target.checked })}
           />
           <span className="small">{L.labels.agree}</span>
         </label>
@@ -706,155 +685,7 @@ function ComplianceChecklist({
   );
 }
 
-/* ===== Step 5: Identity Verification ===== */
-function IdentityVerification({
-  onBack,
-  onContinue,
-}: {
-  onBack: () => void;
-  onContinue: (data: any) => void;
-}) {
-  const L = TXT.flow;
-  const [documentFile, setDocumentFile] = useState<File | null>(null);
-  const [selfieFile, setSelfieFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState("");
-
-  const fileToBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const rd = new FileReader();
-      rd.onload = () => resolve(rd.result as string);
-      rd.onerror = reject;
-      rd.readAsDataURL(file);
-    });
-
-  const handleSubmit = async () => {
-    if (!documentFile || !selfieFile) {
-      setError("Please upload both files.");
-      return;
-    }
-    setUploading(true);
-    setError("");
-    try {
-      await new Promise((r) => setTimeout(r, 1200));
-      const documentData = await fileToBase64(documentFile);
-      const selfieData = await fileToBase64(selfieFile);
-      onContinue({
-        documentFile: documentData,
-        selfieFile: selfieData,
-        timestamp: new Date().toISOString(),
-        status: "pending_review",
-      });
-    } catch {
-      setError("Error uploading files. Try again.");
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  return (
-    <section className="section-narrow">
-      <h2>{L.verificationTitle}</h2>
-      <p className="muted mb-16">{L.verificationSubtitle}</p>
-
-      {error && <div className="alert alert-error mb-16">{error}</div>}
-
-      <div className="alert alert-info">
-        <AlertCircle size={18} />
-        <div>
-          <ul className="mt-12" style={{ paddingLeft: 20 }}>
-            {L.verificationInstructions.map((t: string, i: number) => (
-              <li key={i} className="mb-8">
-                {t}
-              </li>
-            ))}
-          </ul>
-          <p className="small mt-12">{L.verificationNote}</p>
-        </div>
-      </div>
-
-      <div className="upload-grid mt-16">
-        <div className="upload-box">
-          <Upload size={28} />
-          <p className="mt-8" style={{ fontWeight: 700 }}>
-            {L.uploadDocument}
-          </p>
-          <p className="hint">Click or drag file</p>
-          {documentFile && (
-            <p className="small mt-8" style={{ color: "#059669" }}>
-              ✓ {documentFile.name}
-            </p>
-          )}
-          <input
-            type="file"
-            accept="image/*,.pdf"
-            onChange={(e) =>
-              setDocumentFile(e.target.files?.[0] || null)
-            }
-            className="mt-12"
-            style={{
-              maxWidth: 220,
-              marginInline: "auto",
-              display: "block",
-            }}
-          />
-        </div>
-
-        <div className="upload-box">
-          <Camera size={28} />
-          <p className="mt-8" style={{ fontWeight: 700 }}>
-            {L.uploadSelfie}
-          </p>
-          <p className="hint">Click or drag selfie</p>
-          {selfieFile && (
-            <p className="small mt-8" style={{ color: "#059669" }}>
-              ✓ {selfieFile.name}
-            </p>
-          )}
-          <input
-            type="file"
-            accept="image/*"
-            capture="user"
-            onChange={(e) =>
-              setSelfieFile(e.target.files?.[0] || null)
-            }
-            className="mt-12"
-            style={{
-              maxWidth: 220,
-              marginInline: "auto",
-              display: "block",
-            }}
-          />
-        </div>
-      </div>
-
-      {uploading && (
-        <div className="alert alert-warn mt-16">
-          {L.verificationPending}
-        </div>
-      )}
-
-      <div className="mt-16 btn-row">
-        <button
-          className="btn btn-ghost"
-          disabled={uploading}
-          onClick={onBack}
-        >
-          {L.btnBack}
-        </button>
-        <button
-          className="btn btn-primary"
-          disabled={uploading || !documentFile || !selfieFile}
-          onClick={handleSubmit}
-        >
-          {uploading ? "..." : L.sendForReview}
-        </button>
-      </div>
-    </section>
-  );
-}
-
-/* ===== Step 6: Payment / Free Trial ===== */
+/* ===== Step 5: Payment / Free Trial + Stripe Identity ===== */
 function PaymentStep({
   plan,
   formData,
@@ -880,6 +711,7 @@ function PaymentStep({
       const priceMonthly = PLANS[plan].priceMonthly;
       const planName = TXT.plans[plan].name;
 
+      // 1) Cria ou loga usuário + upsert therapist
       const { userId } = await ensureAuthAndUpsertProfile({
         email: formData.email,
         password: formData.password,
@@ -887,14 +719,19 @@ function PaymentStep({
         displayName: formData.displayName,
         phone: formData.phone,
         location: formData.location,
-        languages: formData.languages, // agora array
-        services: formData.services,
+        languages: formData.languages || [], // array de idiomas
+        services: formData.services || [],
         agree: formData.agree,
         plan,
         planName,
         priceMonthly,
       });
 
+      if (!userId) {
+        throw new Error("Could not get user ID for this account.");
+      }
+
+      // 2) Se for plano Free: só ativa trial e vai para ativação
       if (isFree) {
         const trialEnds = new Date();
         trialEnds.setDate(trialEnds.getDate() + FREE_TRIAL_DAYS);
@@ -912,40 +749,40 @@ function PaymentStep({
           console.error("Error updating free trial info:", err);
         }
 
-        localStorage.setItem(
-          "mm_pending_activation",
-          JSON.stringify({
-            userId,
-            plan,
-            formData,
-            trialEndsAt: trialEnds.toISOString(),
-            timestamp: new Date().toISOString(),
-          })
-        );
+        if (typeof window !== "undefined") {
+          localStorage.setItem(
+            "mm_pending_activation",
+            JSON.stringify({
+              userId,
+              plan,
+              formData,
+              trialEndsAt: trialEnds.toISOString(),
+              timestamp: new Date().toISOString(),
+            })
+          );
+        }
 
         setLoading(false);
-        onSuccess();
+        onSuccess(); // step 6: ActivationStatus
         return;
       }
 
+      // 3) Planos pagos: iniciar fluxo Stripe Identity → depois Checkout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 25000);
 
       let resp: Response;
       try {
-        resp = await fetch(
-          `${STRIPE_BACKEND}/create-checkout-session`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              planKey: plan,
-              userId,
-              customerEmail: formData.email,
-            }),
-            signal: controller.signal,
-          }
-        );
+        resp = await fetch(`${STRIPE_BACKEND}/start-payment-flow`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            planKey: plan,
+            userId,
+            customerEmail: formData.email,
+          }),
+          signal: controller.signal,
+        });
       } catch (err: any) {
         if (err.name === "AbortError") {
           throw new Error(
@@ -957,38 +794,41 @@ function PaymentStep({
         clearTimeout(timeoutId);
       }
 
-      const data = await resp.json().catch(() => ({}));
+      const data = (await resp.json().catch(() => ({}))) as any;
 
       if (!resp.ok) {
-        const msg = (data as any)?.error || `Error ${resp.status}`;
+        const msg = data?.error || `Error ${resp.status}`;
         throw new Error(msg);
       }
 
-      if (!(data as any)?.url) {
-        throw new Error("Invalid server response.");
+      if (!data?.url) {
+        throw new Error("Invalid server response (missing url).");
       }
 
-      localStorage.setItem(
-        "mm_pending_activation",
-        JSON.stringify({
-          userId,
-          plan,
-          formData,
-          timestamp: new Date().toISOString(),
-        })
-      );
-
-      window.location.href = (data as any).url;
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          "mm_pending_activation",
+          JSON.stringify({
+            userId,
+            plan,
+            formData,
+            timestamp: new Date().toISOString(),
+          })
+        );
+        window.location.href = data.url;
+      }
     } catch (err: any) {
-      console.error("Payment error:", err);
-      setError(err.message || "Error starting payment.");
+      console.error("Payment/verification error:", err);
+      setError(
+        err.message || "Error starting identity verification and payment."
+      );
       setLoading(false);
     }
   };
 
   const trialNote = isFree
     ? "Free 7-day trial. No charge will be made. Your profile will be reviewed by our team."
-    : L.paymentNote;
+    : "You will first complete identity verification via Stripe. After your identity is confirmed, you will be automatically redirected to Stripe Checkout to complete the subscription payment.";
 
   return (
     <section className="section-narrow">
@@ -1004,7 +844,7 @@ function PaymentStep({
 
       <div className="payment-panel">
         <div style={{ fontSize: 48, marginBottom: 16 }}>
-          {isFree ? "Free Trial" : "Credit Card"}
+          {isFree ? "Free Trial" : "Identity + Checkout"}
         </div>
         <h3 className="mb-8">{TXT.plans[plan].name}</h3>
         <p
@@ -1030,12 +870,14 @@ function PaymentStep({
           {loading ? (
             <>
               <Loader2 size={18} className="animate-spin" />
-              {isFree ? "Activating..." : "Processing..."}
+              {isFree
+                ? "Activating..."
+                : "Starting verification & payment..."}
             </>
           ) : isFree ? (
             L.paymentFree
           ) : (
-            L.paymentButton
+            "Start verification & go to payment"
           )}
         </button>
 
@@ -1050,14 +892,15 @@ function PaymentStep({
 
       {!isFree && (
         <div className="alert alert-info mt-16 center">
-          Secure Lock – Secure payment processed via Stripe
+          Secure Lock – Identity verification and payment are processed via
+          Stripe.
         </div>
       )}
     </section>
   );
 }
 
-/* ===== Step 7: Activation Status ===== */
+/* ===== Step 6: Activation Status ===== */
 function ActivationStatus() {
   const L = TXT.flow;
   return (
@@ -1093,7 +936,6 @@ export default function JoinPage() {
   const [formData, setFormData] = useState<any>({});
   const [legalData, setLegalData] = useState<any>({});
   const [complianceData, setComplianceData] = useState<any>({});
-  const [verificationData, setVerificationData] = useState<any>({});
 
   const L = TXT;
 
@@ -1101,7 +943,7 @@ export default function JoinPage() {
     <main>
       {/* Progress Indicator */}
       <div className="progress">
-        {[1, 2, 3, 4, 5, 6].map((s) => (
+        {[1, 2, 3, 4, 5].map((s) => (
           <div key={s} className={`bar ${step >= s ? "is-on" : ""}`} />
         ))}
       </div>
@@ -1201,25 +1043,15 @@ export default function JoinPage() {
       )}
 
       {step === 5 && (
-        <IdentityVerification
-          onBack={() => setStep(4)}
-          onContinue={(data: any) => {
-            setVerificationData(data);
-            setStep(6);
-          }}
-        />
-      )}
-
-      {step === 6 && (
         <PaymentStep
           plan={selectedPlan}
           formData={formData}
-          onBack={() => setStep(5)}
-          onSuccess={() => setStep(7)}
+          onBack={() => setStep(4)}
+          onSuccess={() => setStep(6)}
         />
       )}
 
-      {step === 7 && <ActivationStatus />}
+      {step === 6 && <ActivationStatus />}
 
       {/* Footer */}
       <footer className="footer">
