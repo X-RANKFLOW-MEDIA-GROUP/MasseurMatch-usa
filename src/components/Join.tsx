@@ -116,8 +116,8 @@ const TXT = {
       displayName: "Display name",
       email: "Email",
       phone: "WhatsApp / Phone",
-      location: "ZIP / Postal Code", // 🔹 ATUALIZADO
-      languages: "Languages spoken", // vai ser lista fixa
+      location: "ZIP / Postal Code", // ZIP
+      languages: "Languages spoken",
       servicesLegend: "Services offered",
       agree: "I accept the Terms and Privacy Policy.",
       password: "Password (min. 6)",
@@ -128,7 +128,7 @@ const TXT = {
       displayName: "Public display name",
       email: "you@example.com",
       phone: "(000) 000-0000",
-      location: "ZIP / Postal Code", // 🔹 ATUALIZADO
+      location: "ZIP / Postal Code",
       languages: "Select your main languages",
       password: "Create a password",
       password2: "Repeat the password",
@@ -156,11 +156,11 @@ const TXT = {
       "I understand this is a directory (no service/payment intermediation).",
     ],
 
-    paymentTitle: "Complete Payment",
+    paymentTitle: "Complete Verification & Payment",
     paymentSubtitle: "Final step to activate your account",
     paymentNote: "You'll be redirected to Stripe's secure checkout.",
     paymentButton: "Go to Payment",
-    paymentFree: "Activate Free Trial",
+    paymentFree: "Activate Free Plan",
 
     activationTitle: "Account Activation in Progress",
     activationSubtitle: "We're processing your information",
@@ -213,7 +213,7 @@ async function ensureAuthAndUpsertProfile(opts: {
   displayName: string;
   phone: string;
   location: string;
-  languages: string[]; // 🔹 agora array de idiomas
+  languages: string[];
   services: string[];
   agree: boolean;
   plan: PlanKey;
@@ -274,8 +274,8 @@ async function ensureAuthAndUpsertProfile(opts: {
     display_name: displayName.trim(),
     email: email.trim(),
     phone: phone.trim(),
-    location: location.trim(), // aqui você pode guardar o ZIP
-    languages, // 🔹 já vai como array (text[] ou jsonb no Supabase)
+    location: location.trim(),
+    languages,
     services,
     agree_terms: agree,
     plan,
@@ -387,7 +387,7 @@ function RegistrationForm({
     email: "",
     phone: "",
     location: "",
-    languages: [] as string[], // 🔹 agora é array
+    languages: [] as string[],
     services: [] as string[],
     agree: false,
     password: "",
@@ -507,7 +507,7 @@ function RegistrationForm({
           className="mb-12"
         />
 
-        {/* 🔹 Seleção de idiomas fixos */}
+        {/* Idiomas */}
         <fieldset className="mb-16">
           <legend>{L.labels.languages}</legend>
           <p className="small muted mb-8">
@@ -719,7 +719,7 @@ function PaymentStep({
         displayName: formData.displayName,
         phone: formData.phone,
         location: formData.location,
-        languages: formData.languages || [], // array de idiomas
+        languages: formData.languages || [],
         services: formData.services || [],
         agree: formData.agree,
         plan,
@@ -731,49 +731,19 @@ function PaymentStep({
         throw new Error("Could not get user ID for this account.");
       }
 
-      // 2) Se for plano Free: só ativa trial e vai para ativação
-      if (isFree) {
-        const trialEnds = new Date();
-        trialEnds.setDate(trialEnds.getDate() + FREE_TRIAL_DAYS);
+      // 2) Iniciar fluxo na API:
+      //    - FREE  → só Stripe Identity (sem Checkout)
+      //    - PAID  → Identity + Checkout
+      const endpoint = isFree
+        ? `${STRIPE_BACKEND}/start-identity-flow`
+        : `${STRIPE_BACKEND}/start-payment-flow`;
 
-        try {
-          await supabase
-            .from("therapists")
-            .update({
-              subscription_status: "trialing",
-              trial_ends_at: trialEnds.toISOString(),
-              updated_at: new Date().toISOString(),
-            })
-            .eq("user_id", userId);
-        } catch (err) {
-          console.error("Error updating free trial info:", err);
-        }
-
-        if (typeof window !== "undefined") {
-          localStorage.setItem(
-            "mm_pending_activation",
-            JSON.stringify({
-              userId,
-              plan,
-              formData,
-              trialEndsAt: trialEnds.toISOString(),
-              timestamp: new Date().toISOString(),
-            })
-          );
-        }
-
-        setLoading(false);
-        onSuccess(); // step 6: ActivationStatus
-        return;
-      }
-
-      // 3) Planos pagos: iniciar fluxo Stripe Identity → depois Checkout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 25000);
 
       let resp: Response;
       try {
-        resp = await fetch(`${STRIPE_BACKEND}/start-payment-flow`, {
+        resp = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -815,20 +785,24 @@ function PaymentStep({
             timestamp: new Date().toISOString(),
           })
         );
+        // Redireciona para a página de verificação (Free) ou verificação+checkout (Paid)
         window.location.href = data.url;
       }
     } catch (err: any) {
       console.error("Payment/verification error:", err);
       setError(
-        err.message || "Error starting identity verification and payment."
+        err.message ||
+          "Error starting identity verification (and payment, if applicable)."
       );
       setLoading(false);
     }
   };
 
   const trialNote = isFree
-    ? "Free 7-day trial. No charge will be made. Your profile will be reviewed by our team."
+    ? "You will complete a quick identity verification via Stripe. No payment will be charged for the Free plan. Once your ID is verified, our team will review and activate your profile."
     : "You will first complete identity verification via Stripe. After your identity is confirmed, you will be automatically redirected to Stripe Checkout to complete the subscription payment.";
+
+  const titleLabel = isFree ? "Identity Verification" : "Identity + Checkout";
 
   return (
     <section className="section-narrow">
@@ -843,9 +817,7 @@ function PaymentStep({
       )}
 
       <div className="payment-panel">
-        <div style={{ fontSize: 48, marginBottom: 16 }}>
-          {isFree ? "Free Trial" : "Identity + Checkout"}
-        </div>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>{titleLabel}</div>
         <h3 className="mb-8">{TXT.plans[plan].name}</h3>
         <p
           style={{
@@ -871,11 +843,11 @@ function PaymentStep({
             <>
               <Loader2 size={18} className="animate-spin" />
               {isFree
-                ? "Activating..."
+                ? "Starting verification..."
                 : "Starting verification & payment..."}
             </>
           ) : isFree ? (
-            L.paymentFree
+            "Start identity verification"
           ) : (
             "Start verification & go to payment"
           )}
@@ -890,12 +862,11 @@ function PaymentStep({
         </button>
       </div>
 
-      {!isFree && (
-        <div className="alert alert-info mt-16 center">
-          Secure Lock – Identity verification and payment are processed via
-          Stripe.
-        </div>
-      )}
+      <div className="alert alert-info mt-16 center">
+        {isFree
+          ? "Identity verification is processed via Stripe. No payment will be charged for the Free plan."
+          : "Identity verification and payment are processed via Stripe."}
+      </div>
     </section>
   );
 }
