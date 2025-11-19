@@ -105,7 +105,7 @@ const TXT = {
       displayName: "Display name",
       email: "Email",
       phone: "WhatsApp / Phone",
-      location: "Location (City / Base)",
+      location: "ZIP Code",
       languages: "Languages spoken",
       servicesLegend: "Services offered",
       agree: "I accept the Terms and Privacy Policy.",
@@ -117,7 +117,7 @@ const TXT = {
       displayName: "Public display name",
       email: "you@example.com",
       phone: "(000) 000-0000",
-      location: "City - State / Region",
+      location: "ZIP Code (e.g., 10001)",
       languages: "English, Spanish",
       password: "Create a password",
       password2: "Repeat the password",
@@ -205,6 +205,17 @@ const STRIPE_BACKEND =
 const POLICY_VERSION = "2025-11-11";
 const FREE_TRIAL_DAYS = 7;
 
+/* ===== Languages (7 principais idiomas mundiais) ===== */
+const LANGUAGE_OPTIONS = [
+  "English",
+  "Spanish",
+  "Portuguese",
+  "French",
+  "German",
+  "Italian",
+  "Arabic",
+] as const;
+
 /* ===== Utils ===== */
 function priceLabel(price: number) {
   return `$${price.toFixed(2)}`;
@@ -218,7 +229,7 @@ async function ensureAuthAndUpsertProfile(opts: {
   displayName: string;
   phone: string;
   location: string;
-  languages: string;
+  languages: string[]; // agora array de idiomas
   services: string[];
   agree: boolean;
   plan: PlanKey;
@@ -279,11 +290,8 @@ async function ensureAuthAndUpsertProfile(opts: {
     display_name: displayName.trim(),
     email: email.trim(),
     phone: phone.trim(),
-    location: location.trim(),
-    languages: languages
-      .split(",")
-      .map((l) => l.trim())
-      .filter(Boolean),
+    location: location.trim(), // aqui você ainda salva ZIP Code nesse campo
+    languages, // já é array de strings
     services,
     agree_terms: agree,
     plan,
@@ -393,7 +401,7 @@ function RegistrationForm({
     email: "",
     phone: "",
     location: "",
-    languages: "",
+    languages: [] as string[], // agora array
     services: [] as string[],
     agree: false,
     password: "",
@@ -424,12 +432,25 @@ function RegistrationForm({
       setError("Invalid email.");
       return;
     }
+    if (form.languages.length === 0) {
+      setError("Select at least one language.");
+      return;
+    }
     if (form.services.length === 0) {
       setError("Select at least one service.");
       return;
     }
     setError("");
     onContinue(form);
+  };
+
+  const toggleLanguage = (lang: string) => {
+    setForm((prev) => ({
+      ...prev,
+      languages: prev.languages.includes(lang)
+        ? prev.languages.filter((l) => l !== lang)
+        : [...prev.languages, lang],
+    }));
   };
 
   return (
@@ -507,15 +528,21 @@ function RegistrationForm({
           }
           className="mb-12"
         />
-        <input
-          type="text"
-          placeholder={L.placeholders.languages}
-          value={form.languages}
-          onChange={(e) =>
-            setForm({ ...form, languages: e.target.value })
-          }
-          className="mb-16"
-        />
+
+        {/* Idiomas - seleção de 7 principais */}
+        <fieldset className="mb-16">
+          <legend>{L.labels.languages}</legend>
+          {LANGUAGE_OPTIONS.map((lang) => (
+            <label key={lang} className="check-row">
+              <input
+                type="checkbox"
+                checked={form.languages.includes(lang)}
+                onChange={() => toggleLanguage(lang)}
+              />
+              <span>{lang}</span>
+            </label>
+          ))}
+        </fieldset>
 
         <fieldset className="mb-16">
           <legend>{L.labels.servicesLegend}</legend>
@@ -525,12 +552,12 @@ function RegistrationForm({
                 type="checkbox"
                 checked={form.services.includes(svc)}
                 onChange={(e) =>
-                  setForm({
-                    ...form,
+                  setForm((prev) => ({
+                    ...prev,
                     services: e.target.checked
-                      ? [...form.services, svc]
-                      : form.services.filter((s) => s !== svc),
-                  })
+                      ? [...prev.services, svc]
+                      : prev.services.filter((s) => s !== svc),
+                  }))
                 }
               />
               <span>{svc}</span>
@@ -860,7 +887,7 @@ function PaymentStep({
         displayName: formData.displayName,
         phone: formData.phone,
         location: formData.location,
-        languages: formData.languages,
+        languages: formData.languages, // agora array
         services: formData.services,
         agree: formData.agree,
         plan,
@@ -1106,7 +1133,9 @@ export default function JoinPage() {
                   style={{ display: "flex", alignItems: "center", gap: 6 }}
                 >
                   <Check size={18} />
-                  <span style={{ fontSize: 14, fontWeight: 700 }}>{stat}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700 }}>
+                    {stat}
+                  </span>
                 </div>
               ))}
             </div>
