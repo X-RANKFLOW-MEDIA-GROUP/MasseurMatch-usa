@@ -779,7 +779,7 @@ export default function AdminDashboard() {
     if (!confirm("Confirma novamente? Esta ação NÃO pode ser desfeita!"))
       return;
 
-    const backendUrl = (import.meta.env.VITE_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "").replace(/\/+$/, "");
+    const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_URL || "").replace(/\/+$/, "");
 
     if (!backendUrl) {
       console.error("BACKEND_URL não configurado");
