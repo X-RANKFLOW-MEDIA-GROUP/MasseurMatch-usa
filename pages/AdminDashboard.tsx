@@ -29,7 +29,6 @@ type TherapistRow = {
   updated_at: string | null;
   subscription_status: string | null;
   paid_until: string | null;
-  // 🔐 Novos campos de verificação / documentos
   document_url?: string | null;
   selfie_url?: string | null;
   card_url?: string | null;
@@ -127,10 +126,7 @@ function normalizeTherapistPayload(
 ): Record<string, any> {
   const normalized: Record<string, any> = { ...payload };
 
-  // Campos date no Postgres – não podem receber ""
   const dateFields = ["birthdate", "massage_start_date"];
-
-  // Campos numéricos opcionais
   const numericFields = [
     "mobile_service_radius",
     "years_experience",
@@ -292,7 +288,7 @@ function EditReviewModal({
 }
 
 /* =====================
-  Modal de documentos dos novos cadastros
+  Modal de documentos
 ===================== */
 
 function ApprovalDocsModal({
@@ -313,7 +309,6 @@ function ApprovalDocsModal({
   } = therapist;
 
   const openProfile = () => {
-    // 👉 Sempre abrir perfil como VISITANTE (usa user_id)
     const profileId = therapist.user_id || therapist.id;
     window.open(`/therapist/${profileId}`, "_blank");
   };
@@ -391,7 +386,6 @@ function ApprovalDocsModal({
             <div className="field-comparison" style={{ marginTop: "1.5rem" }}>
               <h4>Termo Assinado (PDF)</h4>
               <div className="pdf-preview-wrapper">
-                {/* Tentativa de embed. Se não funcionar bem, admin usa o link abaixo */}
                 <iframe
                   src={signed_term_url}
                   title="Termo assinado"
@@ -445,14 +439,12 @@ export default function AdminDashboard() {
   const [busy, setBusy] = useState<string | null>(null);
   const [deleteBusyId, setDeleteBusyId] = useState<string | null>(null);
 
-  // Edições de perfil
   const [activeTab, setActiveTab] = useState<TabType>("approvals");
   const [profileEdits, setProfileEdits] = useState<ProfileEdit[]>([]);
   const [selectedEdit, setSelectedEdit] = useState<ProfileEdit | null>(null);
   const [processingEdit, setProcessingEdit] = useState(false);
   const [adminId, setAdminId] = useState<string>("");
 
-  // Modal docs
   const [selectedTherapist, setSelectedTherapist] =
     useState<TherapistRow | null>(null);
 
@@ -769,45 +761,105 @@ export default function AdminDashboard() {
       setProcessingEdit(false);
     }
   }
+
+  /* ---- EXCLUSÃO COMPLETA DO TERAPEUTA / USER ---- */
   async function handleDeleteTherapist(row: TherapistRow) {
     if (!row.user_id || !row.id) {
       alert("Erro: registro sem user_id ou therapistId.");
       return;
     }
 
-    if (!confirm(`Excluir completamente o usuário ${row.full_name || row.email}?`)) return;
+    const confirmMessage = `⚠️ ATENÇÃO: Esta ação é IRREVERSÍVEL!\n\nVocê está prestes a excluir PERMANENTEMENTE:\n\n• Usuário: ${
+      row.full_name || row.email || "sem nome"
+    }\n• Email: ${row.email || "não informado"}\n• ID: ${row.user_id}\n\nSerão removidos:\n- Conta de autenticação\n- Perfil de terapeuta\n- Dados pessoais\n- Histórico de pagamentos\n- Edições pendentes\n- Todas as notificações\n\nTem certeza absoluta?`;
+
+    if (!confirm(confirmMessage)) return;
+
+    // Segunda confirmação
+    if (!confirm("Confirma novamente? Esta ação NÃO pode ser desfeita!"))
+      return;
+
+    const backendUrl = (import.meta.env.VITE_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "").replace(/\/+$/, "");
+
+    if (!backendUrl) {
+      console.error("BACKEND_URL não configurado");
+      alert(
+        "❌ Erro de configuração: URL do backend não está definida.\n\nDefina VITE_BACKEND_URL ou NEXT_PUBLIC_BACKEND_URL nas variáveis de ambiente."
+      );
+      return;
+    }
+
+    console.log("🗑️ Iniciando exclusão de usuário:", {
+      userId: row.user_id,
+      therapistId: row.id,
+      backendUrl,
+    });
 
     setDeleteBusyId(row.id);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/delete-user`, {
+      const res = await fetch(`${backendUrl}/admin/delete-user`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           userId: row.user_id,
           therapistId: row.id,
         }),
       });
 
-      const json = await res.json();
-      if (!json.ok) {
-        alert("Erro ao excluir: " + json.error);
+      console.log("📡 Resposta do servidor:", {
+        status: res.status,
+        ok: res.ok,
+        statusText: res.statusText,
+      });
+
+      const contentType = res.headers.get("content-type") || "";
+      let payload: any = null;
+
+      if (contentType.includes("application/json")) {
+        try {
+          payload = await res.json();
+          console.log("📦 Payload recebido:", payload);
+        } catch (e) {
+          console.error("⚠️ Erro ao parsear JSON:", e);
+        }
+      } else {
+        const text = await res.text().catch(() => "");
+        console.warn("⚠️ Resposta não-JSON recebida:", text.substring(0, 200));
+      }
+
+      if (!res.ok) {
+        const errorMsg =
+          payload?.error ||
+          `Erro HTTP ${res.status}: ${res.statusText}`;
+        console.error("❌ Falha na requisição:", errorMsg);
+        alert(`❌ Erro ao excluir usuário:\n\n${errorMsg}`);
         return;
       }
 
+      if (payload && payload.ok === false) {
+        console.error("❌ Backend retornou ok=false:", payload.error);
+        alert(`❌ Erro ao excluir:\n\n${payload.error || "Erro desconhecido"}`);
+        return;
+      }
+
+      // Sucesso - remove da lista local
+      console.log("✅ Usuário excluído com sucesso");
       setAllRows((prev) => prev.filter((u) => u.id !== row.id));
       setRows((prev) => prev.filter((u) => u.id !== row.id));
 
-      alert("Usuário excluído com sucesso.");
-    } catch (err) {
-      console.error("Delete failed", err);
-      alert("Erro ao excluir usuário.");
+      alert(`✅ Usuário ${row.full_name || row.email} foi excluído permanentemente do sistema.`);
+    } catch (err: any) {
+      console.error("❌ Erro na requisição de exclusão:", err);
+      alert(
+        `❌ Erro ao excluir usuário:\n\n${err.message || "Erro de conexão com o servidor"}`
+      );
     } finally {
       setDeleteBusyId(null);
     }
   }
-
-
 
   /* ---- Empty states ---- */
 
@@ -856,24 +908,22 @@ export default function AdminDashboard() {
     );
   }
 
-  /* ---- Helper de navegação: sempre VISITANTE ---- */
   const openProfile = (row: TherapistRow) => {
     const profileId = row.user_id || row.id;
     window.open(`/therapist/${profileId}`, "_blank");
   };
 
-  /* ---- Render ---- */
-
   return (
     <div className="admin-shell">
       <h1 className="title">Admin Dashboard</h1>
-      <p className="subtitle">Gerencie aprovações, edições, perfis e exclusões.</p>
+      <p className="subtitle">
+        Gerencie aprovações, edições, perfis e exclusões.
+      </p>
 
       {/* Tabs */}
       <div className="admin-tabs">
         <button
-          className={`admin-tab ${activeTab === "approvals" ? "active" : ""
-            }`}
+          className={`admin-tab ${activeTab === "approvals" ? "active" : ""}`}
           onClick={() => setActiveTab("approvals")}
         >
           <User size={18} />
@@ -908,8 +958,8 @@ export default function AdminDashboard() {
             activeTab === "approvals"
               ? fetchPending
               : activeTab === "edits"
-                ? fetchPendingEdits
-                : fetchAllTherapists
+              ? fetchPendingEdits
+              : fetchAllTherapists
           }
           disabled={loading}
         >
@@ -970,8 +1020,8 @@ export default function AdminDashboard() {
                     const when =
                       r.created_at || r.updated_at
                         ? new Date(
-                          r.created_at || (r.updated_at as string)
-                        ).toLocaleString()
+                            r.created_at || (r.updated_at as string)
+                          ).toLocaleString()
                         : "—";
                     const nome = r.full_name || "—";
                     const loc = r.location || "—";
@@ -995,14 +1045,14 @@ export default function AdminDashboard() {
                             r.selfie_url ||
                             r.card_url ||
                             r.signed_term_url) && (
-                              <button
-                                className="btn btn-ghost"
-                                onClick={() => setSelectedTherapist(r)}
-                              >
-                                <Eye size={14} />
-                                Ver docs
-                              </button>
-                            )}
+                            <button
+                              className="btn btn-ghost"
+                              onClick={() => setSelectedTherapist(r)}
+                            >
+                              <Eye size={14} />
+                              Ver docs
+                            </button>
+                          )}
                         </td>
                         <td className="actions">
                           <button
@@ -1062,7 +1112,7 @@ export default function AdminDashboard() {
                     <th>Status</th>
                     <th>Payment</th>
                     <th>Created</th>
-                    <th>Profile</th>
+                    <th className="col-actions">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1090,7 +1140,7 @@ export default function AdminDashboard() {
                     <th>Status</th>
                     <th>Payment</th>
                     <th>Created</th>
-                    <th>Profile</th>
+                    <th className="col-actions">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1098,8 +1148,8 @@ export default function AdminDashboard() {
                     const when =
                       r.created_at || r.updated_at
                         ? new Date(
-                          r.created_at || (r.updated_at as string)
-                        ).toLocaleString()
+                            r.created_at || (r.updated_at as string)
+                          ).toLocaleString()
                         : "—";
                     const nome = r.full_name || "—";
                     const loc = r.location || "—";
