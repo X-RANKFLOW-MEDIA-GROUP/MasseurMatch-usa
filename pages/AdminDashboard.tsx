@@ -13,6 +13,7 @@ import {
   Edit,
   ExternalLink,
   FileText,
+  Trash2,
 } from "lucide-react";
 
 type TherapistRow = {
@@ -129,7 +130,7 @@ function normalizeTherapistPayload(
   // Campos date no Postgres – não podem receber ""
   const dateFields = ["birthdate", "massage_start_date"];
 
-  // Campos numéricos opcionais: se vierem como "", mandamos null
+  // Campos numéricos opcionais
   const numericFields = [
     "mobile_service_radius",
     "years_experience",
@@ -150,7 +151,6 @@ function normalizeTherapistPayload(
     }
   }
 
-  // Remover chaves undefined para evitar ruído no update
   Object.keys(normalized).forEach((key) => {
     if (typeof normalized[key] === "undefined") {
       delete normalized[key];
@@ -313,8 +313,9 @@ function ApprovalDocsModal({
   } = therapist;
 
   const openProfile = () => {
-    // 🔗 Ajuste a rota se o seu perfil público for diferente
-    window.open(`/therapist/${therapist.id}`, "_blank");
+    // 👉 Sempre abrir perfil como VISITANTE (usa user_id)
+    const profileId = therapist.user_id || therapist.id;
+    window.open(`/therapist/${profileId}`, "_blank");
   };
 
   return (
@@ -438,10 +439,11 @@ function ApprovalDocsModal({
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [rows, setRows] = useState<TherapistRow[]>([]); // pendentes
-  const [allRows, setAllRows] = useState<TherapistRow[]>([]); // todos
+  const [rows, setRows] = useState<TherapistRow[]>([]);
+  const [allRows, setAllRows] = useState<TherapistRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [deleteBusyId, setDeleteBusyId] = useState<string | null>(null);
 
   // Edições de perfil
   const [activeTab, setActiveTab] = useState<TabType>("approvals");
@@ -450,7 +452,7 @@ export default function AdminDashboard() {
   const [processingEdit, setProcessingEdit] = useState(false);
   const [adminId, setAdminId] = useState<string>("");
 
-  // Modal de documentos dos cadastros
+  // Modal docs
   const [selectedTherapist, setSelectedTherapist] =
     useState<TherapistRow | null>(null);
 
@@ -514,7 +516,7 @@ export default function AdminDashboard() {
     setLoading(false);
   }
 
-  /* ---- Buscar TODOS os profissionais cadastrados ---- */
+  /* ---- Buscar TODOS os profissionais ---- */
   async function fetchAllTherapists() {
     setLoading(true);
     setError(null);
@@ -548,7 +550,7 @@ export default function AdminDashboard() {
     setLoading(false);
   }
 
-  /* ---- Buscar edições de perfil pendentes ---- */
+  /* ---- Buscar edições pendentes ---- */
   async function fetchPendingEdits() {
     setLoading(true);
     setError(null);
@@ -576,7 +578,7 @@ export default function AdminDashboard() {
     setLoading(false);
   }
 
-  /* ---- Carregar dados ao entrar / trocar de aba ---- */
+  /* ---- Carregar dados ao trocar de aba ---- */
   useEffect(() => {
     if (isAdmin === true) {
       if (activeTab === "approvals") {
@@ -589,7 +591,7 @@ export default function AdminDashboard() {
     }
   }, [isAdmin, activeTab]);
 
-  /* ---- Realtime para profile_edits ---- */
+  /* ---- Realtime profile_edits ---- */
   useEffect(() => {
     if (!isAdmin) return;
 
@@ -640,7 +642,6 @@ export default function AdminDashboard() {
 
     if (!tryFull.error) return;
 
-    // fallback se colunas não existirem
     await supabase.from("therapists").update({ status }).eq("id", id);
   }
 
@@ -662,7 +663,7 @@ export default function AdminDashboard() {
     }
   }
 
-  /* ---- Aprovar edição de perfil (aplica direto em therapists) ---- */
+  /* ---- Aprovar edição de perfil ---- */
   async function approveProfileEdit(editId: string) {
     setProcessingEdit(true);
     try {
@@ -674,33 +675,26 @@ export default function AdminDashboard() {
       const pendingGallery = edit.pending_gallery || null;
       const originalGallery = edit.original_gallery || null;
 
-      // Mescla dados originais + editados (editados sobrescrevem)
       const mergedData: Record<string, any> = {
         ...original,
         ...edited,
       };
 
-      // Tratar gallery
       if (pendingGallery && pendingGallery.length > 0) {
         mergedData.gallery = pendingGallery;
       } else if (originalGallery) {
         mergedData.gallery = originalGallery;
       }
 
-      // Normalizar payload (datas, números, undefined, etc.)
       const finalData = normalizeTherapistPayload(mergedData);
 
-      // Atualizar therapists com TODOS os campos de finalData
       const { error: updateError } = await supabase
         .from("therapists")
         .update(finalData)
         .eq("id", edit.therapist_id);
 
-      if (updateError) {
-        throw updateError;
-      }
+      if (updateError) throw updateError;
 
-      // Atualizar status da edição
       const { error: statusError } = await supabase
         .from("profile_edits")
         .update({
@@ -711,11 +705,8 @@ export default function AdminDashboard() {
         })
         .eq("id", editId);
 
-      if (statusError) {
-        throw statusError;
-      }
+      if (statusError) throw statusError;
 
-      // Notificação para o terapeuta
       await supabase.from("edit_notifications").insert({
         therapist_id: edit.therapist_id,
         edit_id: editId,
@@ -723,7 +714,6 @@ export default function AdminDashboard() {
         message: "Suas edições foram aprovadas e publicadas no seu perfil!",
       });
 
-      // Atualizar estado local
       setProfileEdits((prev) => prev.filter((e) => e.id !== editId));
       setSelectedEdit(null);
       alert("Edições aprovadas com sucesso!");
@@ -779,6 +769,45 @@ export default function AdminDashboard() {
       setProcessingEdit(false);
     }
   }
+  async function handleDeleteTherapist(row: TherapistRow) {
+    if (!row.user_id || !row.id) {
+      alert("Erro: registro sem user_id ou therapistId.");
+      return;
+    }
+
+    if (!confirm(`Excluir completamente o usuário ${row.full_name || row.email}?`)) return;
+
+    setDeleteBusyId(row.id);
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/delete-user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: row.user_id,
+          therapistId: row.id,
+        }),
+      });
+
+      const json = await res.json();
+      if (!json.ok) {
+        alert("Erro ao excluir: " + json.error);
+        return;
+      }
+
+      setAllRows((prev) => prev.filter((u) => u.id !== row.id));
+      setRows((prev) => prev.filter((u) => u.id !== row.id));
+
+      alert("Usuário excluído com sucesso.");
+    } catch (err) {
+      console.error("Delete failed", err);
+      alert("Erro ao excluir usuário.");
+    } finally {
+      setDeleteBusyId(null);
+    }
+  }
+
+
 
   /* ---- Empty states ---- */
 
@@ -827,11 +856,10 @@ export default function AdminDashboard() {
     );
   }
 
-  /* ---- Helpers de navegação ---- */
-
+  /* ---- Helper de navegação: sempre VISITANTE ---- */
   const openProfile = (row: TherapistRow) => {
-    // Ajuste a rota se o path do perfil for diferente
-    window.open(`/therapist/${row.id}`, "_blank");
+    const profileId = row.user_id || row.id;
+    window.open(`/therapist/${profileId}`, "_blank");
   };
 
   /* ---- Render ---- */
@@ -839,14 +867,13 @@ export default function AdminDashboard() {
   return (
     <div className="admin-shell">
       <h1 className="title">Admin Dashboard</h1>
-      <p className="subtitle">Gerencie aprovações, edições e perfis.</p>
+      <p className="subtitle">Gerencie aprovações, edições, perfis e exclusões.</p>
 
       {/* Tabs */}
       <div className="admin-tabs">
         <button
-          className={`admin-tab ${
-            activeTab === "approvals" ? "active" : ""
-          }`}
+          className={`admin-tab ${activeTab === "approvals" ? "active" : ""
+            }`}
           onClick={() => setActiveTab("approvals")}
         >
           <User size={18} />
@@ -881,8 +908,8 @@ export default function AdminDashboard() {
             activeTab === "approvals"
               ? fetchPending
               : activeTab === "edits"
-              ? fetchPendingEdits
-              : fetchAllTherapists
+                ? fetchPendingEdits
+                : fetchAllTherapists
           }
           disabled={loading}
         >
@@ -892,7 +919,7 @@ export default function AdminDashboard() {
 
       {error && <p style={{ color: "tomato" }}>{error}</p>}
 
-      {/* APROVAÇÕES DE NOVOS CADASTROS */}
+      {/* APROVAÇÕES */}
       {activeTab === "approvals" && (
         <>
           {loading ? (
@@ -943,12 +970,13 @@ export default function AdminDashboard() {
                     const when =
                       r.created_at || r.updated_at
                         ? new Date(
-                            r.created_at || (r.updated_at as string)
-                          ).toLocaleString()
+                          r.created_at || (r.updated_at as string)
+                        ).toLocaleString()
                         : "—";
                     const nome = r.full_name || "—";
                     const loc = r.location || "—";
                     const isBusy = busy === r.id;
+                    const isDeleting = deleteBusyId === r.id;
 
                     return (
                       <tr key={r.id}>
@@ -967,20 +995,20 @@ export default function AdminDashboard() {
                             r.selfie_url ||
                             r.card_url ||
                             r.signed_term_url) && (
-                            <button
-                              className="btn btn-ghost"
-                              onClick={() => setSelectedTherapist(r)}
-                            >
-                              <Eye size={14} />
-                              Ver docs
-                            </button>
-                          )}
+                              <button
+                                className="btn btn-ghost"
+                                onClick={() => setSelectedTherapist(r)}
+                              >
+                                <Eye size={14} />
+                                Ver docs
+                              </button>
+                            )}
                         </td>
                         <td className="actions">
                           <button
                             className="btn"
                             onClick={() => openProfile(r)}
-                            disabled={isBusy}
+                            disabled={isBusy || isDeleting}
                           >
                             <ExternalLink size={14} />
                             Perfil
@@ -988,7 +1016,7 @@ export default function AdminDashboard() {
                           <button
                             className="btn btn-approve"
                             onClick={() => moderate(r.id, "approve")}
-                            disabled={isBusy}
+                            disabled={isBusy || isDeleting}
                             aria-busy={isBusy}
                           >
                             {isBusy ? "..." : "Approve"}
@@ -996,9 +1024,17 @@ export default function AdminDashboard() {
                           <button
                             className="btn btn-reject"
                             onClick={() => moderate(r.id, "reject")}
-                            disabled={isBusy}
+                            disabled={isBusy || isDeleting}
                           >
                             Reject
+                          </button>
+                          <button
+                            className="btn btn-reject"
+                            onClick={() => handleDeleteTherapist(r)}
+                            disabled={isDeleting || isBusy}
+                          >
+                            <Trash2 size={14} />
+                            {isDeleting ? "Excluindo..." : "Excluir"}
                           </button>
                         </td>
                       </tr>
@@ -1062,11 +1098,12 @@ export default function AdminDashboard() {
                     const when =
                       r.created_at || r.updated_at
                         ? new Date(
-                            r.created_at || (r.updated_at as string)
-                          ).toLocaleString()
+                          r.created_at || (r.updated_at as string)
+                        ).toLocaleString()
                         : "—";
                     const nome = r.full_name || "—";
                     const loc = r.location || "—";
+                    const isDeleting = deleteBusyId === r.id;
 
                     return (
                       <tr key={r.id}>
@@ -1089,9 +1126,18 @@ export default function AdminDashboard() {
                           <button
                             className="btn"
                             onClick={() => openProfile(r)}
+                            disabled={isDeleting}
                           >
                             <ExternalLink size={14} />
                             Ver perfil
+                          </button>
+                          <button
+                            className="btn btn-reject"
+                            onClick={() => handleDeleteTherapist(r)}
+                            disabled={isDeleting}
+                          >
+                            <Trash2 size={14} />
+                            {isDeleting ? "Excluindo..." : "Excluir"}
                           </button>
                         </td>
                       </tr>
@@ -1172,7 +1218,7 @@ export default function AdminDashboard() {
         </>
       )}
 
-      {/* Modal de revisão de edições */}
+      {/* Modal revisão edições */}
       {selectedEdit && (
         <EditReviewModal
           edit={selectedEdit}
@@ -1183,7 +1229,7 @@ export default function AdminDashboard() {
         />
       )}
 
-      {/* Modal de documentos dos novos cadastros */}
+      {/* Modal documentos */}
       {selectedTherapist && (
         <ApprovalDocsModal
           therapist={selectedTherapist}
