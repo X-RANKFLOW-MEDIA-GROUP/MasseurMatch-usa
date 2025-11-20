@@ -3,13 +3,14 @@ import type { Metadata } from "next";
 import React from "react";
 
 import "./globals.css";
-import "@/src/components/TherapistProfile.css"; // estilos globais do profile
+
+// Estilos globais do MasseurMatch
+import "@/src/components/TherapistProfile.css";
+import "@/src/styles/edit-profile.css";
 
 import Header from "@/src/components/Header";
 import { ProfileProvider } from "@/src/context/ProfileContext";
-import "@/src/styles/edit-profile.css";
 
-  
 export const metadata: Metadata = {
   title: "MasseurMatch",
   description: "Find real massage therapists. Connect with confidence.",
@@ -22,7 +23,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      {/* suppressHydrationWarning corrige o erro causado por extensões do navegador */}
+      <body suppressHydrationWarning={true}>
         <ProfileProvider>
           <Header />
           <main>{children}</main>
