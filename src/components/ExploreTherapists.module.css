@@ -82,7 +82,7 @@
   font-size: 0.9rem;
 }
 
-/* search input */
+/* Search input */
 .search {
   flex: 1;
   min-width: 220px;
@@ -145,7 +145,7 @@
   border-color: rgba(139, 92, 246, 0.8);
   box-shadow:
     0 0 25px rgba(139, 92, 246, 0.5),
-    0 24px 55px rgba(0, 0, 0, 0.9);
+    0 24px 55px rgba(0, 0, 0, 1);
 }
 
 .card__media {
@@ -167,7 +167,7 @@
   transform: scale(1.06);
 }
 
-/* badges on image */
+/* BADGES */
 .card__badges {
   position: absolute;
   left: 10px;
@@ -177,7 +177,6 @@
   gap: 0.4rem;
 }
 
-/* ===== BADGES ===== */
 .badge {
   font-size: 0.7rem;
   padding: 0.22rem 0.55rem;
@@ -234,14 +233,14 @@
   background: #22c55e;
 }
 
-/* rating row */
+/* Rating row */
 .card__ratingrow {
   display: flex;
   align-items: center;
   gap: 0.4rem;
 }
 
-/* ===== STARS ===== */
+/* STARS */
 .stars {
   display: inline-flex;
   align-items: center;
@@ -276,7 +275,7 @@
   color: #9ca3af;
 }
 
-/* tags */
+/* TAGS */
 .card__tags {
   display: flex;
   flex-wrap: wrap;
@@ -292,7 +291,7 @@
   border: 1px solid rgba(129, 140, 248, 0.5);
 }
 
-/* footer row */
+/* FOOTER */
 .card__footer {
   margin-top: 0.35rem;
   padding-top: 0.6rem;
@@ -319,7 +318,7 @@
   color: #f97316;
 }
 
-/* ghost button */
+/* Ghost button */
 .btn--ghost {
   border-radius: 999px;
   padding: 0.4rem 0.9rem;
@@ -336,7 +335,7 @@
   box-shadow: 0 10px 24px rgba(139, 92, 246, 0.35);
 }
 
-/* empty states */
+/* Empty state */
 .empty {
   max-width: 1120px;
   margin: 3rem auto 0;
@@ -345,7 +344,7 @@
   color: #9ca3af;
 }
 
-/* ===== RESPONSIVE ===== */
+/* RESPONSIVE */
 @media (max-width: 768px) {
   .explore {
     padding: 5.3rem 1.25rem 3.5rem;
@@ -366,14 +365,14 @@
   }
 }
 
-/* Acessibilidade: foco */
+/* ACCESSIBILITY */
 .btn:focus-visible,
 .search__input:focus-visible {
   outline: 2px solid #8b5cf6;
   outline-offset: 3px;
 }
 
-/* Menos motion se user preferir */
+/* REDUCED MOTION */
 @media (prefers-reduced-motion: reduce) {
   .card,
   .btn,
