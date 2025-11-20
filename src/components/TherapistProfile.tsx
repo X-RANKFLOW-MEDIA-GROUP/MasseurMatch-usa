@@ -39,7 +39,7 @@ const rid = () =>
   (globalThis as any)?.crypto?.randomUUID?.() ??
   Math.random().toString(36).slice(2) + Date.now().toString(36);
 
-/** ===== Modelo UI ===== */
+/** ===== Modelo UI (apenas mock / preview) ===== */
 export type Therapist = {
   id: string;
   name: string;
@@ -93,7 +93,7 @@ export type Therapist = {
   pendingEditsCount?: number;
 };
 
-/** ===== Fallback visual ===== */
+/** ===== Fallback visual MOCK (só quando não há registro no DB) ===== */
 const SAMPLE: Therapist = {
   id: "sample",
   name: "Bruno",
@@ -216,7 +216,7 @@ function asArray(val: unknown): string[] {
     try {
       const parsed = JSON.parse(val);
       if (Array.isArray(parsed)) return parsed.filter((v) => typeof v === "string");
-    } catch { }
+    } catch {}
     return val
       .split(",")
       .map((s) => s.trim())
@@ -381,7 +381,7 @@ async function loadPendingEditsCount(therapistId: string) {
 
 /** ===== Helpers de disponibilidade (JSON -> UI) ===== */
 function mapAvailabilityFromJson(av: any): Therapist["availability"] {
-  if (!av || typeof av !== "object") return SAMPLE.availability;
+  if (!av || typeof av !== "object") return [];
 
   const result: AvailabilityExtended[] = [];
 
@@ -404,7 +404,7 @@ function mapAvailabilityFromJson(av: any): Therapist["availability"] {
     });
   }
 
-  return result.length ? result : SAMPLE.availability;
+  return result;
 }
 
 /** ===== Gate helpers (therapists) ===== */
@@ -474,39 +474,91 @@ async function hasPaidOnPayments(opts: { uid?: string | null; email?: string | n
 
 /** ===== Map DB -> UI ===== */
 function dbToUi(row: DbTherapist | null | undefined): Therapist {
-  const base = { ...SAMPLE };
-  if (!row) return base;
+  // se não tem registro no DB, usa o mock completo
+  if (!row) return { ...SAMPLE };
 
-  // Nome
-  const name = row.display_name?.trim() || row.full_name?.trim() || base.name;
+  // base começa com tudo vazio (exceto foto/galeria)
+  const baseEmpty: Therapist = {
+    ...SAMPLE,
+    id: "",
+    name: "",
+    title: "",
+    rating: 0,
+    ratingCount: undefined,
+    locationCityState: "",
+    services: "",
+    specialties: "",
+    promocoes: "",
+    startingAt: "",
+    visitingFrom: "",
+    address: "",
+    zipCode: "",
+    accessNotes: "",
+    rates: [],
+    availability: [],
+    reviews: [],
+    bio: "",
+    philosophy: [],
+    techniques: [],
+    mobileRadius: "",
+    mobileMiles: undefined,
+    studioAmenities: [],
+    mobileExtras: [],
+    additionalServices: [],
+    productsUsed: [],
+    policies: "",
+    payments: {
+      visa: false,
+      mastercard: false,
+      amex: false,
+      discover: false,
+      cash: false,
+      venmo: false,
+      zelle: false,
+    },
+    discounts: {},
+    degrees: [],
+    affiliations: [],
+    startDate: "",
+    languagesSpoken: [],
+    businessTrips: [],
+    statusRaw: null,
+    planRaw: null,
+    paidUntilRaw: null,
+    subStatusRaw: null,
+    hasPendingEdits: false,
+    pendingEditsCount: 0,
+  };
+
+  // Nome: ÚNICO campo que já vem preenchido por padrão
+  const name = row.display_name?.trim() || row.full_name?.trim() || "";
 
   // Localização
   const locCityState =
     [row.city, row.state].filter(Boolean).join(", ") ||
     row.locationCityState?.trim() ||
     row.location?.trim() ||
-    base.locationCityState;
+    "";
 
   // Sobre / bio
-  const bio = row.about?.trim() || row.bio?.trim() || base.bio;
+  const bio = row.about?.trim() || row.bio?.trim() || "";
 
   // Línguas
   const langsNew = Array.isArray(row.languages)
     ? row.languages.filter(Boolean).map(String)
     : asArray(row.languages);
   const langsArr =
-    (langsNew && langsNew.length ? langsNew : row.languagesSpoken) ||
-    base.languagesSpoken;
+    (langsNew && langsNew.length ? langsNew : row.languagesSpoken) || [];
 
   // services + specialties
-  const servicesHeadline = row.services_headline?.trim() || null;
+  const servicesHeadline = row.services_headline?.trim() || "";
   const servicesArr = asArray(row.services);
   const servicesText =
-    servicesHeadline || (servicesArr.length ? servicesArr.join(", ") : base.services);
+    servicesHeadline || (servicesArr.length ? servicesArr.join(", ") : "");
 
   const specialtiesText =
     row.specialties_headline?.trim() ||
-    (servicesArr.length ? servicesArr.join(", ") : base.specialties);
+    (servicesArr.length ? servicesArr.join(", ") : "");
 
   // Técnicas / setup
   const techniquesArr = asArray(row.massage_techniques);
@@ -538,15 +590,23 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
       zelle: pmArray.some((p) => /zelle/i.test(p)),
     };
   } else {
-    payments = row.payments ?? base.payments!;
+    payments =
+      row.payments ?? {
+        visa: false,
+        mastercard: false,
+        amex: false,
+        discover: false,
+        cash: false,
+        venmo: false,
+        zelle: false,
+      };
   }
 
   // Descontos
   const discounts: Discounts = {
-    regular: row.regular_discounts || row.discounts?.regular || base.discounts?.regular,
-    weekday:
-      row.day_of_week_discount || row.discounts?.weekday || base.discounts?.weekday,
-    weekly: row.weekly_specials || row.discounts?.weekly || base.discounts?.weekly,
+    regular: row.regular_discounts || row.discounts?.regular,
+    weekday: row.day_of_week_discount || row.discounts?.weekday,
+    weekly: row.weekly_specials || row.discounts?.weekly,
   };
 
   // Disponibilidade
@@ -562,7 +622,7 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
       .map((s) => s.trim())
       .filter(Boolean);
   } else {
-    businessTrips = row.businessTripsArr || base.businessTrips;
+    businessTrips = row.businessTripsArr || [];
   }
 
   // Rates simples
@@ -584,14 +644,17 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
     });
   }
 
+  // startingAt = primeiro preço
+  const startingAt = row.rate_60 || "";
+
   // Filosofia
-  const philosophyArr = row.philosophy ? [row.philosophy] : base.philosophy;
+  const philosophyArr = row.philosophy ? [row.philosophy] : [];
 
   // Data início
   const startDate =
     row.massage_start_date
       ? `Practicing since: ${new Date(row.massage_start_date).toLocaleDateString()}`
-      : row.startDate ?? base.startDate;
+      : row.startDate ?? "";
 
   // Mobile miles
   const mobileMiles =
@@ -599,65 +662,64 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
       ? row.mobileMiles
       : typeof row.mobile_service_radius === "number" &&
         !Number.isNaN(row.mobile_service_radius)
-        ? row.mobile_service_radius
-        : base.mobileMiles;
+      ? row.mobile_service_radius
+      : undefined;
 
   const ui: Therapist = {
-    ...base,
+    ...baseEmpty,
 
-    id: row.user_id || base.id,
+    id: row.user_id || "",
     name,
-    title: row.headline?.trim() || row.title?.trim() || base.title,
+    title: row.headline?.trim() || row.title?.trim() || "",
     bio,
     locationCityState: locCityState,
-    zipCode: row.zip_code || base.zipCode,
-    address: row.nearest_intersection || row.address || base.address,
+    zipCode: row.zip_code || "",
+    address: row.nearest_intersection || row.address || "",
 
-    profilePhoto: row.profile_photo || base.profilePhoto,
-    gallery: coerceGallery(row.gallery ?? base.gallery),
+    profilePhoto: row.profile_photo || SAMPLE.profilePhoto,
+    gallery: coerceGallery(row.gallery ?? SAMPLE.gallery),
 
     services: servicesText,
     specialties: specialtiesText,
-    promocoes: row.promotions_headline ?? row.promocoes ?? base.promocoes,
+    promocoes: row.promotions_headline ?? row.promocoes ?? "",
+    startingAt,
 
-    languagesSpoken: (langsArr && langsArr.length ? langsArr : base.languagesSpoken)!,
+    languagesSpoken: langsArr,
 
     mobileMiles,
     mobileRadius:
       typeof mobileMiles === "number"
         ? `${mobileMiles} miles`
         : row.travel_radius ||
-        (row.mobile_service_radius
-          ? `${row.mobile_service_radius} miles`
-          : base.mobileRadius),
+          (typeof row.mobile_service_radius === "number"
+            ? `${row.mobile_service_radius} miles`
+            : ""),
 
     philosophy: philosophyArr,
-    techniques: techniquesArr.length ? techniquesArr : base.techniques,
-    // não existe coluna massageSetup no banco, então usamos só o default
-    massageSetup: base.massageSetup,
-    studioAmenities: studioAmenitiesArr.length ? studioAmenitiesArr : base.studioAmenities,
-    mobileExtras: mobileExtrasArr.length ? mobileExtrasArr : base.mobileExtras,
-    additionalServices:
-      additionalServicesArr.length ? additionalServicesArr : base.additionalServices,
+    techniques: techniquesArr,
+    // não existe coluna massageSetup no banco, então usamos só texto do usuário (se quiser mudar no futuro)
+    massageSetup: baseEmpty.massageSetup,
+    studioAmenities: studioAmenitiesArr,
+    mobileExtras: mobileExtrasArr,
+    additionalServices: additionalServicesArr,
+    productsUsed: productsUsedArr,
 
-    productsUsed: productsUsedArr.length ? productsUsedArr : base.productsUsed,
-
-    policies: row.policies ?? base.policies,
+    policies: row.policies ?? "",
     payments,
     discounts,
     availability,
-    rates: rates && rates.length ? rates : row.rates ?? base.rates,
+    rates: rates && rates.length ? rates : row.rates ?? [],
 
-    degrees: row.degrees ? asArray(row.degrees) : row.degreesArr ?? base.degrees,
-    affiliations: asArray(row.affiliations ?? row.affiliationsArr) || base.affiliations,
+    degrees: row.degrees ? asArray(row.degrees) : row.degreesArr ?? [],
+    affiliations: asArray(row.affiliations ?? row.affiliationsArr) || [],
     startDate,
     businessTrips,
 
-    reviews: row.reviews ?? base.reviews,
-    rating: row.rating ?? base.rating,
-    ratingCount: row.override_reviews_count ?? row.ratingCount ?? base.ratingCount,
+    reviews: row.reviews ?? [],
+    rating: row.rating ?? 0,
+    ratingCount: row.override_reviews_count ?? row.ratingCount ?? undefined,
 
-    accessNotes: row.accessNotes ?? base.accessNotes,
+    accessNotes: row.accessNotes ?? "",
 
     statusRaw: row.status ?? null,
     planRaw: row.plan ?? null,
@@ -677,8 +739,8 @@ export default function TherapistProfile() {
     typeof routeIdRaw === "string"
       ? routeIdRaw
       : Array.isArray(routeIdRaw)
-        ? routeIdRaw[0]
-        : undefined;
+      ? routeIdRaw[0]
+      : undefined;
 
   const [data, setData] = useState<Therapist>(SAMPLE);
   const [status] = useState<Status>("online");
@@ -1029,8 +1091,8 @@ export default function TherapistProfile() {
 
   const mapDirectionsHref = mapQuery
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      mapQuery
-    )}`
+        mapQuery
+      )}`
     : undefined;
 
   const mobileRadiusText = useMemo(() => {
@@ -1270,13 +1332,17 @@ export default function TherapistProfile() {
         </div>
 
         <div className="tp-hero-right">
-          <h1 className="tp-title">Male Massage by {data.name}</h1>
+          <h1 className="tp-title">
+            Male Massage by {data.name || "Your Name"}
+          </h1>
           <div className="tp-subtitle">{data.title}</div>
 
           <div className="tp-cards">
             <div className="tp-card">
               <div className="tp-card__title">Location</div>
-              <div className="tp-card__value">{data.locationCityState}</div>
+              <div className="tp-card__value">
+                {data.locationCityState || "Add your city & state"}
+              </div>
               {data.zipCode && (
                 <div className="tp-card__muted">ZIP {data.zipCode}</div>
               )}
@@ -1290,18 +1356,23 @@ export default function TherapistProfile() {
             <div className="tp-card">
               <div className="tp-card__title">Services</div>
               <div className="tp-card__value">
-                {data.services} — Starting at {data.startingAt}
+                {data.services || "Describe your services"}{" "}
+                {data.startingAt && <>— Starting at {data.startingAt}</>}
               </div>
             </div>
 
             <div className="tp-card">
               <div className="tp-card__title">Specialties</div>
-              <div className="tp-card__value">{data.specialties}</div>
+              <div className="tp-card__value">
+                {data.specialties || "Add your specialties"}
+              </div>
             </div>
 
             <div className="tp-card">
               <div className="tp-card__title">Promoções</div>
-              <div className="tp-card__value">{data.promocoes}</div>
+              <div className="tp-card__value">
+                {data.promocoes || "Add promos or leave blank"}
+              </div>
             </div>
           </div>
 
@@ -1362,8 +1433,9 @@ export default function TherapistProfile() {
           return (
             <div
               key={g.id}
-              className={`tp-thumb tp-thumb--fixed ${isOwner && isActive ? "is-active" : ""
-                }`}
+              className={`tp-thumb tp-thumb--fixed ${
+                isOwner && isActive ? "is-active" : ""
+              }`}
             >
               <img
                 src={g.url}
@@ -1394,8 +1466,10 @@ export default function TherapistProfile() {
       <section className="tp-block">
         <h2 className="tp-block__title">ABOUT</h2>
         <article className="tp-box tp-box--wide">
-          <h4>About {data.name}</h4>
-          <p className="tp-p">{data.bio}</p>
+          <h4>About {data.name || "you"}</h4>
+          <p className="tp-p">
+            {data.bio || "Use the Edit Profile to tell clients about you."}
+          </p>
         </article>
 
         <div className="tp-two-col">
@@ -1445,7 +1519,7 @@ export default function TherapistProfile() {
             <p>
               <strong>Location & Service Area</strong>
               <br />
-              {data.locationCityState}
+              {data.locationCityState || "Add your city & state in Edit Profile"}
             </p>
             {data.zipCode && (
               <p>
@@ -1469,14 +1543,18 @@ export default function TherapistProfile() {
             )}
             {data.accessNotes && <p className="tp-muted">{data.accessNotes}</p>}
             <p>
-              <strong>Services:</strong> {data.services}
+              <strong>Services:</strong>{" "}
+              {data.services || "Add your services list."}
             </p>
             <p>
-              <strong>Specialties:</strong> {data.specialties}
+              <strong>Specialties:</strong>{" "}
+              {data.specialties || "Add your specialties."}
             </p>
-            <p>
-              <strong>Starting at:</strong> {data.startingAt}
-            </p>
+            {data.startingAt && (
+              <p>
+                <strong>Starting at:</strong> {data.startingAt}
+              </p>
+            )}
           </article>
 
           <article className="tp-box tp-box--map">
@@ -1551,7 +1629,7 @@ export default function TherapistProfile() {
           </article>
 
           <article className="tp-box">
-            {data.payments && (
+            {data.payments && Object.values(data.payments).some(Boolean) && (
               <>
                 <h4>Payment Methods</h4>
                 <ul className="tp-tags">
@@ -1596,8 +1674,8 @@ export default function TherapistProfile() {
           <article className="tp-box">
             <h4>Hours</h4>
             {Array.isArray(data.availability) &&
-              (data.availability as any)[0] &&
-              "incallHours" in (data.availability as any)[0] ? (
+            (data.availability as any)[0] &&
+            "incallHours" in (data.availability as any)[0] ? (
               <div className="tp-ptable tp-ptable--avail">
                 <div className="tp-ptable__head">
                   <span>in-studio hours</span>
@@ -1612,7 +1690,7 @@ export default function TherapistProfile() {
                   </div>
                 ))}
               </div>
-            ) : (
+            ) : data.availability && data.availability.length ? (
               <ul className="tp-list">
                 {(data.availability as AvailabilitySimple[]).map((a, i) => (
                   <li key={i}>
@@ -1620,6 +1698,8 @@ export default function TherapistProfile() {
                   </li>
                 ))}
               </ul>
+            ) : (
+              <p className="tp-muted">Set your availability in Edit Profile.</p>
             )}
           </article>
 
