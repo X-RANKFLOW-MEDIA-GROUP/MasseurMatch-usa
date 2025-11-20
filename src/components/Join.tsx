@@ -198,7 +198,6 @@ const STRIPE_BACKEND =
   "https://backend-massuer-stripe.onrender.com";
 
 const POLICY_VERSION = "2025-11-11";
-const FREE_TRIAL_DAYS = 7;
 
 /* ===== Utils ===== */
 function priceLabel(price: number) {
@@ -685,17 +684,16 @@ function ComplianceChecklist({
   );
 }
 
-/* ===== Step 5: Payment / Free Trial + Stripe Identity ===== */
+/* ===== Step 5: Payment / Identity (Free + Paid) ===== */
 function PaymentStep({
   plan,
   formData,
   onBack,
-  onSuccess,
 }: {
   plan: PlanKey;
   formData: any;
   onBack: () => void;
-  onSuccess: () => void;
+  onSuccess: () => void; // mantido na assinatura, mas não é chamado aqui
 }) {
   const L = TXT.flow;
   const [loading, setLoading] = useState(false);
@@ -1018,7 +1016,7 @@ export default function JoinPage() {
           plan={selectedPlan}
           formData={formData}
           onBack={() => setStep(4)}
-          onSuccess={() => setStep(6)}
+          onSuccess={() => setStep(6)} // hoje não é disparado no handlePayment
         />
       )}
 
