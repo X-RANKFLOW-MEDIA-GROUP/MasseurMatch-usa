@@ -731,8 +731,8 @@ function PaymentStep({
       }
 
       // 2) Iniciar fluxo na API:
-      //    - FREE  → só Stripe Identity (sem Checkout)
-      //    - PAID  → Identity + Checkout
+      //   FREE  → Stripe Identity → redireciona direto pro perfil (/therapist/:id)
+      //   PAID  → Stripe Identity → backend /after-identity → Checkout → success → perfil
       const endpoint = isFree
         ? `${STRIPE_BACKEND}/start-identity-flow`
         : `${STRIPE_BACKEND}/start-payment-flow`;
@@ -784,7 +784,8 @@ function PaymentStep({
             timestamp: new Date().toISOString(),
           })
         );
-        // Redireciona para a página de verificação (Free) ou verificação+checkout (Paid)
+        // Free: abre Stripe Identity → volta direto pro perfil
+        // Paid: abre Stripe Identity → backend /after-identity → Checkout → success → perfil
         window.location.href = data.url;
       }
     } catch (err: any) {
@@ -798,8 +799,8 @@ function PaymentStep({
   };
 
   const trialNote = isFree
-    ? "You will complete a quick identity verification via Stripe. No payment will be charged for the Free plan. Once your ID is verified, our team will review and activate your profile."
-    : "You will first complete identity verification via Stripe. After your identity is confirmed, you will be automatically redirected to Stripe Checkout to complete the subscription payment.";
+    ? "You will complete a quick identity verification via Stripe. No payment will be charged for the Free plan. After your ID is verified, you'll be redirected directly to your public profile."
+    : "You will first complete identity verification via Stripe. After your identity is confirmed, you will be redirected to Stripe Checkout to complete the payment, and then back to your profile.";
 
   const titleLabel = isFree ? "Identity Verification" : "Identity + Checkout";
 
