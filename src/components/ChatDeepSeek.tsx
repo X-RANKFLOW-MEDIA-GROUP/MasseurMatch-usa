@@ -54,11 +54,11 @@ export default function ChatDeepSeek() {
         content: m.text,
       }));
 
-      const res = await fetch("/api/deepseek", {
+      const res = await fetch("localhost:4000/deepseek", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: payloadMessages }),
-      });
+      })
 
       if (!res.ok) {
         console.error("DeepSeek API error:", res.status);
