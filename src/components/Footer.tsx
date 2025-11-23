@@ -1,6 +1,12 @@
 "use client";
 
-import { FaInstagram, FaTwitter, FaLinkedin, FaEnvelope } from "react-icons/fa";
+import Link from "next/link";
+import {
+  FaInstagram,
+  FaTwitter,
+  FaLinkedin,
+  FaEnvelope,
+} from "react-icons/fa";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
@@ -13,85 +19,126 @@ export default function Footer() {
             <span className={styles["brand-gradient"]}>Masseur</span>Match
           </h3>
           <p>
-            A maior plataforma inclusiva de massagistas do Brasil. Conectando
-            bem-estar e tecnologia.
+            The most inclusive massage therapist platform. Connecting wellness
+            and technology with trust.
           </p>
+
           <div className={styles["footer-socials"]}>
-            <a href="#" aria-label="Instagram">
+            <Link href="#" aria-label="Instagram">
               <FaInstagram />
-            </a>
-            <a href="#" aria-label="Twitter">
+            </Link>
+            <Link href="#" aria-label="Twitter">
               <FaTwitter />
-            </a>
-            <a href="#" aria-label="LinkedIn">
+            </Link>
+            <Link href="#" aria-label="LinkedIn">
               <FaLinkedin />
-            </a>
-            <a href="#" aria-label="E-mail">
+            </Link>
+            <Link href="mailto:support@masseurmatch.com" aria-label="E-mail">
               <FaEnvelope />
-            </a>
+            </Link>
           </div>
         </div>
 
-        {/* Links */}
+        {/* Navigation Links */}
         <div className={styles["footer-links"]}>
+          {/* Platform */}
           <div>
-            <h4>Plataforma</h4>
+            <h4>Platform</h4>
             <ul>
               <li>
-                <a href="#">Explorar</a>
+                <Link href="/explore">Explore</Link>
               </li>
               <li>
-                <a href="#">Como Funciona</a>
+                <Link href="/about">How It Works</Link>
               </li>
               <li>
-                <a href="#">Sobre Nós</a>
+                <Link href="/about">About Us</Link>
               </li>
               <li>
-                <a href="#">Blog</a>
+                <Link href="/about">Blog</Link>
               </li>
             </ul>
           </div>
+
+          {/* For Therapists */}
           <div>
-            <h4>Para Massagistas</h4>
+            <h4>For Therapists</h4>
             <ul>
               <li>
-                <a href="#">Criar Conta</a>
+                <Link href="/join">Create Account</Link>
               </li>
               <li>
-                <a href="#">Dashboard</a>
+                <Link href="/dashboard">Dashboard</Link>
               </li>
               <li>
-                <a href="#">Planos e Preços</a>
+                <Link href="/checkout">Plans &amp; Pricing</Link>
               </li>
               <li>
-                <a href="#">Central de Ajuda</a>
+                <Link href="/therapist">Help Center</Link>
               </li>
             </ul>
           </div>
+
+          {/* Legal - EXTERNAL LINKS */}
           <div>
             <h4>Legal</h4>
             <ul>
               <li>
-                <a href="#">Termos de Uso</a>
+                <Link
+                  href="https://legalhubmasseurmatch.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Terms of Use
+                </Link>
               </li>
               <li>
-                <a href="#">Privacidade</a>
+                <Link
+                  href="https://legalhubmasseurmatch.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Privacy Policy
+                </Link>
               </li>
               <li>
-                <a href="#">Código de Conduta</a>
+                <Link
+                  href="https://legalhubmasseurmatch.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Community Guidelines
+                </Link>
               </li>
               <li>
-                <a href="#">Segurança</a>
+                <Link
+                  href="https://legalhubmasseurmatch.vercel.app/legal/anti-trafficking"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Safety
+                </Link>
               </li>
             </ul>
           </div>
+        </div>
+
+        {/* Language Selector */}
+        <div className={styles["footer-language"]}>
+          <h4>Language</h4>
+          <select aria-label="Language selector">
+            <option value="en">English</option>
+            <option value="pt">Português (Brazil)</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+          </select>
         </div>
       </div>
 
       {/* Bottom Bar */}
       <div className={styles["footer-bottom"]}>
-        <p>© 2025 MasseurMatch. Todos os direitos reservados.</p>
-        <span>Feito com 💜 para o bem-estar de todos</span>
+        <p>© 2025 MasseurMatch. All rights reserved.</p>
+        <span>Made with 💜 for everyone&apos;s well-being</span>
       </div>
     </footer>
   );

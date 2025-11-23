@@ -14,16 +14,16 @@ const initialMessages: Message[] = [
   {
     id: "m2",
     role: "assistant",
-    text: "Hello, I'm here to help you.",
+    text: "Hello, I'm Knotty AI, your assistant. How can I help you today?",
   },
 ];
 
 export default function ChatDeepSeek() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
   const listRef = useRef<HTMLDivElement | null>(null);
 
-  // auto-scroll to bottom on new message
   useEffect(() => {
     if (!listRef.current) return;
     listRef.current.scrollTo({
@@ -32,10 +32,10 @@ export default function ChatDeepSeek() {
     });
   }, [messages.length]);
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = input.trim();
-    if (!trimmed) return;
+    if (!trimmed || loading) return;
 
     const userMsg: Message = {
       id: crypto.randomUUID(),
@@ -43,26 +43,60 @@ export default function ChatDeepSeek() {
       text: trimmed,
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
     setInput("");
+    setLoading(true);
 
-    // mock reply (sem API ainda)
-    const reply: Message = {
-      id: crypto.randomUUID(),
-      role: "assistant",
-      text:
-        "Thanks! I’ll refine the results using that preference. Would you also like to set a price range or preferred technique?",
-    };
+    try {
+      const payloadMessages = newMessages.map((m) => ({
+        role: m.role,
+        content: m.text,
+      }));
 
-    setTimeout(() => {
+      const res = await fetch("/api/deepseek", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: payloadMessages }),
+      });
+
+      if (!res.ok) {
+        console.error("DeepSeek API error:", res.status);
+        const errorMsg: Message = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          text:
+            "Sorry, I had a problem talking to the AI. Please try again in a moment.",
+        };
+        setMessages((prev) => [...prev, errorMsg]);
+        return;
+      }
+
+      const data: { reply: string } = await res.json();
+
+      const reply: Message = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        text: data.reply,
+      };
+
       setMessages((prev) => [...prev, reply]);
-    }, 400);
+    } catch (err) {
+      console.error("Error calling /api/deepseek:", err);
+      const errorMsg: Message = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        text:
+          "There was a connection problem. Please check your internet and try again.",
+      };
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const assistChips = useMemo(
-    () => [
-      { id: "c1", label: "Knotty AI", icon: <Sparkles size={14} /> },
-    ],
+    () => [{ id: "c1", label: "Knotty AI", icon: <Sparkles size={14} /> }],
     []
   );
 
@@ -115,14 +149,21 @@ export default function ChatDeepSeek() {
               <Wand2 className={styles["assistant-inputicon"]} aria-hidden />
               <input
                 aria-label="Type your message"
-                placeholder="Type your message…"
+                placeholder={
+                  loading ? "Waiting for Knotty AI..." : "Type your message…"
+                }
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                disabled={loading}
               />
             </div>
-            <button className={styles["assistant-send"]} aria-label="Send">
+            <button
+              className={styles["assistant-send"]}
+              aria-label="Send"
+              disabled={loading || !input.trim()}
+            >
               <Send size={18} />
-              <span>Send</span>
+              <span>{loading ? "Thinking..." : "Send"}</span>
             </button>
           </form>
         </div>
