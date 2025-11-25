@@ -6,10 +6,7 @@ import styles from "./FinalCTA.module.css";
 
 const FinalCTA: React.FC = () => {
   return (
-    <section
-      className={styles["cta-section"]}
-      aria-labelledby="cta-title"
-    >
+    <section className={styles["cta-section"]} aria-labelledby="cta-title">
       <div className={styles["cta-wrap"]}>
         <h2 id="cta-title" className={styles["cta-title"]}>
           Ready to start?
@@ -20,8 +17,9 @@ const FinalCTA: React.FC = () => {
         </p>
 
         <div className={styles["cta-actions"]}>
+          {/* BOTÃO PARA A ROTA /explore */}
           <a
-            href="#explore"
+            href="/explore"
             className={`${styles["cta-btn"]} ${styles["cta-primary"]}`}
             aria-label="Explore all profiles"
           >
@@ -29,8 +27,9 @@ const FinalCTA: React.FC = () => {
             <ArrowRight size={16} aria-hidden />
           </a>
 
+          {/* BOTÃO PARA A ROTA /join COM PLANO FREE  */}
           <a
-            href="#signup"
+            href="/join?plan=free"
             className={`${styles["cta-btn"]} ${styles["cta-secondary"]}`}
             aria-label="Create a free account"
           >

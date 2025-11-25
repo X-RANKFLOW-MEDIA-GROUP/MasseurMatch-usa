@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Sparkles, Send, Wand2 } from "lucide-react";
 import styles from "./ChatDeepSeek.module.css";
 
@@ -10,6 +10,7 @@ type Message = {
   text: string;
 };
 
+// Mensagem inicial do assistente
 const initialMessages: Message[] = [
   {
     id: "m2",
@@ -18,12 +19,17 @@ const initialMessages: Message[] = [
   },
 ];
 
+// URL do backend da IA (configurada via .env)
+const IA_BACKEND_URL =
+  process.env.NEXT_PUBLIC_IA_BACKEND_URL || "http://localhost:4000";
+
 export default function ChatDeepSeek() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const listRef = useRef<HTMLDivElement | null>(null);
 
+  // Auto-scroll pro final sempre que uma nova mensagem é adicionada
   useEffect(() => {
     if (!listRef.current) return;
     listRef.current.scrollTo({
@@ -49,16 +55,17 @@ export default function ChatDeepSeek() {
     setLoading(true);
 
     try {
+      // Formato que o backend espera
       const payloadMessages = newMessages.map((m) => ({
         role: m.role,
         content: m.text,
       }));
 
-      const res = await fetch("localhost:4000/deepseek", {
+      const res = await fetch(`${IA_BACKEND_URL}/deepseek`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: payloadMessages }),
-      })
+      });
 
       if (!res.ok) {
         console.error("DeepSeek API error:", res.status);
@@ -82,7 +89,7 @@ export default function ChatDeepSeek() {
 
       setMessages((prev) => [...prev, reply]);
     } catch (err) {
-      console.error("Error calling /api/deepseek:", err);
+      console.error("Error calling IA backend:", err);
       const errorMsg: Message = {
         id: crypto.randomUUID(),
         role: "assistant",
