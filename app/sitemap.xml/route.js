@@ -4,19 +4,7 @@ export async function GET() {
   const base = "https://www.masseurmatch.com";
   const today = new Date().toISOString();
 
-  // Páginas reais do seu site
-  const staticPages = [
-    "", 
-    "explore",
-    "waitlist",
-    "login",
-    "join",
-    "privacy-policy",
-    "terms",
-    "sms-consent"
-  ];
-
-  // Estados reais para futuras páginas locais
+  //  TODOS os 50 estados dos EUA
   const states = [
     "alabama","alaska","arizona","arkansas","california","colorado","connecticut",
     "delaware","florida","georgia","hawaii","idaho","illinois","indiana","iowa",
@@ -28,28 +16,52 @@ export async function GET() {
     "virginia","washington","west-virginia","wisconsin","wyoming"
   ];
 
-  // Cidades com maior volume de busca — ótimo para pré-SEO
+  //  LISTA GRANDE DE CIDADES (alta busca + agregadas)
   const cities = [
-    "atlanta","austin","boston","chicago","cleveland","columbus","dallas","denver",
-    "detroit","houston","indianapolis","jacksonville","kansas-city","las-vegas",
-    "los-angeles","memphis","miami","minneapolis","nashville","new-orleans",
-    "new-york","oklahoma-city","orlando","philadelphia","phoenix","pittsburgh",
-    "portland","raleigh","sacramento","salt-lake-city","san-antonio","san-diego",
-    "san-francisco","san-jose","seattle","st-louis","tampa","washington-dc"
+    "albany","albuquerque","allentown","amarillo","anaheim","anchorage","arlington",
+    "atlanta","austin","bakersfield","baltimore","baton-rouge","birmingham",
+    "boise","boston","buffalo","burlington","charleston","charlotte","chattanooga",
+    "chesapeake","chicago","cincinnati","cleveland","colorado-springs","columbia",
+    "columbus","dallas","dayton","daytona-beach","denver","des-moines","detroit",
+    "el-paso","erich","fayetteville","fort-lauderdale","fort-worth","fresno",
+    "grand-rapids","greensboro","greenville","hartford","honolulu","houston",
+    "indianapolis","jackson","jacksonville","jersey-city","kansas-city","knoxville",
+    "las-vegas","lexington","lincoln","little-rock","los-angeles","louisville",
+    "lubbock","madison","memphis","mesa","miami","milwaukee","minneapolis",
+    "mobile","modesto","montgomery","nashville","new-orleans","new-york",
+    "norfolk","oakland","oklahoma-city","omaha","orlando","pasadena","philadelphia",
+    "phoenix","pittsburgh","plano","portland","providence","raleigh","reno",
+    "richmond","rochester","sacramento","salt-lake-city","san-antonio","san-diego",
+    "san-francisco","san-jose","santa-ana","sarasota","savannah","seattle",
+    "shreveport","spokane","springfield","st-louis","st-paul","stockton",
+    "syracuse","tallahassee","tampa","tucson","tulsa","virginia-beach","wichita",
+    "winston-salem","washington-dc"
   ];
 
-  // Monta URLs
+  // PÁGINAS PRINCIPAIS DO SITE
+  const staticPages = [
+    "",
+    "explore",
+    "waitlist",
+    "login",
+    "join",
+    "privacy-policy",
+    "terms",
+    "sms-consent"
+  ];
+
+  // MONTA TODAS AS URLS
   const urls = [
     ...staticPages.map((p) => `${base}/${p}`),
 
-    // Pagina de explore/state
+    // explore/state
     ...states.map((s) => `${base}/explore/${s}`),
 
-    // Pagina explore/state/city
+    // explore/usa/city
     ...cities.map((c) => `${base}/explore/usa/${c}`)
   ];
 
-  // Gera XML
+  //  GERA O XML FINAL
   const xml = `
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       ${urls
