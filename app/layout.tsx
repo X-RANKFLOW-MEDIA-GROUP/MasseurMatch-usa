@@ -1,10 +1,8 @@
 // app/layout.tsx
 import type { Metadata } from "next";
-import React from "react";
-
+import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
-// Estilos globais do MasseurMatch
 import "@/src/components/TherapistProfile.css";
 import "@/src/styles/edit-profile.css";
 
@@ -16,14 +14,9 @@ export const metadata: Metadata = {
   description: "Find real massage therapists. Connect with confidence.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      {/* suppressHydrationWarning corrige o erro causado por extensões do navegador */}
       <body suppressHydrationWarning={true}>
         <ProfileProvider>
           <Header />
