@@ -4,8 +4,19 @@ export async function GET() {
   const base = "https://www.masseurmatch.com";
   const today = new Date().toISOString();
 
-  const staticPages = ["", "about", "privacy-policy", "terms", "sms-consent"];
+  // Páginas reais do seu site
+  const staticPages = [
+    "", 
+    "explore",
+    "waitlist",
+    "login",
+    "join",
+    "privacy-policy",
+    "terms",
+    "sms-consent"
+  ];
 
+  // Estados reais para futuras páginas locais
   const states = [
     "alabama","alaska","arizona","arkansas","california","colorado","connecticut",
     "delaware","florida","georgia","hawaii","idaho","illinois","indiana","iowa",
@@ -17,6 +28,7 @@ export async function GET() {
     "virginia","washington","west-virginia","wisconsin","wyoming"
   ];
 
+  // Cidades com maior volume de busca — ótimo para pré-SEO
   const cities = [
     "atlanta","austin","boston","chicago","cleveland","columbus","dallas","denver",
     "detroit","houston","indianapolis","jacksonville","kansas-city","las-vegas",
@@ -26,22 +38,28 @@ export async function GET() {
     "san-francisco","san-jose","seattle","st-louis","tampa","washington-dc"
   ];
 
+  // Monta URLs
   const urls = [
-    ...staticPages.map(p => `${base}/${p}`),
-    ...states.map(s => `${base}/massage/${s}`),
-    ...cities.map(c => `${base}/massage/${c}`)
+    ...staticPages.map((p) => `${base}/${p}`),
+
+    // Pagina de explore/state
+    ...states.map((s) => `${base}/explore/${s}`),
+
+    // Pagina explore/state/city
+    ...cities.map((c) => `${base}/explore/usa/${c}`)
   ];
 
+  // Gera XML
   const xml = `
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       ${urls
         .map(
-          u => `
+          (u) => `
         <url>
           <loc>${u}</loc>
           <lastmod>${today}</lastmod>
           <changefreq>daily</changefreq>
-          <priority>${u === base ? "1.0" : "0.8"}</priority>
+          <priority>${u === base ? "1.0" : "0.7"}</priority>
         </url>`
         )
         .join("")}
