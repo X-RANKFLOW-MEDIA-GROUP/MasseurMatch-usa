@@ -6,6 +6,11 @@ import { useSearchParams } from "next/navigation";
 import { supabase } from "../lib/supabase";
 import styles from "./ExploreTherapists.module.css";
 
+/* ====== Leaflet / React-Leaflet ====== */
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+
 type BadgeType = "verified" | "elite" | "pro";
 
 type Therapist = {
@@ -20,14 +25,20 @@ type Therapist = {
   startingPriceUSD: number;
   photoUrl: string;
   badges?: BadgeType[];
+
+  // ➕ coords calculadas a partir de location/ZIP
+  lat?: number;
+  lng?: number;
 };
 
 /* ----------------------------------------------------------
-   Função para resolver LOCATION em cidade/estado (ZIP/CEP)
+   Função para resolver LOCATION em cidade/estado + lat/lng
 ----------------------------------------------------------- */
 async function resolveLocation(rawLocation: unknown): Promise<{
   city: string;
   state: string;
+  lat?: number;
+  lng?: number;
 }> {
   const loc = String(rawLocation || "").trim();
 
@@ -36,47 +47,87 @@ async function resolveLocation(rawLocation: unknown): Promise<{
   const cepRegexBR = /^\d{5}-?\d{3}$/;
   const zipRegexUSA = /^\d{5}(-\d{4})?$/;
 
-  // Cidade-Estado
-  if (loc.includes("-") && !cepRegexBR.test(loc) && !zipRegexUSA.test(loc)) {
-    const [city = "", state = ""] = loc.split("-");
-    return { city: city.trim(), state: state.trim() };
+  /* ---------- Helpers de geocoding (OpenStreetMap / Nominatim) ---------- */
+  async function geocodeFreeText(query: string) {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          query
+        )}`
+      );
+      const data: any[] = await res.json();
+      if (data?.length) {
+        return {
+          lat: Number(data[0].lat),
+          lng: Number(data[0].lon),
+        };
+      }
+    } catch {
+      // ignore
+    }
+    return { lat: undefined, lng: undefined };
   }
 
-  // ZIP EUA
+  /* ---------- Cidade - Estado (ex: "Lauro de Freitas - BA") ---------- */
+  if (loc.includes("-") && !cepRegexBR.test(loc) && !zipRegexUSA.test(loc)) {
+    const [cityRaw = "", stateRaw = ""] = loc.split("-");
+    const city = cityRaw.trim();
+    const state = stateRaw.trim();
+
+    const { lat, lng } = await geocodeFreeText(`${city}, ${state}`);
+    return { city, state, lat, lng };
+  }
+
+  /* ---------- ZIP EUA ---------- */
   if (zipRegexUSA.test(loc)) {
     try {
       const res = await fetch(`https://api.zippopotam.us/us/${loc}`);
       if (res.ok) {
         const data: any = await res.json();
         const place = data?.places?.[0];
-        return {
-          city: place?.["place name"] ?? "",
-          state: place?.["state abbreviation"] ?? "",
-        };
+
+        const city = place?.["place name"] ?? "";
+        const state = place?.["state abbreviation"] ?? "";
+        const lat = place ? Number(place.latitude) : undefined;
+        const lng = place ? Number(place.longitude) : undefined;
+
+        return { city, state, lat, lng };
       }
     } catch {
-      // segue pro fallback abaixo
+      // segue pro fallback
     }
-    return { city: loc, state: "" };
+    // Sem sucesso, trata como texto
+    const { lat, lng } = await geocodeFreeText(loc);
+    return { city: loc, state: "", lat, lng };
   }
 
-  // CEP Brasil
+  /* ---------- CEP Brasil ---------- */
   if (cepRegexBR.test(loc)) {
     try {
       const sanitized = loc.replace("-", "");
       const res = await fetch(`https://viacep.com.br/ws/${sanitized}/json/`);
       const data: any = await res.json();
+
       if (!data.erro) {
-        return { city: data.localidade ?? "", state: data.uf ?? "" };
+        const city = data.localidade ?? "";
+        const state = data.uf ?? "";
+
+        // Tenta pegar coordenadas da cidade/estado
+        const { lat, lng } = await geocodeFreeText(`${city}, ${state}, Brasil`);
+
+        return { city, state, lat, lng };
       }
     } catch {
-      // segue pro fallback abaixo
+      // segue pro fallback
     }
-    return { city: loc, state: "" };
+
+    const { lat, lng } = await geocodeFreeText(loc);
+    return { city: loc, state: "", lat, lng };
   }
 
-  // Qualquer outro texto é tratado como nome de cidade
-  return { city: loc, state: "" };
+  /* ---------- Qualquer outro texto: tenta geocodar como cidade ---------- */
+  const { lat, lng } = await geocodeFreeText(loc);
+  return { city: loc, state: "", lat, lng };
 }
 
 /* ----------------------------------------------------------
@@ -90,17 +141,26 @@ function StarRow({ value }: { value: number }) {
   return (
     <div className={styles.stars}>
       {Array.from({ length: full }).map((_, i) => (
-        <span key={`f${i}`} className={`${styles.star} ${styles["star--full"]}`}>
+        <span
+          key={`f${i}`}
+          className={`${styles.star} ${styles["star--full"]}`}
+        >
           ★
         </span>
       ))}
       {Array.from({ length: half }).map((_, i) => (
-        <span key={`h${i}`} className={`${styles.star} ${styles["star--half"]}`}>
+        <span
+          key={`h${i}`}
+          className={`${styles.star} ${styles["star--half"]}`}
+        >
           ★
         </span>
       ))}
       {Array.from({ length: empty }).map((_, i) => (
-        <span key={`e${i}`} className={`${styles.star} ${styles["star--empty"]}`}>
+        <span
+          key={`e${i}`}
+          className={`${styles.star} ${styles["star--empty"]}`}
+        >
           ☆
         </span>
       ))}
@@ -123,7 +183,9 @@ function Badge({ kind }: { kind: BadgeType }) {
   const label =
     kind === "verified" ? "Verified" : kind === "elite" ? "Elite" : "Pro";
 
-  return <span className={`${styles.badge} ${styles[className]}`}>{label}</span>;
+  return (
+    <span className={`${styles.badge} ${styles[className]}`}>{label}</span>
+  );
 }
 
 /* ----------------------------------------------------------
@@ -183,6 +245,27 @@ function TherapistCard({ t }: { t: Therapist }) {
 }
 
 /* ----------------------------------------------------------
+   Ícone com foto (estilo Masseurfinder)
+----------------------------------------------------------- */
+function createPhotoIcon(url: string) {
+  return L.divIcon({
+    html: `<div style="
+        width: 46px;
+        height: 46px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid white;
+        box-shadow: 0 0 8px rgba(0,0,0,0.45);
+      ">
+        <img src="${url}" style="width: 100%; height: 100%; object-fit: cover;" />
+      </div>`,
+    className: "",
+    iconSize: [46, 46],
+    iconAnchor: [23, 23],
+  });
+}
+
+/* ----------------------------------------------------------
    PÁGINA PRINCIPAL
 ----------------------------------------------------------- */
 export default function ExploreTherapists() {
@@ -212,7 +295,7 @@ export default function ExploreTherapists() {
 
         const mapped: Therapist[] = await Promise.all(
           (data || []).map(async (t: any) => {
-            const { city, state } = await resolveLocation(t.location);
+            const { city, state, lat, lng } = await resolveLocation(t.location);
 
             const tags = Array.isArray(t.services)
               ? t.services
@@ -237,6 +320,8 @@ export default function ExploreTherapists() {
                 t.profile_photo ||
                 "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?q=80&w=1600&auto=format&fit=crop",
               badges: ["verified"],
+              lat,
+              lng,
             };
           })
         );
@@ -278,7 +363,7 @@ export default function ExploreTherapists() {
     return list;
   }, [therapists, query, showOnlyVerified, cityFilterParam]);
 
-  /* ------------------------ MAPA (MESMO ESTILO DO PERFIL) ------------------------ */
+  /* ------------------------ MAPA: texto pra toolbar + Google Maps externo ------------------------ */
   const mapQuery = useMemo(() => {
     // 1) Se veio da home /cities?city=...
     if (cityFilterParam) return cityFilterParam;
@@ -299,10 +384,6 @@ export default function ExploreTherapists() {
     return "United States";
   }, [cityFilterParam, query, results, therapists]);
 
-  const mapEmbedSrc = `https://www.google.com/maps?q=${encodeURIComponent(
-    mapQuery
-  )}&output=embed`;
-
   const mapDirectionsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     mapQuery
   )}`;
@@ -311,6 +392,20 @@ export default function ExploreTherapists() {
     ? `Therapists in ${cityFilterParam}`
     : "Explore Therapists";
 
+  /* ------------------------ MAPA: cálculo do centro e zoom ------------------------ */
+  const therapistsWithCoords = results.filter(
+    (t) => typeof t.lat === "number" && typeof t.lng === "number"
+  );
+
+  const mapCenter: [number, number] = useMemo(() => {
+    const first = therapistsWithCoords[0];
+    if (first) return [first.lat!, first.lng!];
+    // fallback: Brasil mais aberto
+    return [-15.8, -47.9];
+  }, [therapistsWithCoords]);
+
+  const mapZoom = therapistsWithCoords.length ? 11 : 3;
+
   /* ------------------------ LOADING ------------------------ */
   if (loading) {
     return (
@@ -318,6 +413,25 @@ export default function ExploreTherapists() {
         <section className={styles.pagehead}>
           <div className={styles.pagehead__left}>
             <h1 className={styles.pagehead__title}>{pageTitle}</h1>
+
+            <div className={styles.filters}>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles["btn--chip"]}`}
+                disabled
+              >
+                ⚙ Filters
+              </button>
+
+              <div className={styles.search}>
+                <input
+                  className={styles.search__input}
+                  placeholder="Search by name, city, state, or ZIP..."
+                  disabled
+                />
+              </div>
+            </div>
+
             <div className={styles.mapWrapper}>
               <div className={styles.mapLoading}>Loading map...</div>
             </div>
@@ -335,29 +449,7 @@ export default function ExploreTherapists() {
         <div className={styles.pagehead__left}>
           <h1 className={styles.pagehead__title}>{pageTitle}</h1>
 
-          {/* 🔥 MAPA NO MESMO ESTILO DO PERFIL */}
-          <div className={styles.mapWrapper}>
-            <iframe
-              title="Therapists map"
-              src={mapEmbedSrc}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className={styles.mapFrame}
-            />
-            <div className={styles.mapToolbar}>
-              <span className={styles.mapLabel}>Showing area: {mapQuery}</span>
-              <a
-                href={mapDirectionsHref}
-                target="_blank"
-                rel="noreferrer"
-                className={styles.mapButton}
-              >
-                Open in Google Maps
-              </a>
-            </div>
-          </div>
-
-          {/* FILTROS */}
+          {/* 🔍 FILTROS + INPUT DE PESQUISA */}
           <div className={styles.filters}>
             <button
               type="button"
@@ -373,9 +465,49 @@ export default function ExploreTherapists() {
               <input
                 className={styles.search__input}
                 placeholder="Search by name, city, state, or ZIP..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                value={query} // ⬅ sempre controlado
+                disabled
+                onChange={() => {}} // ⬅ evita warning
               />
+            </div>
+          </div>
+
+          {/* 🔥 MAPA ESTILO DIRECTORY COM FOTOS DOS MASSAGISTAS (AGORA ABAIXO DO INPUT) */}
+          <div className={styles.mapWrapper}>
+            <div className={styles.mapFrame}>
+              <MapContainer
+                center={mapCenter}
+                zoom={mapZoom}
+                style={{ width: "100%", height: "100%" }}
+              >
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+                {therapistsWithCoords.map((t) => (
+                  <Marker
+                    key={t.id}
+                    position={[t.lat!, t.lng!]}
+                    icon={createPhotoIcon(t.photoUrl)}
+                    eventHandlers={{
+                      click: () => {
+                        // ao clicar no pin, abre o perfil em outra aba
+                        window.open(`/therapist/${t.id}`, "_blank");
+                      },
+                    }}
+                  />
+                ))}
+              </MapContainer>
+            </div>
+
+            <div className={styles.mapToolbar}>
+              <span className={styles.mapLabel}>Showing area: {mapQuery}</span>
+              <a
+                href={mapDirectionsHref}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.mapButton}
+              >
+                Open in Google Maps
+              </a>
             </div>
           </div>
         </div>
