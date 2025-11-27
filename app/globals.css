@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* ===========================
    THEME / BASE VARIABLES
    =========================== */
@@ -70,7 +72,7 @@ body {
   height: 38px;
   padding: 0 14px;
   border-radius: 999px;
-  background: #23252E;
+  background: #23252e;
   color: var(--text);
   font-weight: 700;
   border: 1px solid transparent;
@@ -98,7 +100,7 @@ body {
 }
 
 .btn--ghost:hover {
-  background: #14161C;
+  background: #14161c;
 }
 
 .btn--accent {
