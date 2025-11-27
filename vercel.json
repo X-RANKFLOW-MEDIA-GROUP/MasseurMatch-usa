@@ -1,9 +1,3 @@
 {
-  "redirects": [
-    {
-      "source": "/:path*",
-      "destination": "https://www.masseurmatch.com/:path*",
-      "permanent": true
-    }
-  ]
+  "version": 2
 }
