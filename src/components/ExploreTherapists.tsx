@@ -26,7 +26,7 @@ type Therapist = {
   photoUrl: string;
   badges?: BadgeType[];
 
-  // ➕ coords calculadas a partir de location/ZIP
+  // coords calculadas a partir de location/ZIP
   lat?: number;
   lng?: number;
 };
@@ -34,7 +34,9 @@ type Therapist = {
 /* ----------------------------------------------------------
    Função para resolver LOCATION em cidade/estado + lat/lng
 ----------------------------------------------------------- */
-async function resolveLocation(rawLocation: unknown): Promise<{
+async function resolveLocation(
+  rawLocation: unknown
+): Promise<{
   city: string;
   state: string;
   lat?: number;
@@ -47,7 +49,6 @@ async function resolveLocation(rawLocation: unknown): Promise<{
   const cepRegexBR = /^\d{5}-?\d{3}$/;
   const zipRegexUSA = /^\d{5}(-\d{4})?$/;
 
-  /* ---------- Helpers de geocoding (OpenStreetMap / Nominatim) ---------- */
   async function geocodeFreeText(query: string) {
     try {
       const res = await fetch(
@@ -68,7 +69,7 @@ async function resolveLocation(rawLocation: unknown): Promise<{
     return { lat: undefined, lng: undefined };
   }
 
-  /* ---------- Cidade - Estado (ex: "Lauro de Freitas - BA") ---------- */
+  // Cidade - Estado (ex: "Lauro de Freitas - BA")
   if (loc.includes("-") && !cepRegexBR.test(loc) && !zipRegexUSA.test(loc)) {
     const [cityRaw = "", stateRaw = ""] = loc.split("-");
     const city = cityRaw.trim();
@@ -78,7 +79,7 @@ async function resolveLocation(rawLocation: unknown): Promise<{
     return { city, state, lat, lng };
   }
 
-  /* ---------- ZIP EUA ---------- */
+  // ZIP EUA
   if (zipRegexUSA.test(loc)) {
     try {
       const res = await fetch(`https://api.zippopotam.us/us/${loc}`);
@@ -96,12 +97,11 @@ async function resolveLocation(rawLocation: unknown): Promise<{
     } catch {
       // segue pro fallback
     }
-    // Sem sucesso, trata como texto
     const { lat, lng } = await geocodeFreeText(loc);
     return { city: loc, state: "", lat, lng };
   }
 
-  /* ---------- CEP Brasil ---------- */
+  // CEP Brasil
   if (cepRegexBR.test(loc)) {
     try {
       const sanitized = loc.replace("-", "");
@@ -112,8 +112,9 @@ async function resolveLocation(rawLocation: unknown): Promise<{
         const city = data.localidade ?? "";
         const state = data.uf ?? "";
 
-        // Tenta pegar coordenadas da cidade/estado
-        const { lat, lng } = await geocodeFreeText(`${city}, ${state}, Brasil`);
+        const { lat, lng } = await geocodeFreeText(
+          `${city}, ${state}, Brasil`
+        );
 
         return { city, state, lat, lng };
       }
@@ -125,7 +126,7 @@ async function resolveLocation(rawLocation: unknown): Promise<{
     return { city: loc, state: "", lat, lng };
   }
 
-  /* ---------- Qualquer outro texto: tenta geocodar como cidade ---------- */
+  // Qualquer outro texto: tenta geocodar como cidade
   const { lat, lng } = await geocodeFreeText(loc);
   return { city: loc, state: "", lat, lng };
 }
@@ -141,18 +142,12 @@ function StarRow({ value }: { value: number }) {
   return (
     <div className={styles.stars}>
       {Array.from({ length: full }).map((_, i) => (
-        <span
-          key={`f${i}`}
-          className={`${styles.star} ${styles["star--full"]}`}
-        >
+        <span key={`f${i}`} className={`${styles.star} ${styles["star--full"]}`}>
           ★
         </span>
       ))}
       {Array.from({ length: half }).map((_, i) => (
-        <span
-          key={`h${i}`}
-          className={`${styles.star} ${styles["star--half"]}`}
-        >
+        <span key={`h${i}`} className={`${styles.star} ${styles["star--half"]}`}>
           ★
         </span>
       ))}
@@ -183,9 +178,7 @@ function Badge({ kind }: { kind: BadgeType }) {
   const label =
     kind === "verified" ? "Verified" : kind === "elite" ? "Elite" : "Pro";
 
-  return (
-    <span className={`${styles.badge} ${styles[className]}`}>{label}</span>
-  );
+  return <span className={`${styles.badge} ${styles[className]}`}>{label}</span>;
 }
 
 /* ----------------------------------------------------------
@@ -270,7 +263,7 @@ function createPhotoIcon(url: string) {
 ----------------------------------------------------------- */
 export default function ExploreTherapists() {
   const searchParams = useSearchParams();
-  const cityFilterParam = searchParams.get("city");
+  const cityFilterParam = searchParams?.get("city") ?? null; // ✅ evita erro de null
 
   const [therapists, setTherapists] = useState<Therapist[]>([]);
   const [loading, setLoading] = useState(true);
@@ -365,13 +358,9 @@ export default function ExploreTherapists() {
 
   /* ------------------------ MAPA: texto pra toolbar + Google Maps externo ------------------------ */
   const mapQuery = useMemo(() => {
-    // 1) Se veio da home /cities?city=...
     if (cityFilterParam) return cityFilterParam;
-
-    // 2) Se usuário digitou cidade/estado/ZIP no search
     if (query.trim()) return query.trim();
 
-    // 3) Usa o primeiro terapeuta da lista como referência
     const first = results[0] || therapists[0];
     if (first) {
       const parts = [first.city, first.state].filter(Boolean);
@@ -380,7 +369,6 @@ export default function ExploreTherapists() {
       if (joined) return joined;
     }
 
-    // 4) fallback genérico
     return "United States";
   }, [cityFilterParam, query, results, therapists]);
 
@@ -392,7 +380,7 @@ export default function ExploreTherapists() {
     ? `Therapists in ${cityFilterParam}`
     : "Explore Therapists";
 
-  /* ------------------------ MAPA: cálculo do centro e zoom ------------------------ */
+  /* ------------------------ MAPA: centro e zoom ------------------------ */
   const therapistsWithCoords = results.filter(
     (t) => typeof t.lat === "number" && typeof t.lng === "number"
   );
@@ -400,8 +388,7 @@ export default function ExploreTherapists() {
   const mapCenter: [number, number] = useMemo(() => {
     const first = therapistsWithCoords[0];
     if (first) return [first.lat!, first.lng!];
-    // fallback: Brasil mais aberto
-    return [-15.8, -47.9];
+    return [-15.8, -47.9]; // fallback Brasil
   }, [therapistsWithCoords]);
 
   const mapZoom = therapistsWithCoords.length ? 11 : 3;
@@ -427,7 +414,9 @@ export default function ExploreTherapists() {
                 <input
                   className={styles.search__input}
                   placeholder="Search by name, city, state, or ZIP..."
+                  value={query}
                   disabled
+                  onChange={() => {}}
                 />
               </div>
             </div>
@@ -465,14 +454,13 @@ export default function ExploreTherapists() {
               <input
                 className={styles.search__input}
                 placeholder="Search by name, city, state, or ZIP..."
-                value={query} // ⬅ sempre controlado
-                disabled
-                onChange={() => {}} // ⬅ evita warning
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
               />
             </div>
           </div>
 
-          {/* 🔥 MAPA ESTILO DIRECTORY COM FOTOS DOS MASSAGISTAS (AGORA ABAIXO DO INPUT) */}
+          {/* 🔥 MAPA ABAIXO DO INPUT */}
           <div className={styles.mapWrapper}>
             <div className={styles.mapFrame}>
               <MapContainer
@@ -489,7 +477,6 @@ export default function ExploreTherapists() {
                     icon={createPhotoIcon(t.photoUrl)}
                     eventHandlers={{
                       click: () => {
-                        // ao clicar no pin, abre o perfil em outra aba
                         window.open(`/therapist/${t.id}`, "_blank");
                       },
                     }}
