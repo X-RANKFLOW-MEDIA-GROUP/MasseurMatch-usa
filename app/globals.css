@@ -1,3 +1,6 @@
+/* ===========================
+   TAILWIND (obrigatório)
+   =========================== */
 @import "tailwindcss";
 
 /* ===========================
@@ -14,8 +17,9 @@
   --violet: #8b5cf6;
   --pink: #ec4899;
   --success: #22c55e;
-  --shadow: 0 12px 28px rgba(0, 0, 0, 0.30);
-  --focus: 0 0 0 3px rgba(139, 92, 246, 0.35), 0 0 0 1.5px rgba(139, 92, 246, 0.9) inset;
+  --shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+  --focus: 0 0 0 3px rgba(139, 92, 246, 0.35),
+    0 0 0 1.5px rgba(139, 92, 246, 0.9) inset;
   --header-h: 72px;
   --accent: #8b5cf6;
   --accent-2: #a855f7;
@@ -54,7 +58,7 @@ html,
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: Inter, system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-family: Inter, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -77,7 +81,8 @@ body {
   font-weight: 700;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: 0.15s background, 0.15s border, 0.15s transform, 0.15s color;
+  transition: 0.15s background, 0.15s border, 0.15s transform,
+    0.15s color;
 }
 
 .btn:hover {
