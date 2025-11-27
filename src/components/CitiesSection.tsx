@@ -26,7 +26,7 @@ export function CitiesSection() {
         {TOP_CITIES.map((city) => (
           <Link
             key={city}
-            href={`/explore-therapists?city=${encodeURIComponent(city)}`}
+            href={`/explore?city=${encodeURIComponent(city)}`}
             className="city-card"
           >
             {city}
@@ -34,9 +34,9 @@ export function CitiesSection() {
         ))}
       </div>
 
-      <a href="/cities" className="cities-link">
+      {/*<a href="/cities" className="cities-link">
         View All 300+ Cities →
-      </a>
+      </a>*/}
     </section>
   );
 }
