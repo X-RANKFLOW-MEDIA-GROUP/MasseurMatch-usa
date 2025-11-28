@@ -1119,10 +1119,10 @@ export default function TherapistProfile() {
     );
   }
 
-  /** ===== Gate (usuários comuns precisam aprovação + pagamento; ADMIN bypass) ===== */
-  const unlocked = isAdmin || (adminApproved && paymentOk);
+  /** ===== Gate (BLOQUEIO APENAS PARA O DONO DO PERFIL) ===== */
+  const ownerLocked = isOwner && !isAdmin && !(adminApproved && paymentOk);
 
-  if (!unlocked) {
+  if (ownerLocked) {
     const reasons: string[] = [];
     if (!adminApproved)
       reasons.push("seu perfil ainda está em análise pelo time (status: pending).");
@@ -1164,56 +1164,42 @@ export default function TherapistProfile() {
             </ul>
 
             <div className="tp-actions-row" style={{ marginTop: 12 }}>
-              {isOwner ? (
-                <>
-                  {!adminApproved && (
-                    <button className="btn" onClick={() => router.push("/pending")}>
-                      Acompanhar aprovação
-                    </button>
-                  )}
-                  {!paymentOk && (
-                    <button
-                      className="btn btn--accent"
-                      onClick={() => router.push("/join")}
-                    >
-                      Ir para planos / pagamento
-                    </button>
-                  )}
-                  <button
-                    className="btn btn--ghost"
-                    onClick={() => router.push("/edit-profile")}
-                  >
-                    Editar informações
-                  </button>
-                </>
-              ) : (
-                <button className="btn" onClick={() => router.push("/explore")}>
-                  Ver outros profissionais
-                </button>
-              )}
+              <button className="btn" onClick={() => router.push("/pending")}>
+                Acompanhar aprovação
+              </button>
+              <button
+                className="btn btn--accent"
+                onClick={() => router.push("/join")}
+              >
+                Ir para planos / pagamento
+              </button>
+              <button
+                className="btn btn--ghost"
+                onClick={() => router.push("/edit-profile")}
+              >
+                Editar informações
+              </button>
             </div>
 
-            {isOwner && (
-              <div className="tp-actions-row" style={{ marginTop: 8 }}>
-                <button
-                  className="btn btn--ghost"
-                  onClick={() => setShouldPoll(true)}
-                  title="Reverificar status"
-                >
-                  Reverificar agora
-                </button>
-                {shouldPoll && (
-                  <span className="tp-muted">Verificando atualizações…</span>
-                )}
-              </div>
-            )}
+            <div className="tp-actions-row" style={{ marginTop: 8 }}>
+              <button
+                className="btn btn--ghost"
+                onClick={() => setShouldPoll(true)}
+                title="Reverificar status"
+              >
+                Reverificar agora
+              </button>
+              {shouldPoll && (
+                <span className="tp-muted">Verificando atualizações…</span>
+              )}
+            </div>
           </article>
         </section>
       </main>
     );
   }
 
-  /** ===== Render normal (desbloqueado) ===== */
+  /** ===== Render normal (desbloqueado para visitantes / admin / dono com tudo ok) ===== */
   return (
     <main className={`tp container status-${status}`}>
       <div className="tp-grid" aria-hidden />
