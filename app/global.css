@@ -170,7 +170,7 @@ button:disabled:hover {
 button:focus-visible {
   outline: none;
   box-shadow: var(--focus);
-}
+}   
 
 a.tp-link {
   color: #cbbdff;
