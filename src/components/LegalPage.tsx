@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   Scale,
   Menu,
@@ -11,9 +11,9 @@ import {
   AlertCircle,
   Shield,
   ChevronRight,
-} from 'lucide-react';
-import { Button } from './ui/button';
-import { ScrollArea } from './ui/scroll-area';
+} from "lucide-react";
+import { Button } from "./ui/button";
+import { ScrollArea } from "./ui/scroll-area";
 import {
   Card,
   CardContent,
@@ -21,10 +21,10 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from './ui/card';
-import { Separator } from './ui/separator';
-import { Input } from './ui/input';
-import { Badge } from './ui/badge';
+} from "./ui/card";
+import { Separator } from "./ui/separator";
+import { Input } from "./ui/input";
+import { Badge } from "./ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -32,12 +32,15 @@ import {
   DialogTitle,
   DialogDescription,
   DialogHeader,
-} from './ui/dialog';
-import { cn } from '../lib/utils';
-import { legalDocuments, DocumentSlug } from '../lib/legal-data';
-import { ContactForm } from './legal/ContactForm';
-import { CookieConsent } from './legal/CookieConsent';
-import { KnottyBot } from './support/KnottyBot';
+} from "./ui/dialog";
+import { cn } from "../lib/utils";
+import { legalDocuments, DocumentSlug } from "../lib/legal-data";
+import { ContactForm } from "./legal/ContactForm";
+import { CookieConsent } from "./legal/CookieConsent";
+import { KnottyBot } from "./support/KnottyBot";
+
+// 👉 importa o CSS normal
+import "./LegalPage.css";
 
 // Mock Analytics
 const trackEvent = (action: string, label: string) => {
@@ -51,28 +54,28 @@ const SPECIAL_ROUTES: Record<
   { slug: DocumentSlug; subject?: string; openContact?: boolean }
 > = {
   report: {
-    slug: 'complaints',
+    slug: "complaints",
     openContact: true,
-    subject: 'Content Complaint / Violation Report',
+    subject: "Content Complaint / Violation Report",
   },
-  'dmca/submit': {
-    slug: 'dmca',
+  "dmca/submit": {
+    slug: "dmca",
     openContact: true,
-    subject: 'DMCA Takedown Notice',
+    subject: "DMCA Takedown Notice",
   },
-  'law-enforcement': {
-    slug: 'subpoena',
+  "law-enforcement": {
+    slug: "subpoena",
     openContact: false,
   },
 };
 
 export function LegalPage() {
   // Initialize state from URL or default to 'terms'
-  const [activeSlug, setActiveSlug] = useState<DocumentSlug>('terms');
+  const [activeSlug, setActiveSlug] = useState<DocumentSlug>("terms");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [contactOpen, setContactOpen] = useState(false);
-  const [contactSubject, setContactSubject] = useState<string>('');
+  const [contactSubject, setContactSubject] = useState<string>("");
 
   // Handle "routing" and metadata based on URL
   useEffect(() => {
@@ -88,7 +91,7 @@ export function LegalPage() {
         setActiveSlug(config.slug);
 
         if (config.openContact) {
-          setContactSubject(config.subject || '');
+          setContactSubject(config.subject || "");
           setContactOpen(true);
         }
       } else {
@@ -101,7 +104,7 @@ export function LegalPage() {
           setActiveSlug(doc.slug);
         } else {
           // 404 fallback logic
-          console.warn('Document not found, defaulting to Terms');
+          console.warn("Document not found, defaulting to Terms");
         }
       }
     }
@@ -115,26 +118,24 @@ export function LegalPage() {
     document.title = `${doc.title} | Legal Center - MasseurMatch`;
 
     // Canonical link
-    let link = document.querySelector<HTMLLinkElement>(
-      "link[rel='canonical']",
-    );
+    let link = document.querySelector<HTMLLinkElement>("link[rel='canonical']");
     if (!link) {
-      link = document.createElement('link');
-      link.setAttribute('rel', 'canonical');
+      link = document.createElement("link");
+      link.setAttribute("rel", "canonical");
       document.head.appendChild(link);
     }
-    link.setAttribute('href', `https://masseurmatch.com/legal/${activeSlug}`);
+    link.setAttribute("href", `https://masseurmatch.com/legal/${activeSlug}`);
 
-    trackEvent('view_document', activeSlug);
+    trackEvent("view_document", activeSlug);
   }, [activeSlug]);
 
   const handleNavigation = (slug: DocumentSlug) => {
     setActiveSlug(slug);
     setMobileMenuOpen(false);
-    setSearchQuery('');
+    setSearchQuery("");
 
     // Update URL without reload
-    window.history.pushState({}, '', `/legal/${slug}`);
+    window.history.pushState({}, "", `/legal/${slug}`);
     window.scrollTo(0, 0);
   };
 
@@ -142,14 +143,14 @@ export function LegalPage() {
     const doc = legalDocuments.find((d) => d.slug === activeSlug);
     if (!doc) return;
 
-    const element = document.getElementById('legal-content-area');
+    const element = document.getElementById("legal-content-area");
     const text = element
       ? element.innerText
       : `Legal Document: ${doc.title}`;
 
-    const blob = new Blob([text], { type: 'text/plain' });
+    const blob = new Blob([text], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
 
     a.href = url;
     a.download = `masseurmatch-${activeSlug}.txt`;
@@ -159,7 +160,7 @@ export function LegalPage() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    trackEvent('download_document', activeSlug);
+    trackEvent("download_document", activeSlug);
   };
 
   const filteredDocuments = legalDocuments.filter((doc) =>
@@ -170,32 +171,32 @@ export function LegalPage() {
 
   // JSON-LD Structured Data
   const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
     itemListElement: [
       {
-        '@type': 'ListItem',
+        "@type": "ListItem",
         position: 1,
-        name: 'Home',
-        item: 'https://masseurmatch.com/',
+        name: "Home",
+        item: "https://masseurmatch.com/",
       },
       {
-        '@type': 'ListItem',
+        "@type": "ListItem",
         position: 2,
-        name: 'Legal',
-        item: 'https://masseurmatch.com/legal',
+        name: "Legal",
+        item: "https://masseurmatch.com/legal",
       },
       {
-        '@type': 'ListItem',
+        "@type": "ListItem",
         position: 3,
-        name: activeDocument?.title || 'Document',
+        name: activeDocument?.title || "Document",
         item: `https://masseurmatch.com/legal/${activeSlug}`,
       },
     ],
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans antialiased selection:bg-primary/20 selection:text-primary">
+    <div className="legal-page-root">
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
@@ -203,41 +204,37 @@ export function LegalPage() {
       />
 
       {/* Background Glow */}
-      <div className="fixed top-0 left-0 right-0 h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background -z-10 pointer-events-none" />
+      <div className="legal-bg-glow" />
 
       {/* Header */}
-      <header className="border-b border-border/40 sticky top-0 z-30 bg-background/80 backdrop-blur-md">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <header className="legal-header">
+        <div className="legal-container legal-header-inner">
           <div
-            className="flex items-center gap-2 cursor-pointer group"
-            onClick={() => handleNavigation('terms')}
+            className="legal-brand"
+            onClick={() => handleNavigation("terms")}
           >
-            <div className="bg-primary/10 p-1.5 rounded-md group-hover:bg-primary/20 transition-colors ring-1 ring-white/10">
-              <Scale className="w-5 h-5 text-primary" />
+            <div className="legal-brand-icon-wrapper">
+              <Scale className="legal-brand-icon" />
             </div>
-            <div className="flex flex-col">
-              <h1 className="font-bold text-lg tracking-tight leading-none">
-                Legal Center
-              </h1>
-              <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
-                MasseurMatch
-              </span>
+            <div className="legal-brand-text">
+              <h1>Legal Center</h1>
+              <span>MasseurMatch</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="legal-header-actions">
             <Dialog open={contactOpen} onOpenChange={setContactOpen}>
               <DialogTrigger asChild>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="hidden md:flex h-9 bg-background/50 border-primary/20 hover:bg-primary/10 hover:border-primary/50 transition-all"
+                  className="legal-contact-button-desktop"
                 >
-                  <Mail className="w-4 h-4 mr-2" />
+                  <Mail className="legal-contact-icon" />
                   Contact Support
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px] border-primary/20 bg-background/95 backdrop-blur-xl">
+              <DialogContent className="legal-contact-dialog">
                 <DialogHeader className="sr-only">
                   <DialogTitle>Contact Support</DialogTitle>
                   <DialogDescription>
@@ -252,117 +249,109 @@ export function LegalPage() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="legal-mobile-menu-button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
             >
               {mobileMenuOpen ? (
-                <X className="w-5 h-5" />
+                <X className="legal-icon-md" />
               ) : (
-                <Menu className="w-5 h-5" />
+                <Menu className="legal-icon-md" />
               )}
             </Button>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8 flex-1 flex flex-col md:flex-row gap-8 relative">
+      <div className="legal-main-layout legal-container">
         {/* Sidebar Navigation */}
         <aside
           className={cn(
-            'md:w-72 lg:w-80 flex-shrink-0',
-            mobileMenuOpen
-              ? 'fixed inset-0 z-50 bg-background/95 backdrop-blur-sm p-4 animate-in slide-in-from-left-10 md:relative md:p-0 md:bg-transparent md:z-auto md:animate-none'
-              : 'hidden md:block',
+            "legal-sidebar",
+            mobileMenuOpen && "legal-sidebar--mobile-open",
           )}
         >
           {mobileMenuOpen && (
-            <div className="flex justify-between items-center mb-6 md:hidden">
-              <div className="flex items-center gap-2">
-                <Scale className="w-5 h-5 text-primary" />
-                <h2 className="font-bold text-lg">Legal Menu</h2>
+            <div className="legal-sidebar-mobile-header">
+              <div className="legal-sidebar-mobile-title">
+                <Scale className="legal-icon-md primary" />
+                <h2>Legal Menu</h2>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <X className="w-5 h-5" />
+                <X className="legal-icon-md" />
               </Button>
             </div>
           )}
 
-          <div className="sticky top-24 h-[calc(100vh-8rem)] flex flex-col">
+          <div className="legal-sidebar-inner">
             {/* Search Bar */}
-            <div className="mb-4 relative group">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <div className="legal-search-wrapper">
+              <Search className="legal-search-icon" />
               <Input
                 placeholder="Search documents..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-muted/30 border-transparent focus:border-primary/30 focus:bg-background transition-all shadow-inner"
+                className="legal-search-input"
               />
             </div>
 
-            <ScrollArea className="flex-1 pr-4 -mr-4">
-              <div className="pb-4">
-                <div className="flex items-center justify-between px-2 mb-3">
-                  <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Documents
-                  </h2>
-                  <Badge
-                    variant="outline"
-                    className="text-[10px] h-4 px-1.5 border-primary/20 bg-primary/5 text-primary"
-                  >
+            <ScrollArea className="legal-sidebar-scroll">
+              <div className="legal-sidebar-docs">
+                <div className="legal-sidebar-docs-header">
+                  <h2>Documents</h2>
+                  <Badge variant="outline" className="legal-version-badge">
                     v1.1
                   </Badge>
                 </div>
 
-                <div className="space-y-1">
+                <div className="legal-doc-list">
                   {filteredDocuments.length > 0 ? (
                     filteredDocuments.map((doc) => (
                       <Button
                         key={doc.slug}
                         variant={
-                          activeSlug === doc.slug ? 'secondary' : 'ghost'
+                          activeSlug === doc.slug ? "secondary" : "ghost"
                         }
                         className={cn(
-                          'w-full justify-start font-medium h-auto py-2.5 px-3 text-sm whitespace-normal text-left group transition-all border border-transparent',
-                          activeSlug === doc.slug
-                            ? 'bg-primary/10 text-primary border-primary/20 shadow-[0_0_15px_rgba(139,92,246,0.1)] translate-x-1'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-white/5 hover:translate-x-1',
+                          "legal-doc-button",
+                          activeSlug === doc.slug && "legal-doc-button--active",
                         )}
                         onClick={() => handleNavigation(doc.slug)}
                       >
-                        <div className="flex items-start w-full">
+                        <div className="legal-doc-button-inner">
                           <span
                             className={cn(
-                              'flex-shrink-0 mr-3 mt-0.5 transition-colors',
-                              activeSlug === doc.slug
-                                ? 'text-primary drop-shadow-[0_0_3px_rgba(139,92,246,0.5)]'
-                                : 'text-muted-foreground group-hover:text-foreground',
+                              "legal-doc-icon",
+                              activeSlug === doc.slug &&
+                                "legal-doc-icon--active",
                             )}
                           >
                             {doc.icon}
                           </span>
-                          <span>{doc.title}</span>
+                          <span className="legal-doc-title">{doc.title}</span>
                           {activeSlug === doc.slug && (
-                            <ChevronRight className="ml-auto w-3 h-3 opacity-50 text-primary" />
+                            <ChevronRight className="legal-doc-chevron" />
                           )}
                         </div>
                       </Button>
                     ))
                   ) : (
-                    <div className="flex flex-col items-center justify-center py-8 text-center px-4 border rounded-lg bg-muted/20 border-dashed border-muted-foreground/20">
-                      <Search className="w-8 h-8 text-muted-foreground/50 mb-2" />
-                      <p className="text-sm font-medium">No documents found</p>
-                      <p className="text-xs text-muted-foreground mt-1">
+                    <div className="legal-no-docs">
+                      <Search className="legal-no-docs-icon" />
+                      <p className="legal-no-docs-title">
+                        No documents found
+                      </p>
+                      <p className="legal-no-docs-text">
                         Try adjusting your search terms.
                       </p>
                       <Button
                         variant="link"
                         size="sm"
-                        onClick={() => setSearchQuery('')}
-                        className="mt-2 h-auto p-0 text-primary"
+                        onClick={() => setSearchQuery("")}
+                        className="legal-no-docs-clear"
                       >
                         Clear search
                       </Button>
@@ -372,26 +361,26 @@ export function LegalPage() {
               </div>
             </ScrollArea>
 
-            <div className="mt-4 pt-4 border-t border-border/40 md:hidden">
+            <div className="legal-sidebar-mobile-contact">
               <Button
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0"
+                className="legal-sidebar-mobile-contact-button"
                 onClick={() => {
                   setContactOpen(true);
                   setMobileMenuOpen(false);
                 }}
               >
-                <Mail className="w-4 h-4 mr-2" />
+                <Mail className="legal-icon-sm" />
                 Contact Support
               </Button>
             </div>
 
             {/* Changelog / Version Info */}
-            <div className="hidden md:block mt-4 pt-4 border-t border-border/40 text-xs text-muted-foreground">
-              <p className="flex items-center gap-1.5">
-                <AlertCircle className="w-3 h-3 text-primary/70" />
+            <div className="legal-changelog">
+              <p className="legal-changelog-row">
+                <AlertCircle className="legal-icon-xs primary" />
                 <span>Latest Update: Jan 2025</span>
               </p>
-              <p className="mt-1 ml-4 opacity-80">
+              <p className="legal-changelog-sub">
                 v1.1: Added SMS STOP/HELP clause
               </p>
             </div>
@@ -399,34 +388,33 @@ export function LegalPage() {
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 min-w-0">
+        <main className="legal-main-content">
           {activeDocument ? (
-            <Card className="border border-border/40 shadow-2xl shadow-black/20 bg-card/50 backdrop-blur-sm mb-8 overflow-hidden relative group">
-              {/* Card Glow Effect */}
-              <div className="absolute -inset-px bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <Card className="legal-card">
+              <div className="legal-card-glow" />
 
-              <CardHeader className="px-0 md:px-8 pt-0 md:pt-8 pb-6 border-b border-border/40 bg-muted/10 relative z-10">
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                  <div className="flex flex-col space-y-2">
-                    <CardTitle className="text-2xl md:text-3xl font-bold leading-tight tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-100 to-purple-200">
+              <CardHeader className="legal-card-header">
+                <div className="legal-card-header-inner">
+                  <div className="legal-card-header-text">
+                    <CardTitle className="legal-card-title">
                       {activeDocument.title}
                     </CardTitle>
-                    <CardDescription className="text-sm flex items-center gap-2 text-muted-foreground">
+                    <CardDescription className="legal-card-description">
                       <span>Last updated: {activeDocument.lastUpdated}</span>
-                      <span className="hidden md:inline">•</span>
-                      <span className="hidden md:inline text-primary">
+                      <span className="separator-dot">•</span>
+                      <span className="legal-official-policy">
                         Official Policy
                       </span>
                     </CardDescription>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="legal-card-header-actions">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={handleDownload}
-                      className="h-8 text-xs bg-background/50 border-border/50 hover:bg-background hover:border-primary/30"
+                      className="legal-download-button"
                     >
-                      <Download className="w-3.5 h-3.5 mr-1.5" />
+                      <Download className="legal-icon-xs" />
                       Download TXT
                     </Button>
                   </div>
@@ -434,60 +422,59 @@ export function LegalPage() {
               </CardHeader>
 
               <CardContent
-                className="px-0 md:px-8 py-8 relative z-10"
+                className="legal-card-content"
                 id="legal-content-area"
               >
-                <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-20 prose-a:text-primary hover:prose-a:underline prose-headings:text-foreground/90 prose-p:text-muted-foreground prose-strong:text-foreground">
+                <div className="legal-content">
                   {activeDocument.content}
                 </div>
               </CardContent>
 
-              <CardFooter className="px-0 md:px-8 py-6 border-t border-border/40 bg-muted/5 text-xs text-muted-foreground flex flex-col md:flex-row justify-between gap-4 relative z-10">
-                <p>Reference ID: {activeDocument.slug.toUpperCase()}-2025-V1</p>
+              <CardFooter className="legal-card-footer">
+                <p className="legal-reference-id">
+                  Reference ID: {activeDocument.slug.toUpperCase()}-2025-V1
+                </p>
                 <a
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
-                  className="hover:text-primary transition-colors"
+                  className="legal-back-to-top"
                 >
                   Back to top
                 </a>
               </CardFooter>
             </Card>
           ) : (
-            <div className="flex flex-col items-center justify-center py-20 text-center border border-border/40 rounded-lg bg-card/30 backdrop-blur-sm border-dashed">
-              <Shield className="w-16 h-16 text-muted-foreground/20 mb-4" />
-              <h3 className="text-lg font-semibold">Document Not Found</h3>
-              <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
+            <div className="legal-not-found">
+              <Shield className="legal-not-found-icon" />
+              <h3 className="legal-not-found-title">Document Not Found</h3>
+              <p className="legal-not-found-text">
                 The legal document you requested could not be found. It may have
                 been moved or renamed.
               </p>
-              <Button onClick={() => handleNavigation('terms')} variant="secondary">
+              <Button onClick={() => handleNavigation("terms")} variant="secondary">
                 Return to Terms &amp; Conditions
               </Button>
             </div>
           )}
 
           {/* Contact Section */}
-          <div className="mt-12 md:px-0">
-            <div className="bg-gradient-to-br from-muted/30 to-background border border-border/40 rounded-xl p-6 md:p-10 text-center relative overflow-hidden group">
-              <div className="absolute inset-0 bg-grid-slate-900/[0.02] bg-[size:20px_20px]" />
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="relative z-10">
-                <h3 className="text-xl font-semibold mb-3 text-foreground">
-                  Have specific questions?
-                </h3>
-                <p className="text-muted-foreground mb-8 max-w-lg mx-auto leading-relaxed">
+          <div className="legal-contact-section">
+            <div className="legal-contact-card">
+              <div className="legal-contact-card-overlay" />
+              <div className="legal-contact-card-inner">
+                <h3 className="legal-contact-title">Have specific questions?</h3>
+                <p className="legal-contact-text">
                   Our support team is available to assist with compliance
                   inquiries, DMCA reports, and account issues.
                 </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <div className="legal-contact-actions">
                   <Button
                     size="lg"
                     onClick={() => setContactOpen(true)}
-                    className="w-full sm:w-auto shadow-lg shadow-primary/20 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0"
+                    className="legal-contact-primary"
                   >
                     Open Support Ticket
                   </Button>
@@ -495,7 +482,7 @@ export function LegalPage() {
                     size="lg"
                     variant="outline"
                     asChild
-                    className="w-full sm:w-auto bg-background/50 border-border/50 hover:bg-background hover:border-primary/30"
+                    className="legal-contact-secondary"
                   >
                     <a href="mailto:legal@masseurmatch.com">Email Legal Team</a>
                   </Button>
@@ -513,33 +500,29 @@ export function LegalPage() {
       <KnottyBot />
 
       {/* Footer with Fixed Disclaimer */}
-      <footer className="border-t border-border/40 py-12 mt-auto bg-muted/10 backdrop-blur-sm">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-            <div className="md:col-span-2 space-y-4">
-              <div className="flex items-center gap-2">
-                <Scale className="w-5 h-5 text-muted-foreground" />
-                <span className="font-semibold tracking-tight text-foreground">
-                  MasseurMatch Legal Center
-                </span>
+      <footer className="legal-footer">
+        <div className="legal-container">
+          <div className="legal-footer-grid">
+            <div className="legal-footer-main">
+              <div className="legal-footer-brand">
+                <Scale className="legal-icon-sm muted" />
+                <span>MasseurMatch Legal Center</span>
               </div>
-              <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
+              <p className="legal-footer-description">
                 Dedicated to maintaining a safe, compliant, and professional
                 advertising platform. We operate in full compliance with
                 applicable US laws including FOSTA-SESTA.
               </p>
             </div>
 
-            <div>
-              <h4 className="font-semibold text-sm mb-4 text-foreground">
-                Quick Access
-              </h4>
-              <ul className="space-y-2.5 text-sm text-muted-foreground">
+            <div className="legal-footer-column">
+              <h4 className="legal-footer-title">Quick Access</h4>
+              <ul className="legal-footer-list">
                 <li>
                   <button
                     type="button"
-                    onClick={() => handleNavigation('terms')}
-                    className="hover:text-primary hover:underline transition-colors"
+                    onClick={() => handleNavigation("terms")}
+                    className="legal-footer-link-button"
                   >
                     Terms of Service
                   </button>
@@ -547,8 +530,8 @@ export function LegalPage() {
                 <li>
                   <button
                     type="button"
-                    onClick={() => handleNavigation('privacy')}
-                    className="hover:text-primary hover:underline transition-colors"
+                    onClick={() => handleNavigation("privacy")}
+                    className="legal-footer-link-button"
                   >
                     Privacy Policy
                   </button>
@@ -556,8 +539,8 @@ export function LegalPage() {
                 <li>
                   <button
                     type="button"
-                    onClick={() => handleNavigation('content-guidelines')}
-                    className="hover:text-primary hover:underline transition-colors"
+                    onClick={() => handleNavigation("content-guidelines")}
+                    className="legal-footer-link-button"
                   >
                     Content Guidelines
                   </button>
@@ -565,8 +548,8 @@ export function LegalPage() {
                 <li>
                   <button
                     type="button"
-                    onClick={() => handleNavigation('dmca')}
-                    className="hover:text-primary hover:underline transition-colors"
+                    onClick={() => handleNavigation("dmca")}
+                    className="legal-footer-link-button"
                   >
                     DMCA Policy
                   </button>
@@ -574,15 +557,13 @@ export function LegalPage() {
               </ul>
             </div>
 
-            <div>
-              <h4 className="font-semibold text-sm mb-4 text-foreground">
-                Contact
-              </h4>
-              <ul className="space-y-2.5 text-sm text-muted-foreground">
+            <div className="legal-footer-column">
+              <h4 className="legal-footer-title">Contact</h4>
+              <ul className="legal-footer-list">
                 <li>
                   <a
                     href="mailto:support@masseurmatch.com"
-                    className="hover:text-primary hover:underline transition-colors"
+                    className="legal-footer-link"
                   >
                     Support Team
                   </a>
@@ -590,7 +571,7 @@ export function LegalPage() {
                 <li>
                   <a
                     href="mailto:legal@masseurmatch.com"
-                    className="hover:text-primary hover:underline transition-colors"
+                    className="legal-footer-link"
                   >
                     Legal Inquiries
                   </a>
@@ -598,7 +579,7 @@ export function LegalPage() {
                 <li>
                   <a
                     href="mailto:billing@masseurmatch.com"
-                    className="hover:text-primary hover:underline transition-colors"
+                    className="legal-footer-link"
                   >
                     Billing Help
                   </a>
@@ -607,15 +588,15 @@ export function LegalPage() {
             </div>
           </div>
 
-          <Separator className="mb-8 opacity-30" />
+          <Separator className="legal-footer-separator" />
 
-          <div className="space-y-6">
+          <div className="legal-footer-bottom">
             {/* Fixed Disclaimer Block */}
-            <div className="bg-card/30 border border-border/40 rounded-lg p-4 md:p-6 text-sm text-muted-foreground shadow-sm backdrop-blur-sm">
-              <p className="font-medium text-foreground mb-2">
+            <div className="legal-footer-disclaimer">
+              <p className="legal-footer-disclaimer-title">
                 Platform Disclaimer
               </p>
-              <p className="leading-relaxed">
+              <p className="legal-footer-disclaimer-text">
                 MasseurMatch is an advertising-only directory. We do not
                 arrange, facilitate, negotiate, process, or manage bookings,
                 payments, appointments, or service transactions of any kind. We
@@ -626,8 +607,8 @@ export function LegalPage() {
               </p>
             </div>
 
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-              <div className="space-y-1">
+            <div className="legal-footer-meta">
+              <div className="legal-footer-meta-left">
                 <p>&copy; {new Date().getFullYear()} MasseurMatch.</p>
                 <p>
                   Advertising directory only. No bookings. No escorting. No
@@ -635,9 +616,9 @@ export function LegalPage() {
                 </p>
                 <p>Not affiliated with MasseurFinder, RentMasseur, or RentMen.</p>
               </div>
-              <div className="flex items-center gap-6">
+              <div className="legal-footer-meta-right">
                 <span>v1.1.0 (Jan 2025)</span>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="#" className="legal-footer-link">
                   Sitemap
                 </a>
               </div>

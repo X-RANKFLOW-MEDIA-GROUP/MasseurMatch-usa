@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { Switch } from '../ui/switch';
-import { Label } from '../ui/label';
-import { Cookie } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
+import { Cookie } from "lucide-react";
+
+import "./CookieConsent.css";
 
 interface CookiePreferences {
   essential: boolean;
@@ -20,7 +28,7 @@ export function CookieConsent() {
   });
 
   useEffect(() => {
-    const stored = localStorage.getItem('masseurmatch-cookie-consent');
+    const stored = localStorage.getItem("masseurmatch-cookie-consent");
     if (!stored) {
       setIsOpen(true);
     } else {
@@ -29,77 +37,119 @@ export function CookieConsent() {
   }, []);
 
   const handleSave = () => {
-    localStorage.setItem('masseurmatch-cookie-consent', JSON.stringify(preferences));
+    localStorage.setItem(
+      "masseurmatch-cookie-consent",
+      JSON.stringify(preferences),
+    );
     setIsOpen(false);
-    // Here you would trigger your analytics/pixel init based on preferences
+
     if (preferences.analytics) {
-      console.log('Analytics cookies enabled');
+      console.log("Analytics cookies enabled");
     }
   };
 
   const handleAcceptAll = () => {
     const allEnabled = { essential: true, analytics: true, marketing: true };
     setPreferences(allEnabled);
-    localStorage.setItem('masseurmatch-cookie-consent', JSON.stringify(allEnabled));
+    localStorage.setItem(
+      "masseurmatch-cookie-consent",
+      JSON.stringify(allEnabled),
+    );
     setIsOpen(false);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:max-w-md z-50 animate-in slide-in-from-bottom-full duration-500">
-      <Card className="border-primary/20 shadow-xl bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Cookie className="w-5 h-5 text-primary" />
-            Cookie Preferences
+    <div className="cookie-consent-root">
+      <Card className="cookie-consent-card">
+        <CardHeader className="cookie-consent-header">
+          <CardTitle className="cookie-consent-title">
+            <Cookie className="cookie-consent-icon" />
+            <span>Cookie Preferences</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4 text-sm text-muted-foreground">
-          <p>
-            We use cookies to ensure our platform works correctly and to improve your experience.
-            See our <a href="/legal/cookies" className="underline hover:text-foreground">Cookies Policy</a>.
+
+        <CardContent className="cookie-consent-content">
+          <p className="cookie-consent-text">
+            We use cookies to ensure our platform works correctly and to improve
+            your experience. See our{" "}
+            <a href="/legal/cookies" className="cookie-consent-link">
+              Cookies Policy
+            </a>
+            .
           </p>
-          
-          <div className="space-y-3 border rounded-lg p-3 bg-muted/20">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label className="text-foreground">Essential</Label>
-                <p className="text-xs">Required for the site to function.</p>
+
+          <div className="cookie-consent-options">
+            {/* Essential */}
+            <div className="cookie-consent-row">
+              <div className="cookie-consent-row-text">
+                <Label className="cookie-consent-label">Essential</Label>
+                <p className="cookie-consent-description">
+                  Required for the site to function.
+                </p>
               </div>
               <Switch checked={true} disabled />
             </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="analytics" className="text-foreground">Analytics</Label>
-                <p className="text-xs">Help us improve our platform.</p>
+
+            {/* Analytics */}
+            <div className="cookie-consent-row">
+              <div className="cookie-consent-row-text">
+                <Label
+                  htmlFor="analytics"
+                  className="cookie-consent-label"
+                >
+                  Analytics
+                </Label>
+                <p className="cookie-consent-description">
+                  Help us improve our platform.
+                </p>
               </div>
-              <Switch 
-                id="analytics" 
-                checked={preferences.analytics} 
-                onCheckedChange={(checked) => setPreferences(p => ({ ...p, analytics: checked }))} 
+              <Switch
+                id="analytics"
+                checked={preferences.analytics}
+                onCheckedChange={(checked) =>
+                  setPreferences((p) => ({ ...p, analytics: checked }))
+                }
               />
             </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="marketing" className="text-foreground">Marketing</Label>
-                <p className="text-xs">Used for targeted advertising.</p>
+
+            {/* Marketing */}
+            <div className="cookie-consent-row">
+              <div className="cookie-consent-row-text">
+                <Label
+                  htmlFor="marketing"
+                  className="cookie-consent-label"
+                >
+                  Marketing
+                </Label>
+                <p className="cookie-consent-description">
+                  Used for targeted advertising.
+                </p>
               </div>
-              <Switch 
-                id="marketing" 
-                checked={preferences.marketing} 
-                onCheckedChange={(checked) => setPreferences(p => ({ ...p, marketing: checked }))} 
+              <Switch
+                id="marketing"
+                checked={preferences.marketing}
+                onCheckedChange={(checked) =>
+                  setPreferences((p) => ({ ...p, marketing: checked }))
+                }
               />
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex gap-2 justify-end">
-          <Button variant="outline" onClick={handleSave} className="text-xs h-8">
+
+        <CardFooter className="cookie-consent-footer">
+          <Button
+            variant="outline"
+            onClick={handleSave}
+            className="cookie-consent-btn cookie-consent-btn-outline"
+          >
             Save Preferences
           </Button>
-          <Button onClick={handleAcceptAll} className="text-xs h-8">
+          <Button
+            onClick={handleAcceptAll}
+            className="cookie-consent-btn cookie-consent-btn-primary"
+          >
             Accept All
           </Button>
         </CardFooter>
