@@ -49,6 +49,7 @@
   border-bottom: 1px solid rgba(148, 163, 184, 0.4);
   background: rgba(2, 6, 23, 0.85);
   backdrop-filter: blur(12px);
+  margin-top: 70px;
 }
 
 .legal-header-inner {
