@@ -79,45 +79,21 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Legal - EXTERNAL LINKS */}
+          {/* Legal – ALL REDIRECT TO /legal */}
           <div>
             <h4>Legal</h4>
             <ul>
               <li>
-                <Link
-                  href="https://legalhubmasseurmatch.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Terms of Use
-                </Link>
+                <Link href="/legal">Terms of Use</Link>
               </li>
               <li>
-                <Link
-                  href="https://legalhubmasseurmatch.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Privacy Policy
-                </Link>
+                <Link href="/legal">Privacy Policy</Link>
               </li>
               <li>
-                <Link
-                  href="https://legalhubmasseurmatch.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Community Guidelines
-                </Link>
+                <Link href="/legal">Community Guidelines</Link>
               </li>
               <li>
-                <Link
-                  href="https://legalhubmasseurmatch.vercel.app/legal/anti-trafficking"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Safety
-                </Link>
+                <Link href="/legal">Safety</Link>
               </li>
             </ul>
           </div>
