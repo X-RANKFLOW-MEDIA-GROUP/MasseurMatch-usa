@@ -1,4 +1,4 @@
-import { supabaseServer } from "@/lib/supabaseServer";
+import { supabaseServer } from "@/src/lib/supabaseServer";
 import { baseSEO } from "@/app/lib/seo";
 import TherapistProfile from "@/src/components/TherapistProfile";
 
