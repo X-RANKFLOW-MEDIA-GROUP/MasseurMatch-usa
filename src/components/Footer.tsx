@@ -44,7 +44,7 @@ export default function Footer() {
       </div>
 
       <div className={styles["footer-bottom"]}>
-        <p>© 2025 MasseurMatch. All rights reserved.</p>
+        <p>&copy; 2025 MasseurMatch. All rights reserved.</p>
         <span>Made with care for everyone&apos;s well-being</span>
       </div>
     </footer>
