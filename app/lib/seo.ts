@@ -1,10 +1,18 @@
+interface BaseSEOParams {
+  title: string;
+  description: string;
+  keywords: string | string[];
+  url: string;
+  image?: string;
+}
+
 export function baseSEO({
   title,
   description,
   keywords,
   url,
   image = '/og-image.jpg'
-}) {
+}: BaseSEOParams) {
   return {
     title,
     description,

@@ -1,4 +1,4 @@
-export const neighbors = {
+export const neighbors: Record<string, string[]> = {
   miami: ["fort-lauderdale", "orlando", "tampa"],
   orlando: ["tampa", "miami", "jacksonville"],
   tulsa: ["oklahoma-city", "wichita", "kansas-city"],
