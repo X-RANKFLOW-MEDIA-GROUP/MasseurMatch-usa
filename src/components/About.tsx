@@ -157,7 +157,7 @@ export default function About() {
             <div className={styles.about__cardHead}>
               <h3>Directory Only — No Bookings</h3>
             </div>
-            <p> mjr
+            <p>
               MasseurMatch does not process payments, bookings, or messaging. We are not a marketplace or intermediary —
               we&apos;re a visibility tool.
             </p>

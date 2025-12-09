@@ -40,6 +40,30 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+
+          <div>
+            <h4>Popular Cities</h4>
+            <ul>
+              <li>
+                <Link href="/city/miami">Miami Gay Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/new-york">NYC Male Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/los-angeles">LA LGBT Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/san-francisco">SF Gay Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/las-vegas">Vegas Gay Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/chicago">Chicago M4M</Link>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
