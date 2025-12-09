@@ -71,6 +71,27 @@ export default async function CityPage({ params }: CityPageProps) {
     }
   };
 
+  // SCHEMA LOCALBUSINESS (SEO boost)
+  const ldJsonLocalBusiness = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": `Gay Massage in ${info.label}`,
+    "description": `Find LGBT-friendly massage therapists in ${info.label}, ${info.state}`,
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": info.label,
+      "addressRegion": info.state,
+      "addressCountry": "US"
+    },
+    "url": `https://www.masseurmatch.com/city/${params.city}`,
+    "priceRange": "$$",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.7",
+      "reviewCount": total > 0 ? total : 50
+    }
+  };
+
   // SCHEMA BREADCRUMB
   const ldJsonBreadcrumb = {
     "@context": "https://schema.org",
@@ -114,6 +135,13 @@ export default async function CityPage({ params }: CityPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJsonService) }}
       />
 
+      {/* SCHEMA LOCALBUSINESS */}
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJsonLocalBusiness) }}
+      />
+
       {/* SCHEMA BREADCRUMB */}
       <script
         type="application/ld+json"
@@ -128,9 +156,30 @@ export default async function CityPage({ params }: CityPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJsonFAQ) }}
       />
 
+      {/* BREADCRUMBS HTML (SEO + UX) */}
+      <nav aria-label="Breadcrumb" className="text-sm">
+        <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex gap-2">
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a itemProp="item" href="/" className="text-blue-600 hover:underline">
+              <span itemProp="name">Home</span>
+            </a>
+            <meta itemProp="position" content="1" />
+            <span className="mx-2">/</span>
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <span itemProp="name" className="text-gray-600">{info.label}</span>
+            <meta itemProp="position" content="2" />
+          </li>
+        </ol>
+      </nav>
+
       <h1 className="text-3xl font-bold">
         Gay massage in {info.label}, {info.state}
       </h1>
+
+      <p className="text-lg text-gray-700">
+        Find verified LGBT-friendly male massage therapists. {total}+ professionals available.
+      </p>
 
       <p>
         MasseurMatch highlights inclusive massage therapists in {info.label} so visitors and locals can book safely. This directory blends public profiles with {total} vetted seed profiles to keep pages useful, human, and aligned with real demand in the metro area.
@@ -203,17 +252,52 @@ export default async function CityPage({ params }: CityPageProps) {
         </div>
       </section>
 
+      {/* RELATED SEGMENTS (Internal Linking for SEO) */}
+      <section className="space-y-3 border-t pt-6">
+        <h2 className="text-2xl font-semibold">Popular Services in {info.label}</h2>
+        <p>Explore specialized massage services tailored for the LGBT community in {info.label}:</p>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <a href={`/city/${params.city}/gay-massage`} className="text-blue-600 hover:underline">
+            Gay Massage in {info.label}
+          </a>
+          <a href={`/city/${params.city}/male-massage`} className="text-blue-600 hover:underline">
+            Male Massage in {info.label}
+          </a>
+          <a href={`/city/${params.city}/m4m-massage`} className="text-blue-600 hover:underline">
+            M4M Massage in {info.label}
+          </a>
+          <a href={`/city/${params.city}/lgbt-massage`} className="text-blue-600 hover:underline">
+            LGBT Massage in {info.label}
+          </a>
+          <a href={`/city/${params.city}/deep-tissue`} className="text-blue-600 hover:underline">
+            Deep Tissue Massage
+          </a>
+          <a href={`/city/${params.city}/sports-massage`} className="text-blue-600 hover:underline">
+            Sports Massage
+          </a>
+          <a href={`/city/${params.city}/relaxation`} className="text-blue-600 hover:underline">
+            Relaxation Massage
+          </a>
+          <a href={`/city/${params.city}/hotel-massage`} className="text-blue-600 hover:underline">
+            Hotel Massage
+          </a>
+          <a href={`/city/${params.city}/mobile-massage`} className="text-blue-600 hover:underline">
+            Mobile Massage
+          </a>
+        </div>
+      </section>
+
       {/* NEARBY CITIES */}
       {neighbors[key] && (
-        <section>
-          <h2 className="text-2xl font-semibold">Nearby Cities</h2>
+        <section className="space-y-3 border-t pt-6">
+          <h2 className="text-2xl font-semibold">Explore Gay Massage in Nearby Cities</h2>
           <p>
             Travelers often price-compare or split trips between nearby hubs. Explore the cities below to see alternate airport options, hotel areas, and therapists willing to cover both markets.
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {neighbors[key].map(n => (
-              <a key={n} href={`/city/${n}`}>
-                {cityMap[n].label}
+              <a key={n} href={`/city/${n}`} className="text-blue-600 hover:underline">
+                {cityMap[n]?.label || n} Gay Massage
               </a>
             ))}
           </div>

@@ -137,20 +137,30 @@ export default async function TherapistPage({ params }: TherapistPageProps) {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": name,
-    "jobTitle": data?.headline || "Massage therapist",
-    "address": cityState
+    "jobTitle": data?.headline || "Licensed Massage Therapist",
+    "address": data?.city && data?.state
       ? {
           "@type": "PostalAddress",
-          "addressLocality": cityState
+          "addressLocality": data.city,
+          "addressRegion": data.state,
+          "addressCountry": "US"
         }
       : undefined,
     "image": photo,
+    "url": `https://www.masseurmatch.com/therapist/${params.id}`,
+    "knowsAbout": ["Massage Therapy", "Gay Massage", "Male Massage", "Deep Tissue", "Sports Massage", "Relaxation"],
+    "memberOf": {
+      "@type": "Organization",
+      "name": "MasseurMatch"
+    },
     "aggregateRating":
       rating && ratingCount
         ? {
             "@type": "AggregateRating",
             "ratingValue": rating,
-            "reviewCount": ratingCount
+            "reviewCount": ratingCount,
+            "bestRating": "5",
+            "worstRating": "1"
           }
         : undefined
   };
@@ -195,6 +205,30 @@ export default async function TherapistPage({ params }: TherapistPageProps) {
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJsonBreadcrumb) }}
       />
+
+      {/* BREADCRUMBS HTML (SEO + UX) */}
+      <nav aria-label="Breadcrumb" className="text-sm mb-4">
+        <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex gap-2">
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a itemProp="item" href="/" className="text-blue-600 hover:underline">
+              <span itemProp="name">Home</span>
+            </a>
+            <meta itemProp="position" content="1" />
+            <span className="mx-2">/</span>
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a itemProp="item" href="/explore" className="text-blue-600 hover:underline">
+              <span itemProp="name">Therapists</span>
+            </a>
+            <meta itemProp="position" content="2" />
+            <span className="mx-2">/</span>
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <span itemProp="name" className="text-gray-600">{name}</span>
+            <meta itemProp="position" content="3" />
+          </li>
+        </ol>
+      </nav>
 
       {/* UI completa vem do componente client que voce ja tem */}
       <TherapistProfile />
