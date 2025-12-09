@@ -15,12 +15,12 @@ type LegalPageProps = {
 };
 
 const LEGAL_LINKS = [
-  { href: "/terms", label: "Terms of Use" },
-  { href: "/privacy-policy", label: "Privacy Policy" },
-  { href: "/community-guidelines", label: "Community Guidelines" },
-  { href: "/cookie-policy", label: "Cookie Policy" },
-  { href: "/professional-standards", label: "Professional Standards" },
-  { href: "/anti-trafficking", label: "Anti-Trafficking" }
+  { href: "/legal/terms", label: "Terms of Use" },
+  { href: "/legal/privacy-policy", label: "Privacy Policy" },
+  { href: "/legal/community-guidelines", label: "Community Guidelines" },
+  { href: "/legal/cookie-policy", label: "Cookie Policy" },
+  { href: "/legal/professional-standards", label: "Professional Standards" },
+  { href: "/legal/anti-trafficking", label: "Anti-Trafficking" }
 ];
 
 const CONTACT_BLOCK = (

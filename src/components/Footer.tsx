@@ -21,22 +21,46 @@ export default function Footer() {
             <h4>Legal</h4>
             <ul>
               <li>
-                <Link href="/terms">Terms</Link>
+                <Link href="/legal/terms">Terms</Link>
               </li>
               <li>
-                <Link href="/privacy-policy">Privacy</Link>
+                <Link href="/legal/privacy-policy">Privacy</Link>
               </li>
               <li>
-                <Link href="/community-guidelines">Community Guidelines</Link>
+                <Link href="/legal/community-guidelines">Community Guidelines</Link>
               </li>
               <li>
-                <Link href="/cookie-policy">Cookie Policy</Link>
+                <Link href="/legal/cookie-policy">Cookie Policy</Link>
               </li>
               <li>
-                <Link href="/professional-standards">Professional Standards</Link>
+                <Link href="/legal/professional-standards">Professional Standards</Link>
               </li>
               <li>
-                <Link href="/anti-trafficking">Anti Trafficking</Link>
+                <Link href="/legal/anti-trafficking">Anti Trafficking</Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4>Popular Cities</h4>
+            <ul>
+              <li>
+                <Link href="/city/miami">Miami Gay Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/new-york">NYC Male Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/los-angeles">LA LGBT Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/san-francisco">SF Gay Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/las-vegas">Vegas Gay Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/chicago">Chicago M4M</Link>
               </li>
             </ul>
           </div>

@@ -13,7 +13,6 @@ import "@/src/styles/edit-profile.css";
 import Header from "@/src/components/Header";
 import { ProfileProvider } from "@/src/context/ProfileContext";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -21,7 +20,7 @@ const orgSchema = {
   "alternateName": "Masseur Match",
   "url": "https://www.masseurmatch.com",
   "logo": "https://www.masseurmatch.com/logo.png",
-  "description": "Find real massage therapists. Connect with confidence.",
+  "description": "Find verified gay massage and male massage therapists across the USA. LGBT-friendly wellness directory.",
   "foundingDate": "2024",
   "founder": {
     "@type": "Person",
@@ -42,7 +41,9 @@ const orgSchema = {
     "Gay Massage",
     "Male Massage",
     "LGBT Wellness",
-    "Bodywork"
+    "Bodywork",
+    "M4M Massage",
+    "Gay-Friendly Massage"
   ],
   "sameAs": [
     "https://www.instagram.com/masseurmatch",
@@ -54,13 +55,20 @@ const orgSchema = {
 };
 
 export const metadata: Metadata = {
-  title: "MasseurMatch",
-  description: "Find real massage therapists. Connect with confidence.",
+  title: "MasseurMatch | Gay Massage & Male Massage Therapist Directory USA",
+  description: "Find verified gay massage and male massage therapists across the USA. LGBT-friendly wellness directory with licensed professionals in your city. Safe, discreet, inclusive.",
+  keywords: ["gay massage", "male massage", "lgbt massage", "m4m massage", "gay massage therapist", "male bodywork", "gay spa", "lgbt wellness"],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
+      </head>
       <body suppressHydrationWarning={true}>
         <ProfileProvider>
           <Header />

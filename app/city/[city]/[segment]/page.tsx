@@ -289,9 +289,37 @@ export default async function SegmentPage({ params }: SegmentPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJsonFAQ) }}
       />
 
+      {/* BREADCRUMBS HTML (SEO + UX) */}
+      <nav aria-label="Breadcrumb" className="text-sm">
+        <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex gap-2">
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a itemProp="item" href="/" className="text-blue-600 hover:underline">
+              <span itemProp="name">Home</span>
+            </a>
+            <meta itemProp="position" content="1" />
+            <span className="mx-2">/</span>
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a itemProp="item" href={`/city/${params.city}`} className="text-blue-600 hover:underline">
+              <span itemProp="name">{info.label}</span>
+            </a>
+            <meta itemProp="position" content="2" />
+            <span className="mx-2">/</span>
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <span itemProp="name" className="text-gray-600">{cfg.title}</span>
+            <meta itemProp="position" content="3" />
+          </li>
+        </ol>
+      </nav>
+
       <h1 className="text-3xl font-bold">
         {cfg.title} in {info.label}
       </h1>
+
+      <p className="text-lg text-gray-700">
+        Find {cfg.title.toLowerCase()} specialists in {info.label}. {total}+ verified therapists available.
+      </p>
 
       <p>
         {info.description}
@@ -365,15 +393,49 @@ export default async function SegmentPage({ params }: SegmentPageProps) {
         </div>
       </section>
 
+      {/* RELATED SEGMENTS (Internal Linking for SEO) */}
+      <section className="space-y-3 border-t pt-6">
+        <h2 className="text-2xl font-semibold">Other Services in {info.label}</h2>
+        <p>Explore more massage options in {info.label}:</p>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <a href={`/city/${params.city}/gay-massage`} className="text-blue-600 hover:underline">
+            Gay Massage
+          </a>
+          <a href={`/city/${params.city}/male-massage`} className="text-blue-600 hover:underline">
+            Male Massage
+          </a>
+          <a href={`/city/${params.city}/m4m-massage`} className="text-blue-600 hover:underline">
+            M4M Massage
+          </a>
+          <a href={`/city/${params.city}/deep-tissue`} className="text-blue-600 hover:underline">
+            Deep Tissue
+          </a>
+          <a href={`/city/${params.city}/sports-massage`} className="text-blue-600 hover:underline">
+            Sports Massage
+          </a>
+          <a href={`/city/${params.city}/relaxation`} className="text-blue-600 hover:underline">
+            Relaxation
+          </a>
+          <a href={`/city/${params.city}/hotel-massage`} className="text-blue-600 hover:underline">
+            Hotel Massage
+          </a>
+          <a href={`/city/${params.city}/mobile-massage`} className="text-blue-600 hover:underline">
+            Mobile Massage
+          </a>
+        </div>
+      </section>
+
       {neighbors[cityKey] && (
-        <section>
+        <section className="space-y-3 border-t pt-6">
           <h2 className="text-2xl font-semibold">Nearby cities</h2>
           <p>
             If you split your trip across nearby hubs, these links help you compare availability and travel time before booking.
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {neighbors[cityKey].map(n => (
-              <a key={n} href={`/city/${n}`}>{cityMap[n].label}</a>
+              <a key={n} href={`/city/${n}`} className="text-blue-600 hover:underline">
+                {cityMap[n]?.label || n} Gay Massage
+              </a>
             ))}
           </div>
         </section>
