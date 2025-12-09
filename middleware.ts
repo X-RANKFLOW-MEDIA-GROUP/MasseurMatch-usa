@@ -26,6 +26,24 @@ export function middleware(req: NextRequest) {
   }
 
   // ====================================
+  // 301 REDIRECTS - Legal Pages Migration
+  // ====================================
+  const legalRedirects: Record<string, string> = {
+    "/terms": "/legal/terms",
+    "/privacy-policy": "/legal/privacy-policy",
+    "/community-guidelines": "/legal/community-guidelines",
+    "/cookie-policy": "/legal/cookie-policy",
+    "/professional-standards": "/legal/professional-standards",
+    "/anti-trafficking": "/legal/anti-trafficking"
+  };
+
+  if (legalRedirects[pathname]) {
+    const newUrl = new URL(req.url);
+    newUrl.pathname = legalRedirects[pathname];
+    return NextResponse.redirect(newUrl, 301); // Permanent redirect
+  }
+
+  // ====================================
   // FORCE WWW (SEO Best Practice)
   // ====================================
   const host = req.headers.get("host");
