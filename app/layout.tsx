@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 // 🔥 CSS GLOBAL — ordem importa
 import "leaflet/dist/leaflet.css";   // obrigatório para o mapa
-import "./globals.css";              // estilos globais do projeto
+import "./global.css";              // estilos globais do projeto
 
 // CSS do Projeto
 import "@/src/components/TherapistProfile.css";
