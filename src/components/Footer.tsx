@@ -1,19 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import {
-  FaInstagram,
-  FaTwitter,
-  FaLinkedin,
-  FaEnvelope,
-} from "react-icons/fa";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles["footer-container"]}>
-        {/* Brand */}
         <div className={styles["footer-brand"]}>
           <h3 className={styles["footer-logo"]}>
             <span className={styles["brand-gradient"]}>Masseur</span>Match
@@ -22,24 +15,8 @@ export default function Footer() {
             The most inclusive massage therapist platform. Connecting wellness
             and technology with trust.
           </p>
-
-          <div className={styles["footer-socials"]}>
-            <Link href="#" aria-label="Instagram">
-              <FaInstagram />
-            </Link>
-            <Link href="#" aria-label="Twitter">
-              <FaTwitter />
-            </Link>
-            <Link href="#" aria-label="LinkedIn">
-              <FaLinkedin />
-            </Link>
-            <Link href="mailto:support@masseurmatch.com" aria-label="E-mail">
-              <FaEnvelope />
-            </Link>
-          </div>
         </div>
 
-        {/* Navigation Links */}
         <div className={styles["footer-links"]}>
           {/* Platform */}
           <div>
@@ -55,7 +32,7 @@ export default function Footer() {
                 <Link href="/about">About Us</Link>
               </li>
               <li>
-                <Link href="/about">Blog</Link>
+                <Link href="/blog">Blog</Link>
               </li>
             </ul>
           </div>
@@ -74,47 +51,72 @@ export default function Footer() {
                 <Link href="/checkout">Plans &amp; Pricing</Link>
               </li>
               <li>
-                <Link href="/therapist">Help Center</Link>
+                <Link href="/support">Help Center</Link>
               </li>
             </ul>
           </div>
 
-          {/* Legal – ALL REDIRECT TO /legal */}
+          {/* Legal */}
           <div>
             <h4>Legal</h4>
             <ul>
               <li>
-                <Link href="/legal">Terms of Use</Link>
+                <Link href="/legal/terms">Terms of Use</Link>
               </li>
               <li>
-                <Link href="/legal">Privacy Policy</Link>
+                <Link href="/legal/privacy-policy">Privacy Policy</Link>
               </li>
               <li>
-                <Link href="/legal">Community Guidelines</Link>
+                <Link href="/legal/community-guidelines">
+                  Community Guidelines
+                </Link>
               </li>
               <li>
-                <Link href="/legal">Safety</Link>
+                <Link href="/legal/cookie-policy">Cookie Policy</Link>
+              </li>
+              <li>
+                <Link href="/legal/professional-standards">
+                  Professional Standards
+                </Link>
+              </li>
+              <li>
+                <Link href="/legal/anti-trafficking">
+                  Anti-Trafficking Policy
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Popular Cities (SEO) */}
+          <div>
+            <h4>Popular Cities</h4>
+            <ul>
+              <li>
+                <Link href="/city/miami">Miami Gay Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/new-york">NYC Male Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/los-angeles">LA LGBT Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/san-francisco">SF Gay Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/las-vegas">Vegas Gay Massage</Link>
+              </li>
+              <li>
+                <Link href="/city/chicago">Chicago M4M Massage</Link>
               </li>
             </ul>
           </div>
         </div>
-
-        {/* Language Selector */}
-        <div className={styles["footer-language"]}>
-          <h4>Language</h4>
-          <select aria-label="Language selector">
-            <option value="en">English</option>
-            <option value="pt">Português (Brazil)</option>
-            <option value="es">Español</option>
-            <option value="fr">Français</option>
-          </select>
-        </div>
       </div>
 
-      {/* Bottom Bar */}
       <div className={styles["footer-bottom"]}>
-        <p>© 2025 MasseurMatch. All rights reserved.</p>
-        <span>Made with 💜 for everyone&apos;s well-being</span>
+        <p>&copy; 2025 MasseurMatch. All rights reserved.</p>
+        <span>Made with care for everyone&apos;s well-being</span>
       </div>
     </footer>
   );
