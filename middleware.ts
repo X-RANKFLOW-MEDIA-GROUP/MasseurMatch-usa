@@ -2,76 +2,123 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const NOINDEX_ROUTES = [
+  "/login",
+  "/join/form",
+  "/recuperar",
+  "/dashboard",
+  "/edit-profile",
+  "/pending",
+  "/checkout",
+  "/admin",
+];
+
+const LEGAL_REDIRECTS: Record<string, string> = {
+  "/terms": "/legal/terms",
+  "/privacy-policy": "/legal/privacy-policy",
+  "/community-guidelines": "/legal/community-guidelines",
+  "/cookie-policy": "/legal/cookie-policy",
+  "/professional-standards": "/legal/professional-standards",
+  "/anti-trafficking": "/legal/anti-trafficking",
+};
+
+function normalizePath(pathname: string) {
+  if (pathname.length > 1 && pathname.endsWith("/")) return pathname.slice(0, -1);
+  return pathname;
+}
+
 export function middleware(req: NextRequest) {
-  const pathname = req.nextUrl.pathname;
+  const pathname = normalizePath(req.nextUrl.pathname);
 
   // ====================================
-  // NOINDEX ROUTES (Private/User Areas)
+  // BYPASS WAITLIST (Vercel rewrites)
   // ====================================
-  const noindexRoutes = [
-    "/login",
-    "/join/form",
-    "/recuperar",
-    "/dashboard",
-    "/edit-profile",
-    "/pending",
-    "/checkout",
-    "/admin"
-  ];
-
-  if (noindexRoutes.some(route => pathname.startsWith(route))) {
-    const response = NextResponse.next();
-    response.headers.set("X-Robots-Tag", "noindex, nofollow");
-    return response;
+  // IMPORTANT: This must be before any redirects/headers logic
+  if (pathname === "/waitlist" || pathname.startsWith("/waitlist/")) {
+    return NextResponse.next();
   }
 
   // ====================================
   // 301 REDIRECTS - Legal Pages Migration
   // ====================================
-  const legalRedirects: Record<string, string> = {
-    "/terms": "/legal/terms",
-    "/privacy-policy": "/legal/privacy-policy",
-    "/community-guidelines": "/legal/community-guidelines",
-    "/cookie-policy": "/legal/cookie-policy",
-    "/professional-standards": "/legal/professional-standards",
-    "/anti-trafficking": "/legal/anti-trafficking"
-  };
-
-  if (legalRedirects[pathname]) {
-    const newUrl = new URL(req.url);
-    newUrl.pathname = legalRedirects[pathname];
-    return NextResponse.redirect(newUrl, 301); // Permanent redirect
+  const legalTarget = LEGAL_REDIRECTS[pathname];
+  if (legalTarget) {
+    const newUrl = req.nextUrl.clone();
+    newUrl.pathname = legalTarget;
+    return NextResponse.redirect(newUrl, 301);
   }
 
   // ====================================
-  // FORCE WWW (SEO Best Practice)
+  // FORCE WWW (SEO Best Practice) - proxy-safe
   // ====================================
-  const host = req.headers.get("host");
+  const forwardedHost = req.headers.get("x-forwarded-host");
+  const host = forwardedHost ?? req.headers.get("host");
 
-  if (host && !host.startsWith("www.") && !host.includes("localhost") && !host.includes("vercel.app")) {
-    const newUrl = new URL(req.url);
+  if (
+    host &&
+    !host.startsWith("www.") &&
+    !host.includes("localhost") &&
+    !host.includes("vercel.app")
+  ) {
+    const newUrl = req.nextUrl.clone();
     newUrl.host = `www.${host}`;
-    return NextResponse.redirect(newUrl, 301); // Permanent redirect
+    return NextResponse.redirect(newUrl, 301);
+  }
+
+  // ====================================
+  // RESPONSE (headers)
+  // ====================================
+  const res = NextResponse.next();
+
+  // ====================================
+  // NOINDEX ROUTES (Private/User Areas)
+  // ====================================
+  if (NOINDEX_ROUTES.some((route) => pathname.startsWith(route))) {
+    res.headers.set("X-Robots-Tag", "noindex, nofollow");
   }
 
   // ====================================
   // SECURITY HEADERS
   // ====================================
-  const response = NextResponse.next();
-
   // Prevent clickjacking
-  response.headers.set("X-Frame-Options", "DENY");
+  res.headers.set("X-Frame-Options", "DENY");
 
   // Prevent MIME type sniffing
-  response.headers.set("X-Content-Type-Options", "nosniff");
-
-  // XSS Protection
-  response.headers.set("X-XSS-Protection", "1; mode=block");
+  res.headers.set("X-Content-Type-Options", "nosniff");
 
   // Referrer Policy
-  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
 
-  return response;
+  // HSTS (only meaningful on HTTPS; safe to set in production)
+  res.headers.set(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains; preload"
+  );
+
+  // Permissions Policy (hardening)
+  res.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), payment=()"
+  );
+
+  // Basic CSP (adjust if you use external scripts like Stripe/GTM etc.)
+  res.headers.set(
+    "Content-Security-Policy",
+    [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "frame-ancestors 'none'",
+      "img-src 'self' data: https:",
+      "font-src 'self' data: https:",
+      "style-src 'self' 'unsafe-inline'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "connect-src 'self' https:",
+      "upgrade-insecure-requests",
+    ].join("; ")
+  );
+
+  return res;
 }
 
 // ====================================
@@ -84,8 +131,9 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization)
      * - favicon.ico (favicon)
-     * - public folder files
+     * - robots.txt / sitemap.xml (SEO files)
+     * - common static assets
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"
-  ]
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map)$).*)",
+  ],
 };
