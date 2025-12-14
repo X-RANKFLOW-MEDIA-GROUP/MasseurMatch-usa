@@ -59,16 +59,28 @@ export default function BlogPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
       />
-      <main className="mx-auto max-w-6xl px-6 py-12">
+      <main
+        className="mx-auto max-w-6xl px-6 py-12"
+        style={{ background: "var(--bg)", color: "var(--text)" }}
+      >
         {/* Header */}
         <header className="mb-12 text-center">
-          <p className="mb-2 text-sm uppercase tracking-wide text-purple-400">
+          <p
+            className="mb-2 text-sm uppercase tracking-wide"
+            style={{ color: "var(--violet)" }}
+          >
             MasseurMatch Blog
           </p>
-          <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">
+          <h1
+            className="mb-4 text-4xl font-bold md:text-5xl"
+            style={{ color: "var(--text)" }}
+          >
             Wellness & Massage Insights
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-gray-400">
+          <p
+            className="mx-auto max-w-2xl text-lg"
+            style={{ color: "var(--muted)" }}
+          >
             Expert advice, wellness tips, and resources to help you on your
             journey to better health and relaxation.
           </p>
@@ -79,21 +91,42 @@ export default function BlogPage() {
           <section className="mb-16">
             <Link
               href={`/blog/${posts[0].slug}`}
-              className="group block overflow-hidden rounded-2xl border border-gray-800 bg-gray-900/50 transition-all hover:border-purple-500/50 hover:bg-gray-900"
+              className="group block overflow-hidden rounded-2xl transition-all"
+              style={{
+                background: "var(--panel)",
+                border: "1px solid var(--stroke)"
+              }}
             >
               <div className="grid gap-6 p-6 md:grid-cols-2 md:p-8">
-                <div className="flex aspect-video items-center justify-center rounded-xl bg-gradient-to-br from-purple-600/20 to-pink-600/20">
+                <div
+                  className="flex aspect-video items-center justify-center rounded-xl"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))"
+                  }}
+                >
                   <span className="text-6xl">📖</span>
                 </div>
                 <div className="flex flex-col justify-center">
-                  <span className="mb-2 text-sm font-medium text-purple-400">
+                  <span
+                    className="mb-2 text-sm font-medium"
+                    style={{ color: "var(--violet)" }}
+                  >
                     Featured Article
                   </span>
-                  <h2 className="mb-3 text-2xl font-bold text-white group-hover:text-purple-300 md:text-3xl">
+                  <h2
+                    className="mb-3 text-2xl font-bold md:text-3xl"
+                    style={{ color: "var(--text)" }}
+                  >
                     {posts[0].title}
                   </h2>
-                  <p className="mb-4 text-gray-400">{posts[0].excerpt}</p>
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <p className="mb-4" style={{ color: "var(--muted)" }}>
+                    {posts[0].excerpt}
+                  </p>
+                  <div
+                    className="flex items-center gap-4 text-sm"
+                    style={{ color: "var(--muted)" }}
+                  >
                     <span>{posts[0].author}</span>
                     <span>•</span>
                     <span>{posts[0].readingTime} min read</span>
@@ -117,15 +150,30 @@ export default function BlogPage() {
 
         {/* All Posts Grid */}
         <section>
-          <h2 className="mb-8 text-2xl font-bold text-white">All Articles</h2>
+          <h2
+            className="mb-8 text-2xl font-bold"
+            style={{ color: "var(--text)" }}
+          >
+            All Articles
+          </h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {posts.slice(1).map((post) => (
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="group flex flex-col overflow-hidden rounded-xl border border-gray-800 bg-gray-900/50 transition-all hover:border-purple-500/50 hover:bg-gray-900"
+                className="group flex flex-col overflow-hidden rounded-xl transition-all"
+                style={{
+                  background: "var(--panel)",
+                  border: "1px solid var(--stroke)"
+                }}
               >
-                <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-purple-600/10 to-pink-600/10">
+                <div
+                  className="flex aspect-video items-center justify-center"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1))"
+                  }}
+                >
                   <span className="text-4xl">✨</span>
                 </div>
                 <div className="flex flex-1 flex-col p-5">
@@ -133,19 +181,32 @@ export default function BlogPage() {
                     {post.tags.slice(0, 2).map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full bg-purple-500/10 px-2 py-0.5 text-xs text-purple-300"
+                        className="rounded-full px-2 py-0.5 text-xs"
+                        style={{
+                          background: "rgba(139, 92, 246, 0.15)",
+                          color: "var(--violet)"
+                        }}
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <h3 className="mb-2 text-lg font-semibold text-white group-hover:text-purple-300">
+                  <h3
+                    className="mb-2 text-lg font-semibold"
+                    style={{ color: "var(--text)" }}
+                  >
                     {post.title}
                   </h3>
-                  <p className="mb-4 flex-1 text-sm text-gray-400 line-clamp-2">
+                  <p
+                    className="mb-4 flex-1 text-sm line-clamp-2"
+                    style={{ color: "var(--muted)" }}
+                  >
                     {post.excerpt}
                   </p>
-                  <div className="flex items-center justify-between text-xs text-gray-500">
+                  <div
+                    className="flex items-center justify-between text-xs"
+                    style={{ color: "var(--muted)" }}
+                  >
                     <span>{post.readingTime} min read</span>
                     <time dateTime={post.publishedAt}>
                       {new Date(post.publishedAt).toLocaleDateString("en-US", {
@@ -161,17 +222,33 @@ export default function BlogPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="mt-16 rounded-2xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 p-8 text-center md:p-12">
-          <h2 className="mb-4 text-2xl font-bold text-white md:text-3xl">
+        <section
+          className="mt-16 rounded-2xl p-8 text-center md:p-12"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))"
+          }}
+        >
+          <h2
+            className="mb-4 text-2xl font-bold md:text-3xl"
+            style={{ color: "var(--text)" }}
+          >
             Ready to Experience Professional Massage?
           </h2>
-          <p className="mx-auto mb-6 max-w-xl text-gray-300">
+          <p
+            className="mx-auto mb-6 max-w-xl"
+            style={{ color: "var(--muted)" }}
+          >
             Find verified, professional massage therapists in your area. Browse
             profiles, read reviews, and book with confidence.
           </p>
           <Link
             href="/explore"
-            className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-purple-500"
+            className="inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold transition-colors"
+            style={{
+              background: "var(--accent-2)",
+              color: "#fff"
+            }}
           >
             Find a Therapist
             <svg

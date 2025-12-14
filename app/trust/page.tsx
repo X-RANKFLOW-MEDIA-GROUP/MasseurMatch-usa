@@ -54,12 +54,22 @@ export default function TrustPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(trustSchema) }}
       />
-      <main className="mx-auto max-w-4xl px-6 py-12">
+      <main
+        className="mx-auto max-w-4xl px-6 py-12"
+        style={{ background: "var(--bg)", color: "var(--text)" }}
+      >
         {/* Hero Section */}
         <header className="mb-16 text-center">
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-purple-600/20 to-pink-600/20">
+          <div
+            className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))"
+            }}
+          >
             <svg
-              className="h-10 w-10 text-purple-400"
+              className="h-10 w-10"
+              style={{ color: "var(--violet)" }}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -72,13 +82,22 @@ export default function TrustPage() {
               />
             </svg>
           </div>
-          <p className="mb-2 text-sm uppercase tracking-wide text-purple-400">
+          <p
+            className="mb-2 text-sm uppercase tracking-wide"
+            style={{ color: "var(--violet)" }}
+          >
             Trust & Safety
           </p>
-          <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">
+          <h1
+            className="mb-4 text-4xl font-bold md:text-5xl"
+            style={{ color: "var(--text)" }}
+          >
             Your Safety Is Our Priority
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-gray-400">
+          <p
+            className="mx-auto max-w-2xl text-lg"
+            style={{ color: "var(--muted)" }}
+          >
             At MasseurMatch, we&apos;re committed to creating a safe, inclusive,
             and trustworthy platform for both clients and massage therapists.
           </p>
@@ -86,10 +105,20 @@ export default function TrustPage() {
 
         {/* Trust Pillars */}
         <section className="mb-16 grid gap-6 md:grid-cols-3">
-          <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-500/10">
+          <div
+            className="rounded-xl p-6 text-center"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--stroke)"
+            }}
+          >
+            <div
+              className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full"
+              style={{ background: "rgba(34, 197, 94, 0.15)" }}
+            >
               <svg
-                className="h-6 w-6 text-green-400"
+                className="h-6 w-6"
+                style={{ color: "var(--success)" }}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -102,17 +131,30 @@ export default function TrustPage() {
                 />
               </svg>
             </div>
-            <h3 className="mb-2 text-lg font-semibold text-white">
+            <h3
+              className="mb-2 text-lg font-semibold"
+              style={{ color: "var(--text)" }}
+            >
               Verified Profiles
             </h3>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm" style={{ color: "var(--muted)" }}>
               Every therapist goes through our verification process
             </p>
           </div>
-          <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
+          <div
+            className="rounded-xl p-6 text-center"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--stroke)"
+            }}
+          >
+            <div
+              className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full"
+              style={{ background: "rgba(139, 92, 246, 0.15)" }}
+            >
               <svg
-                className="h-6 w-6 text-blue-400"
+                className="h-6 w-6"
+                style={{ color: "var(--violet)" }}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -125,17 +167,30 @@ export default function TrustPage() {
                 />
               </svg>
             </div>
-            <h3 className="mb-2 text-lg font-semibold text-white">
+            <h3
+              className="mb-2 text-lg font-semibold"
+              style={{ color: "var(--text)" }}
+            >
               Secure Platform
             </h3>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm" style={{ color: "var(--muted)" }}>
               Your data is protected with industry-standard encryption
             </p>
           </div>
-          <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/10">
+          <div
+            className="rounded-xl p-6 text-center"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--stroke)"
+            }}
+          >
+            <div
+              className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full"
+              style={{ background: "rgba(236, 72, 153, 0.15)" }}
+            >
               <svg
-                className="h-6 w-6 text-purple-400"
+                className="h-6 w-6"
+                style={{ color: "var(--pink)" }}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -148,10 +203,13 @@ export default function TrustPage() {
                 />
               </svg>
             </div>
-            <h3 className="mb-2 text-lg font-semibold text-white">
+            <h3
+              className="mb-2 text-lg font-semibold"
+              style={{ color: "var(--text)" }}
+            >
               Inclusive Community
             </h3>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm" style={{ color: "var(--muted)" }}>
               A welcoming space for everyone, especially LGBTQ+ individuals
             </p>
           </div>
@@ -160,11 +218,24 @@ export default function TrustPage() {
         {/* Detailed Sections */}
         <div className="space-y-12">
           {/* Verification Process */}
-          <section className="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
-            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-white">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/10">
+          <section
+            className="rounded-2xl p-8"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--stroke)"
+            }}
+          >
+            <h2
+              className="mb-6 flex items-center gap-3 text-2xl font-bold"
+              style={{ color: "var(--text)" }}
+            >
+              <span
+                className="flex h-10 w-10 items-center justify-center rounded-full"
+                style={{ background: "rgba(34, 197, 94, 0.15)" }}
+              >
                 <svg
-                  className="h-5 w-5 text-green-400"
+                  className="h-5 w-5"
+                  style={{ color: "var(--success)" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -179,56 +250,86 @@ export default function TrustPage() {
               </span>
               Therapist Verification Process
             </h2>
-            <p className="mb-6 text-gray-400">
+            <p className="mb-6" style={{ color: "var(--muted)" }}>
               We take verification seriously. Every therapist on MasseurMatch
               goes through a comprehensive screening process:
             </p>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-500/20 text-sm font-semibold text-purple-300">
+                <span
+                  className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
+                  style={{
+                    background: "rgba(139, 92, 246, 0.2)",
+                    color: "var(--violet)"
+                  }}
+                >
                   1
                 </span>
                 <div>
-                  <p className="font-medium text-white">Identity Verification</p>
-                  <p className="text-sm text-gray-400">
+                  <p className="font-medium" style={{ color: "var(--text)" }}>
+                    Identity Verification
+                  </p>
+                  <p className="text-sm" style={{ color: "var(--muted)" }}>
                     Government-issued ID verification to confirm therapist
                     identity
                   </p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-500/20 text-sm font-semibold text-purple-300">
+                <span
+                  className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
+                  style={{
+                    background: "rgba(139, 92, 246, 0.2)",
+                    color: "var(--violet)"
+                  }}
+                >
                   2
                 </span>
                 <div>
-                  <p className="font-medium text-white">
+                  <p className="font-medium" style={{ color: "var(--text)" }}>
                     License & Certification Check
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm" style={{ color: "var(--muted)" }}>
                     Verification of massage therapy licenses and professional
                     certifications
                   </p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-500/20 text-sm font-semibold text-purple-300">
+                <span
+                  className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
+                  style={{
+                    background: "rgba(139, 92, 246, 0.2)",
+                    color: "var(--violet)"
+                  }}
+                >
                   3
                 </span>
                 <div>
-                  <p className="font-medium text-white">Profile Review</p>
-                  <p className="text-sm text-gray-400">
+                  <p className="font-medium" style={{ color: "var(--text)" }}>
+                    Profile Review
+                  </p>
+                  <p className="text-sm" style={{ color: "var(--muted)" }}>
                     Manual review of profile information, photos, and service
                     descriptions
                   </p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-500/20 text-sm font-semibold text-purple-300">
+                <span
+                  className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
+                  style={{
+                    background: "rgba(139, 92, 246, 0.2)",
+                    color: "var(--violet)"
+                  }}
+                >
                   4
                 </span>
                 <div>
-                  <p className="font-medium text-white">Ongoing Monitoring</p>
-                  <p className="text-sm text-gray-400">
+                  <p className="font-medium" style={{ color: "var(--text)" }}>
+                    Ongoing Monitoring
+                  </p>
+                  <p className="text-sm" style={{ color: "var(--muted)" }}>
                     Continuous monitoring of reviews and reports to maintain
                     quality standards
                   </p>
@@ -238,11 +339,24 @@ export default function TrustPage() {
           </section>
 
           {/* Community Guidelines */}
-          <section className="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
-            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-white">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10">
+          <section
+            className="rounded-2xl p-8"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--stroke)"
+            }}
+          >
+            <h2
+              className="mb-6 flex items-center gap-3 text-2xl font-bold"
+              style={{ color: "var(--text)" }}
+            >
+              <span
+                className="flex h-10 w-10 items-center justify-center rounded-full"
+                style={{ background: "rgba(139, 92, 246, 0.15)" }}
+              >
                 <svg
-                  className="h-5 w-5 text-blue-400"
+                  className="h-5 w-5"
+                  style={{ color: "var(--violet)" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -257,36 +371,52 @@ export default function TrustPage() {
               </span>
               Community Standards
             </h2>
-            <p className="mb-6 text-gray-400">
+            <p className="mb-6" style={{ color: "var(--muted)" }}>
               Our community guidelines ensure a respectful and professional
               environment for everyone:
             </p>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-lg bg-gray-800/50 p-4">
-                <p className="mb-2 font-medium text-white">
+              <div
+                className="rounded-lg p-4"
+                style={{ background: "var(--panel-2)" }}
+              >
+                <p className="mb-2 font-medium" style={{ color: "var(--text)" }}>
                   Professional Conduct
                 </p>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm" style={{ color: "var(--muted)" }}>
                   All interactions must remain professional and respectful
                 </p>
               </div>
-              <div className="rounded-lg bg-gray-800/50 p-4">
-                <p className="mb-2 font-medium text-white">Zero Tolerance</p>
-                <p className="text-sm text-gray-400">
+              <div
+                className="rounded-lg p-4"
+                style={{ background: "var(--panel-2)" }}
+              >
+                <p className="mb-2 font-medium" style={{ color: "var(--text)" }}>
+                  Zero Tolerance
+                </p>
+                <p className="text-sm" style={{ color: "var(--muted)" }}>
                   No harassment, discrimination, or inappropriate behavior
                 </p>
               </div>
-              <div className="rounded-lg bg-gray-800/50 p-4">
-                <p className="mb-2 font-medium text-white">
+              <div
+                className="rounded-lg p-4"
+                style={{ background: "var(--panel-2)" }}
+              >
+                <p className="mb-2 font-medium" style={{ color: "var(--text)" }}>
                   Honest Representation
                 </p>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm" style={{ color: "var(--muted)" }}>
                   Accurate profiles and truthful service descriptions required
                 </p>
               </div>
-              <div className="rounded-lg bg-gray-800/50 p-4">
-                <p className="mb-2 font-medium text-white">Boundary Respect</p>
-                <p className="text-sm text-gray-400">
+              <div
+                className="rounded-lg p-4"
+                style={{ background: "var(--panel-2)" }}
+              >
+                <p className="mb-2 font-medium" style={{ color: "var(--text)" }}>
+                  Boundary Respect
+                </p>
+                <p className="text-sm" style={{ color: "var(--muted)" }}>
                   Clear boundaries must be communicated and honored
                 </p>
               </div>
@@ -294,7 +424,8 @@ export default function TrustPage() {
             <div className="mt-6">
               <Link
                 href="/legal/community-guidelines"
-                className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300"
+                className="inline-flex items-center gap-2"
+                style={{ color: "var(--violet)" }}
               >
                 Read full Community Guidelines
                 <svg
@@ -315,11 +446,24 @@ export default function TrustPage() {
           </section>
 
           {/* Reporting & Support */}
-          <section className="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
-            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-white">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/10">
+          <section
+            className="rounded-2xl p-8"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--stroke)"
+            }}
+          >
+            <h2
+              className="mb-6 flex items-center gap-3 text-2xl font-bold"
+              style={{ color: "var(--text)" }}
+            >
+              <span
+                className="flex h-10 w-10 items-center justify-center rounded-full"
+                style={{ background: "rgba(239, 68, 68, 0.15)" }}
+              >
                 <svg
-                  className="h-5 w-5 text-red-400"
+                  className="h-5 w-5"
+                  style={{ color: "var(--danger)" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -334,14 +478,24 @@ export default function TrustPage() {
               </span>
               Reporting & Support
             </h2>
-            <p className="mb-6 text-gray-400">
+            <p className="mb-6" style={{ color: "var(--muted)" }}>
               We make it easy to report concerns and get help when you need it:
             </p>
             <div className="space-y-4">
-              <div className="flex items-start gap-4 rounded-lg border border-gray-700 bg-gray-800/30 p-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-700">
+              <div
+                className="flex items-start gap-4 rounded-lg p-4"
+                style={{
+                  background: "var(--panel-2)",
+                  border: "1px solid var(--stroke)"
+                }}
+              >
+                <div
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                  style={{ background: "var(--panel)" }}
+                >
                   <svg
-                    className="h-5 w-5 text-gray-300"
+                    className="h-5 w-5"
+                    style={{ color: "var(--muted)" }}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -355,12 +509,14 @@ export default function TrustPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-white">Email Support</p>
-                  <p className="text-sm text-gray-400">
+                  <p className="font-medium" style={{ color: "var(--text)" }}>
+                    Email Support
+                  </p>
+                  <p className="text-sm" style={{ color: "var(--muted)" }}>
                     Contact us at{" "}
                     <a
                       href="mailto:support@masseurmatch.com"
-                      className="text-purple-400 hover:underline"
+                      style={{ color: "var(--violet)" }}
                     >
                       support@masseurmatch.com
                     </a>{" "}
@@ -368,10 +524,20 @@ export default function TrustPage() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-4 rounded-lg border border-gray-700 bg-gray-800/30 p-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-700">
+              <div
+                className="flex items-start gap-4 rounded-lg p-4"
+                style={{
+                  background: "var(--panel-2)",
+                  border: "1px solid var(--stroke)"
+                }}
+              >
+                <div
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                  style={{ background: "var(--panel)" }}
+                >
                   <svg
-                    className="h-5 w-5 text-gray-300"
+                    className="h-5 w-5"
+                    style={{ color: "var(--muted)" }}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -385,22 +551,34 @@ export default function TrustPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-white">Report a Concern</p>
-                  <p className="text-sm text-gray-400">
+                  <p className="font-medium" style={{ color: "var(--text)" }}>
+                    Report a Concern
+                  </p>
+                  <p className="text-sm" style={{ color: "var(--muted)" }}>
                     Use the report button on any profile or contact{" "}
                     <a
                       href="mailto:safety@masseurmatch.com"
-                      className="text-purple-400 hover:underline"
+                      style={{ color: "var(--violet)" }}
                     >
                       safety@masseurmatch.com
                     </a>
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-4 rounded-lg border border-gray-700 bg-gray-800/30 p-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-700">
+              <div
+                className="flex items-start gap-4 rounded-lg p-4"
+                style={{
+                  background: "var(--panel-2)",
+                  border: "1px solid var(--stroke)"
+                }}
+              >
+                <div
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                  style={{ background: "var(--panel)" }}
+                >
                   <svg
-                    className="h-5 w-5 text-gray-300"
+                    className="h-5 w-5"
+                    style={{ color: "var(--muted)" }}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -414,8 +592,10 @@ export default function TrustPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-white">Emergency Response</p>
-                  <p className="text-sm text-gray-400">
+                  <p className="font-medium" style={{ color: "var(--text)" }}>
+                    Emergency Response
+                  </p>
+                  <p className="text-sm" style={{ color: "var(--muted)" }}>
                     Urgent safety concerns are prioritized and addressed within
                     24 hours
                   </p>
@@ -425,11 +605,24 @@ export default function TrustPage() {
           </section>
 
           {/* Anti-Trafficking */}
-          <section className="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
-            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-white">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10">
+          <section
+            className="rounded-2xl p-8"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--stroke)"
+            }}
+          >
+            <h2
+              className="mb-6 flex items-center gap-3 text-2xl font-bold"
+              style={{ color: "var(--text)" }}
+            >
+              <span
+                className="flex h-10 w-10 items-center justify-center rounded-full"
+                style={{ background: "rgba(249, 115, 22, 0.15)" }}
+              >
                 <svg
-                  className="h-5 w-5 text-orange-400"
+                  className="h-5 w-5"
+                  style={{ color: "#f97316" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -444,14 +637,15 @@ export default function TrustPage() {
               </span>
               Anti-Trafficking Commitment
             </h2>
-            <p className="mb-4 text-gray-400">
+            <p className="mb-4" style={{ color: "var(--muted)" }}>
               MasseurMatch maintains a strict zero-tolerance policy against
               human trafficking and exploitation. We actively work to:
             </p>
-            <ul className="mb-6 space-y-2 text-gray-400">
+            <ul className="mb-6 space-y-2" style={{ color: "var(--muted)" }}>
               <li className="flex items-center gap-2">
                 <svg
-                  className="h-4 w-4 text-green-400"
+                  className="h-4 w-4"
+                  style={{ color: "var(--success)" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -467,7 +661,8 @@ export default function TrustPage() {
               </li>
               <li className="flex items-center gap-2">
                 <svg
-                  className="h-4 w-4 text-green-400"
+                  className="h-4 w-4"
+                  style={{ color: "var(--success)" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -483,7 +678,8 @@ export default function TrustPage() {
               </li>
               <li className="flex items-center gap-2">
                 <svg
-                  className="h-4 w-4 text-green-400"
+                  className="h-4 w-4"
+                  style={{ color: "var(--success)" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -499,7 +695,8 @@ export default function TrustPage() {
               </li>
               <li className="flex items-center gap-2">
                 <svg
-                  className="h-4 w-4 text-green-400"
+                  className="h-4 w-4"
+                  style={{ color: "var(--success)" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -516,7 +713,8 @@ export default function TrustPage() {
             </ul>
             <Link
               href="/legal/anti-trafficking"
-              className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300"
+              className="inline-flex items-center gap-2"
+              style={{ color: "var(--violet)" }}
             >
               Read our Anti-Trafficking Policy
               <svg
@@ -536,11 +734,24 @@ export default function TrustPage() {
           </section>
 
           {/* Data Privacy */}
-          <section className="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
-            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-white">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-500/10">
+          <section
+            className="rounded-2xl p-8"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--stroke)"
+            }}
+          >
+            <h2
+              className="mb-6 flex items-center gap-3 text-2xl font-bold"
+              style={{ color: "var(--text)" }}
+            >
+              <span
+                className="flex h-10 w-10 items-center justify-center rounded-full"
+                style={{ background: "rgba(6, 182, 212, 0.15)" }}
+              >
                 <svg
-                  className="h-5 w-5 text-cyan-400"
+                  className="h-5 w-5"
+                  style={{ color: "#06b6d4" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -555,13 +766,14 @@ export default function TrustPage() {
               </span>
               Data Privacy & Security
             </h2>
-            <p className="mb-6 text-gray-400">
+            <p className="mb-6" style={{ color: "var(--muted)" }}>
               Your privacy matters. Here&apos;s how we protect your information:
             </p>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="flex items-start gap-3">
                 <svg
-                  className="mt-1 h-5 w-5 shrink-0 text-cyan-400"
+                  className="mt-1 h-5 w-5 shrink-0"
+                  style={{ color: "#06b6d4" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -573,13 +785,14 @@ export default function TrustPage() {
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <p className="text-gray-400">
+                <p style={{ color: "var(--muted)" }}>
                   256-bit SSL encryption for all data transmission
                 </p>
               </div>
               <div className="flex items-start gap-3">
                 <svg
-                  className="mt-1 h-5 w-5 shrink-0 text-cyan-400"
+                  className="mt-1 h-5 w-5 shrink-0"
+                  style={{ color: "#06b6d4" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -591,13 +804,14 @@ export default function TrustPage() {
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <p className="text-gray-400">
+                <p style={{ color: "var(--muted)" }}>
                   Secure payment processing through trusted partners
                 </p>
               </div>
               <div className="flex items-start gap-3">
                 <svg
-                  className="mt-1 h-5 w-5 shrink-0 text-cyan-400"
+                  className="mt-1 h-5 w-5 shrink-0"
+                  style={{ color: "#06b6d4" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -609,13 +823,14 @@ export default function TrustPage() {
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <p className="text-gray-400">
+                <p style={{ color: "var(--muted)" }}>
                   No selling of personal data to third parties
                 </p>
               </div>
               <div className="flex items-start gap-3">
                 <svg
-                  className="mt-1 h-5 w-5 shrink-0 text-cyan-400"
+                  className="mt-1 h-5 w-5 shrink-0"
+                  style={{ color: "#06b6d4" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -627,7 +842,7 @@ export default function TrustPage() {
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <p className="text-gray-400">
+                <p style={{ color: "var(--muted)" }}>
                   Regular security audits and updates
                 </p>
               </div>
@@ -635,7 +850,8 @@ export default function TrustPage() {
             <div className="mt-6">
               <Link
                 href="/legal/privacy-policy"
-                className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300"
+                className="inline-flex items-center gap-2"
+                style={{ color: "var(--violet)" }}
               >
                 Read our Privacy Policy
                 <svg
@@ -657,24 +873,45 @@ export default function TrustPage() {
         </div>
 
         {/* CTA Section */}
-        <section className="mt-16 rounded-2xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 p-8 text-center md:p-12">
-          <h2 className="mb-4 text-2xl font-bold text-white md:text-3xl">
+        <section
+          className="mt-16 rounded-2xl p-8 text-center md:p-12"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))"
+          }}
+        >
+          <h2
+            className="mb-4 text-2xl font-bold md:text-3xl"
+            style={{ color: "var(--text)" }}
+          >
             Have Questions About Safety?
           </h2>
-          <p className="mx-auto mb-6 max-w-xl text-gray-300">
+          <p
+            className="mx-auto mb-6 max-w-xl"
+            style={{ color: "var(--muted)" }}
+          >
             Our team is here to help. Reach out with any concerns or questions
             about our safety measures.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
               href="mailto:support@masseurmatch.com"
-              className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-purple-500"
+              className="inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold transition-colors"
+              style={{
+                background: "var(--accent-2)",
+                color: "#fff"
+              }}
             >
               Contact Support
             </a>
             <Link
               href="/support"
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-600 px-6 py-3 font-semibold text-white transition-colors hover:border-gray-500 hover:bg-gray-800"
+              className="inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold transition-colors"
+              style={{
+                background: "transparent",
+                color: "var(--text)",
+                border: "1px solid var(--stroke)"
+              }}
             >
               Help Center
             </Link>
@@ -683,31 +920,54 @@ export default function TrustPage() {
 
         {/* Related Links */}
         <section className="mt-12">
-          <h3 className="mb-4 text-lg font-semibold text-white">
+          <h3
+            className="mb-4 text-lg font-semibold"
+            style={{ color: "var(--text)" }}
+          >
             Related Policies
           </h3>
           <div className="flex flex-wrap gap-3">
             <Link
               href="/legal/terms"
-              className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-300 transition-colors hover:border-purple-500/50 hover:bg-gray-800"
+              className="rounded-lg px-4 py-2 text-sm transition-colors"
+              style={{
+                background: "var(--panel)",
+                color: "var(--muted)",
+                border: "1px solid var(--stroke)"
+              }}
             >
               Terms of Use
             </Link>
             <Link
               href="/legal/privacy-policy"
-              className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-300 transition-colors hover:border-purple-500/50 hover:bg-gray-800"
+              className="rounded-lg px-4 py-2 text-sm transition-colors"
+              style={{
+                background: "var(--panel)",
+                color: "var(--muted)",
+                border: "1px solid var(--stroke)"
+              }}
             >
               Privacy Policy
             </Link>
             <Link
               href="/legal/community-guidelines"
-              className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-300 transition-colors hover:border-purple-500/50 hover:bg-gray-800"
+              className="rounded-lg px-4 py-2 text-sm transition-colors"
+              style={{
+                background: "var(--panel)",
+                color: "var(--muted)",
+                border: "1px solid var(--stroke)"
+              }}
             >
               Community Guidelines
             </Link>
             <Link
               href="/legal/professional-standards"
-              className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-300 transition-colors hover:border-purple-500/50 hover:bg-gray-800"
+              className="rounded-lg px-4 py-2 text-sm transition-colors"
+              style={{
+                background: "var(--panel)",
+                color: "var(--muted)",
+                border: "1px solid var(--stroke)"
+              }}
             >
               Professional Standards
             </Link>

@@ -99,23 +99,31 @@ export default async function BlogPostPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <main className="mx-auto max-w-4xl px-6 py-12">
+      <main
+        className="mx-auto max-w-4xl px-6 py-12"
+        style={{ background: "var(--bg)", color: "var(--text)" }}
+      >
         {/* Breadcrumb */}
         <nav className="mb-8" aria-label="Breadcrumb">
-          <ol className="flex items-center gap-2 text-sm text-gray-400">
+          <ol
+            className="flex items-center gap-2 text-sm"
+            style={{ color: "var(--muted)" }}
+          >
             <li>
-              <Link href="/" className="hover:text-purple-400">
+              <Link href="/" className="hover:opacity-80" style={{ color: "var(--violet)" }}>
                 Home
               </Link>
             </li>
             <li>/</li>
             <li>
-              <Link href="/blog" className="hover:text-purple-400">
+              <Link href="/blog" className="hover:opacity-80" style={{ color: "var(--violet)" }}>
                 Blog
               </Link>
             </li>
             <li>/</li>
-            <li className="truncate text-gray-500">{post.title}</li>
+            <li className="truncate" style={{ color: "var(--muted)" }}>
+              {post.title}
+            </li>
           </ol>
         </nav>
 
@@ -125,18 +133,32 @@ export default async function BlogPostPage({ params }: Props) {
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-medium text-purple-300"
+                className="rounded-full px-3 py-1 text-xs font-medium"
+                style={{
+                  background: "rgba(139, 92, 246, 0.15)",
+                  color: "var(--violet)"
+                }}
               >
                 {tag}
               </span>
             ))}
           </div>
-          <h1 className="mb-4 text-3xl font-bold text-white md:text-4xl lg:text-5xl">
+          <h1
+            className="mb-4 text-3xl font-bold md:text-4xl lg:text-5xl"
+            style={{ color: "var(--text)" }}
+          >
             {post.title}
           </h1>
-          <p className="mb-6 text-lg text-gray-400">{post.excerpt}</p>
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-            <span className="font-medium text-gray-300">{post.author}</span>
+          <p className="mb-6 text-lg" style={{ color: "var(--muted)" }}>
+            {post.excerpt}
+          </p>
+          <div
+            className="flex flex-wrap items-center gap-4 text-sm"
+            style={{ color: "var(--muted)" }}
+          >
+            <span className="font-medium" style={{ color: "var(--text)" }}>
+              {post.author}
+            </span>
             <span>•</span>
             <time dateTime={post.publishedAt}>
               {new Date(post.publishedAt).toLocaleDateString("en-US", {
@@ -152,20 +174,27 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Article Content */}
         <article
-          className="prose prose-invert prose-lg max-w-none
-            prose-headings:text-white prose-headings:font-bold
-            prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
-            prose-p:text-gray-300 prose-p:leading-relaxed
-            prose-a:text-purple-400 prose-a:no-underline hover:prose-a:underline
-            prose-strong:text-white
-            prose-ul:text-gray-300 prose-li:text-gray-300
-            prose-li:marker:text-purple-400"
+          className="prose prose-lg max-w-none"
+          style={{
+            color: "var(--muted)",
+            ["--tw-prose-headings" as string]: "var(--text)",
+            ["--tw-prose-body" as string]: "var(--muted)",
+            ["--tw-prose-links" as string]: "var(--violet)",
+            ["--tw-prose-bold" as string]: "var(--text)",
+            ["--tw-prose-bullets" as string]: "var(--violet)"
+          }}
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
         {/* Share Section */}
-        <div className="mt-12 border-t border-gray-800 pt-8">
-          <p className="mb-4 text-sm font-medium text-gray-400">
+        <div
+          className="mt-12 pt-8"
+          style={{ borderTop: "1px solid var(--stroke)" }}
+        >
+          <p
+            className="mb-4 text-sm font-medium"
+            style={{ color: "var(--muted)" }}
+          >
             Share this article
           </p>
           <div className="flex gap-3">
@@ -173,7 +202,12 @@ export default async function BlogPostPage({ params }: Props) {
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://www.masseurmatch.com/blog/${post.slug}`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2 text-sm text-gray-300 transition-colors hover:bg-gray-700"
+              className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm transition-colors"
+              style={{
+                background: "var(--panel)",
+                color: "var(--text)",
+                border: "1px solid var(--stroke)"
+              }}
             >
               Twitter
             </a>
@@ -181,7 +215,12 @@ export default async function BlogPostPage({ params }: Props) {
               href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://www.masseurmatch.com/blog/${post.slug}`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2 text-sm text-gray-300 transition-colors hover:bg-gray-700"
+              className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm transition-colors"
+              style={{
+                background: "var(--panel)",
+                color: "var(--text)",
+                border: "1px solid var(--stroke)"
+              }}
             >
               Facebook
             </a>
@@ -189,7 +228,12 @@ export default async function BlogPostPage({ params }: Props) {
               href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(`https://www.masseurmatch.com/blog/${post.slug}`)}&title=${encodeURIComponent(post.title)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2 text-sm text-gray-300 transition-colors hover:bg-gray-700"
+              className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm transition-colors"
+              style={{
+                background: "var(--panel)",
+                color: "var(--text)",
+                border: "1px solid var(--stroke)"
+              }}
             >
               LinkedIn
             </a>
@@ -199,7 +243,10 @@ export default async function BlogPostPage({ params }: Props) {
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
           <section className="mt-16">
-            <h2 className="mb-6 text-2xl font-bold text-white">
+            <h2
+              className="mb-6 text-2xl font-bold"
+              style={{ color: "var(--text)" }}
+            >
               Related Articles
             </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -207,22 +254,36 @@ export default async function BlogPostPage({ params }: Props) {
                 <Link
                   key={relatedPost.slug}
                   href={`/blog/${relatedPost.slug}`}
-                  className="group flex flex-col rounded-xl border border-gray-800 bg-gray-900/50 p-5 transition-all hover:border-purple-500/50 hover:bg-gray-900"
+                  className="group flex flex-col rounded-xl p-5 transition-all"
+                  style={{
+                    background: "var(--panel)",
+                    border: "1px solid var(--stroke)"
+                  }}
                 >
                   <div className="mb-2 flex flex-wrap gap-2">
                     {relatedPost.tags.slice(0, 2).map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full bg-purple-500/10 px-2 py-0.5 text-xs text-purple-300"
+                        className="rounded-full px-2 py-0.5 text-xs"
+                        style={{
+                          background: "rgba(139, 92, 246, 0.15)",
+                          color: "var(--violet)"
+                        }}
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <h3 className="mb-2 font-semibold text-white group-hover:text-purple-300">
+                  <h3
+                    className="mb-2 font-semibold"
+                    style={{ color: "var(--text)" }}
+                  >
                     {relatedPost.title}
                   </h3>
-                  <p className="text-sm text-gray-400 line-clamp-2">
+                  <p
+                    className="text-sm line-clamp-2"
+                    style={{ color: "var(--muted)" }}
+                  >
                     {relatedPost.excerpt}
                   </p>
                 </Link>
@@ -232,17 +293,33 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         {/* CTA */}
-        <section className="mt-16 rounded-2xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 p-8 text-center">
-          <h2 className="mb-4 text-2xl font-bold text-white">
+        <section
+          className="mt-16 rounded-2xl p-8 text-center"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))"
+          }}
+        >
+          <h2
+            className="mb-4 text-2xl font-bold"
+            style={{ color: "var(--text)" }}
+          >
             Find Your Perfect Massage Therapist
           </h2>
-          <p className="mx-auto mb-6 max-w-xl text-gray-300">
+          <p
+            className="mx-auto mb-6 max-w-xl"
+            style={{ color: "var(--muted)" }}
+          >
             Ready to experience the benefits of professional massage? Browse
             verified therapists in your area.
           </p>
           <Link
             href="/explore"
-            className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-purple-500"
+            className="inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold transition-colors"
+            style={{
+              background: "var(--accent-2)",
+              color: "#fff"
+            }}
           >
             Explore Therapists
           </Link>
@@ -252,7 +329,8 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="mt-12 text-center">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300"
+            className="inline-flex items-center gap-2"
+            style={{ color: "var(--violet)" }}
           >
             <svg
               className="h-4 w-4"
