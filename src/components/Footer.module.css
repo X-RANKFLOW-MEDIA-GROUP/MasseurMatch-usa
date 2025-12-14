@@ -20,12 +20,14 @@
   font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  background: linear-gradient(90deg, #8b5cf6 0%, #ec4899 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .brand-gradient {
-  background: linear-gradient(90deg, #8b5cf6, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* Mantido para compatibilidade, mas não mais necessário */
 }
 
 .footer-brand p {
