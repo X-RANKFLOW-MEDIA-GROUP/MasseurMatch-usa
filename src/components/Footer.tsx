@@ -34,6 +34,9 @@ export default function Footer() {
               <li>
                 <Link href="/blog">Blog</Link>
               </li>
+              <li>
+                <Link href="/trust">Trust & Safety</Link>
+              </li>
             </ul>
           </div>
 

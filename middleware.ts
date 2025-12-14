@@ -2,6 +2,31 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+// ====================================
+// BLOCKED COUNTRIES (ISO 3166-1 alpha-2)
+// ====================================
+// Reasons: Anti-LGBTQ+ laws, US sanctions, high fraud/trafficking risk
+const BLOCKED_COUNTRIES = new Set([
+  // Severe anti-LGBTQ+ laws (death penalty or life imprisonment)
+  "IR", // Iran
+  "SA", // Saudi Arabia
+  "AF", // Afghanistan
+  "BN", // Brunei
+  "NG", // Nigeria (northern states)
+  "MR", // Mauritania
+  "YE", // Yemen
+  "SO", // Somalia
+  "SD", // Sudan
+  "UG", // Uganda
+  // US Sanctions
+  "RU", // Russia
+  "KP", // North Korea
+  "CU", // Cuba
+  "SY", // Syria
+  // High trafficking/fraud risk
+  "MM", // Myanmar
+]);
+
 const NOINDEX_ROUTES = [
   "/login",
   "/join/form",
@@ -29,6 +54,21 @@ function normalizePath(pathname: string) {
 
 export function middleware(req: NextRequest) {
   const pathname = normalizePath(req.nextUrl.pathname);
+
+  // ====================================
+  // GEO-BLOCKING (Country Restriction)
+  // ====================================
+  // Skip geo-blocking for the blocked page itself to avoid redirect loop
+  if (pathname !== "/blocked") {
+    // Vercel automatically provides country code via x-vercel-ip-country header
+    const country = req.headers.get("x-vercel-ip-country") || req.geo?.country;
+
+    if (country && BLOCKED_COUNTRIES.has(country)) {
+      const blockedUrl = req.nextUrl.clone();
+      blockedUrl.pathname = "/blocked";
+      return NextResponse.rewrite(blockedUrl);
+    }
+  }
 
   // ====================================
   // BYPASS WAITLIST (Vercel rewrites)
