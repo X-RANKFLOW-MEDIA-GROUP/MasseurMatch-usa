@@ -1,4 +1,4 @@
-// middleware.ts - SEO & Security Control
+// proxy.ts - SEO & Security Control
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -52,7 +52,7 @@ function normalizePath(pathname: string) {
   return pathname;
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const pathname = normalizePath(req.nextUrl.pathname);
 
   // ====================================
@@ -60,8 +60,11 @@ export function middleware(req: NextRequest) {
   // ====================================
   // Skip geo-blocking for the blocked page itself to avoid redirect loop
   if (pathname !== "/blocked") {
-    // Vercel automatically provides country code via x-vercel-ip-country header
-    const country = req.headers.get("x-vercel-ip-country") || req.geo?.country;
+    // Vercel automatically provides country code via x-vercel-ip-country header.
+    // In some environments `req.geo` is present but not typed, so we cast safely.
+    const geoCountry = (req as NextRequest & { geo?: { country?: string } }).geo
+      ?.country;
+    const country = req.headers.get("x-vercel-ip-country") || geoCountry;
 
     if (country && BLOCKED_COUNTRIES.has(country)) {
       const blockedUrl = req.nextUrl.clone();
