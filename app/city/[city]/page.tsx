@@ -51,12 +51,24 @@ export default async function CityPage({ params }: CityPageProps) {
     );
   }
 
-  const { data } = await supabaseServer
-    .from("therapist_seeds")
-    .select("segment_public, segment_technique, segment_problem")
-    .eq("city", info.label);
+  let total = 0;
+  let fetchError = false;
 
-  const total = data?.length ?? 0;
+  try {
+    const { data, error } = await supabaseServer
+      .from("therapist_seeds")
+      .select("segment_public, segment_technique, segment_problem")
+      .eq("city", info.label);
+
+    if (error) {
+      throw error;
+    }
+
+    total = data?.length ?? 0;
+  } catch (error) {
+    fetchError = true;
+    console.error("Failed to load therapist seeds for city page", error);
+  }
 
   // SCHEMA SERVICE
   const ldJsonService = {
@@ -180,6 +192,12 @@ export default async function CityPage({ params }: CityPageProps) {
       <p className="text-lg text-gray-700">
         Find verified LGBT-friendly male massage therapists. {total}+ professionals available.
       </p>
+
+      {fetchError && (
+        <p className="rounded-md bg-yellow-50 p-4 text-sm text-yellow-800">
+          We are having trouble loading live therapist data right now. You can still explore city insights below while we work on restoring the connection.
+        </p>
+      )}
 
       <p>
         MasseurMatch highlights inclusive massage therapists in {info.label} so visitors and locals can book safely. This directory blends public profiles with {total} vetted seed profiles to keep pages useful, human, and aligned with real demand in the metro area.
