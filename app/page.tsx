@@ -5,19 +5,19 @@ import HowItWorks from "@/src/components/HowItWorks";
 import FeaturedProfessionals from "@/src/components/ProfessionalsHighlights";
 import Testimonials from "@/src/components/Testimonials";
 import FinalCTA from "@/src/components/FinalCTA";
-import Footer from "@/src/components/Footer";
 import { CitiesSection } from "@/src/components/CitiesSection";
+import BackToTop from "@/src/components/BackToTop";
 
 export default function HomePage() {
   return (
-    <>a
+    <>
       <Hero />
       <FeaturedProfessionals />
       <HowItWorks />
       <Testimonials />
       <FinalCTA />
-      <CitiesSection/>
-      <Footer />  
+      <CitiesSection />
+      <BackToTop />
     </>
   );
 }

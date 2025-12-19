@@ -19,6 +19,7 @@ import {
 type TherapistRow = {
   id: string;
   user_id: string;
+  slug?: string | null;
   full_name: string | null;
   email: string | null;
   location: string | null;
@@ -309,7 +310,7 @@ function ApprovalDocsModal({
   } = therapist;
 
   const openProfile = () => {
-    const profileId = therapist.user_id || therapist.id;
+    const profileId = therapist.slug || therapist.user_id || therapist.id;
     window.open(`/therapist/${profileId}`, "_blank");
   };
 
@@ -484,6 +485,7 @@ export default function AdminDashboard() {
         `
         id,
         user_id,
+        slug,
         full_name,
         email,
         location,
@@ -519,6 +521,7 @@ export default function AdminDashboard() {
         `
         id,
         user_id,
+        slug,
         full_name,
         email,
         location,
@@ -909,7 +912,7 @@ export default function AdminDashboard() {
   }
 
   const openProfile = (row: TherapistRow) => {
-    const profileId = row.user_id || row.id;
+    const profileId = row.slug || row.user_id || row.id;
     window.open(`/therapist/${profileId}`, "_blank");
   };
 

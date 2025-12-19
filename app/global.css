@@ -1,6 +1,7 @@
 /* ===========================
    TAILWIND (obrigatório)
    =========================== */
+@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 /* ===========================
@@ -31,6 +32,10 @@
   --gap-md: 16px;
   --gap-lg: 20px;
   --gap-xl: 28px;
+  --font-display: "Figtree", Inter, system-ui, "Segoe UI", Roboto, Arial,
+    sans-serif;
+  --font-body: "Figtree", Inter, system-ui, "Segoe UI", Roboto, Arial,
+    sans-serif;
 }
 
 /* Status colors */
@@ -58,7 +63,7 @@ html,
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: Inter, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: var(--font-body);
   margin: 0;
   padding: 0;
 }
@@ -141,6 +146,98 @@ button:disabled {
 
 button:disabled:hover {
   transform: none;
+}
+
+.t-h1 {
+  font-family: var(--font-display);
+  font-size: 70px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.t-h2 {
+  font-family: var(--font-display);
+  font-size: 50px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.t-h3 {
+  font-family: var(--font-display);
+  font-size: 35px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.t-h4 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.t-h5 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.t-h6 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.t-card-title {
+  font-family: var(--font-display);
+  font-size: 23px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.t-card {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.t-body-xxl {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.t-body-xl {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.t-body-l {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.t-body-m {
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.0;
+}
+
+.t-body-s {
+  font-family: var(--font-body);
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.t-body-xs {
+  font-family: var(--font-body);
+  font-size: 8px;
+  line-height: 1.1;
 }
 
 /* ===========================

@@ -1,6 +1,46 @@
-// app/recuperar/page.tsx
+"use client";
+
+import { FormEvent, useState } from "react";
+import { supabase } from "@/src/lib/supabase";
 
 export default function RecuperarPage() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setStatus(null);
+    setError(null);
+
+    const trimmed = email.trim();
+    if (!trimmed) {
+      setError("Informe um e-mail para recuperar o acesso.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const redirectBase =
+        process.env.NEXT_PUBLIC_SITE_URL ||
+        (typeof window !== "undefined" ? window.location.origin : "");
+      const redirectTo = `${redirectBase}/reset`;
+
+      const { error: resetErr } = await supabase.auth.resetPasswordForEmail(
+        trimmed,
+        { redirectTo }
+      );
+      if (resetErr) throw resetErr;
+
+      setStatus("Enviamos um e-mail com o link para redefinir a senha.");
+    } catch (err: any) {
+      setError(err?.message || "Não foi possível iniciar a recuperação.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main
       style={{
@@ -45,10 +85,84 @@ export default function RecuperarPage() {
             lineHeight: 1.6,
           }}
         >
-          Esta é uma página temporária para recuperação de conta. Em breve,
-          aqui você poderá redefinir sua senha ou recuperar o acesso ao seu
-          perfil de terapeuta no MasseurMatch.
+          Enviaremos um e-mail com o link para redefinir sua senha. Verifique a
+          caixa de entrada e o spam.
         </p>
+
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.75rem",
+            maxWidth: "420px",
+          }}
+        >
+          <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <span style={{ fontWeight: 600 }}>E-mail</span>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="voce@email.com"
+              required
+              style={{
+                padding: "0.75rem 1rem",
+                borderRadius: "0.75rem",
+                border: "1px solid rgba(148,163,184,0.5)",
+                background: "rgba(15,23,42,0.7)",
+                color: "#fff",
+              }}
+              disabled={loading}
+            />
+          </label>
+
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              padding: "0.8rem 1.1rem",
+              borderRadius: "0.75rem",
+              border: "1px solid rgba(59,130,246,0.5)",
+              background:
+                "linear-gradient(135deg, rgba(59,130,246,0.9), rgba(56,189,248,0.9))",
+              color: "#0b1220",
+              fontWeight: 700,
+              cursor: loading ? "not-allowed" : "pointer",
+            }}
+          >
+            {loading ? "Enviando..." : "Enviar link de recuperação"}
+          </button>
+
+          {status && (
+            <p
+              role="status"
+              style={{
+                background: "rgba(34,197,94,0.15)",
+                border: "1px solid rgba(34,197,94,0.5)",
+                color: "#bbf7d0",
+                padding: "0.75rem",
+                borderRadius: "0.75rem",
+              }}
+            >
+              {status}
+            </p>
+          )}
+          {error && (
+            <p
+              role="alert"
+              style={{
+                background: "rgba(248,113,113,0.1)",
+                border: "1px solid rgba(248,113,113,0.5)",
+                color: "#fecdd3",
+                padding: "0.75rem",
+                borderRadius: "0.75rem",
+              }}
+            >
+              {error}
+            </p>
+          )}
+        </form>
       </section>
     </main>
   );

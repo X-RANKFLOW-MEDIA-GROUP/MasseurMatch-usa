@@ -2,6 +2,8 @@ import { supabaseServer } from "@/src/lib/supabaseServer";
 import { baseSEO } from "@/app/lib/seo";
 import { cityMap } from "@/app/data/cities";
 import { neighbors } from "@/app/data/cityNeighbors";
+import CityLandingPage from "@/src/components/CityLandingPage";
+import { getExpansionCity } from "@/app/data/expansionCities";
 
 type CityPageProps = { params: { city: string } };
 
@@ -11,6 +13,26 @@ type CityPageProps = { params: { city: string } };
 export async function generateMetadata({ params }: CityPageProps) {
   const key = params.city.toLowerCase();
   const info = cityMap[key];
+  const expansionCity = getExpansionCity(key);
+
+  if (!info && expansionCity) {
+    const { name, state } = expansionCity;
+
+    return baseSEO({
+      title: `Gay Massage ${name} ${state} | Male Massage Therapists | MasseurMatch`,
+      description: `Find LGBT-friendly massage therapists in ${name}, ${state}. Professional male bodywork, gay massage, and inclusive wellness services. Join our expanding network.`,
+      keywords: [
+        `gay massage ${name}`,
+        `male massage ${name}`,
+        `LGBT massage ${state}`,
+        `m4m massage ${name}`,
+        `gay spa ${name}`,
+        `male bodywork ${name}`,
+        `inclusive massage ${name}`
+      ],
+      url: `https://www.masseurmatch.com/city/${params.city}`
+    });
+  }
 
   if (!info) {
     return baseSEO({
@@ -42,6 +64,11 @@ export async function generateMetadata({ params }: CityPageProps) {
 export default async function CityPage({ params }: CityPageProps) {
   const key = params.city.toLowerCase();
   const info = cityMap[key];
+  const expansionCity = getExpansionCity(key);
+
+  if (!info && expansionCity) {
+    return <CityLandingPage city={expansionCity} slug={params.city} />;
+  }
 
   if (!info) {
     return (

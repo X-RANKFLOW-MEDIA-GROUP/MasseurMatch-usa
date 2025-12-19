@@ -54,7 +54,7 @@ export default function TrustPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(trustSchema) }}
       />
-      <main
+      <div
         className="mx-auto max-w-4xl px-6 py-12"
         style={{ background: "var(--bg)", color: "var(--text)" }}
       >
@@ -973,7 +973,7 @@ export default function TrustPage() {
             </Link>
           </div>
         </section>
-      </main>
+      </div>
     </>
   );
 }

@@ -11,9 +11,9 @@
   --field-focus: rgba(138, 99, 255, .45);
   --error-bg: rgba(246, 74, 88, .14);
   --error-tx: #ff6b81;
-  --grad-1: #6c34ff;
-  --grad-2: #ff2d87;
-  --grad-3: #7b5bff;
+  --grad-1: #6366f1;
+  --grad-2: #a855f7;
+  --grad-3: #8b5cf6;
   --radius-xl: 18px;
   --radius-lg: 14px;
   --radius-md: 12px;
@@ -22,9 +22,10 @@
 }
 
 .login-page {
-  min-height: 100vh;
+  min-height: calc(100vh - var(--header-h, 72px));
   display: grid;
   place-items: center;
+  padding: 48px 16px;
   background:
     radial-gradient(1200px 700px at 50% -120px, rgba(120,70,255,.22), transparent 60%),
     radial-gradient(800px 500px at 90% 110%, rgba(255,50,140,.18), transparent 60%),
@@ -47,9 +48,10 @@
 
 .login-container {
   position: relative;
-  width: min(540px, 100%);
-  padding: 12px;
-  margin-top: 58px;
+  width: 100%;
+  max-width: 440px;
+  padding: 10px;
+  margin: 0 auto;
 }
 
 .login-header {
@@ -71,7 +73,7 @@
 }
 
 .login-card {
-  padding: 28px;
+  padding: 24px;
   background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
   border: 1px solid var(--card-border);
   border-radius: var(--radius-xl);
@@ -206,8 +208,8 @@
   cursor: pointer;
   font-weight: 700;
   color: #fff;
-  background: linear-gradient(90deg, var(--grad-1), var(--grad-3), var(--grad-2));
-  box-shadow: 0 10px 24px rgba(124,58,237,.35);
+  background: linear-gradient(135deg, var(--grad-1), var(--grad-3));
+  box-shadow: 0 10px 24px rgba(99, 102, 241, .3);
   transition: 0.2s;
 }
 
@@ -283,7 +285,7 @@
   .login-container {
     width: 100%;
     padding: 16px;
-    margin-top: 40px;
+    margin: 0 auto;
   }
 
   .login-card {
