@@ -13,7 +13,7 @@ const FinalCTA: React.FC = () => {
         </h2>
 
         <p className={styles["cta-sub"]}>
-          Join Brazil’s most inclusive platform for massage therapists.
+          Join the most inclusive platform for massage therapists.
         </p>
 
         <div className={styles["cta-actions"]}>

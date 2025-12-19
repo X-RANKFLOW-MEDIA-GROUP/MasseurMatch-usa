@@ -27,9 +27,15 @@
 
 /* ===== logo ===== */
 .logo { text-decoration: none; display: inline-flex; align-items: center; }
-.logo-text { font-size: 18px; font-weight: 700; letter-spacing: .02em; line-height: 1; }
-.logo-masseur { color: #8b5cf6; }
-.logo-match { color: #fff; margin-left: 2px; }
+.logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  line-height: 1;
+  color: #ffffff;
+}
+.logo-masseur { }
+.logo-match { margin-left: 2px; }
 
 /* ===== desktop nav / actions: escondidos por padrão (mobile-first) ===== */
 .nav, .actions { display: none; }
@@ -133,6 +139,9 @@
     justify-self: center;
     align-items: center;
     gap: 28px;
+    justify-content: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
   }
 
   .nav-link {

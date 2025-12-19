@@ -1,133 +1,92 @@
-// app/dashboard/page.tsx
+"use client";
+
+import "@/dashboard-vite/src/index.css";
+import "@/dashboard-vite/src/styles/globals.css";
+import { Dashboard } from "@/dashboard-vite/src/components/Dashboard";
+import { Toaster } from "@/dashboard-vite/src/components/ui/sonner";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { supabase } from "@/src/lib/supabase";
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const [profile, setProfile] = useState<any | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [profileError, setProfileError] = useState<string | null>(null);
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+
+      // Clear any local storage
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("massur:last-email");
+      }
+
+      // Redirect to login
+      router.replace("/login");
+    } catch (err: any) {
+      console.error("Logout error:", err);
+      // Even if there's an error, redirect to login
+      router.replace("/login");
+    }
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProfile() {
+      try {
+        setLoadingProfile(true);
+        setProfileError(null);
+
+        const { data: sessionData, error: sessionErr } =
+          await supabase.auth.getSession();
+        if (sessionErr) throw sessionErr;
+
+        const userId = sessionData.session?.user?.id;
+        if (!userId) {
+          router.replace("/login?redirectTo=/dashboard");
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("therapists")
+          .select(
+            "display_name, full_name, location, plan, plan_name, status, profile_photo, services, languages"
+          )
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        if (error) throw error;
+        if (!cancelled) setProfile(data);
+      } catch (err: any) {
+        if (!cancelled)
+          setProfileError(err?.message || "Não foi possível carregar o perfil.");
+      } finally {
+        if (!cancelled) setLoadingProfile(false);
+      }
+    }
+
+    loadProfile();
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
+
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        padding: "2rem 1.5rem 4rem",
-        background:
-          "radial-gradient(circle at top, #020617 0, #020014 45%, #000 100%)",
-        color: "#f9fafb",
-        fontFamily:
-          'system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif',
-      }}
-    >
-      <section
-        style={{
-          maxWidth: "960px",
-          margin: "0 auto",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "2rem",
-            fontWeight: 700,
-            marginBottom: "0.75rem",
-          }}
-        >
-          Dashboard do MasseurMatch
-        </h1>
-
-        <p
-          style={{
-            maxWidth: 560,
-            lineHeight: 1.6,
-            fontSize: "0.98rem",
-            opacity: 0.9,
-          }}
-        >
-          Aqui você poderá acompanhar estatísticas, reservas e performance dos
-          profissionais. Esta é apenas uma versão placeholder para permitir o
-          deploy na Vercel. Depois conectamos tudo com Supabase, filtros e
-          gráficos reais.
-        </p>
-
-        <div
-          style={{
-            marginTop: "1.75rem",
-            display: "grid",
-            gap: "1rem",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          }}
-        >
-          <div
-            style={{
-              borderRadius: "1rem",
-              padding: "1rem 1.1rem",
-              background:
-                "radial-gradient(circle at top left, #4c1d95, #020617)",
-              border: "1px solid rgba(244,114,182,0.5)",
-              boxShadow: "0 14px 32px rgba(15,23,42,1)",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "0.9rem",
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "#f472b6",
-                marginBottom: "0.4rem",
-              }}
-            >
-              Quick Stat
-            </h2>
-            <p
-              style={{
-                fontSize: "1.6rem",
-                fontWeight: 700,
-                margin: 0,
-              }}
-            >
-              0
-            </p>
-            <p
-              style={{
-                fontSize: "0.85rem",
-                color: "#e5e7eb",
-                marginTop: "0.2rem",
-              }}
-            >
-              Bookings registrados (demo)
-            </p>
-          </div>
-
-          <div
-            style={{
-              borderRadius: "1rem",
-              padding: "1rem 1.1rem",
-              background:
-                "radial-gradient(circle at top left, #0369a1, #020617)",
-              border: "1px solid rgba(59,130,246,0.6)",
-              boxShadow: "0 14px 32px rgba(15,23,42,1)",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "0.9rem",
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "#7dd3fc",
-                marginBottom: "0.4rem",
-              }}
-            >
-              Próximos passos
-            </h2>
-            <ul
-              style={{
-                fontSize: "0.9rem",
-                paddingLeft: "1.1rem",
-                margin: 0,
-                lineHeight: 1.5,
-              }}
-            >
-              <li>Conectar com Supabase (reservas, therapists, usuários).</li>
-              <li>Adicionar cards com faturamento e conversões.</li>
-              <li>Criar filtros por cidade e plano.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-    </main>
+    <div className="min-h-screen flex flex-col bg-[#05050A] text-slate-200">
+      <main className="flex-1 relative">
+        <Dashboard
+          onViewProfile={() => router.push("/therapist")}
+          onLogout={handleLogout}
+          profile={profile}
+          loadingProfile={loadingProfile}
+          profileError={profileError}
+        />
+      </main>
+      <Toaster position="top-center" />
+    </div>
   );
 }

@@ -30,5 +30,12 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "dashboard-vite/src/App.tsx",
+    "dashboard-vite/src/main.tsx",
+    "dashboard-vite/src/supabase/**",
+    "dashboard-vite/src/vite-env.d.ts",
+    "dashboard-vite/vite.config.ts"
+  ]
 }

@@ -20,6 +20,17 @@ Disallow: /
 
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /edit-profile
+Disallow: /login
+Disallow: /join/form
+Disallow: /checkout/
+Disallow: /pending
+Disallow: /recuperar
+Disallow: /api/
 
 Sitemap: https://www.masseurmatch.com/sitemap.xml
 Host: www.masseurmatch.com

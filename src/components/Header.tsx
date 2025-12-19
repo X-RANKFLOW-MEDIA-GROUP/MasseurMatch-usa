@@ -119,6 +119,9 @@ export default function Header() {
             <Link href="/explore" className={navLinkClass("/explore")}>
               Explore
             </Link>
+            <Link href="/blog" className={navLinkClass("/blog")}>
+              Blog
+            </Link>
             <Link href="/about" className={navLinkClass("/about")}>
               About
             </Link>
@@ -240,6 +243,13 @@ export default function Header() {
             onClick={() => setOpen(false)}
           >
             Explore
+          </Link>
+          <Link
+            href="/blog"
+            className={drawerLinkClass("/blog")}
+            onClick={() => setOpen(false)}
+          >
+            Blog
           </Link>
           <Link
             href="/about"

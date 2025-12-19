@@ -1,3 +1,13 @@
 {
-  "version": 2
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/waitlist",
+      "destination": "https://waitlist-mm-website.vercel.app"
+    },
+    {
+      "source": "/waitlist/:path*",
+      "destination": "https://waitlist-mm-website.vercel.app/:path*"
+    }
+  ]
 }

@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(cat:*)",
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash(dir:*)",
+      "Bash(npm run build:*)",
+      "Bash(timeout /t 3 /nobreak)",
+      "Bash(ls:*)",
+      "Bash(timeout 15 npm run dev:*)",
+      "Bash(taskkill:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

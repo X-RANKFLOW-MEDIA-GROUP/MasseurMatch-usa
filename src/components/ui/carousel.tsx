@@ -3,8 +3,8 @@
 import * as React from "react";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
-} from "embla-carousel-react@8.6.0";
-import { ArrowLeft, ArrowRight } from "lucide-react@0.487.0";
+} from "embla-carousel-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { cn } from "./utils";
 import { Button } from "./button";
@@ -58,13 +58,14 @@ function Carousel({
     },
     plugins,
   );
+
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
 
-  const onSelect = React.useCallback((api: CarouselApi) => {
-    if (!api) return;
-    setCanScrollPrev(api.canScrollPrev());
-    setCanScrollNext(api.canScrollNext());
+  const onSelect = React.useCallback((emblaApi: CarouselApi) => {
+    if (!emblaApi) return;
+    setCanScrollPrev(emblaApi.canScrollPrev());
+    setCanScrollNext(emblaApi.canScrollNext());
   }, []);
 
   const scrollPrev = React.useCallback(() => {
@@ -95,12 +96,14 @@ function Carousel({
 
   React.useEffect(() => {
     if (!api) return;
+
     onSelect(api);
     api.on("reInit", onSelect);
     api.on("select", onSelect);
 
     return () => {
-      api?.off("select", onSelect);
+      api.off("select", onSelect);
+      api.off("reInit", onSelect);
     };
   }, [api, onSelect]);
 
@@ -108,7 +111,7 @@ function Carousel({
     <CarouselContext.Provider
       value={{
         carouselRef,
-        api: api,
+        api,
         opts,
         orientation:
           orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
@@ -132,7 +135,10 @@ function Carousel({
   );
 }
 
-function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
+function CarouselContent({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   const { carouselRef, orientation } = useCarousel();
 
   return (
@@ -153,7 +159,10 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
+function CarouselItem({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   const { orientation } = useCarousel();
 
   return (

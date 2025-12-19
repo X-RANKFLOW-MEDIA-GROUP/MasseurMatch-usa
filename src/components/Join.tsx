@@ -2,8 +2,30 @@
 
 import React, { useState } from "react";
 import { Check, AlertCircle, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
 import "./Join.css";
+
+// Social Login helpers
+const handleSocialLogin = async (provider: 'google' | 'apple') => {
+  try {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?next=/join`,
+        queryParams: provider === 'google' ? {
+          access_type: 'offline',
+          prompt: 'consent',
+        } : undefined,
+      },
+    });
+
+    if (error) throw error;
+  } catch (err: any) {
+    console.error(`${provider} login error:`, err);
+    throw err;
+  }
+};
 
 type PlanKey = "free" | "standard" | "pro" | "elite";
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
@@ -189,6 +211,9 @@ const PLANS: Record<
   pro: { key: "pro", priceMonthly: 89, highlight: true },
   elite: { key: "elite", priceMonthly: 149 },
 };
+
+const REQUIRE_ID_VERIFICATION =
+  process.env.NEXT_PUBLIC_REQUIRE_ID_VERIFICATION !== "false";
 
 /** Stripe backend URL */
 const STRIPE_BACKEND =
@@ -393,6 +418,8 @@ function RegistrationForm({
     password2: "",
   });
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const toggleLanguage = (lang: string) => {
     setForm((prev) => ({
@@ -401,6 +428,33 @@ function RegistrationForm({
         ? prev.languages.filter((l) => l !== lang)
         : [...prev.languages, lang],
     }));
+  };
+
+  // Real-time validation
+  const validateEmail = (email: string) => {
+    if (!email) return "";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return "Please enter a valid email address";
+    }
+    return "";
+  };
+
+  const validatePassword = (password: string) => {
+    if (!password) return "";
+    if (password.length < 6) {
+      return "Password must be at least 6 characters";
+    }
+    return "";
+  };
+
+  const handleEmailBlur = () => {
+    const err = validateEmail(form.email);
+    setFieldErrors((prev) => ({ ...prev, email: err }));
+  };
+
+  const handlePasswordBlur = () => {
+    const err = validatePassword(form.password);
+    setFieldErrors((prev) => ({ ...prev, password: err }));
   };
 
   const handleSubmit = () => {
@@ -416,10 +470,6 @@ function RegistrationForm({
     }
     if (form.password.length < 6) {
       setError("Password must be at least 6 characters.");
-      return;
-    }
-    if (form.password !== form.password2) {
-      setError("Passwords do not match.");
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
@@ -447,6 +497,59 @@ function RegistrationForm({
 
       {error && <div className="alert alert-error mb-16">{error}</div>}
 
+      {/* Social Login Options - 2025 Best Practice */}
+      <div className="mb-16">
+        <div className="grid gap-3 sm:grid-cols-2 mb-6">
+          <button
+            type="button"
+            className="btn btn-ghost flex items-center justify-center gap-2"
+            style={{ border: "1px solid var(--stroke)" }}
+            onClick={async () => {
+              try {
+                await handleSocialLogin('google');
+              } catch (err: any) {
+                setError(err?.message || 'Failed to login with Google');
+              }
+            }}
+          >
+            <svg className="h-5 w-5" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost flex items-center justify-center gap-2"
+            style={{ border: "1px solid var(--stroke)" }}
+            onClick={async () => {
+              try {
+                await handleSocialLogin('apple');
+              } catch (err: any) {
+                setError(err?.message || 'Failed to login with Apple');
+              }
+            }}
+          >
+            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+            </svg>
+            Continue with Apple
+          </button>
+        </div>
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t" style={{ borderColor: "var(--stroke)" }}></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2" style={{ background: "var(--bg)", color: "var(--muted)" }}>
+              or continue with email
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div className="mb-16">
         <input
           type="text"
@@ -464,30 +567,49 @@ function RegistrationForm({
           }
           className="mb-12"
         />
-        <input
-          type="email"
-          placeholder={L.placeholders.email}
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="mb-12"
-        />
+        <div className="mb-12">
+          <input
+            type="email"
+            placeholder={L.placeholders.email}
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            onBlur={handleEmailBlur}
+            aria-invalid={!!fieldErrors.email}
+            aria-describedby={fieldErrors.email ? "email-error" : undefined}
+          />
+          {fieldErrors.email && (
+            <p id="email-error" className="mt-2 text-xs" style={{ color: "#ef4444" }}>
+              {fieldErrors.email}
+            </p>
+          )}
+        </div>
 
-        <input
-          type="password"
-          placeholder={L.placeholders.password}
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className="mb-12"
-        />
-        <input
-          type="password"
-          placeholder={L.placeholders.password2}
-          value={form.password2}
-          onChange={(e) =>
-            setForm({ ...form, password2: e.target.value })
-          }
-          className="mb-12"
-        />
+        <div className="mb-12 relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder={L.placeholders.password}
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            onBlur={handlePasswordBlur}
+            aria-invalid={!!fieldErrors.password}
+            aria-describedby={fieldErrors.password ? "password-error" : undefined}
+            style={{ paddingRight: "40px" }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium"
+            style={{ color: "var(--violet)" }}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
+          {fieldErrors.password && (
+            <p id="password-error" className="mt-2 text-xs" style={{ color: "#ef4444" }}>
+              {fieldErrors.password}
+            </p>
+          )}
+        </div>
 
         <input
           type="tel"
@@ -699,8 +821,46 @@ function PaymentStep({
   const L = TXT.flow;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
+
+  const requiresId = REQUIRE_ID_VERIFICATION;
 
   const isFree = plan === "free";
+
+  const handleFinishWithoutId = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const priceMonthly = PLANS[plan].priceMonthly;
+      const planName = TXT.plans[plan].name;
+
+      const { userId } = await ensureAuthAndUpsertProfile({
+        email: formData.email,
+        password: formData.password,
+        fullName: formData.fullName,
+        displayName: formData.displayName,
+        phone: formData.phone,
+        location: formData.location,
+        languages: formData.languages || [],
+        services: formData.services || [],
+        agree: formData.agree,
+        plan,
+        planName,
+        priceMonthly,
+      });
+
+      if (!userId) throw new Error("Não foi possível salvar o perfil.");
+
+      onSuccess();
+      router.replace("/dashboard");
+    } catch (err: any) {
+      console.error("Erro ao salvar perfil:", err);
+      setError(err?.message || "Não foi possível salvar o perfil.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handlePayment = async () => {
     setLoading(true);
@@ -802,7 +962,11 @@ function PaymentStep({
     ? "You will complete a quick identity verification via Stripe. No payment will be charged for the Free plan. After your ID is verified, you'll be redirected directly to your public profile."
     : "You will first complete identity verification via Stripe. After your identity is confirmed, you will be redirected to Stripe Checkout to complete the payment, and then back to your profile.";
 
-  const titleLabel = isFree ? "Identity Verification" : "Identity + Checkout";
+  const titleLabel = requiresId
+    ? isFree
+      ? "Identity Verification"
+      : "Identity + Checkout"
+    : "Finalize Profile (ID opcional no ambiente de teste)";
 
   return (
     <section className="section-narrow">
@@ -832,24 +996,34 @@ function PaymentStep({
             /month
           </span>
         </p>
-        <p className="payment-legend">{trialNote}</p>
+        <p className="payment-legend">
+          {requiresId
+            ? trialNote
+            : "ID verification foi desativada para este ambiente. Vamos salvar o perfil e você acessa o dashboard."}
+        </p>
 
         <button
           className="btn btn-primary btn-block"
           disabled={loading}
-          onClick={handlePayment}
+          onClick={requiresId ? handlePayment : handleFinishWithoutId}
         >
           {loading ? (
             <>
               <Loader2 size={18} className="animate-spin" />
-              {isFree
-                ? "Starting verification..."
-                : "Starting verification & payment..."}
+              {requiresId
+                ? isFree
+                  ? "Starting verification..."
+                  : "Starting verification & payment..."
+                : "Salvando perfil..."}
             </>
-          ) : isFree ? (
-            "Start identity verification"
+          ) : requiresId ? (
+            isFree ? (
+              "Start identity verification"
+            ) : (
+              "Start verification & go to payment"
+            )
           ) : (
-            "Start verification & go to payment"
+            "Finalizar perfil e ir para o dashboard"
           )}
         </button>
 
@@ -863,9 +1037,11 @@ function PaymentStep({
       </div>
 
       <div className="alert alert-info mt-16 center">
-        {isFree
-          ? "Identity verification is processed via Stripe. No payment will be charged for the Free plan."
-          : "Identity verification and payment are processed via Stripe."}
+        {requiresId
+          ? isFree
+            ? "Identity verification is processed via Stripe. No payment will be charged for the Free plan."
+            : "Identity verification and payment are processed via Stripe."
+          : "Neste ambiente a verificação por ID está desativada para facilitar a criação do perfil."}
       </div>
     </section>
   );
@@ -1023,11 +1199,6 @@ export default function JoinPage() {
       )}
 
       {step === 6 && <ActivationStatus />}
-
-      {/* Footer */}
-      <footer className="footer">
-        <p>© 2025 ProDirectory. All rights reserved.</p>
-      </footer>
     </main>
   );
 }
