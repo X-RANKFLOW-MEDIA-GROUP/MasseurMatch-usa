@@ -49,10 +49,6 @@ const fallbackCityContent = (slug: string): CityContent => {
         answer: "Most guests split time between the central hotel corridor and nearby arts or dining districts, so look for therapists who can meet in those areas or offer mobile visits.",
       },
       {
-        question: `Is it easy to book day-of sessions in ${label}?`,
-        answer: "Same-day appointments can work when therapists are already in the city core. Evening and event weekends book fast, so messaging early in the day helps secure a slot.",
-      },
-      {
         question: `What should LGBT clients ask before booking in ${label}?`,
         answer: "Confirm inclusivity, comfort with pronouns, and any building check-in rules. Profiles on MasseurMatch highlight boundaries, payment methods, and mobility radius to simplify planning.",
       },
