@@ -1,6 +1,7 @@
-// proxy.ts - SEO & Security Control
+// proxy.ts - SEO & Security Control + Auth Protection
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 
 // ====================================
 // BLOCKED COUNTRIES (ISO 3166-1 alpha-2)
@@ -27,6 +28,11 @@ const BLOCKED_COUNTRIES = new Set([
   "MM", // Myanmar
 ]);
 
+// ====================================
+// PROTECTED ROUTES (Require Authentication)
+// ====================================
+const PROTECTED_ROUTES = ["/dashboard", "/edit-profile"];
+
 const NOINDEX_ROUTES = [
   "/login",
   "/join/form",
@@ -52,8 +58,83 @@ function normalizePath(pathname: string) {
   return pathname;
 }
 
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const pathname = normalizePath(req.nextUrl.pathname);
+
+  // ====================================
+  // AUTH PROTECTION (Protected Routes)
+  // ====================================
+  const isProtectedRoute = PROTECTED_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
+
+  if (isProtectedRoute) {
+    let response = NextResponse.next({
+      request: {
+        headers: req.headers,
+      },
+    });
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return req.cookies.get(name)?.value;
+          },
+          set(name: string, value: string, options: CookieOptions) {
+            req.cookies.set({
+              name,
+              value,
+              ...options,
+            });
+            response = NextResponse.next({
+              request: {
+                headers: req.headers,
+              },
+            });
+            response.cookies.set({
+              name,
+              value,
+              ...options,
+            });
+          },
+          remove(name: string, options: CookieOptions) {
+            req.cookies.set({
+              name,
+              value: "",
+              ...options,
+            });
+            response = NextResponse.next({
+              request: {
+                headers: req.headers,
+              },
+            });
+            response.cookies.set({
+              name,
+              value: "",
+              ...options,
+            });
+          },
+        },
+      }
+    );
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      const redirectUrl = req.nextUrl.clone();
+      redirectUrl.pathname = "/login";
+      redirectUrl.searchParams.set(
+        "redirectTo",
+        `${pathname}${req.nextUrl.search}`
+      );
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
 
   // ====================================
   // GEO-BLOCKING (Country Restriction)

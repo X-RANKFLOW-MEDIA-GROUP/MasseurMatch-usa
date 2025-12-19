@@ -1,19 +1,67 @@
+import { notFound, permanentRedirect } from "next/navigation";
 import { supabaseServer } from "@/src/lib/supabaseServer";
 import { baseSEO } from "@/app/lib/seo";
 import TherapistProfile from "@/src/components/TherapistProfile";
 
 type TherapistPageProps = {
-  params: { id: string };
+  params: { slug: string };
 };
 
-// ========================
-// METADATA DINA,MICA SEO
-// ========================
-export async function generateMetadata({ params }: TherapistPageProps) {
+const therapistSelect = `
+  id,
+  user_id,
+  slug,
+  full_name,
+  display_name,
+  headline,
+  city,
+  state,
+  locationCityState,
+  zip_code,
+  profile_photo,
+  rating,
+  override_reviews_count
+`;
+
+async function resolveTherapist(slug: string) {
   const { data } = await supabaseServer
+    .from("therapists")
+    .select(therapistSelect)
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (data) return { data, resolvedSlug: data.slug || slug };
+
+  const { data: redirectRow } = await supabaseServer
+    .from("therapist_redirects")
+    .select("to_slug")
+    .eq("from_slug", slug)
+    .maybeSingle();
+
+  if (redirectRow?.to_slug) {
+    permanentRedirect(`/therapist/${redirectRow.to_slug}`);
+  }
+
+  const { data: fallback } = await supabaseServer
+    .from("therapists")
+    .select(therapistSelect)
+    .eq("user_id", slug)
+    .maybeSingle();
+
+  if (fallback?.slug) {
+    permanentRedirect(`/therapist/${fallback.slug}`);
+  }
+
+  return { data: fallback, resolvedSlug: fallback?.slug || slug };
+}
+
+async function resolveMetadataData(slug: string) {
+  let currentSlug = slug;
+  let { data } = await supabaseServer
     .from("therapists")
     .select(
       `
+      slug,
       full_name,
       display_name,
       headline,
@@ -24,8 +72,71 @@ export async function generateMetadata({ params }: TherapistPageProps) {
       override_reviews_count
     `
     )
-    .eq("user_id", params.id)
+    .eq("slug", currentSlug)
     .maybeSingle();
+
+  if (!data) {
+    const { data: redirectRow } = await supabaseServer
+      .from("therapist_redirects")
+      .select("to_slug")
+      .eq("from_slug", slug)
+      .maybeSingle();
+
+    if (redirectRow?.to_slug) {
+      currentSlug = redirectRow.to_slug;
+      const { data: redirected } = await supabaseServer
+        .from("therapists")
+        .select(
+          `
+          slug,
+          full_name,
+          display_name,
+          headline,
+          city,
+          state,
+          locationCityState,
+          rating,
+          override_reviews_count
+        `
+        )
+        .eq("slug", currentSlug)
+        .maybeSingle();
+      data = redirected || null;
+    }
+  }
+
+  if (!data) {
+    const { data: byId } = await supabaseServer
+      .from("therapists")
+      .select(
+        `
+        slug,
+        full_name,
+        display_name,
+        headline,
+        city,
+        state,
+        locationCityState,
+        rating,
+        override_reviews_count
+      `
+      )
+      .eq("user_id", slug)
+      .maybeSingle();
+    if (byId) {
+      currentSlug = byId.slug || currentSlug;
+      data = byId;
+    }
+  }
+
+  return { data, resolvedSlug: currentSlug };
+}
+
+// ========================
+// METADATA DINÂMICA SEO
+// ========================
+export async function generateMetadata({ params }: TherapistPageProps) {
+  const { data, resolvedSlug } = await resolveMetadataData(params.slug);
 
   const name =
     data?.display_name?.trim() ||
@@ -55,7 +166,7 @@ export async function generateMetadata({ params }: TherapistPageProps) {
       name,
       cityState
     ].filter(Boolean),
-    url: `https://www.masseurmatch.com/therapist/${params.id}`
+    url: `https://www.masseurmatch.com/therapist/${resolvedSlug}`
   });
 }
 
@@ -63,41 +174,32 @@ export async function generateMetadata({ params }: TherapistPageProps) {
 // PAGE SERVER + SEO SCHEMA
 // ========================
 export default async function TherapistPage({ params }: TherapistPageProps) {
-  const { data } = await supabaseServer
-    .from("therapists")
-    .select(
-      `
-      full_name,
-      display_name,
-      headline,
-      city,
-      state,
-      locationCityState,
-      zip_code,
-      profile_photo,
-      rating,
-      override_reviews_count
-    `
-    )
-    .eq("user_id", params.id)
-    .maybeSingle();
+  const { data, resolvedSlug } = await resolveTherapist(params.slug);
+
+  if (!data) {
+    notFound();
+  }
+
+  if (data.slug && data.slug !== params.slug) {
+    permanentRedirect(`/therapist/${data.slug}`);
+  }
 
   const name =
-    data?.display_name?.trim() ||
-    data?.full_name?.trim() ||
+    data.display_name?.trim() ||
+    data.full_name?.trim() ||
     "Massage therapist";
 
   const cityState =
-    [data?.city, data?.state].filter(Boolean).join(", ") ||
-    data?.locationCityState?.trim() ||
+    [data.city, data.state].filter(Boolean).join(", ") ||
+    data.locationCityState?.trim() ||
     "";
 
-  const headline = data?.headline?.trim() || "";
+  const headline = data.headline?.trim() || "";
 
-  const photo = data?.profile_photo || undefined;
+  const photo = data.profile_photo || undefined;
 
-  const rating = data?.rating ?? undefined;
-  const ratingCount = data?.override_reviews_count ?? undefined;
+  const rating = data.rating ?? undefined;
+  const ratingCount = data.override_reviews_count ?? undefined;
 
   const narrativeParagraphs = [
     `${name} keeps this profile${cityState ? ` for clients in ${cityState}` : ""} so you can understand availability, rates, and expectations before sending a message. Each booking request should feel professional, with clear boundaries and enough context for both client and therapist to decide if the fit is right.`,
@@ -137,8 +239,8 @@ export default async function TherapistPage({ params }: TherapistPageProps) {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": name,
-    "jobTitle": data?.headline || "Licensed Massage Therapist",
-    "address": data?.city && data?.state
+    "jobTitle": data.headline || "Licensed Massage Therapist",
+    "address": data.city && data.state
       ? {
           "@type": "PostalAddress",
           "addressLocality": data.city,
@@ -147,7 +249,7 @@ export default async function TherapistPage({ params }: TherapistPageProps) {
         }
       : undefined,
     "image": photo,
-    "url": `https://www.masseurmatch.com/therapist/${params.id}`,
+    "url": `https://www.masseurmatch.com/therapist/${resolvedSlug}`,
     "knowsAbout": ["Massage Therapy", "Gay Massage", "Male Massage", "Deep Tissue", "Sports Massage", "Relaxation"],
     "memberOf": {
       "@type": "Organization",
@@ -185,7 +287,7 @@ export default async function TherapistPage({ params }: TherapistPageProps) {
         "@type": "ListItem",
         "position": 3,
         "name": name,
-        "item": `https://www.masseurmatch.com/therapist/${params.id}`
+        "item": `https://www.masseurmatch.com/therapist/${resolvedSlug}`
       }
     ]
   };

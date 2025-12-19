@@ -1,6 +1,8 @@
 // app/layout.tsx
 import type { Metadata } from "next";
 
+const noIndex = process.env.NEXT_PUBLIC_NO_INDEX === "true";
+
 // 🔥 CSS GLOBAL — ordem importa
 import "leaflet/dist/leaflet.css";   // obrigatório para o mapa
 import "./global.css";              // estilos globais do projeto
@@ -11,6 +13,7 @@ import "@/src/styles/edit-profile.css";
 
 // Componentes Globais
 import Header from "@/src/components/Header";
+import Footer from "@/src/components/Footer";
 import { ProfileProvider } from "@/src/context/ProfileContext";
 
 const orgSchema = {
@@ -22,10 +25,6 @@ const orgSchema = {
   "logo": "https://www.masseurmatch.com/logo.png",
   "description": "Find verified gay massage and male massage therapists across the USA. LGBT-friendly wellness directory.",
   "foundingDate": "2024",
-  "founder": {
-    "@type": "Person",
-    "name": "Segatti"
-  },
   "contactPoint": {
     "@type": "ContactPoint",
     "contactType": "customer support",
@@ -67,7 +66,48 @@ export const metadata: Metadata = {
     "male bodywork",
     "gay spa",
     "lgbt wellness"
-  ]
+  ],
+  metadataBase: new URL('https://www.masseurmatch.com'),
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://www.masseurmatch.com',
+    siteName: 'MasseurMatch',
+    title: 'MasseurMatch | Gay Massage & Male Massage Therapist Directory',
+    description: 'Find verified gay massage and male massage therapists across the USA. LGBT-friendly wellness directory with licensed professionals.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'MasseurMatch - LGBT-Friendly Massage Therapist Directory',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@masseurmatch',
+    creator: '@masseurmatch',
+    title: 'MasseurMatch | Gay Massage & Male Massage Therapist Directory',
+    description: 'Find verified gay massage and male massage therapists across the USA. LGBT-friendly wellness directory.',
+    images: ['/twitter-image.png'],
+  },
+  robots: {
+    index: !noIndex,
+    follow: !noIndex,
+    googleBot: {
+      index: !noIndex,
+      follow: !noIndex,
+      'max-image-preview': noIndex ? 'none' : 'large',
+      'max-snippet': noIndex ? 0 : -1,
+    },
+  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -83,6 +123,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ProfileProvider>
           <Header />
           <main>{children}</main>
+          <Footer />
         </ProfileProvider>
       </body>
     </html>

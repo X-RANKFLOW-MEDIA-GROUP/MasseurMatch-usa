@@ -6,18 +6,21 @@ import "@app/lega";
 
 // 🔥 CSS do Projeto
 import "@/src/components/TherapistProfile.css";
+
+const noIndex = process.env.NEXT_PUBLIC_NO_INDEX === "true";
+
 export const metadata: Metadata = {
   title: 'Legal Center | MasseurMatch',
   description: 'Terms, Privacy Policy, and Compliance Documents for MasseurMatch.',
   robots: {
-    index: true,
-    follow: true,
+    index: !noIndex,
+    follow: !noIndex,
     googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      index: !noIndex,
+      follow: !noIndex,
+      'max-video-preview': noIndex ? 0 : -1,
+      'max-image-preview': noIndex ? 'none' : 'large',
+      'max-snippet': noIndex ? 0 : -1,
     },
   },
   alternates: {

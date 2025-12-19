@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
@@ -15,10 +16,53 @@ export default function Footer() {
             The most inclusive massage therapist platform. Connecting wellness
             and technology with trust.
           </p>
+
+          <div className={styles["footer-cta"]}>
+            <Link href="/join" className={styles["footer-btn-primary"]}>
+              List your services
+            </Link>
+            <Link href="/explore" className={styles["footer-btn-ghost"]}>
+              Explore therapists
+            </Link>
+          </div>
+
+          <div className={styles["footer-socials"]}>
+            <a
+              href="https://www.instagram.com/masseurmatch"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+            >
+              <Instagram size={18} />
+            </a>
+            <a
+              href="https://twitter.com/masseurmatch"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Twitter"
+            >
+              <Twitter size={18} />
+            </a>
+            <a
+              href="https://www.facebook.com/masseurmatch"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Facebook"
+            >
+              <Facebook size={18} />
+            </a>
+            <a
+              href="https://www.linkedin.com/company/masseurmatch"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+            >
+              <Linkedin size={18} />
+            </a>
+          </div>
         </div>
 
         <div className={styles["footer-links"]}>
-          {/* Platform */}
           <div>
             <h4>Platform</h4>
             <ul>
@@ -40,7 +84,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* For Therapists */}
           <div>
             <h4>For Therapists</h4>
             <ul>
@@ -59,7 +102,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Legal */}
           <div>
             <h4>Legal</h4>
             <ul>
@@ -90,7 +132,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Popular Cities (SEO) */}
           <div>
             <h4>Popular Cities</h4>
             <ul>
@@ -119,7 +160,7 @@ export default function Footer() {
 
       <div className={styles["footer-bottom"]}>
         <p>&copy; 2025 MasseurMatch. All rights reserved.</p>
-        <span>Made with care for everyone&apos;s well-being</span>
+        <span>Made with care for everyone&apos;s well-being.</span>
       </div>
     </footer>
   );
