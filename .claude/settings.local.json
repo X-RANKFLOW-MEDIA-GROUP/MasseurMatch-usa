@@ -10,7 +10,10 @@
       "Bash(timeout /t 3 /nobreak)",
       "Bash(ls:*)",
       "Bash(timeout 15 npm run dev:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(npm start)",
+      "Bash(cmd /c npm start)",
+      "Bash(powershell -Command \"npm start\")"
     ],
     "deny": [],
     "ask": []
