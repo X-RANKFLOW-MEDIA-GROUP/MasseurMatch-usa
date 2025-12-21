@@ -1,0 +1,71 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Next.js
+.next
+out
+build
+dist
+
+# Testing
+coverage
+__tests__
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Environment files
+.env
+.env.*
+.env*.local
+!.env.example
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Documentation
+README.md
+DOCS-*.md
+*.md
+!package.json
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+
+# Security reports
+sbom-*.json
+licenses.json
+npm-audit-report.json
+snyk-report.json
+trivy-report.json
+
+# Misc
+.husky
+scripts

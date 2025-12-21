@@ -1,0 +1,164 @@
+name: Docker Build, Sign & Scan
+
+on:
+  push:
+    branches:
+      - main
+      - claude/**
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-sign:
+    name: Build, Scan & Sign Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write  # Required for Cosign keyless signing
+      security-events: write  # Required for SARIF uploads
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          load: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: true
+          sbom: true
+
+      - name: Run Trivy vulnerability scanner on image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-image-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-image-results.sarif'
+
+      - name: Run Trivy for JSON report
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: 'json'
+          output: 'trivy-image-report.json'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+
+      - name: Check Trivy results
+        run: |
+          CRITICAL=$(jq '.Results[].Vulnerabilities[]? | select(.Severity=="CRITICAL") | .VulnerabilityID' trivy-image-report.json | wc -l)
+          HIGH=$(jq '.Results[].Vulnerabilities[]? | select(.Severity=="HIGH") | .VulnerabilityID' trivy-image-report.json | wc -l)
+
+          echo "Critical vulnerabilities: $CRITICAL"
+          echo "High vulnerabilities: $HIGH"
+
+          if [ "$CRITICAL" -gt 0 ]; then
+            echo "❌ CRITICAL vulnerabilities found in Docker image!"
+            exit 1
+          fi
+
+      - name: Push Docker image
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: true
+          sbom: true
+
+      - name: Install Cosign
+        if: github.event_name != 'pull_request'
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign Docker image with Cosign (keyless)
+        if: github.event_name != 'pull_request'
+        env:
+          COSIGN_EXPERIMENTAL: "true"
+        run: |
+          cosign sign --yes \
+            -a "repo=${{ github.repository }}" \
+            -a "workflow=${{ github.workflow }}" \
+            -a "ref=${{ github.sha }}" \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+
+      - name: Verify signature
+        if: github.event_name != 'pull_request'
+        env:
+          COSIGN_EXPERIMENTAL: "true"
+        run: |
+          cosign verify \
+            --certificate-identity-regexp="https://github.com/${{ github.repository }}" \
+            --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+
+      - name: Generate image digest summary
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "## Docker Image Built & Signed ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Image:** \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Digest:** \`${{ steps.build.outputs.digest }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Tags:** \`${{ steps.meta.outputs.tags }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Signed with:** Cosign (Sigstore keyless)" >> $GITHUB_STEP_SUMMARY
+          echo "**SBOM:** Generated ✅" >> $GITHUB_STEP_SUMMARY
+          echo "**Provenance:** Generated ✅" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Trivy image report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-image-report
+          path: trivy-image-report.json

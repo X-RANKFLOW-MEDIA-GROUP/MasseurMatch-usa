@@ -22,6 +22,11 @@
     "audit:licenses:check": "node scripts/check-licenses.js",
     "sbom:generate": "cyclonedx-npm --output-file sbom-cyclonedx.json",
     "sbom:validate": "cyclonedx-npm --output-file sbom-cyclonedx.json --validate",
+    "docker:build": "docker build -t masseurmatch:latest .",
+    "docker:run": "docker run -p 3000:3000 masseurmatch:latest",
+    "docker:compose:up": "docker-compose up -d",
+    "docker:compose:down": "docker-compose down",
+    "docker:compose:logs": "docker-compose logs -f",
     "prepare": "husky"
   },
   "dependencies": {
