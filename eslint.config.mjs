@@ -30,6 +30,14 @@ const eslintConfig = defineConfig([
       "security/detect-pseudoRandomBytes": "error",
     },
   },
+  // Allow CommonJS require in scripts directory
+  {
+    files: ["scripts/**/*.js"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+      "security/detect-object-injection": "off",
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
