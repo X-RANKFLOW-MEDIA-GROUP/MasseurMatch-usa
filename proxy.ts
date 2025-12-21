@@ -61,6 +61,10 @@ function normalizePath(pathname: string) {
 export async function proxy(req: NextRequest) {
   const pathname = normalizePath(req.nextUrl.pathname);
 
+  // Validate required environment variables
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
   // ====================================
   // AUTH PROTECTION (Protected Routes)
   // ====================================
@@ -69,6 +73,12 @@ export async function proxy(req: NextRequest) {
   );
 
   if (isProtectedRoute) {
+    // Skip auth check if env vars are missing (development mode)
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.warn("Supabase credentials missing - skipping auth check");
+      return NextResponse.next();
+    }
+
     let response = NextResponse.next({
       request: {
         headers: req.headers,
@@ -76,8 +86,8 @@ export async function proxy(req: NextRequest) {
     });
 
     const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      supabaseUrl,
+      supabaseAnonKey,
       {
         cookies: {
           get(name: string) {

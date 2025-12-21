@@ -162,7 +162,11 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
     if (insertError) {
       console.error("Error creating therapist profile:", insertError);
-      return null;
+      throw new Error(`Failed to create therapist profile: ${insertError.message}`);
+    }
+
+    if (!inserted) {
+      throw new Error("Failed to create therapist profile: No data returned");
     }
 
     return inserted as Therapist;
@@ -174,7 +178,9 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       const therapistData = await ensureTherapistForUser();
       setTherapist(therapistData);
     } catch (err) {
-      console.error("Unexpected error loading profile:", err);
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      console.error("Failed to load or create profile:", errorMessage, err);
+      // Set therapist to null so the UI knows the profile is unavailable
       setTherapist(null);
     } finally {
       setLoading(false);

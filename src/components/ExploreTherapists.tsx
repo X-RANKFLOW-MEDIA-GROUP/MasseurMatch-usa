@@ -488,9 +488,14 @@ export default function ExploreTherapists() {
 
         const { data, error } = await supabase
           .from("therapists")
-          .select("user_id, slug, display_name, location, services, profile_photo, zip_code, phone");
+          .select("user_id, slug, display_name, location, services, profile_photo, zip_code, phone, status")
+          .eq("status", "approved")
+          .order("created_at", { ascending: false });
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error fetching therapists:", error);
+          throw new Error("Failed to load therapists. Please try again later.");
+        }
 
         const mapped: Therapist[] = await Promise.all(
           (data || []).map(async (t: any, index: number, array: any[]) => {
@@ -505,21 +510,25 @@ export default function ExploreTherapists() {
                   .filter(Boolean)
               : [];
 
-            const ratingCount = Math.floor(Math.random() * 100) + 1;
-            const rating = 5;
+            // TODO: Replace with actual database columns for ratings
+            // For now, use default values until rating system is implemented
+            const ratingCount = 0;
+            const rating = 0;
 
-            const isHighestRated = index < Math.ceil(array.length * 0.1);
-            const hasHighestReview = ratingCount > 100;
+            const isHighestRated = false;
+            const hasHighestReview = false;
 
             const offersTravelService = tags.some((tag: string) =>
               tag.toLowerCase().includes("mobile") ||
               tag.toLowerCase().includes("travel")
             );
 
-            const incall = Math.random() > 0.35;
-            const outcall = offersTravelService || Math.random() > 0.5;
+            // TODO: Replace with actual database columns (incall_available, outcall_available)
+            // For now, assume both are available if no data exists
+            const incall = true;
+            const outcall = offersTravelService || true;
 
-            const isFeatured = isHighestRated || hasHighestReview || rating >= 4.8;
+            const isFeatured = false;
 
             return {
               id: t.slug || t.user_id,
@@ -532,7 +541,8 @@ export default function ExploreTherapists() {
               tags,
               rating,
               ratingCount,
-              startingPriceUSD: 100 + Math.floor(Math.random() * 40),
+              // TODO: Replace with actual pricing from database
+              startingPriceUSD: 100,
               photoUrl:
                 t.profile_photo ||
                 "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?q=80&w=1600&auto=format&fit=crop",
@@ -540,7 +550,8 @@ export default function ExploreTherapists() {
               phone: t.phone || undefined,
               isHighestRated,
               hasHighestReview,
-              isAvailable: Math.random() > 0.5,
+              // TODO: Replace with actual availability status from database
+              isAvailable: true,
               offersTravelService,
               lat,
               lng,
@@ -554,6 +565,7 @@ export default function ExploreTherapists() {
         setTherapists(mapped);
       } catch (e) {
         console.error("Erro ao carregar terapeutas:", e);
+        setTherapists([]);
       } finally {
         setLoading(false);
       }
