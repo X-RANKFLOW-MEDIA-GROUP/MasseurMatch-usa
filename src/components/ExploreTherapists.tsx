@@ -488,8 +488,29 @@ export default function ExploreTherapists() {
 
         const { data, error } = await supabase
           .from("therapists")
-          .select("user_id, slug, display_name, location, services, profile_photo, zip_code, phone, status")
+          .select(`
+            user_id,
+            slug,
+            display_name,
+            location,
+            services,
+            profile_photo,
+            zip_code,
+            phone,
+            status,
+            rating,
+            rating_count,
+            is_highest_rated,
+            has_highest_review,
+            is_featured,
+            is_available,
+            incall_available,
+            outcall_available,
+            starting_price_usd
+          `)
           .eq("status", "approved")
+          .order("is_featured", { ascending: false })
+          .order("rating", { ascending: false })
           .order("created_at", { ascending: false });
 
         if (error) {
@@ -510,25 +531,21 @@ export default function ExploreTherapists() {
                   .filter(Boolean)
               : [];
 
-            // TODO: Replace with actual database columns for ratings
-            // For now, use default values until rating system is implemented
-            const ratingCount = 0;
-            const rating = 0;
-
-            const isHighestRated = false;
-            const hasHighestReview = false;
+            // Use real database values with fallbacks
+            const ratingCount = t.rating_count ?? 0;
+            const rating = t.rating ?? 0;
+            const isHighestRated = t.is_highest_rated ?? false;
+            const hasHighestReview = t.has_highest_review ?? false;
+            const isFeatured = t.is_featured ?? false;
 
             const offersTravelService = tags.some((tag: string) =>
               tag.toLowerCase().includes("mobile") ||
               tag.toLowerCase().includes("travel")
             );
 
-            // TODO: Replace with actual database columns (incall_available, outcall_available)
-            // For now, assume both are available if no data exists
-            const incall = true;
-            const outcall = offersTravelService || true;
-
-            const isFeatured = false;
+            // Use real database availability with intelligent fallbacks
+            const incall = t.incall_available ?? true;
+            const outcall = t.outcall_available ?? offersTravelService;
 
             return {
               id: t.slug || t.user_id,
@@ -541,8 +558,8 @@ export default function ExploreTherapists() {
               tags,
               rating,
               ratingCount,
-              // TODO: Replace with actual pricing from database
-              startingPriceUSD: 100,
+              // Use real pricing from database with fallback
+              startingPriceUSD: t.starting_price_usd ?? 100,
               photoUrl:
                 t.profile_photo ||
                 "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?q=80&w=1600&auto=format&fit=crop",
@@ -550,8 +567,8 @@ export default function ExploreTherapists() {
               phone: t.phone || undefined,
               isHighestRated,
               hasHighestReview,
-              // TODO: Replace with actual availability status from database
-              isAvailable: true,
+              // Use real availability from database with fallback
+              isAvailable: t.is_available ?? true,
               offersTravelService,
               lat,
               lng,
