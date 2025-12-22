@@ -32,6 +32,7 @@
   ],
   "exclude": [
     "node_modules",
+    "dashboard-vite/**",
     "dashboard-vite/src/App.tsx",
     "dashboard-vite/src/main.tsx",
     "dashboard-vite/src/supabase/**",

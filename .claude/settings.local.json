@@ -13,7 +13,11 @@
       "Bash(taskkill:*)",
       "Bash(npm start)",
       "Bash(cmd /c npm start)",
-      "Bash(powershell -Command \"npm start\")"
+      "Bash(powershell -Command \"npm start\")",
+      "Bash(findstr:*)",
+      "Bash(touch:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm install)"
     ],
     "deny": [],
     "ask": []
