@@ -41,6 +41,33 @@ type Therapist = {
   distanceMiles?: number;
 };
 
+type TherapistRow = {
+  user_id: string;
+  slug?: string | null;
+  display_name?: string | null;
+  location?: string | null;
+  services?: string[] | string | null;
+  profile_photo?: string | null;
+  zip_code?: string | null;
+  phone?: string | null;
+  status?: string | null;
+  rating?: number | null;
+  rating_count?: number | null;
+  is_highest_rated?: boolean | null;
+  has_highest_review?: boolean | null;
+  is_featured?: boolean | null;
+  is_available?: boolean | null;
+  incall_available?: boolean | null;
+  outcall_available?: boolean | null;
+  starting_price_usd?: number | null;
+};
+
+type TherapistAPIResponse = {
+  success: boolean;
+  therapists?: TherapistRow[];
+  error?: string;
+};
+
 type LatLng = { lat: number; lng: number };
 
 function haversineMiles(a: LatLng, b: LatLng): number {
