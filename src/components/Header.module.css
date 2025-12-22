@@ -118,8 +118,8 @@
 
 .btn-dashboard {
   color: #fff;
-  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-  box-shadow: 0 4px 12px rgba(168,85,247,.3);
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
 }
 
 .btn-dashboard:hover { filter: brightness(1.05); }

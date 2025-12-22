@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { FormEvent, useState } from "react";
 import { supabase } from "@/src/lib/supabase";
@@ -61,7 +61,7 @@ export default function RecuperarPage() {
             "radial-gradient(circle at top left, #1e1b4b, #020617 80%)",
           padding: "1.75rem 1.5rem",
           borderRadius: "1rem",
-          border: "1px solid rgba(56,189,248,0.6)",
+          border: "1px solid rgba(139,92,246,0.6)",
           boxShadow: "0 22px 45px rgba(0,0,0,0.6)",
         }}
       >
@@ -123,9 +123,9 @@ export default function RecuperarPage() {
             style={{
               padding: "0.8rem 1.1rem",
               borderRadius: "0.75rem",
-              border: "1px solid rgba(59,130,246,0.5)",
+              border: "1px solid rgba(99,102,241,0.5)",
               background:
-                "linear-gradient(135deg, rgba(59,130,246,0.9), rgba(56,189,248,0.9))",
+                "linear-gradient(135deg, rgba(99,102,241,0.9), rgba(139,92,246,0.9))",
               color: "#0b1220",
               fontWeight: 700,
               cursor: loading ? "not-allowed" : "pointer",
@@ -138,9 +138,9 @@ export default function RecuperarPage() {
             <p
               role="status"
               style={{
-                background: "rgba(34,197,94,0.15)",
-                border: "1px solid rgba(34,197,94,0.5)",
-                color: "#bbf7d0",
+                background: "rgba(139,92,246,0.16)",
+                border: "1px solid rgba(139,92,246,0.5)",
+                color: "#e9d5ff",
                 padding: "0.75rem",
                 borderRadius: "0.75rem",
               }}
@@ -167,3 +167,6 @@ export default function RecuperarPage() {
     </main>
   );
 }
+
+
+

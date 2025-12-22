@@ -1,4 +1,4 @@
-/* ===== CSS Variables ===== */
+﻿/* ===== CSS Variables ===== */
 :root {
   --bg-1: #0b0b12;
   --bg-2: #0f1020;
@@ -14,16 +14,16 @@
   --field-focus: rgba(138, 99, 255, 0.45);
   --error-bg: rgba(246, 74, 88, 0.14);
   --error-tx: #ff6b81;
-  --success-bg: rgba(5, 150, 105, 0.14);
-  --success-tx: #10b981;
-  --info-bg: rgba(59, 130, 246, 0.14);
-  --info-tx: #3b82f6;
-  --warn-bg: rgba(245, 158, 11, 0.14);
-  --warn-tx: #f59e0b;
-  --grad-1: #6c34ff;
-  --grad-2: #ff2d87;
-  --grad-3: #7b5bff;
-  --grad-4: #3b82f6;
+  --success-bg: rgba(139, 92, 246, 0.14);
+  --success-tx: #8b5cf6;
+  --info-bg: rgba(99, 102, 241, 0.14);
+  --info-tx: #6366f1;
+  --warn-bg: rgba(139, 92, 246, 0.2);
+  --warn-tx: #a78bfa;
+  --grad-1: #7c3aed;
+  --grad-2: #8b5cf6;
+  --grad-3: #6366f1;
+  --grad-4: #4f46e5;
   --radius-xl: 18px;
   --radius-lg: 14px;
   --radius-md: 12px;
@@ -136,8 +136,8 @@ main {
   pointer-events: none;
   background:
     radial-gradient(40% 50% at 35% 20%, rgba(139, 92, 246, 0.28), transparent 60%),
-    radial-gradient(35% 45% at 70% 30%, rgba(59, 130, 246, 0.24), transparent 60%),
-    radial-gradient(30% 40% at 65% 65%, rgba(236, 72, 153, 0.22), transparent 60%);
+    radial-gradient(35% 45% at 70% 30%, rgba(99, 102, 241, 0.24), transparent 60%),
+    radial-gradient(30% 40% at 65% 65%, rgba(139, 92, 246, 0.22), transparent 60%);
   filter: blur(40px);
   z-index: 0;
 }
@@ -168,7 +168,7 @@ main {
   font-weight: 800;
   line-height: 1.1;
   margin-top: 24px;
-  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 50%, #ec4899 100%);
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #4f46e5 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -289,7 +289,7 @@ h3 {
   margin-top: 20px;
   font-weight: 600;
   letter-spacing: 0.3px;
-  background: linear-gradient(135deg, #7c3aed, #3b82f6, #ec4899);
+  background: linear-gradient(135deg, #7c3aed, #6366f1, #8b5cf6);
   background-size: 200%;
   animation: gradientShift 6s ease infinite;
 }
@@ -342,7 +342,7 @@ h3 {
   top:10px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #f59e0b, #f97316);
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
   color: white;
   padding: 5px 14px;
   border-radius: 999px;
@@ -350,7 +350,7 @@ h3 {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.5);
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.45);
   white-space: nowrap;
   z-index: 5;
   animation: pulse 2s infinite;
@@ -375,7 +375,7 @@ h3 {
 .card-price b {
   font-size: 48px;
   font-weight: 800;
-  background: linear-gradient(135deg, #7c3aed, #3b82f6);
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -401,7 +401,7 @@ h3 {
 .card-list li svg {
   flex-shrink: 0;
   margin-top: 2px;
-  color: #10b981;
+  color: #8b5cf6;
 }
 .card-list li:hover {
   color: var(--text-1);
@@ -595,12 +595,12 @@ fieldset:hover {
 .alert-info {
   background: var(--info-bg);
   color: var(--info-tx);
-  border: 1px solid rgba(59, 130, 246, 0.35);
+  border: 1px solid rgba(99, 102, 241, 0.35);
 }
 .alert-warn {
   background: var(--warn-bg);
   color: var(--warn-tx);
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  border: 1px solid rgba(139, 92, 246, 0.35);
 }
 
 /* ===== Upload Box ===== */
@@ -786,3 +786,5 @@ fieldset:hover {
   outline: 2px solid rgba(138, 99, 255, 0.6);
   outline-offset: 2px;
 }
+
+

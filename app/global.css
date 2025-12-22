@@ -1,52 +1,52 @@
 /* ===========================
    TAILWIND (obrigatório)
    =========================== */
-@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
 /* ===========================
    THEME / BASE VARIABLES
    =========================== */
 :root {
-  --bg: #0b0b14;
-  --panel: #111123;
-  --panel-2: #0f0f1f;
-  --panel-3: #0b0b18;
-  --text: #e9e9f1;
-  --muted: #b6b6ce;
-  --stroke: #2a2a48;
+  --bg: #050505;
+  --panel: #0a0a0f;
+  --panel-2: #0b0b14;
+  --panel-3: #0c0c16;
+  --text: #f8f9ff;
+  --muted: #a1a1aa;
+  --stroke: #1f1f2b;
   --violet: #8b5cf6;
-  --pink: #ec4899;
-  --success: #22c55e;
+  --pink: #7c3aed;
+  --success: #8b5cf6;
   --shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
   --focus: 0 0 0 3px rgba(139, 92, 246, 0.35),
     0 0 0 1.5px rgba(139, 92, 246, 0.9) inset;
   --header-h: 72px;
   --accent: #8b5cf6;
-  --accent-2: #a855f7;
-  --chip: #20222a;
-  --chip-stroke: #2f3340;
+  --accent-2: #6366f1;
+  --chip: #111113;
+  --chip-stroke: #1f1f2b;
   --danger: #ef4444;
   --gap-xs: 10px;
   --gap-sm: 12px;
   --gap-md: 16px;
   --gap-lg: 20px;
   --gap-xl: 28px;
-  --font-display: "Figtree", Inter, system-ui, "Segoe UI", Roboto, Arial,
+  --font-display: "Inter", system-ui, "Segoe UI", Roboto, Arial,
     sans-serif;
-  --font-body: "Figtree", Inter, system-ui, "Segoe UI", Roboto, Arial,
+  --font-body: "Inter", system-ui, "Segoe UI", Roboto, Arial,
     sans-serif;
 }
 
 /* Status colors */
 .status-online {
-  --status-color: #22c55e;
-  --status-glow: rgba(34, 197, 94, 0.55);
+  --status-color: #8b5cf6;
+  --status-glow: rgba(139, 92, 246, 0.55);
 }
 
 .status-away {
-  --status-color: #f59e0b;
-  --status-glow: rgba(245, 158, 11, 0.55);
+  --status-color: #6366f1;
+  --status-glow: rgba(99, 102, 241, 0.55);
 }
 
 .status-busy {

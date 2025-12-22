@@ -1,10 +1,10 @@
-/* ===== SECTION WRAPPER ===== */
+﻿/* ===== SECTION WRAPPER ===== */
 .how-it-works {
   background: #050513;
   color: #fff;
   padding: 72px 8%;
   text-align: center;
-  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
     sans-serif;
   position: relative;
   overflow: hidden;
@@ -17,7 +17,7 @@
   inset: -40%;
   background:
     radial-gradient(40% 40% at 10% 0%, rgba(139, 92, 246, 0.18), transparent 60%),
-    radial-gradient(45% 45% at 90% 15%, rgba(56, 189, 248, 0.16), transparent 65%);
+    radial-gradient(45% 45% at 90% 15%, rgba(99, 102, 241, 0.16), transparent 65%);
   opacity: 0.6;
   pointer-events: none;
   z-index: 0;
@@ -59,7 +59,7 @@
   border-radius: 18px;
   padding: 22px 20px 20px;
   box-shadow:
-    0 0 18px rgba(124, 58, 237, 0.18),
+    0 0 18px rgba(139, 92, 246, 0.18),
     0 18px 45px rgba(0, 0, 0, 0.85);
   border: 1px solid rgba(148, 163, 184, 0.18);
   text-align: left;
@@ -78,7 +78,7 @@
   inset: 0;
   background: radial-gradient(
     circle at top right,
-    rgba(244, 114, 182, 0.17),
+    rgba(139, 92, 246, 0.2),
     transparent 60%
   );
   opacity: 0;
@@ -91,7 +91,7 @@
   box-shadow:
     0 0 26px rgba(129, 140, 248, 0.48),
     0 22px 55px rgba(0, 0, 0, 0.95);
-  border-color: rgba(168, 85, 247, 0.65);
+  border-color: rgba(139, 92, 246, 0.7);
 }
 
 .step-card:hover::after {
@@ -110,20 +110,20 @@
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.85);
 }
 
-/* variações de cor */
+/* variaÃ§Ãµes de cor */
 .icon-purple {
-  background: radial-gradient(circle at 30% 30%, #a855f7, #5b21b6);
+  background: radial-gradient(circle at 30% 30%, #8b5cf6, #4c1d95);
   color: #f9f5ff;
 }
 
 .icon-pink {
-  background: radial-gradient(circle at 30% 30%, #ec4899, #9d174d);
-  color: #fdf2f8;
+  background: radial-gradient(circle at 30% 30%, #a78bfa, #6366f1);
+  color: #eef2ff;
 }
 
 .icon-blue {
-  background: radial-gradient(circle at 30% 30%, #3b82f6, #1d4ed8);
-  color: #eff6ff;
+  background: radial-gradient(circle at 30% 30%, #6366f1, #3730a3);
+  color: #eef2ff;
 }
 
 /* ===== TITULO / TEXTO DO CARD ===== */
@@ -181,7 +181,7 @@
   }
 }
 
-/* menos animação se o usuário não curtir motion */
+/* menos animaÃ§Ã£o se o usuÃ¡rio nÃ£o curtir motion */
 @media (prefers-reduced-motion: reduce) {
   .step-card {
     transition: none;

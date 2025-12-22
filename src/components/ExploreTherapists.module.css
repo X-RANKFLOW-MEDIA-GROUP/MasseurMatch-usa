@@ -1,4 +1,4 @@
-.explore {
+﻿.explore {
   min-height: 100vh;
   background: radial-gradient(
       1200px 600px at 50% -10%,
@@ -8,7 +8,7 @@
     );
   color: #e5e7eb;
   padding: 5.5rem 1.5rem 4rem;
-  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
     sans-serif;
 }
 
@@ -16,7 +16,7 @@
 .banner {
   max-width: 1200px;
   margin: 0 auto 2.25rem;
-  background: linear-gradient(120deg, rgba(99, 102, 241, 0.18), rgba(34, 197, 94, 0.14));
+  background: linear-gradient(120deg, rgba(99, 102, 241, 0.18), rgba(139, 92, 246, 0.16));
   border: 1px solid rgba(148, 163, 184, 0.35);
   border-radius: 22px;
   padding: 1.5rem;
@@ -48,7 +48,7 @@
   margin: 0;
   font-size: clamp(1.9rem, 3vw, 2.5rem);
   font-weight: 700;
-  background: linear-gradient(90deg, #c4b5fd, #a5b4fc, #22c55e);
+  background: linear-gradient(90deg, #c4b5fd, #a5b4fc, #818cf8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -184,8 +184,8 @@
 }
 
 .thumb--active {
-  border-color: #22c55e;
-  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.35);
+  border-color: #8b5cf6;
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.35);
 }
 
 .thumb img {
@@ -304,7 +304,7 @@
 }
 
 .quickChip:hover {
-  border-color: #22c55e;
+  border-color: #8b5cf6;
   transform: translateY(-1px);
 }
 
@@ -341,7 +341,7 @@
 }
 
 .is-on {
-  background: linear-gradient(135deg, #4f46e5, #22c55e);
+  background: linear-gradient(135deg, #4f46e5, #8b5cf6);
   border-color: transparent;
   color: #f9fafb;
 }
@@ -353,12 +353,12 @@
   gap: 0.35rem;
   border-radius: 12px;
   padding: 0.45rem 0.9rem;
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: #0b1510;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  color: #f9fafb;
   font-weight: 700;
   text-decoration: none;
   border: 1px solid transparent;
-  box-shadow: 0 10px 24px rgba(34, 197, 94, 0.35);
+  box-shadow: 0 10px 24px rgba(139, 92, 246, 0.35);
 }
 
 .btn--primary:hover {
@@ -427,7 +427,7 @@
 }
 
 .locationError {
-  color: #fbbf24;
+  color: #f87171;
   font-size: 0.9rem;
 }
 
@@ -579,15 +579,15 @@
 }
 
 .badge--verified {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
 }
 
 .badge--elite {
-  background: linear-gradient(135deg, #eab308, #f97316);
+  background: linear-gradient(135deg, #a78bfa, #6366f1);
 }
 
 .badge--pro {
-  background: linear-gradient(135deg, #6366f1, #0ea5e9);
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
 }
 
 /* ===== CARD BODY ===== */
@@ -623,7 +623,7 @@
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: #22c55e;
+  background: #8b5cf6;
 }
 
 /* Rating row */
@@ -646,11 +646,11 @@
 }
 
 .star--full {
-  color: #facc15;
+  color: #c4b5fd;
 }
 
 .star--half {
-  color: #fbbf24;
+  color: #a78bfa;
 }
 
 .star--empty {
@@ -722,7 +722,7 @@
 .price__value {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #f97316;
+  color: #c4b5fd;
 }
 
 /* Empty state */
@@ -748,7 +748,7 @@
 
 .slider {
   width: 100%;
-  accent-color: #22c55e;
+  accent-color: #8b5cf6;
 }
 
 .rangeRow {
@@ -914,3 +914,4 @@
     transform: none;
   }
 }
+

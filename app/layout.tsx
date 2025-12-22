@@ -7,10 +7,6 @@ const noIndex = process.env.NEXT_PUBLIC_NO_INDEX === "true";
 import "leaflet/dist/leaflet.css";   // obrigatório para o mapa
 import "./global.css";              // estilos globais do projeto
 
-// CSS do Projeto
-import "@/src/components/TherapistProfile.css";
-import "@/src/styles/edit-profile.css";
-
 // Componentes Globais
 import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";

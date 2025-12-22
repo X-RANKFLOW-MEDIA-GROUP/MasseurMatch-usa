@@ -1,24 +1,24 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 
 :root {
-  --ai-bg: #070910;
-  --ai-surface: #0d111f;
-  --ai-surface-2: #101427;
-  --ai-text: #e5e9f7;
-  --ai-muted: #9ca5c4;
-  --ai-accent: #2ac7e3;
-  --ai-accent-2: #b6f2ff;
-  --ai-glow: rgba(42, 199, 227, 0.2);
+  --ai-bg: #050505;
+  --ai-surface: #0a0a0f;
+  --ai-surface-2: #0d0d15;
+  --ai-text: #f8f9ff;
+  --ai-muted: #a1a1aa;
+  --ai-accent: #8b5cf6;
+  --ai-accent-2: #c4b5fd;
+  --ai-glow: rgba(139, 92, 246, 0.2);
   --ai-stroke: rgba(255, 255, 255, 0.08);
   --ai-hero-size: min(1120px, 90vw);
   --ai-container: min(1180px, 92vw);
   --ai-parallax: 0px;
-  --ai-font: "Space Grotesk", "Figtree", system-ui, -apple-system, sans-serif;
+  --ai-font: "Inter", system-ui, -apple-system, sans-serif;
 }
 
 .ai-page {
-  background: radial-gradient(circle at 20% 20%, rgba(42, 199, 227, 0.08), transparent 40%),
-    radial-gradient(circle at 75% 15%, rgba(175, 150, 255, 0.08), transparent 38%),
+  background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.12), transparent 45%),
+    radial-gradient(circle at 75% 10%, rgba(99, 102, 241, 0.12), transparent 45%),
     var(--ai-bg);
   color: var(--ai-text);
   font-family: var(--ai-font);
@@ -58,7 +58,7 @@
 }
 
 .ai-orb--primary {
-  background: radial-gradient(circle at 40% 40%, rgba(42, 199, 227, 0.35), transparent 60%);
+  background: radial-gradient(circle at 40% 40%, rgba(99, 102, 241, 0.32), transparent 60%);
   top: -22%;
   left: 15%;
 }
@@ -110,7 +110,7 @@
 }
 
 .ai-title em {
-  font-family: "Playfair Display", serif;
+  font-family: var(--ai-font);
   font-style: italic;
   color: var(--ai-accent-2);
   font-weight: 700;
@@ -146,18 +146,18 @@
 
 .ai-button:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(42, 199, 227, 0.35);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.35);
 }
 
 .ai-button--solid {
-  background: linear-gradient(120deg, #0ae0ff, #3fbcff);
-  color: #041019;
-  box-shadow: 0 14px 48px rgba(10, 224, 255, 0.25);
+  background: linear-gradient(120deg, #8b5cf6, #6366f1);
+  color: #09090f;
+  box-shadow: 0 14px 48px rgba(139, 92, 246, 0.25);
 }
 
 .ai-button--solid:hover {
   transform: translateY(-1px);
-  box-shadow: 0 16px 52px rgba(10, 224, 255, 0.35);
+  box-shadow: 0 16px 52px rgba(139, 92, 246, 0.35);
 }
 
 .ai-button--ghost {
@@ -203,8 +203,8 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: linear-gradient(120deg, #0ae0ff, #3fbcff);
-  box-shadow: 0 0 0 6px rgba(10, 224, 255, 0.18);
+  background: linear-gradient(120deg, #8b5cf6, #6366f1);
+  box-shadow: 0 0 0 6px rgba(139, 92, 246, 0.18);
 }
 
 .ai-floating-card__sep {
@@ -343,7 +343,7 @@
 
 .ai-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(42, 199, 227, 0.5);
+  border-color: rgba(139, 92, 246, 0.5);
 }
 
 .ai-card h3 {
@@ -380,8 +380,8 @@
   width: 42px;
   height: 42px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #0ae0ff, #3fbcff);
-  color: #041019;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  color: #0b0b12;
   display: grid;
   place-items: center;
   font-weight: 800;

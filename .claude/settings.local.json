@@ -17,7 +17,10 @@
       "Bash(findstr:*)",
       "Bash(touch:*)",
       "Bash(npm run dev:*)",
-      "Bash(npm install)"
+      "Bash(npm install)",
+      "Bash(node scripts/seed-fake-therapist.js:*)",
+      "Bash(node scripts/seed-simple-therapist.js:*)",
+      "Bash(node scripts/update-therapist-profile.js:*)"
     ],
     "deny": [],
     "ask": []
