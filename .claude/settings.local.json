@@ -20,7 +20,8 @@
       "Bash(npm install)",
       "Bash(node scripts/seed-fake-therapist.js:*)",
       "Bash(node scripts/seed-simple-therapist.js:*)",
-      "Bash(node scripts/update-therapist-profile.js:*)"
+      "Bash(node scripts/update-therapist-profile.js:*)",
+      "Bash(node test-endpoints.js:*)"
     ],
     "deny": [],
     "ask": []
