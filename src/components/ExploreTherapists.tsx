@@ -3,6 +3,8 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { supabase } from "../lib/supabase";
+import { formatSupabaseError } from "../lib/error";
 import styles from "./ExploreTherapists.module.css";
 
 /* ====== Leaflet / React-Leaflet ====== */
@@ -372,6 +374,7 @@ export default function ExploreTherapists() {
 
   const [therapists, setTherapists] = useState<Therapist[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [mapCollapsed, setMapCollapsed] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
   const [showMap, setShowMap] = useState(true);
@@ -507,30 +510,54 @@ export default function ExploreTherapists() {
     );
   };
 
-    useEffect(() => {
-      async function fetchTherapists() {
-        try {
-          setLoading(true);
+  useEffect(() => {
+    async function fetchTherapists() {
+      try {
+        setLoading(true);
+        setLoadError(null);
 
-          const response = await fetch("/api/therapists");
-          const payload = (await response.json()) as TherapistAPIResponse;
+        const { data, error } = await supabase
+          .from("therapists")
+          .select(`
+            user_id,
+            slug,
+            display_name,
+            location,
+            services,
+            profile_photo,
+            zip_code,
+            phone,
+            status,
+            rating,
+            rating_count,
+            is_highest_rated,
+            has_highest_review,
+            is_featured,
+            is_available,
+            incall_available,
+            outcall_available,
+            starting_price_usd
+          `)
+          .eq("status", "approved")
+          .order("is_featured", { ascending: false })
+          .order("rating", { ascending: false })
+          .order("created_at", { ascending: false });
 
-          if (!response.ok || !payload.success || !payload.therapists) {
-            const message =
-              payload.error ||
-              `Failed to load therapists. (status ${response.status})`;
+        if (error) {
+          const formattedError = formatSupabaseError(error);
+          console.error("Error fetching therapists:", formattedError, error);
+          setLoadError(formattedError);
+          setTherapists([]);
+          return;
+        }
 
-            console.error("Error fetching therapists:", message);
-            throw new Error(message);
-          }
+        const mapped: Therapist[] = await Promise.all(
+          (data || []).map(async (t: any, index: number, array: any[]) => {
+            const { city, state, lat, lng } = await resolveLocation(t.location);
 
-          const mapped: Therapist[] = await Promise.all(
-            payload.therapists.map(async (t, index: number, array: any[]) => {
-              const { city, state, lat, lng } = await resolveLocation(t.location);
-
-              const tags = Array.isArray(t.services)
-                ? t.services
-                : t.services
+            const tags = Array.isArray(t.services)
+              ? t.services
+              : t.services
               ? t.services
                   .split(",")
                   .map((s: string) => s.trim())
@@ -587,7 +614,9 @@ export default function ExploreTherapists() {
 
         setTherapists(mapped);
       } catch (e) {
-        console.error("Erro ao carregar terapeutas:", e);
+        const formattedError = formatSupabaseError(e);
+        console.error("Erro ao carregar terapeutas:", formattedError, e);
+        setLoadError(formattedError);
         setTherapists([]);
       } finally {
         setLoading(false);
@@ -846,6 +875,13 @@ export default function ExploreTherapists() {
           </div>
         )}
       </section>
+
+      {loadError ? (
+        <div className={styles.errorNotice} role="status" aria-live="polite">
+          <p className={styles.errorTitle}>We could not load therapists right now.</p>
+          <p className={styles.errorMessage}>{loadError}</p>
+        </div>
+      ) : null}
 
       <section className={styles.layout}>
         <aside className={styles.sidebar}>
