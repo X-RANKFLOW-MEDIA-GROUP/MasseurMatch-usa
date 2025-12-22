@@ -488,9 +488,35 @@ export default function ExploreTherapists() {
 
         const { data, error } = await supabase
           .from("therapists")
-          .select("user_id, slug, display_name, location, services, profile_photo, zip_code, phone");
+          .select(`
+            user_id,
+            slug,
+            display_name,
+            location,
+            services,
+            profile_photo,
+            zip_code,
+            phone,
+            status,
+            rating,
+            rating_count,
+            is_highest_rated,
+            has_highest_review,
+            is_featured,
+            is_available,
+            incall_available,
+            outcall_available,
+            starting_price_usd
+          `)
+          .eq("status", "approved")
+          .order("is_featured", { ascending: false })
+          .order("rating", { ascending: false })
+          .order("created_at", { ascending: false });
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error fetching therapists:", error);
+          throw new Error("Failed to load therapists. Please try again later.");
+        }
 
         const mapped: Therapist[] = await Promise.all(
           (data || []).map(async (t: any, index: number, array: any[]) => {
@@ -505,21 +531,21 @@ export default function ExploreTherapists() {
                   .filter(Boolean)
               : [];
 
-            const ratingCount = Math.floor(Math.random() * 100) + 1;
-            const rating = 5;
-
-            const isHighestRated = index < Math.ceil(array.length * 0.1);
-            const hasHighestReview = ratingCount > 100;
+            // Use real database values with fallbacks
+            const ratingCount = t.rating_count ?? 0;
+            const rating = t.rating ?? 0;
+            const isHighestRated = t.is_highest_rated ?? false;
+            const hasHighestReview = t.has_highest_review ?? false;
+            const isFeatured = t.is_featured ?? false;
 
             const offersTravelService = tags.some((tag: string) =>
               tag.toLowerCase().includes("mobile") ||
               tag.toLowerCase().includes("travel")
             );
 
-            const incall = Math.random() > 0.35;
-            const outcall = offersTravelService || Math.random() > 0.5;
-
-            const isFeatured = isHighestRated || hasHighestReview || rating >= 4.8;
+            // Use real database availability with intelligent fallbacks
+            const incall = t.incall_available ?? true;
+            const outcall = t.outcall_available ?? offersTravelService;
 
             return {
               id: t.slug || t.user_id,
@@ -532,7 +558,8 @@ export default function ExploreTherapists() {
               tags,
               rating,
               ratingCount,
-              startingPriceUSD: 100 + Math.floor(Math.random() * 40),
+              // Use real pricing from database with fallback
+              startingPriceUSD: t.starting_price_usd ?? 100,
               photoUrl:
                 t.profile_photo ||
                 "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?q=80&w=1600&auto=format&fit=crop",
@@ -540,7 +567,8 @@ export default function ExploreTherapists() {
               phone: t.phone || undefined,
               isHighestRated,
               hasHighestReview,
-              isAvailable: Math.random() > 0.5,
+              // Use real availability from database with fallback
+              isAvailable: t.is_available ?? true,
               offersTravelService,
               lat,
               lng,
@@ -554,6 +582,7 @@ export default function ExploreTherapists() {
         setTherapists(mapped);
       } catch (e) {
         console.error("Erro ao carregar terapeutas:", e);
+        setTherapists([]);
       } finally {
         setLoading(false);
       }
