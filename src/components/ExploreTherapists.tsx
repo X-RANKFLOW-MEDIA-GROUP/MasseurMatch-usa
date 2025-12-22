@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "../lib/supabase";
+import { formatSupabaseError } from "../lib/error";
 import styles from "./ExploreTherapists.module.css";
 
 /* ====== Leaflet / React-Leaflet ====== */
@@ -346,6 +347,7 @@ export default function ExploreTherapists() {
 
   const [therapists, setTherapists] = useState<Therapist[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [mapCollapsed, setMapCollapsed] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
   const [showMap, setShowMap] = useState(true);
@@ -485,6 +487,7 @@ export default function ExploreTherapists() {
     async function fetchTherapists() {
       try {
         setLoading(true);
+        setLoadError(null);
 
         const { data, error } = await supabase
           .from("therapists")
@@ -514,8 +517,11 @@ export default function ExploreTherapists() {
           .order("created_at", { ascending: false });
 
         if (error) {
-          console.error("Error fetching therapists:", error);
-          throw new Error("Failed to load therapists. Please try again later.");
+          const formattedError = formatSupabaseError(error);
+          console.error("Error fetching therapists:", formattedError, error);
+          setLoadError(formattedError);
+          setTherapists([]);
+          return;
         }
 
         const mapped: Therapist[] = await Promise.all(
@@ -581,7 +587,9 @@ export default function ExploreTherapists() {
 
         setTherapists(mapped);
       } catch (e) {
-        console.error("Erro ao carregar terapeutas:", e);
+        const formattedError = formatSupabaseError(e);
+        console.error("Erro ao carregar terapeutas:", formattedError, e);
+        setLoadError(formattedError);
         setTherapists([]);
       } finally {
         setLoading(false);
@@ -840,6 +848,13 @@ export default function ExploreTherapists() {
           </div>
         )}
       </section>
+
+      {loadError ? (
+        <div className={styles.errorNotice} role="status" aria-live="polite">
+          <p className={styles.errorTitle}>We could not load therapists right now.</p>
+          <p className={styles.errorMessage}>{loadError}</p>
+        </div>
+      ) : null}
 
       <section className={styles.layout}>
         <aside className={styles.sidebar}>
