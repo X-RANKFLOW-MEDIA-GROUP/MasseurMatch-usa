@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 type CityInfo = {
   name: string;
@@ -24,20 +24,20 @@ export default function CityLandingPage({ city, slug }: Props) {
   const clientMailto = `mailto:${CTA_EMAIL}?subject=${encodeURIComponent(
     `Client request for ${name}, ${state}`,
   )}&body=${encodeURIComponent(
-    `Hello,%0D%0A%0D%0AI want MasseurMatch in ${name}, ${state}. Please keep me updated.%0D%0A%0D%0AWhat I’m looking for:%0D%0A- In-studio or mobile:%0D%0A- Preferred modalities:%0D%0A- Neighborhood/hotel area:%0D%0A`,
+    `Hello,%0D%0A%0D%0AI want MasseurMatch in ${name}, ${state}. Please keep me updated.%0D%0A%0D%0AWhat I'm looking for:%0D%0A- In-studio or mobile:%0D%0A- Preferred modalities:%0D%0A- Neighborhood/hotel area:%0D%0A`,
   )}`;
 
   return (
     <div className="bg-slate-950 text-slate-100">
       <div className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-950 to-black">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(60,220,130,0.08),_transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(139,92,246,0.12),_transparent_50%)]" />
         <div className="relative mx-auto max-w-6xl px-6 pb-16 pt-14 sm:px-10 sm:pt-18">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-emerald-200/90">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_0_6px_rgba(16,185,129,0.2)]" />
-            Expansion Preview · {region}
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-violet-200/90">
+            <span className="h-1.5 w-1.5 rounded-full bg-violet-400 shadow-[0_0_0_6px_rgba(139,92,246,0.2)]" />
+            Expansion Preview - {region}
           </div>
           <h1 className="max-w-3xl text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
-            Massage therapists for {name}, {state} — LGBT-inclusive, discreet,
+            Massage therapists for {name}, {state} - LGBT-inclusive, discreet,
             and coming soon.
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-slate-300">
@@ -50,21 +50,21 @@ export default function CityLandingPage({ city, slug }: Props) {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/join"
-              className="inline-flex items-center justify-center rounded-lg bg-emerald-400 px-5 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-emerald-400/30 transition hover:-translate-y-[1px] hover:shadow-emerald-400/40"
+              className="inline-flex items-center justify-center rounded-lg bg-violet-400 px-5 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-violet-500/30 transition hover:-translate-y-[1px] hover:shadow-violet-500/40"
             >
-              I am a massage therapist — Join waitlist
+              I am a massage therapist - Join waitlist
             </Link>
             <a
               href={therapistMailto}
-              className="inline-flex items-center justify-center rounded-lg border border-emerald-300/60 px-5 py-3 text-sm font-semibold text-emerald-100 transition hover:border-emerald-200 hover:text-white hover:bg-emerald-300/10"
+              className="inline-flex items-center justify-center rounded-lg border border-violet-300/60 px-5 py-3 text-sm font-semibold text-violet-100 transition hover:border-violet-200 hover:text-white hover:bg-violet-300/10"
             >
               Email the expansion team
             </a>
             <a
               href={clientMailto}
-              className="inline-flex items-center justify-center rounded-lg border border-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:border-emerald-300/60 hover:text-emerald-100"
+              className="inline-flex items-center justify-center rounded-lg border border-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:border-violet-300/60 hover:text-violet-100"
             >
-              I am a client — Notify me
+              I am a client - Notify me
             </a>
           </div>
 
@@ -102,22 +102,22 @@ export default function CityLandingPage({ city, slug }: Props) {
             </p>
             <ul className="space-y-3 text-slate-200">
               <li className="flex gap-3">
-                <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="mt-1 h-2 w-2 rounded-full bg-violet-400" />
                 In-studio, hotel, and mobile options tailored for {name}{" "}
                 neighborhoods and visitors.
               </li>
               <li className="flex gap-3">
-                <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="mt-1 h-2 w-2 rounded-full bg-violet-400" />
                 Emphasis on respectful, LGBT-affirming experiences for locals
                 and travelers.
               </li>
               <li className="flex gap-3">
-                <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="mt-1 h-2 w-2 rounded-full bg-violet-400" />
                 Clear rates, travel fees, and availability so clients avoid
                 back-and-forth.
               </li>
               <li className="flex gap-3">
-                <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="mt-1 h-2 w-2 rounded-full bg-violet-400" />
                 SEO-rich coverage so people searching &ldquo;gay massage {name}
                 ,&rdquo; &ldquo;male massage {state},&rdquo; and &ldquo;LGBT
                 bodywork {name}&rdquo; can find vetted options fast.
@@ -125,8 +125,8 @@ export default function CityLandingPage({ city, slug }: Props) {
             </ul>
           </div>
 
-          <div className="space-y-5 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-emerald-500/10">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-200">
+          <div className="space-y-5 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-violet-500/10">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-200">
               Ready to list?
             </p>
             <h3 className="text-xl font-semibold text-white">
@@ -146,7 +146,7 @@ export default function CityLandingPage({ city, slug }: Props) {
               </Link>
               <a
                 href={therapistMailto}
-                className="inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-emerald-300/60"
+                className="inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-violet-300/60"
               >
                 Email us your details
               </a>
@@ -154,10 +154,10 @@ export default function CityLandingPage({ city, slug }: Props) {
             <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-slate-300">
               <p className="font-semibold text-white">Fast-track checklist</p>
               <ul className="mt-2 space-y-2">
-                <li>• Service area (incall, outcall, hotel-friendly)</li>
-                <li>• Top techniques and pressure style</li>
-                <li>• Safety/consent practices you follow</li>
-                <li>• Links to site, socials, or license (if applicable)</li>
+                <li>- Service area (incall, outcall, hotel-friendly)</li>
+                <li>- Top techniques and pressure style</li>
+                <li>- Safety/consent practices you follow</li>
+                <li>- Links to site, socials, or license (if applicable)</li>
               </ul>
             </div>
           </div>
@@ -180,13 +180,13 @@ export default function CityLandingPage({ city, slug }: Props) {
               <div className="flex flex-wrap gap-3">
                 <a
                   href={clientMailto}
-                  className="inline-flex items-center justify-center rounded-lg bg-emerald-400 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-lg shadow-emerald-300/30 transition hover:-translate-y-[1px]"
+                  className="inline-flex items-center justify-center rounded-lg bg-violet-400 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-lg shadow-violet-500/30 transition hover:-translate-y-[1px]"
                 >
                   Request coverage in my area
                 </a>
                 <Link
                   href="/therapist"
-                  className="inline-flex items-center justify-center rounded-lg border border-white/15 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-emerald-300/60"
+                  className="inline-flex items-center justify-center rounded-lg border border-white/15 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-violet-300/60"
                 >
                   Browse active cities
                 </Link>
@@ -195,26 +195,26 @@ export default function CityLandingPage({ city, slug }: Props) {
                 <div>
                   <p className="font-semibold text-white">Popular searches</p>
                   <ul className="mt-2 space-y-1 text-slate-300">
-                    <li>• Gay massage in {name}</li>
-                    <li>• Male therapist near {state}</li>
-                    <li>• Hotel massage for business trips</li>
-                    <li>• Mobile deep tissue in {name}</li>
+                    <li>- Gay massage in {name}</li>
+                    <li>- Male therapist near {state}</li>
+                    <li>- Hotel massage for business trips</li>
+                    <li>- Mobile deep tissue in {name}</li>
                   </ul>
                 </div>
                 <div>
                   <p className="font-semibold text-white">What you can expect</p>
                   <ul className="mt-2 space-y-1 text-slate-300">
-                    <li>• Clear communication and boundaries</li>
-                    <li>• Travel fees stated upfront</li>
-                    <li>• LGBTQ-affirming providers</li>
-                    <li>• Secure booking flow when we launch</li>
+                    <li>- Clear communication and boundaries</li>
+                    <li>- Travel fees stated upfront</li>
+                    <li>- LGBTQ-affirming providers</li>
+                    <li>- Secure booking flow when we launch</li>
                   </ul>
                 </div>
               </div>
             </div>
 
             <div className="space-y-4 rounded-3xl border border-white/10 bg-black/30 p-6 text-sm text-slate-200">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-200">
                 Quick FAQ
               </p>
               <div className="space-y-3">
@@ -258,14 +258,14 @@ export default function CityLandingPage({ city, slug }: Props) {
                   </p>
                 </div>
               </div>
-              <div className="rounded-2xl border border-emerald-300/40 bg-emerald-400/10 p-4 text-slate-200">
+              <div className="rounded-2xl border border-violet-300/40 bg-violet-400/10 p-4 text-slate-200">
                 <p className="font-semibold text-white">
                   Want us somewhere else?
                 </p>
                 <p className="mt-1 text-slate-100">
                   Send a quick note to{" "}
                   <a
-                    className="text-emerald-200 underline decoration-emerald-300/70 underline-offset-2"
+                    className="text-violet-200 underline decoration-violet-300/70 underline-offset-2"
                     href={`mailto:${CTA_EMAIL}?subject=${encodeURIComponent(
                       "Suggest a new city for MasseurMatch",
                     )}&body=${encodeURIComponent(
@@ -284,3 +284,7 @@ export default function CityLandingPage({ city, slug }: Props) {
     </div>
   );
 }
+
+
+
+

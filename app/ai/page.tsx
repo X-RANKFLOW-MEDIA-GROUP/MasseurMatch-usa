@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import AiPageClient from "./AiPageClient";
+import "./ai.css";
+import AiClient from "./AiClient";
 
 export const metadata: Metadata = {
-  title: "AÍ | Automate Smarter with AI",
+  title: "AI Automation Partner | MasseurMatch",
   description:
-    "Automate smarter with AÍ. Book a free call to see how tailored AI workflows accelerate growth.",
+    "A new AI landing experience showcasing automation strategy, secure copilots, and scalable workflows built for modern teams.",
 };
 
-export default function AiPage() {
-  return <AiPageClient />;
+export default function AIPage() {
+  return <AiClient />;
 }

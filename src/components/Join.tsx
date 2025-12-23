@@ -343,7 +343,7 @@ function PlanSelection({
         <h2>{TXT.plansHeader}</h2>
         <p className="muted">{TXT.plansSub}</p>
         <p className="small mt-8">{TXT.monthlyNote}</p>
-        <p className="small mt-8" style={{ color: "#f59e0b" }}>
+        <p className="small mt-8" style={{ color: "var(--warn-tx)" }}>
           {TXT.founderNote}
         </p>
       </div>

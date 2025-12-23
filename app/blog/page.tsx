@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+﻿import { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts } from "./data/posts";
 
@@ -74,10 +74,10 @@ export default function BlogPage() {
           {/* Header */}
           <header className="mb-20 text-center">
             <div className="mx-auto max-w-3xl">
-              <p className="mb-4 text-sm font-bold uppercase tracking-widest text-purple-400">
+              <p className="mb-4 text-sm font-bold uppercase tracking-widest text-violet-300">
                 MasseurMatch Blog
               </p>
-              <h1 className="mb-6 text-5xl md:text-6xl font-black leading-tight bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+              <h1 className="mb-6 text-5xl md:text-6xl font-black leading-tight bg-gradient-to-r from-violet-400 via-indigo-400 to-violet-400 bg-clip-text text-transparent">
                 Wellness & Massage Insights
               </h1>
               <p className="text-lg md:text-xl text-slate-300 leading-relaxed">
@@ -92,17 +92,17 @@ export default function BlogPage() {
             <section className="mb-24">
               <Link
                 href={`/blog/${posts[0].slug}`}
-                className="group block overflow-hidden rounded-3xl bg-[#111123] border border-[#2a2a48] hover:border-purple-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20"
+                className="group block overflow-hidden rounded-3xl bg-[#111123] border border-[#2a2a48] hover:border-violet-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-violet-500/20"
               >
                 <div className="grid gap-8 p-8 md:grid-cols-2 md:p-12">
-                  <div className="flex aspect-video items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+                  <div className="flex aspect-video items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/20 to-indigo-500/20">
                     <span className="text-7xl">📖</span>
                   </div>
                   <div className="flex flex-col justify-center">
-                    <span className="mb-3 inline-block w-fit rounded-full bg-purple-500/15 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-purple-400">
+                    <span className="mb-3 inline-block w-fit rounded-full bg-violet-500/15 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-violet-300">
                       Featured Article
                     </span>
-                    <h2 className="mb-4 text-3xl md:text-4xl font-bold leading-tight text-white group-hover:text-purple-400 transition-colors">
+                    <h2 className="mb-4 text-3xl md:text-4xl font-bold leading-tight text-white group-hover:text-violet-300 transition-colors">
                       {posts[0].title}
                     </h2>
                     <p className="mb-6 text-slate-300 leading-relaxed">
@@ -142,9 +142,9 @@ export default function BlogPage() {
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="group flex flex-col overflow-hidden rounded-2xl bg-[#111123] border border-[#2a2a48] hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 hover:-translate-y-1"
+                  className="group flex flex-col overflow-hidden rounded-2xl bg-[#111123] border border-[#2a2a48] hover:border-violet-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-violet-500/10 hover:-translate-y-1"
                 >
-                  <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-purple-500/15 to-pink-500/15">
+                  <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-violet-500/15 to-indigo-500/15">
                     <span className="text-5xl transition-transform group-hover:scale-110">✨</span>
                   </div>
                   <div className="flex flex-1 flex-col p-6">
@@ -152,13 +152,13 @@ export default function BlogPage() {
                       {post.tags.slice(0, 2).map((tag) => (
                         <span
                           key={tag}
-                          className="rounded-full bg-purple-500/15 px-3 py-1 text-xs font-medium text-purple-400"
+                          className="rounded-full bg-violet-500/15 px-3 py-1 text-xs font-medium text-violet-300"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
-                    <h3 className="mb-3 text-xl font-bold leading-snug text-white group-hover:text-purple-400 transition-colors">
+                    <h3 className="mb-3 text-xl font-bold leading-snug text-white group-hover:text-violet-300 transition-colors">
                       {post.title}
                     </h3>
                     <p className="mb-4 flex-1 text-sm leading-relaxed text-slate-300 line-clamp-2">
@@ -181,7 +181,7 @@ export default function BlogPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="relative mt-24 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 p-12 md:p-16 text-center shadow-lg shadow-purple-500/20">
+          <section className="relative mt-24 overflow-hidden rounded-3xl bg-gradient-to-br from-violet-500/20 to-indigo-500/20 border border-violet-500/30 p-12 md:p-16 text-center shadow-lg shadow-violet-500/20">
             <div className="relative z-10">
               <h2 className="mb-6 text-3xl md:text-4xl font-bold leading-tight text-white">
                 Ready to Experience Professional Massage?
@@ -192,7 +192,7 @@ export default function BlogPage() {
               </p>
               <Link
                 href="/explore"
-                className="inline-flex items-center gap-3 rounded-full bg-purple-600 hover:bg-purple-500 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-purple-500/30 transition-all hover:shadow-xl hover:shadow-purple-500/40 hover:scale-105"
+                className="inline-flex items-center gap-3 rounded-full bg-violet-600 hover:bg-violet-500 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/30 transition-all hover:shadow-xl hover:shadow-violet-500/40 hover:scale-105"
               >
                 Find a Therapist
                 <svg
@@ -216,3 +216,4 @@ export default function BlogPage() {
     </>
   );
 }
+

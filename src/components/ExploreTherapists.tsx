@@ -284,22 +284,22 @@ function TherapistCard({ t }: { t: Therapist }) {
 
         <div className={styles["card__status"]}>
           {t.isAvailable && (
-            <span className={styles["status-badge"]} style={{ background: "#22c55e", color: "white" }}>
+            <span className={styles["status-badge"]} style={{ background: "#8b5cf6", color: "#f9fafb" }}>
               Available now
             </span>
           )}
           {t.offersTravelService && (
-            <span className={styles["status-badge"]} style={{ background: "#3b82f6", color: "white" }}>
+            <span className={styles["status-badge"]} style={{ background: "#6366f1", color: "#f9fafb" }}>
               Travels
             </span>
           )}
           {t.outcall && (
-            <span className={styles["status-badge"]} style={{ background: "#ea580c", color: "white" }}>
+            <span className={styles["status-badge"]} style={{ background: "#7c3aed", color: "#f9fafb" }}>
               Outcall
             </span>
           )}
           {t.incall && (
-            <span className={styles["status-badge"]} style={{ background: "#6366f1", color: "white" }}>
+            <span className={styles["status-badge"]} style={{ background: "#a78bfa", color: "#0f172a" }}>
               Incall
             </span>
           )}
