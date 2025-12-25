@@ -44,3 +44,4 @@ async function createServerSupabaseClient() {
 
 export { createServerSupabaseClient };
 export { createServerSupabaseClient as supabaseServer };
+export { createServerSupabaseClient as createClient };
