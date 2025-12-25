@@ -35,7 +35,22 @@
       "Bash(node:*)",
       "Bash(npm install:*)",
       "Bash(npm run test:run:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(grep:*)",
+      "Bash(npm run lint:*)",
+      "Bash(next.config \")",
+      "Bash(^\\\\\\()",
+      "Bash(^_ \")",
+      "Bash(python:*)",
+      "Bash(while read file)",
+      "Bash(do npm run lint -- \"$file\")",
+      "Bash(done)",
+      "Bash(netstat:*)",
+      "Bash(powershell -Command \"Stop-Process -Id 51000 -Force\")",
+      "Bash(powershell -Command \"Get-Process | Where-Object {$_ProcessName -eq ''node''} | Stop-Process -Force\")",
+      "Bash(npm run lint)",
+      "Bash(do echo \"$file\")"
     ],
     "deny": [],
     "ask": []
