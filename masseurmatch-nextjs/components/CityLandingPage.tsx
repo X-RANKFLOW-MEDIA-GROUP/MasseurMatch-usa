@@ -1,15 +1,10 @@
 ﻿import Link from "next/link";
-
-type CityInfo = {
-  name: string;
-  state: string;
-  population: string;
-  region: string;
-};
+import { CityInfo } from "@/data/cityMap";
 
 type Props = {
   city: CityInfo;
   slug: string;
+  segment?: string;
 };
 
 const CTA_EMAIL = "support@masseurmatch.com";

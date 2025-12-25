@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export const metadata = {
@@ -57,10 +58,10 @@ export default async function BillingPage() {
                 <h3>Free</h3>
                 <p className="price">$0/month</p>
                 <ul>
-                  <li>✓ Basic profile listing</li>
-                  <li>✓ Contact information</li>
-                  <li>✗ Featured placement</li>
-                  <li>✗ Photo gallery</li>
+                  <li>Basic profile listing</li>
+                  <li>Contact information</li>
+                  <li>Featured placement</li>
+                  <li>Photo gallery</li>
                 </ul>
                 <button className="btn-secondary">Current Plan</button>
               </div>
@@ -69,11 +70,11 @@ export default async function BillingPage() {
                 <h3>Premium</h3>
                 <p className="price">$49.99/month</p>
                 <ul>
-                  <li>✓ Everything in Free</li>
-                  <li>✓ Featured placement</li>
-                  <li>✓ Unlimited photos</li>
-                  <li>✓ Priority support</li>
-                  <li>✓ Advanced analytics</li>
+                  <li>Everything in Free</li>
+                  <li>Featured placement</li>
+                  <li>Unlimited photos</li>
+                  <li>Priority support</li>
+                  <li>Advanced analytics</li>
                 </ul>
                 <button className="btn-primary">Upgrade to Premium</button>
               </div>
@@ -82,10 +83,10 @@ export default async function BillingPage() {
                 <h3>Professional</h3>
                 <p className="price">$99.99/month</p>
                 <ul>
-                  <li>✓ Everything in Premium</li>
-                  <li>✓ Top placement</li>
-                  <li>✓ Custom branding</li>
-                  <li>✓ Dedicated account manager</li>
+                  <li>Everything in Premium</li>
+                  <li>Top placement</li>
+                  <li>Custom branding</li>
+                  <li>Dedicated account manager</li>
                 </ul>
                 <button className="btn-primary">Upgrade to Professional</button>
               </div>
@@ -101,9 +102,9 @@ export default async function BillingPage() {
       ) : (
         <div className="no-profile">
           <p>Create a therapist profile to manage your subscription.</p>
-          <a href="/dashboard/ads/new" className="btn-primary">
+          <Link href="/dashboard/ads/new" className="btn-primary">
             Create Profile
-          </a>
+          </Link>
         </div>
       )}
     </div>

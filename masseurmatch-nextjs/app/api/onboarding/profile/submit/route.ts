@@ -7,7 +7,7 @@ import { canSubmitForReview } from '@/lib/onboarding/stateMachine';
  *
  * Submit profile for admin review
  */
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const supabase = await createClient();
 

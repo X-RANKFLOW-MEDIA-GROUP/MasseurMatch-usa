@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Sparkles, Send, Search, ArrowRight, CheckCircle2, ChevronDown, MapPin, Shield, Lock, UserCheck } from 'lucide-react';
+import { Sparkles, Send, Search, ArrowRight, MapPin, Shield, Lock, UserCheck } from 'lucide-react';
 import { ScrollIndicator } from './ScrollIndicator';
 import ExploreModal from '@/components/ExploreModal';
 

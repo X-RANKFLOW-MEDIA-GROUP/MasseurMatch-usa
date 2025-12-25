@@ -196,7 +196,6 @@ export default function SwipeMode({
     );
   }
 
-  const currentTherapist = orderedTherapists[currentIndex];
 
   return (
     <div className={styles.swipeMode}>

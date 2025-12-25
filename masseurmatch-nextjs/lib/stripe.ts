@@ -15,7 +15,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-12-15.clover',
   typescript: true,
 });
 
@@ -28,6 +28,49 @@ export const STRIPE_PRICE_IDS = {
   pro: process.env.STRIPE_PRICE_PRO || '',
   elite: process.env.STRIPE_PRICE_ELITE || '',
 };
+
+export type SubscriptionPlan = keyof typeof STRIPE_PRICE_IDS;
+
+const DEFAULT_TRIAL_DAYS = 7;
+
+export interface CreateCheckoutSessionParams {
+  customerId: string;
+  plan: SubscriptionPlan;
+  successUrl: string;
+  cancelUrl: string;
+  trialDays?: number;
+  metadata?: Record<string, string>;
+}
+
+export async function createCheckoutSession(params: CreateCheckoutSessionParams) {
+  const priceId = STRIPE_PRICE_IDS[params.plan];
+
+  if (!priceId) {
+    throw new Error(`Price ID is not configured for the ${params.plan} plan`);
+  }
+
+  return stripe.checkout.sessions.create({
+    mode: 'subscription',
+    customer: params.customerId,
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price: priceId,
+        quantity: 1,
+      },
+    ],
+    success_url: params.successUrl,
+    cancel_url: params.cancelUrl,
+    subscription_data: {
+      trial_period_days: params.trialDays ?? DEFAULT_TRIAL_DAYS,
+      metadata: {
+        plan: params.plan,
+        ...(params.metadata ?? {}),
+      },
+    },
+    metadata: params.metadata,
+  });
+}
 
 /**
  * Create a Stripe customer for a user

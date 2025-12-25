@@ -2,7 +2,6 @@
 
 import React, { useEffect } from 'react';
 import { Background } from './components/Background';
-import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Features } from './components/Features';
 import { Marquee } from './components/Marquee';
@@ -27,10 +26,7 @@ function App() {
 
   return (
     <>
-      <div
-        id="top"
-        className="min-h-screen bg-black font-sans text-white selection:bg-violet-500/30 selection:text-white relative"
-      >
+      <div className="min-h-screen bg-black font-sans text-white selection:bg-violet-500/30 selection:text-white relative">
         {/* Global Noise Overlay */}
         <div className="fixed inset-0 z-[9999] pointer-events-none opacity-[0.03] mix-blend-overlay">
           <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -47,7 +43,6 @@ function App() {
         </div>
 
         <Background />
-        <Navbar />
         <div className="relative z-0">
           <Hero />
           <Marquee />

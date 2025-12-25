@@ -1,31 +1,24 @@
 ﻿"use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring, PanInfo } from 'framer-motion';
+import { motion, useScroll, useTransform, PanInfo } from 'framer-motion';
 import { 
   Search, 
-  User, 
-  Phone,
-  FileText,
+  User, 
   Eye,
-  Mail,
-  CheckCircle,
+  Mail,
   ChevronLeft,
   ChevronRight,
-  TrendingUp,
-  Users,
-  Star,
-  MapPin,
+  TrendingUp,
+  Star,
   Award,
   ArrowUpRight,
   MessageSquare,
   CheckCircle2,
   Sparkles,
-  Lock,
-  Zap,
+  Lock,
   Shield
 } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
 
 // Video Mockup Component (For Knotty Chat)
 const KnottyVideoMockup = () => {
@@ -630,11 +623,11 @@ export const HowItWorks: React.FC = () => {
     offset: ["start end", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  // const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.95, 1, 1, 0.95]);
 
-  const smoothY = useSpring(y, { stiffness: 100, damping: 30 });
+  // const smoothY = useSpring(y, { stiffness: 100, damping: 30 });
 
   const handleDragEnd = (event: any, info: PanInfo) => {
     const threshold = 100;
@@ -847,7 +840,7 @@ export const HowItWorks: React.FC = () => {
               }}
               className="flex"
             >
-              {slides.map((slideData, index) => (
+              {slides.map((slideData) => (
                 <div key={slideData.id} className="min-w-full px-4">
                   {/* Card */}
                   <motion.div

@@ -7,15 +7,11 @@ import { supabase } from "../lib/supabase";
 import styles from "./Header.module.css";
 
 export default function Header() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const drawerRef = useRef<HTMLElement | null>(null);
-  const pathname = usePathname();
-  if (pathname === "/") {
-    return null;
-  }
-
   // carrega se é admin
   useEffect(() => {
     let mounted = true;
@@ -82,6 +78,11 @@ export default function Header() {
     );
     focusable?.focus();
   }, [open]);
+
+  // Early return after all hooks
+  if (pathname === "/") {
+    return null;
+  }
 
   const toggleMenu = () => setOpen((v) => !v);
 

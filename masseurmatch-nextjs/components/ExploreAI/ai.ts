@@ -261,8 +261,6 @@ export function buildBaseCard(row: TherapistRow, preferences: Preferences): Omit
     gender: "any",
     specialties,
     services,
-    aiExplanation: "",
-    matchScore: 0,
     latitude: lat,
     longitude: lng,
   };

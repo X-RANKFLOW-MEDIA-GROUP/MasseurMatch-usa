@@ -1,18 +1,21 @@
 "use client";
-import { useMemo, useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
+import { useMemo, useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { fetchTherapistsAPI } from "@/lib/api-helpers";
 import styles from "./ExploreTherapists.module.css";
+import { StarRow } from "./StarRow";
+import type { Map as LeafletMapType } from "leaflet";
 
-/* ====== Leaflet / React-Leaflet ====== */
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+const LeafletMap = dynamic(
+  () => import("./ExploreTherapistsMap").then((mod) => mod.ExploreTherapistsMap),
+  { ssr: false }
+);
 
 type BadgeType = "verified" | "elite" | "pro";
 
-type Therapist = {
+export type Therapist = {
   id: string;
   slug?: string;
   name: string;
@@ -56,35 +59,6 @@ function haversineMiles(a: LatLng, b: LatLng): number {
 }
 
 /* ----------------------------------------------------------
-   Estrelas
------------------------------------------------------------ */
-function StarRow({ value }: { value: number }) {
-  const full = Math.floor(value);
-  const half = value - full >= 0.5 ? 1 : 0;
-  const empty = 5 - full - half;
-  return (
-    <div className={styles.stars}>
-      {Array.from({ length: full }).map((_, i) => (
-        <span key={`f${i}`} className={`${styles.star} ${styles["star--full"]}`}>
-          {"★"}
-        </span>
-      ))}
-      {Array.from({ length: half }).map((_, i) => (
-        <span key={`h${i}`} className={`${styles.star} ${styles["star--half"]}`}>
-          {"✧"}
-        </span>
-      ))}
-      {Array.from({ length: empty }).map((_, i) => (
-        <span key={`e${i}`} className={`${styles.star} ${styles["star--empty"]}`}>
-          {"☆"}
-        </span>
-      ))}
-      <span className={styles["stars__value"]}>{value.toFixed(1)}</span>
-    </div>
-  );
-}
-
-/* ----------------------------------------------------------
    Badge
 ----------------------------------------------------------- */
 function Badge({ kind }: { kind: BadgeType }) {
@@ -113,7 +87,7 @@ function TherapistCard({ t }: { t: Therapist }) {
           ))}
           {t.isHighestRated && (
             <span className={`${styles.badge} ${styles["badge--elite"]}`} title="Highest Rated">
-              ★ Top Rated
+              ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ Top Rated
             </span>
           )}
           {t.hasHighestReview && (
@@ -208,28 +182,10 @@ function TherapistCard({ t }: { t: Therapist }) {
   );
 }
 
-function createPhotoIcon(url: string) {
-  return L.divIcon({
-    html: `<div style="
-        width: 46px;
-        height: 46px;
-        border-radius: 8px;
-        overflow: hidden;
-        border: 2px solid white;
-        box-shadow: 0 0 8px rgba(0,0,0,0.45);
-      ">
-        <img src="${url}" style="width: 100%; height: 100%; object-fit: cover;" />
-      </div>`,
-    className: "",
-    iconSize: [46, 46],
-    iconAnchor: [23, 23],
-  });
-}
-
 /* ----------------------------------------------------------
    PAGINA PRINCIPAL
 ----------------------------------------------------------- */
-export default function ExploreTherapists() {
+function ExploreTherapistsContent() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -247,7 +203,7 @@ export default function ExploreTherapists() {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [radius, setRadius] = useState(25);
   const [selectedTherapist, setSelectedTherapist] = useState<Therapist | null>(null);
-  const mapRef = useRef<L.Map | null>(null);
+  const mapRef = useRef<LeafletMapType | null>(null);
   const [filterAvailable, setFilterAvailable] = useState(false);
   const [filterIncall, setFilterIncall] = useState(false);
   const [filterOutcall, setFilterOutcall] = useState(false);
@@ -261,16 +217,6 @@ export default function ExploreTherapists() {
   );
 
   const allowedSorts = new Set(["distance", "availability", "featured", "price", "rating"]);
-
-  /* Fix Leaflet default icon issue in Next.js */
-  useEffect(() => {
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-      iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-      shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    });
-  }, []);
 
   /* Sync filters & sort from URL */
   useEffect(() => {
@@ -887,7 +833,7 @@ export default function ExploreTherapists() {
                           <div className={styles.miniCardPrice}>
                             ${t.startingPriceUSD}
                             {typeof t.distanceMiles === "number" && (
-                              <span className={styles.miniCardDistance}> • {t.distanceMiles.toFixed(1)} mi</span>
+                              <span className={styles.miniCardDistance}> ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ {t.distanceMiles.toFixed(1)} mi</span>
                             )}
                           </div>
                         </div>
@@ -895,60 +841,13 @@ export default function ExploreTherapists() {
                     ))}
                   </div>
                   <div className={styles.mapFrame}>
-                    <MapContainer
-                      center={mapCenter}
-                      zoom={mapZoom}
-                      style={{ width: "100%", height: "100%" }}
-                      ref={mapRef}
-                    >
-                      <TileLayer
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      />
-                      {mapTherapists
-                        .filter((t) => typeof t.lat === "number" && typeof t.lng === "number")
-                        .map((t) => (
-                          <Marker
-                            key={t.id}
-                            position={[t.lat!, t.lng!]}
-                            icon={createPhotoIcon(t.photoUrl)}
-                            eventHandlers={{
-                              click: () => {
-                                setSelectedTherapist(t);
-                              },
-                            }}
-                          >
-                            <Popup>
-                              <div className={styles.mapPopup}>
-                                <img src={t.photoUrl} alt={t.name} className={styles.popupPhoto} />
-                                <div className={styles.popupContent}>
-                                  <h3 className={styles.popupName}>{t.name}</h3>
-                                  <div className={styles.popupLocation}>
-                                    {t.city}, {t.state}
-                                  </div>
-                                  <StarRow value={t.rating} />
-                                  <div className={styles.popupPrice}>
-                                    Starting at ${t.startingPriceUSD}
-                                  </div>
-                                  {typeof t.distanceMiles === "number" && (
-                                    <div className={styles.popupDistance}>
-                                      ~{t.distanceMiles.toFixed(1)} miles away
-                                    </div>
-                                  )}
-                                  <div className={styles.popupTags}>
-                                    {t.tags.slice(0, 3).map((tag) => (
-                                      <span key={tag} className={styles.popupTag}>{tag}</span>
-                                    ))}
-                                  </div>
-                                  <Link href={`/therapist/${t.id}`} className={styles.popupButton}>
-                                    View Profile
-                                  </Link>
-                                </div>
-                              </div>
-                            </Popup>
-                          </Marker>
-                        ))}
-                    </MapContainer>
+                    <LeafletMap
+                      mapTherapists={mapTherapists}
+                      mapCenter={mapCenter}
+                      mapZoom={mapZoom}
+                      mapRef={mapRef}
+                      setSelectedTherapist={setSelectedTherapist}
+                    />
                   </div>
                 </div>
               ) : (
@@ -975,5 +874,17 @@ export default function ExploreTherapists() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function ExploreTherapists() {
+  return (
+    <Suspense fallback={
+      <div className={styles.exploreContainer}>
+        <div className={styles.loading}>Loading...</div>
+      </div>
+    }>
+      <ExploreTherapistsContent />
+    </Suspense>
   );
 }

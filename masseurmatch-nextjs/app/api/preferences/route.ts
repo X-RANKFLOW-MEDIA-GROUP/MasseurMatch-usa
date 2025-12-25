@@ -48,7 +48,7 @@ function rowToPreferences(row: any): Preferences {
   return prefs;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const supabase = await createServerSupabaseClient();
   const { data: sessionData } = await supabase.auth.getSession();
   const userId = sessionData.session?.user?.id;

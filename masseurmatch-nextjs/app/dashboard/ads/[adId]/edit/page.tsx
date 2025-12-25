@@ -41,7 +41,7 @@ export default async function EditAdPage({
   }
 
   // Get therapist profile with all fields
-  const { data: therapist, error } = await supabase
+  const { data: therapist } = await supabase
     .from('therapists')
     .select('*')
     .eq('user_id', adId)

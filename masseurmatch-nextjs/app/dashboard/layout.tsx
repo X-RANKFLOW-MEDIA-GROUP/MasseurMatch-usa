@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+﻿import { redirect } from 'next/navigation';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
@@ -53,35 +53,20 @@ export default async function DashboardLayout({
         {/* Sidebar Navigation */}
         <aside className="dashboard-sidebar">
           <nav className="dashboard-nav">
-            <Link
-              href="/dashboard/ads"
-              className="nav-item"
-            >
-              📝 My Ads
+            <Link href="/dashboard/ads" className="nav-item">
+              My Ads
             </Link>
-            <Link
-              href="/dashboard/billing"
-              className="nav-item"
-            >
-              💳 Billing
+            <Link href="/dashboard/billing" className="nav-item">
+              Billing
             </Link>
-            <Link
-              href="/dashboard/settings"
-              className="nav-item"
-            >
-              ⚙️ Settings
+            <Link href="/dashboard/settings" className="nav-item">
+              Settings
             </Link>
-            <Link
-              href="/dashboard/favorites"
-              className="nav-item"
-            >
-              ⭐ Favorites
+            <Link href="/dashboard/favorites" className="nav-item">
+              Favorites
             </Link>
-            <Link
-              href="/dashboard/support"
-              className="nav-item"
-            >
-              💬 Support
+            <Link href="/dashboard/support" className="nav-item">
+              Support
             </Link>
           </nav>
         </aside>
@@ -94,3 +79,8 @@ export default async function DashboardLayout({
     </div>
   );
 }
+
+
+
+
+

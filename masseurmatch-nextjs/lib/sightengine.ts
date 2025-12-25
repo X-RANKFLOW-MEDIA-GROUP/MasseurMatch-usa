@@ -1,179 +1,99 @@
-/**
- * Sightengine Image and Text Moderation
- *
- * This module provides content moderation using the Sightengine API.
- * It checks images and text for inappropriate content before allowing them to be published.
- */
+const sightengine = require("sightengine");
 
-const sightengine = require('sightengine');
+const apiUser = process.env.SIGHTENGINE_API_USER;
+const apiSecret = process.env.SIGHTENGINE_API_SECRET;
 
-const client = new sightengine.SightengineClient(
-  process.env.SIGHTENGINE_API_USER || '',
-  process.env.SIGHTENGINE_API_SECRET || ''
-);
+if (!apiUser || !apiSecret) {
+  console.warn(
+    "Sightengine credentials are missing (SIGHTENGINE_API_USER / SIGHTENGINE_API_SECRET). Moderation will fallback to manual review."
+  );
+}
 
-export interface ImageModerationResult {
-  status: 'auto_passed' | 'auto_flagged' | 'auto_blocked';
-  nudity_score?: number;
-  weapon_score?: number;
-  drug_score?: number;
-  gore_score?: number;
-  offensive_score?: number;
+const client =
+  apiUser && apiSecret
+    ? new sightengine.SightengineClient(apiUser, apiSecret)
+    : null;
+
+export interface PhotoModerationResult {
+  status: "auto_passed" | "auto_flagged" | "auto_blocked";
+  score: number;
+  flags: {
+    nudity?: number;
+    weapon?: number;
+    drug?: number;
+    gore?: number;
+    offensive?: number;
+  };
   reason?: string;
 }
 
-export interface TextModerationResult {
-  status: 'auto_passed' | 'auto_flagged' | 'auto_blocked';
-  profanity_score?: number;
-  personal_info_score?: number;
-  link_score?: number;
-  reason?: string;
-}
+const FLAG_THRESHOLDS = {
+  pass: 0.8,
+  flag: 0.6,
+};
 
-/**
- * Moderate an image URL using Sightengine
- */
-export async function moderateImage(imageUrl: string): Promise<ImageModerationResult> {
-  try {
-    const result = await client.check(['nudity', 'wad', 'offensive']).set_url(imageUrl);
+const extractScore = (value: number | undefined): number =>
+  Number.isFinite(value) && value !== undefined ? Math.min(1, Math.max(0, value)) : 0;
 
-    // Extract scores
-    const nudityScore = result.nudity?.raw || 0;
-    const weaponScore = result.weapon || 0;
-    const drugScore = result.alcohol || 0;
-    const goreScore = result.gore?.prob || 0;
-    const offensiveScore = result.offensive?.prob || 0;
-
-    // Thresholds
-    const AUTO_BLOCK_THRESHOLD = 0.85;
-    const AUTO_FLAG_THRESHOLD = 0.50;
-
-    // Check for auto-block conditions
-    if (
-      nudityScore > AUTO_BLOCK_THRESHOLD ||
-      weaponScore > AUTO_BLOCK_THRESHOLD ||
-      drugScore > AUTO_BLOCK_THRESHOLD ||
-      goreScore > AUTO_BLOCK_THRESHOLD ||
-      offensiveScore > AUTO_BLOCK_THRESHOLD
-    ) {
-      return {
-        status: 'auto_blocked',
-        nudity_score: nudityScore,
-        weapon_score: weaponScore,
-        drug_score: drugScore,
-        gore_score: goreScore,
-        offensive_score: offensiveScore,
-        reason: 'Image contains prohibited content (high confidence)',
-      };
-    }
-
-    // Check for auto-flag conditions
-    if (
-      nudityScore > AUTO_FLAG_THRESHOLD ||
-      weaponScore > AUTO_FLAG_THRESHOLD ||
-      drugScore > AUTO_FLAG_THRESHOLD ||
-      goreScore > AUTO_FLAG_THRESHOLD ||
-      offensiveScore > AUTO_FLAG_THRESHOLD
-    ) {
-      return {
-        status: 'auto_flagged',
-        nudity_score: nudityScore,
-        weapon_score: weaponScore,
-        drug_score: drugScore,
-        gore_score: goreScore,
-        offensive_score: offensiveScore,
-        reason: 'Image may contain inappropriate content (requires review)',
-      };
-    }
-
-    // Auto-pass
+export async function moderatePhoto(imageUrl: string): Promise<PhotoModerationResult> {
+  if (!client) {
     return {
-      status: 'auto_passed',
-      nudity_score: nudityScore,
-      weapon_score: weaponScore,
-      drug_score: drugScore,
-      gore_score: goreScore,
-      offensive_score: offensiveScore,
-    };
-  } catch (error) {
-    console.error('Sightengine image moderation error:', error);
-    // On error, flag for manual review
-    return {
-      status: 'auto_flagged',
-      reason: 'Moderation service error - requires manual review',
+      status: "auto_flagged",
+      score: 0.5,
+      flags: {},
+      reason: "Moderation client not configured (missing API credentials)",
     };
   }
-}
 
-/**
- * Moderate text content using Sightengine
- */
-export async function moderateText(text: string): Promise<TextModerationResult> {
   try {
-    const result = await client.check(['profanity', 'personal', 'link']).set_text(text);
+    const result = await client
+      .check(["nudity", "wad", "offensive", "gore"])
+      .set_url(imageUrl);
 
-    // Extract scores
-    const profanityScore = result.profanity?.matches?.length > 0 ? 1.0 : 0.0;
-    const personalInfoScore = result.personal?.matches?.length > 0 ? 1.0 : 0.0;
-    const linkScore = result.link?.matches?.length > 0 ? 1.0 : 0.0;
+    const nudityScore = extractScore(result?.nudity?.raw);
+    const weaponScore = extractScore(result?.weapon);
+    const drugScore = extractScore(result?.alcohol);
+    const goreScore = extractScore(result?.gore?.prob);
+    const offensiveScore = extractScore(result?.offensive?.prob);
 
-    // Thresholds
-    const AUTO_BLOCK_THRESHOLD = 0.85;
-    const AUTO_FLAG_THRESHOLD = 0.50;
+    const riskScore = Math.max(nudityScore, weaponScore, drugScore, goreScore, offensiveScore);
+    const cleanScore = Number((1 - riskScore).toFixed(3));
 
-    // Check for auto-block conditions
-    if (profanityScore > AUTO_BLOCK_THRESHOLD) {
-      return {
-        status: 'auto_blocked',
-        profanity_score: profanityScore,
-        personal_info_score: personalInfoScore,
-        link_score: linkScore,
-        reason: 'Text contains severe profanity',
-      };
+    let status: PhotoModerationResult["status"];
+    if (cleanScore > FLAG_THRESHOLDS.pass) {
+      status = "auto_passed";
+    } else if (cleanScore >= FLAG_THRESHOLDS.flag) {
+      status = "auto_flagged";
+    } else {
+      status = "auto_blocked";
     }
 
-    // Check for auto-flag conditions
-    if (
-      profanityScore > AUTO_FLAG_THRESHOLD ||
-      personalInfoScore > AUTO_FLAG_THRESHOLD ||
-      linkScore > AUTO_FLAG_THRESHOLD
-    ) {
-      return {
-        status: 'auto_flagged',
-        profanity_score: profanityScore,
-        personal_info_score: personalInfoScore,
-        link_score: linkScore,
-        reason: 'Text may contain inappropriate content (requires review)',
-      };
-    }
+    const reason =
+      status === "auto_blocked"
+        ? "Image scored below the acceptable threshold"
+        : status === "auto_flagged"
+        ? "Image needs manual review"
+        : undefined;
 
-    // Auto-pass
     return {
-      status: 'auto_passed',
-      profanity_score: profanityScore,
-      personal_info_score: personalInfoScore,
-      link_score: linkScore,
+      status,
+      score: cleanScore,
+      flags: {
+        nudity: nudityScore,
+        weapon: weaponScore,
+        drug: drugScore,
+        gore: goreScore,
+        offensive: offensiveScore,
+      },
+      reason,
     };
   } catch (error) {
-    console.error('Sightengine text moderation error:', error);
-    // On error, flag for manual review
+    console.error("Sightengine moderation failure:", error);
     return {
-      status: 'auto_flagged',
-      reason: 'Moderation service error - requires manual review',
+      status: "auto_flagged",
+      score: 0.5,
+      flags: {},
+      reason: "Moderation service error - requires manual review",
     };
   }
-}
-
-/**
- * Moderate profile bio (text moderation)
- */
-export async function moderateBio(bio: string): Promise<TextModerationResult> {
-  return moderateText(bio);
-}
-
-/**
- * Moderate display name (text moderation)
- */
-export async function moderateDisplayName(displayName: string): Promise<TextModerationResult> {
-  return moderateText(displayName);
 }

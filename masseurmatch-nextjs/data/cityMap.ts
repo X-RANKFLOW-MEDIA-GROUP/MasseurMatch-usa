@@ -4,6 +4,8 @@ export type CityInfo = {
   state?: string;
   country?: string;
   neighbors?: string[];
+  population?: string;
+  region?: string;
 };
 
 export const cityMap: Record<string, CityInfo> = {

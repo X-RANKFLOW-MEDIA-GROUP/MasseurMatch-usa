@@ -1,5 +1,8 @@
-import AdminEditsPanel from '../../../pages/AdminDashboard';
+import AdminEditsPanel from '@/pages/AdminDashboard';
+import { ensureAdminAccess } from '../utils';
 
-export default function AdminEditsPage() {
+export default async function AdminEditsPage() {
+  await ensureAdminAccess();
+
   return <AdminEditsPanel />;
 }

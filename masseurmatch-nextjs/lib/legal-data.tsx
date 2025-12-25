@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import { 
-  Shield, FileText, Cookie, Scale, Lock, MessageSquare, CreditCard, 
+  Shield, FileText, Cookie, MessageSquare, CreditCard, 
   FileSignature, AlertTriangle, Globe, Activity, Copyright, Ban, 
   ListChecks, AlertCircle, ShieldOff, Users, Megaphone, Accessibility, 
   Camera, LayoutTemplate, HelpCircle, Briefcase, Gavel

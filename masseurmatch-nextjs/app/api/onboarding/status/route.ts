@@ -12,7 +12,7 @@ import {
  *
  * Returns current onboarding status, requirements, and next steps
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createClient();
 
@@ -151,24 +151,19 @@ export async function GET(request: NextRequest) {
       counts
     );
 
-    // Get progress
-    const progress = getOnboardingProgress(
-      stage,
-      user as any,
-      subscription as any
-    );
-
-    // Get stage message
+    const progressDetails = getOnboardingProgress(stage, user as any, subscription as any);
     const message = getStageMessage(stage);
 
     return NextResponse.json({
       success: true,
       data: {
         stage,
-        message,
+        progress: progressDetails.percentComplete,
+        progress_details: progressDetails,
+        next_action: message,
+        stage_message: message,
+        blockers: validation.missing,
         canSubmit: validation.valid,
-        missing: validation.missing,
-        progress,
         counts,
         profile: {
           id: profile.id,

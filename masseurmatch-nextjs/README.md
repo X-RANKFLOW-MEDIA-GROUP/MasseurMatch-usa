@@ -34,3 +34,10 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Backend APIs
+
+- The onboarding schema lives in `sql/onboarding_schema_supabase.sql` (and `supabase/migrations`). Run it in your Supabase project to get the new enums, tables, triggers, policies, and indexes.
+- New strict API routes live under `app/api/` for onboarding (`/status`, `/profile`, `/photos`, `/rates`, `/hours`), subscription checkout/webhooks, identity sessions/webhooks, and explore actions.
+- Shared helpers are in `lib/` (Supabase bootstrap, Stripe helpers, Sightengine moderation, auto-approval logic), and TypeScript contracts in `types/` keep stage/status enums in sync.
+- Update `.env.local` with the values outlined in `.env.example` (Supabase creds, Stripe keys/price IDs/webhook secrets, Sightengine credentials, `NEXT_PUBLIC_SITE_URL`, etc.) before running locally.

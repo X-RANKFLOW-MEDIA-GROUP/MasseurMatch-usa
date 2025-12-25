@@ -112,6 +112,13 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const status = mapStripeStatus(subscription.status);
 
   // Update or create subscription record
+  // @ts-ignore - Stripe types are incomplete for these properties
+  const currentPeriodStart = subscription.current_period_start;
+  // @ts-ignore - Stripe types are incomplete for these properties
+  const currentPeriodEnd = subscription.current_period_end;
+  // @ts-ignore - Stripe types are incomplete for these properties
+  const cancelAtPeriodEnd = subscription.cancel_at_period_end;
+
   const { error } = await supabase
     .from('subscriptions')
     .upsert({
@@ -123,9 +130,9 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
       trial_end: subscription.trial_end
         ? new Date(subscription.trial_end * 1000).toISOString()
         : null,
-      current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-      current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-      cancel_at_period_end: subscription.cancel_at_period_end,
+      current_period_start: new Date((currentPeriodStart as number) * 1000).toISOString(),
+      current_period_end: new Date((currentPeriodEnd as number) * 1000).toISOString(),
+      cancel_at_period_end: cancelAtPeriodEnd,
     }, {
       onConflict: 'stripe_subscription_id',
     });
@@ -198,14 +205,16 @@ async function handleIdentityRequiresInput(session: Stripe.Identity.Verification
  * Handle payment failure
  */
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
-  if (!invoice.subscription) {
+  // @ts-ignore - Stripe types are incomplete for subscription property
+  const subscriptionId = invoice.subscription;
+  if (!subscriptionId) {
     return;
   }
 
   const { error } = await supabase
     .from('subscriptions')
     .update({ status: 'past_due' })
-    .eq('stripe_subscription_id', invoice.subscription as string);
+    .eq('stripe_subscription_id', subscriptionId as string);
 
   if (error) {
     console.error('Failed to update subscription status to past_due:', error);

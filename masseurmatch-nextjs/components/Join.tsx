@@ -1,36 +1,14 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
-import { Check, AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Check, Loader2, Minus, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
-import "./Join.css";
-
-// Social Login helpers
-const handleSocialLogin = async (provider: 'google' | 'apple') => {
-  try {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/join`,
-        queryParams: provider === 'google' ? {
-          access_type: 'offline',
-          prompt: 'consent',
-        } : undefined,
-      },
-    });
-
-    if (error) throw error;
-  } catch (err: any) {
-    console.error(`${provider} login error:`, err);
-    throw err;
-  }
-};
+import { Background } from "./newhome/components/Background";
 
 type PlanKey = "free" | "standard" | "pro" | "elite";
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
-/* ===== Idiomas principais ===== */
 const LANGUAGE_OPTIONS = [
   "English",
   "Spanish",
@@ -41,15 +19,14 @@ const LANGUAGE_OPTIONS = [
   "Japanese",
 ] as const;
 
-/* ===== Copy (English only) ===== */
 const TXT = {
-  heroBadge: "Limited Founder Membership Available",
+  heroBadge: "Limited founder membership available",
   heroTitleLine1: "Where trust meets opportunity",
   heroTitleLine2:
     "Join the premier directory platform connecting massage therapists and wellness professionals with clients. Build your profile, boost your visibility, and grow your practice.",
-  heroStats: ["1,000+ Professionals", "4.9/5 Rating", "Growing Fast"],
+  heroStats: ["1,000+ professionals", "4.9/5 average rating", "Growing fast"],
 
-  whyTitle: "Why Professionals Choose Our Platform",
+  whyTitle: "Why professionals choose our platform",
   whySubtitle:
     "Everything you need to build your online presence and attract more clients",
   whyBullets: [
@@ -62,8 +39,8 @@ const TXT = {
       desc: "Build trust with verification badges and professional credentials",
     },
     {
-      title: "Analytics Dashboard",
-      desc: "Track your profile views, engagement, and optimize your presence",
+      title: "Analytics Insights",
+      desc: "Track clicks, profile views, and client feedback to optimize your presence",
     },
     {
       title: "Real-Time Updates",
@@ -71,67 +48,67 @@ const TXT = {
     },
   ],
 
-  plansHeader: "More Visibility. More Trust. More Clients.",
+  plansHeader: "More visibility. More trust. More clients.",
   plansSub:
-    "Plans built for massage therapists and wellness professionals — whether you're just starting or already at the top.",
-  monthlyNote: "Monthly plans only • cancel anytime",
-  founderNote: "First 100 members get Founder badge + 50% lifetime discount.",
+    "Plans built for massage therapists and wellness professionals — whether you're just starting or already established",
+  monthlyNote: "Monthly plans only — cancel anytime",
+  founderNote: "First 100 members earn a Founder badge plus 50% lifetime discount",
   plans: {
     free: {
       name: "Free",
       price: 0,
-      tag: "Start My Profile",
-      pitch: "Perfect for new professionals.",
+      tag: "Start my profile",
+      pitch: "Perfect for new professionals",
       features: [
         "7-day free trial",
-        "Up to 3 photos (1 slide)",
+        "Up to 3 photos / 1 featured slide",
         "1 main city",
-        '"Available Now" up to 3×/day',
+        '"Available Now" badge up to 3 times/day',
         "Basic Explore ranking",
       ],
     },
     standard: {
       name: "Standard",
-      price: 49,
-      tag: "Boost Visibility",
-      pitch: "For part-time pros ready to grow.",
+      price: 29,
+      tag: "Boost visibility",
+      pitch: "For part-time pros ready to grow",
       features: [
-        "Up to 5 photos (2 slides)",
+        "Up to 5 photos / 2 featured slides",
         "1 visiting city",
-        '"Available Now" up to 6×/day',
-        "Verified Badge + standard support",
+        '"Available Now" badge up to 6 times/day',
+        "Verified badge + standard support",
       ],
     },
     pro: {
       name: "Pro",
-      price: 89,
-      tag: "Claim Spotlight",
-      pitch: "Best value — most popular choice.",
+      price: 59,
+      tag: "Claim the spotlight",
+      pitch: "Best value — most popular choice",
       features: [
-        "Up to 6 photos (2 slides)",
+        "Up to 6 photos / 2 featured slides",
         "Up to 3 visiting cities",
         "Analytics + city heatmap",
-        "1 featured credit/month",
+        "1 featured credit / month",
       ],
     },
     elite: {
       name: "Elite",
-      price: 149,
-      tag: "Join Elite Circle",
-      pitch: "Limited Founder Offer active.",
+      price: 119,
+      tag: "Join the elite circle",
+      pitch: "Limited founder offer still active",
       features: [
-        "Up to 8 photos (3 slides)",
+        "Up to 8 photos / 3 featured slides",
         "Top homepage placement",
-        'Auto "Available" every 2h',
-        "2 featured credits/month",
+        'Auto "Available" every 2 hours',
+        "2 featured credits / month",
         "Concierge + VIP support",
       ],
     },
   },
-  mostPopular: "MOST POPULAR",
+  mostPopular: "Most popular",
 
   flow: {
-    formTitle: "Register Your Professional Profile",
+    formTitle: "Register your professional profile",
     formNotePlan: "Selected plan: {{plan}}. You can change later.",
     labels: {
       fullName: "Full name",
@@ -141,7 +118,7 @@ const TXT = {
       location: "ZIP / Postal Code",
       languages: "Languages spoken",
       servicesLegend: "Services offered",
-      agree: "I accept the Terms and Privacy Policy.",
+      agree: "I accept the Terms and Privacy Policy",
       password: "Password (min. 6)",
       password2: "Confirm password",
     },
@@ -151,7 +128,7 @@ const TXT = {
       email: "you@example.com",
       phone: "(000) 000-0000",
       location: "ZIP / Postal Code",
-      languages: "Select your main languages",
+      languages: "Select your primary languages",
       password: "Create a password",
       password2: "Repeat the password",
     },
@@ -168,54 +145,61 @@ const TXT = {
     legalTitle: "Legal Terms & Consent",
     legalAgree:
       "I have read and agree to the Terms of Service, Privacy Policy, Community Guidelines, and Disclaimer. I confirm I am 18+.",
-    legalNews: "I'd like to receive product news by email (optional).",
+    legalNews: "I'd like to receive product updates by email (optional)",
 
-    checklistTitle: "Final Compliance Checklist",
+    checklistTitle: "Final compliance checklist",
     confirmPoints: [
-      "I attest that all information is true and my own.",
-      "I will not post explicit, illegal, or policy-violating content.",
-      "I will comply with all applicable laws and regulations.",
-      "I understand this is a directory (no service/payment intermediation).",
+      "I attest that all information is true and my own",
+      "I will not post explicit, illegal, or policy-violating content",
+      "I will comply with all applicable laws and regulations",
+      "I understand this is a directory; payments and services happen outside of the platform",
     ],
 
-    paymentTitle: "Complete Verification & Payment",
+    paymentTitle: "Complete verification & payment",
     paymentSubtitle: "Final step to activate your account",
-    paymentNote: "You'll be redirected to Stripe's secure checkout.",
-    paymentButton: "Go to Payment",
-    paymentFree: "Activate Free Plan",
+    paymentNote: "You'll be redirected to Stripe's secure checkout",
+    paymentButton: "Go to payment",
+    paymentFree: "Activate free plan",
 
-    activationTitle: "Account Activation in Progress",
+    activationTitle: "Account activation in progress",
     activationSubtitle: "We're processing your information",
     activationSteps: [
       "Plan selected",
       "Registration complete",
       "Terms accepted",
       "Identity verified",
-      "Awaiting approval...",
+      "Awaiting approval",
     ],
 
     btnBack: "Back",
     btnNext: "Continue",
-    toastErr: "Fill all required fields.",
+    toastErr: "Fill all required fields",
     continue: "Continue",
   },
 } as const;
 
-/* ===== Plans / Stripe ===== */
 const PLANS: Record<
   PlanKey,
   { key: PlanKey; highlight?: boolean; priceMonthly: number }
 > = {
   free: { key: "free", priceMonthly: 0 },
-  standard: { key: "standard", priceMonthly: 49 },
-  pro: { key: "pro", priceMonthly: 89, highlight: true },
-  elite: { key: "elite", priceMonthly: 149 },
+  standard: { key: "standard", priceMonthly: 29 },
+  pro: { key: "pro", priceMonthly: 59, highlight: true },
+  elite: { key: "elite", priceMonthly: 119 },
 };
+
+const PROGRESS_STEPS = [
+  "Plan selection",
+  "Registration",
+  "Legal agreement",
+  "Compliance",
+  "Payment",
+  "Activation",
+];
 
 const REQUIRE_ID_VERIFICATION =
   process.env.NEXT_PUBLIC_REQUIRE_ID_VERIFICATION !== "false";
 
-/** Stripe backend URL */
 const STRIPE_BACKEND =
   process.env.NEXT_PUBLIC_STRIPE_BACKEND ||
   process.env.NEXT_PUBLIC_STRIPE_BACKEND_URL ||
@@ -224,12 +208,11 @@ const STRIPE_BACKEND =
 
 const POLICY_VERSION = "2025-11-11";
 
-/* ===== Utils ===== */
 function priceLabel(price: number) {
-  return `$${price.toFixed(2)}`;
+  if (price === 0) return "";
+  return `$${price}`;
 }
 
-/* ===== Auth + Profile ===== */
 async function ensureAuthAndUpsertProfile(opts: {
   email: string;
   password: string;
@@ -259,75 +242,57 @@ async function ensureAuthAndUpsertProfile(opts: {
     priceMonthly,
   } = opts;
 
-  let userId: string | undefined;
-  const { data: signData, error: signErr } = await supabase.auth.signUp({
+  // Call API endpoint to create user and profile (uses service role to bypass RLS)
+  const response = await fetch("/api/therapist/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+      fullName,
+      displayName,
+      phone,
+      location,
+      languages,
+      services,
+      agree,
+      plan,
+      planName,
+      priceMonthly,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Failed to create account");
+  }
+
+  if (!data.userId) {
+    throw new Error("Failed to get user ID");
+  }
+
+  // Sign in the user on the client side
+  const { error: signInErr } = await supabase.auth.signInWithPassword({
     email: email.trim(),
     password,
   });
 
-  if (signErr) {
-    const alreadyExists =
-      (signErr as any).status === 422 ||
-      signErr.message?.toLowerCase().includes("already registered") ||
-      signErr.message?.toLowerCase().includes("already exists");
-
-    if (alreadyExists) {
-      const { data: si, error: siErr } =
-        await supabase.auth.signInWithPassword({
-          email: email.trim(),
-          password,
-        });
-      if (siErr) {
-        throw new Error(
-          "This email already has an account. Please log in or reset your password."
-        );
-      }
-      userId = si.user?.id;
-    } else {
-      throw signErr;
-    }
-  } else {
-    userId = signData.user?.id;
+  if (signInErr) {
+    // User was created but sign-in failed, this is OK for now
+    console.warn("User created but auto sign-in failed:", signInErr.message);
   }
-
-  if (!userId) throw new Error("Failed to authenticate user.");
-
-  const payload = {
-    user_id: userId,
-    full_name: fullName.trim(),
-    display_name: displayName.trim(),
-    email: email.trim(),
-    phone: phone.trim(),
-    location: location.trim(),
-    languages,
-    services,
-    agree_terms: agree,
-    plan,
-    plan_name: planName,
-    price_monthly: Math.round(Number(priceMonthly) * 100),
-    updated_at: new Date().toISOString(),
-    status: "pending",
-  };
-
-  const { error: upErr } = await supabase
-    .from("therapists")
-    .upsert(payload, { onConflict: "user_id" });
-
-  if (upErr) throw upErr;
 
   if (typeof window !== "undefined") {
     localStorage.setItem("mm_user", JSON.stringify({ email: email.trim() }));
   }
 
-  return { userId };
+  return { userId: data.userId };
 }
 
-/* ===== Step 1: Plan Selection ===== */
-function PlanSelection({
-  onSelectPlan,
-}: {
-  onSelectPlan: (plan: PlanKey) => void;
-}) {
+function PlanSelection({ onSelectPlan }: { onSelectPlan: (plan: PlanKey) => void }) {
   const [loading, setLoading] = useState<PlanKey | null>(null);
 
   const handleSelect = async (key: PlanKey) => {
@@ -338,47 +303,60 @@ function PlanSelection({
   };
 
   return (
-    <section className="container mt-32">
-      <div className="center mb-24">
-        <h2>{TXT.plansHeader}</h2>
-        <p className="muted">{TXT.plansSub}</p>
-        <p className="small mt-8">{TXT.monthlyNote}</p>
-        <p className="small mt-8 founder-note">
-          {TXT.founderNote}
+    <section className="max-w-6xl mx-auto px-4 py-12">
+      <div className="space-y-3 text-center">
+        <p className="text-xs uppercase tracking-[0.4em] text-fuchsia-300/80">
+          {TXT.plansHeader}
         </p>
+        <h2 className="text-3xl font-semibold text-white md:text-4xl">
+          {TXT.plansHeader}
+        </h2>
+        <p className="text-lg text-slate-300">{TXT.plansSub}</p>
+        <p className="text-sm text-slate-400">{TXT.monthlyNote}</p>
+        <p className="text-sm font-semibold text-violet-200">{TXT.founderNote}</p>
       </div>
 
-      <div className="plans-grid">
+      <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {(Object.keys(PLANS) as PlanKey[]).map((key) => {
           const pCfg = PLANS[key];
           const pTxt = TXT.plans[key];
-          const cardClass = `card ${pCfg.highlight ? "card--highlight" : ""}`;
           return (
-            <div key={key} className={cardClass}>
+            <div
+              key={key}
+              className="relative flex h-full flex-col gap-5 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-xl transition hover:border-white/30"
+            >
               {pCfg.highlight && (
-                <span className="popular">{TXT.mostPopular}</span>
+                <div className="absolute left-1/2 top-4 -translate-x-1/2 rounded-full bg-gradient-to-r from-indigo-500 to-fuchsia-500 px-3 py-1 text-[11px] uppercase tracking-[0.3em] text-white">
+                  {TXT.mostPopular}
+                </div>
               )}
 
-              <div className="card-title">{pTxt.name}</div>
-              <div className="card-price">
-                <b>{priceLabel(pCfg.priceMonthly)}</b>
-                <span className="sub">/month</span>
+              <div className="space-y-2">
+                <p className="text-base font-medium uppercase tracking-[0.3em] text-slate-300">
+                  {pTxt.name}
+                </p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-bold text-white">
+                    {priceLabel(pCfg.priceMonthly)}
+                  </span>
+                  <span className="text-sm font-semibold text-slate-400">/month</span>
+                </div>
+                <p className="text-sm text-slate-300">{pTxt.pitch}</p>
               </div>
-              <p className="muted">{pTxt.pitch}</p>
 
-              <ul className="card-list mt-16">
-                {pTxt.features.map((f, i) => (
-                  <li key={i}>
-                    <Check size={18} />
-                    <span>{f}</span>
+              <ul className="space-y-3 text-sm text-slate-200">
+                {pTxt.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2">
+                    <Check size={16} className="mt-1 text-violet-300" />
+                    <span>{feature}</span>
                   </li>
                 ))}
               </ul>
 
               <button
-                className={`btn btn-block btn-primary mt-16`}
-                disabled={loading === key}
+                className="mt-auto rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-500 px-4 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white transition hover:brightness-110 disabled:opacity-60"
                 onClick={() => handleSelect(key)}
+                disabled={loading === key}
               >
                 {loading === key ? "..." : pTxt.tag}
               </button>
@@ -390,7 +368,242 @@ function PlanSelection({
   );
 }
 
-/* ===== Step 2: Registration Form ===== */
+const HERO_IMAGES = [
+  {
+    src: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=80",
+    alt: "Terapeuta preparando óleos antes da sessão",
+    label: "Studio dedicado",
+    badge: "Incall",
+    height: "h-56",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1559757175-570136cf47df?auto=format&fit=crop&w=900&q=80",
+    alt: "Profissional de massagem aplicando técnicas em um cliente",
+    label: "Atendimento móvel",
+    badge: "Outcall",
+    height: "h-72",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1000&q=80",
+    alt: "Toalhas e óleos dispostos com iluminação suave",
+    label: "Spa urbano",
+    badge: "VIP",
+    height: "h-64",
+  },
+];
+
+const A15_BULLETS = [
+  {
+    title: "Resposta em 15 minutos",
+    desc: "Suporte ativo e onboarding guiado para acelerar seu primeiro perfil.",
+  },
+  {
+    title: "15 compromissos de confiança",
+    desc: "Revisões, privacidade e curadoria afinadas para manter sua reputação intacta.",
+  },
+  {
+    title: "Visibilidade A15",
+    desc: "Fotos, destaques e listas inteligentes focados nos pontos fortes do seu atendimento.",
+  },
+];
+
+const FAQ_ITEMS = [
+  {
+    question: "O que é o selo A15?",
+    answer:
+      "A15 resume 15 compromissos de transparência, verificação e resposta rápida que acompanha cada novo perfil ativo.",
+  },
+  {
+    question: "Quais informações preciso enviar?",
+    answer:
+      "Depois de escolher o plano, você registra o nome, e-mail, telefone, localização, idiomas e serviços, aceita os termos e conclui o checklist de compliance e verificação.",
+  },
+  {
+    question: "Preciso pagar para aparecer na busca?",
+    answer:
+      "Não. Clientes pesquisam e entram em contato gratuitamente. Os planos pagos ampliam fotos, cidades e prioridade nos resultados.",
+  },
+  {
+    question: "Como acontece a aprovação?",
+    answer:
+      "Revisamos os dados em cinco etapas (plano, registro, termos, checklist e pagamento/identidade). Após o envio completo, mandamos um e-mail em até 48h com o status.",
+  },
+  {
+    question: "Posso trocar de plano depois?",
+    answer:
+      "Sim. A qualquer momento você atualiza, pausa ou troca o plano pelo painel sem perder fotos ou histórico.",
+  },
+];
+
+function JoinHero({ onPlanScroll }: { onPlanScroll: () => void }) {
+  return (
+    <section className="relative isolate overflow-hidden px-4 pt-10 pb-16 lg:pt-16 lg:pb-24">
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/70 via-slate-950 to-transparent" />
+      <div className="relative z-10 mx-auto max-w-6xl grid gap-10 lg:grid-cols-[1.1fr,0.9fr]">
+        <div className="space-y-6 rounded-[36px] border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1 text-xs uppercase tracking-[0.4em] text-slate-200">
+            {TXT.heroBadge}
+          </span>
+          <div className="space-y-4">
+            <h1 className="text-4xl font-bold leading-tight text-white md:text-6xl">
+              {TXT.heroTitleLine1}
+            </h1>
+            <p className="text-lg text-slate-300">{TXT.heroTitleLine2}</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {TXT.heroStats.map((stat) => (
+              <div
+                key={stat}
+                className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/30 px-3 py-3 text-sm text-slate-200"
+              >
+                <Check size={14} className="text-violet-300" />
+                <span>{stat}</span>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-4">
+            <button
+              className="rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-500 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white"
+              onClick={onPlanScroll}
+            >
+              Ver planos
+            </button>
+            <a
+              href="/login"
+              className="rounded-2xl border border-white/20 px-5 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white"
+            >
+              Já sou membro
+            </a>
+          </div>
+        </div>
+        <div className="flex flex-col gap-4">
+          {HERO_IMAGES.map((image, index) => (
+            <div
+              key={image.src}
+              className={`group relative overflow-hidden rounded-[32px] border border-white/10 bg-black/20 shadow-2xl ${image.height}`}
+              style={{
+                transform:
+                  index === 1
+                    ? "translateY(-1.5rem)"
+                    : index === 2
+                    ? "translateY(1rem)"
+                    : undefined,
+              }}
+            >
+              <img
+                src={image.src}
+                alt={image.alt}
+                className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+              <div className="absolute left-4 bottom-4 flex flex-col gap-1 text-xs uppercase tracking-[0.4em] text-white">
+                <span className="font-semibold">{image.label}</span>
+                <span className="rounded-full border border-white/30 px-2 py-0.5 text-[10px] tracking-[0.5em]">
+                  {image.badge}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BenefitsSection() {
+  return (
+    <section className="relative px-4 pb-16 pt-10 lg:pt-20">
+      <div className="relative z-10 max-w-6xl mx-auto space-y-8">
+        <div className="space-y-3 text-center">
+          <p className="text-xs uppercase tracking-[0.4em] text-fuchsia-300/70">Porque assinar</p>
+          <h2 className="text-4xl font-semibold text-white md:text-5xl">
+            Vantagens para sua agenda crescer
+          </h2>
+          <p className="text-base text-slate-300">{TXT.whySubtitle}</p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {TXT.whyBullets.map((benefit) => (
+            <div
+              key={benefit.title}
+              className="group relative flex flex-col gap-4 rounded-[36px] border border-white/10 bg-gradient-to-br from-white/5 to-black/30 p-6 shadow-2xl transition-all hover:-translate-y-1 hover:border-white/30"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-200">
+                  <Check size={20} />
+                </div>
+                <p className="text-lg font-semibold text-white">{benefit.title}</p>
+              </div>
+              <p className="text-sm text-slate-300">{benefit.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function A15FAQSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  return (
+    <section className="relative px-4 pb-20 pt-16 lg:pb-24">
+      <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-indigo-900/80 via-transparent to-transparent" />
+      <div className="relative z-10 max-w-6xl mx-auto grid gap-8 lg:grid-cols-[1.05fr,0.95fr]">
+        <div className="rounded-[36px] border border-white/10 bg-white/5 p-8 shadow-2xl">
+          <p className="text-xs uppercase tracking-[0.4em] text-fuchsia-300/80">A15</p>
+          <h2 className="mt-3 text-4xl font-semibold text-white">A15 Perguntas Frequentes</h2>
+          <p className="mt-2 text-sm text-slate-300">
+            Um compêndio dos 15 compromissos que orientam onboarding, suporte e visibilidade.
+          </p>
+          <div className="mt-8 space-y-4">
+            {A15_BULLETS.map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-white/10 bg-black/20 px-5 py-4"
+              >
+                <p className="text-xs uppercase tracking-[0.4em] text-violet-300">{item.title}</p>
+                <p className="mt-2 text-sm text-slate-300">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-[36px] border border-white/10 bg-black/60 p-6 shadow-2xl backdrop-blur-xl">
+          <div className="space-y-5">
+            {FAQ_ITEMS.map((faq, index) => {
+              const isOpen = openIndex === index;
+              return (
+                <div
+                  key={faq.question}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-4 transition"
+                >
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between gap-4 text-left text-sm font-semibold text-white"
+                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                    aria-expanded={isOpen}
+                  >
+                    <span>{faq.question}</span>
+                    {isOpen ? (
+                      <Minus size={18} className="text-white" />
+                    ) : (
+                      <Plus size={18} className="text-white" />
+                    )}
+                  </button>
+                  {isOpen && (
+                    <p className="mt-3 text-sm text-slate-300 leading-relaxed">{faq.answer}</p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function RegistrationForm({
   planName,
   onBack,
@@ -426,31 +639,29 @@ function RegistrationForm({
     }));
   };
 
-  // Real-time validation
-  const validateEmail = (email: string) => {
-    if (!email) return "";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  const toggleService = (service: string) => {
+    setForm((prev) => ({
+      ...prev,
+      services: prev.services.includes(service)
+        ? prev.services.filter((s) => s !== service)
+        : [...prev.services, service],
+    }));
+  };
+
+  const validateEmail = (value: string) => {
+    if (!value) return "";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       return "Please enter a valid email address";
     }
     return "";
   };
 
-  const validatePassword = (password: string) => {
-    if (!password) return "";
-    if (password.length < 6) {
+  const validatePassword = (value: string) => {
+    if (!value) return "";
+    if (value.length < 6) {
       return "Password must be at least 6 characters";
     }
     return "";
-  };
-
-  const handleEmailBlur = () => {
-    const err = validateEmail(form.email);
-    setFieldErrors((prev) => ({ ...prev, email: err }));
-  };
-
-  const handlePasswordBlur = () => {
-    const err = validatePassword(form.password);
-    setFieldErrors((prev) => ({ ...prev, password: err }));
   };
 
   const handleSubmit = () => {
@@ -465,224 +676,197 @@ function RegistrationForm({
       return;
     }
     if (form.password.length < 6) {
-      setError("Password must be at least 6 characters.");
+      setError("Password must be at least 6 characters");
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      setError("Invalid email.");
+      setError("Invalid email");
       return;
     }
     if (form.languages.length === 0) {
-      setError("Select at least one language.");
+      setError("Select at least one language");
       return;
     }
     if (form.services.length === 0) {
-      setError("Select at least one service.");
+      setError("Select at least one service");
       return;
     }
     setError("");
     onContinue(form);
   };
 
+  const inputBase =
+    "w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/30" +
+    " transition";
+
   return (
-    <section className="section-narrow">
-      <h2>{L.formTitle}</h2>
-      <p className="muted mb-16">
-        {L.formNotePlan.replace("{{plan}}", planName)}
-      </p>
-
-      {error && <div className="alert alert-error mb-16">{error}</div>}
-
-      {/* Social Login Options - 2025 Best Practice */}
-      <div className="mb-16">
-        <div className="grid gap-3 sm:grid-cols-2 mb-6">
-          <button
-            type="button"
-            className="btn btn-ghost btn-outline-stroke flex items-center justify-center gap-2"
-            onClick={async () => {
-              try {
-                await handleSocialLogin('google');
-              } catch (err: any) {
-                setError(err?.message || 'Failed to login with Google');
-              }
-            }}
-          >
-            <svg className="h-5 w-5" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            Continue with Google
-          </button>
-          <button
-            type="button"
-            className="btn btn-ghost btn-outline-stroke flex items-center justify-center gap-2"
-            onClick={async () => {
-              try {
-                await handleSocialLogin('apple');
-              } catch (err: any) {
-                setError(err?.message || 'Failed to login with Apple');
-              }
-            }}
-          >
-            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-            </svg>
-            Continue with Apple
-          </button>
-        </div>
-        <div className="relative mb-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t divider-line"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 divider-pill">
-              or continue with email
-            </span>
-          </div>
-        </div>
+    <section className="max-w-4xl mx-auto space-y-6 rounded-[32px] border border-white/10 bg-white/5 px-6 py-10 shadow-2xl backdrop-blur-xl">
+      <div className="space-y-2">
+        <p className="text-xs uppercase tracking-[0.4em] text-fuchsia-300/80">Step 2</p>
+        <h2 className="text-3xl font-semibold text-white">{L.formTitle}</h2>
+        <p className="text-sm text-slate-300">
+          {L.formNotePlan.replace("{{plan}}", planName)}
+        </p>
       </div>
 
-      <div className="mb-16">
-        <input
-          type="text"
-          placeholder={L.placeholders.fullName}
-          value={form.fullName}
-          onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-          className="mb-12"
-        />
-        <input
-          type="text"
-          placeholder={L.placeholders.displayName}
-          value={form.displayName}
-          onChange={(e) =>
-            setForm({ ...form, displayName: e.target.value })
-          }
-          className="mb-12"
-        />
-        <div className="mb-12">
+      {error && (
+        <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-100">
+          {error}
+        </div>
+      )}
+
+      <div className="space-y-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <input
-            type="email"
-            placeholder={L.placeholders.email}
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            onBlur={handleEmailBlur}
-            aria-invalid={!!fieldErrors.email ? "true" : "false"}
-            aria-describedby={fieldErrors.email ? "email-error" : undefined}
+            type="text"
+            placeholder={L.placeholders.fullName}
+            value={form.fullName}
+            onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+            className={inputBase}
           />
-          {fieldErrors.email && (
-            <p id="email-error" className="mt-2 text-xs error-text">
-              {fieldErrors.email}
-            </p>
-          )}
+          <input
+            type="text"
+            placeholder={L.placeholders.displayName}
+            value={form.displayName}
+            onChange={(e) =>
+              setForm({ ...form, displayName: e.target.value })
+            }
+            className={inputBase}
+          />
         </div>
 
-        <div className="mb-12 relative">
+        <input
+          type="email"
+          placeholder={L.placeholders.email}
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          onBlur={() => {
+            const err = validateEmail(form.email);
+            setFieldErrors((prev) => ({ ...prev, email: err }));
+          }}
+          className={inputBase}
+        />
+        {fieldErrors.email && (
+          <p className="text-xs text-red-300">{fieldErrors.email}</p>
+        )}
+
+        <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
             placeholder={L.placeholders.password}
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
-            onBlur={handlePasswordBlur}
-            aria-invalid={!!fieldErrors.password ? "true" : "false"}
-            aria-describedby={fieldErrors.password ? "password-error" : undefined}
-            className="password-input"
+            onBlur={() => {
+              const err = validatePassword(form.password);
+              setFieldErrors((prev) => ({ ...prev, password: err }));
+            }}
+            className={inputBase}
           />
           <button
             type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium password-toggle"
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-300"
           >
             {showPassword ? "Hide" : "Show"}
           </button>
-          {fieldErrors.password && (
-            <p id="password-error" className="mt-2 text-xs error-text">
-              {fieldErrors.password}
-            </p>
-          )}
         </div>
+        {fieldErrors.password && (
+          <p className="text-xs text-red-300">{fieldErrors.password}</p>
+        )}
 
-        <input
-          type="tel"
-          placeholder={L.placeholders.phone}
-          value={form.phone}
-          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-          className="mb-12"
-        />
-        <input
-          type="text"
-          placeholder={L.placeholders.location}
-          value={form.location}
-          onChange={(e) =>
-            setForm({ ...form, location: e.target.value })
-          }
-          className="mb-12"
-        />
-
-        {/* Languages */}
-        <fieldset className="mb-16">
-          <legend>{L.labels.languages}</legend>
-          <p className="small muted mb-8">
-            Select one or more languages you speak.
-          </p>
-          {LANGUAGE_OPTIONS.map((lang) => (
-            <label key={lang} className="check-row">
-              <input
-                type="checkbox"
-                checked={form.languages.includes(lang)}
-                onChange={() => toggleLanguage(lang)}
-              />
-              <span>{lang}</span>
-            </label>
-          ))}
-        </fieldset>
-
-        <fieldset className="mb-16">
-          <legend>{L.labels.servicesLegend}</legend>
-          {L.servicesList.map((svc: string, i: number) => (
-            <label key={i} className="check-row">
-              <input
-                type="checkbox"
-                checked={form.services.includes(svc)}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    services: e.target.checked
-                      ? [...prev.services, svc]
-                      : prev.services.filter((s) => s !== svc),
-                  }))
-                }
-              />
-              <span>{svc}</span>
-            </label>
-          ))}
-        </fieldset>
-
-        <label className="check-row">
+        <div className="grid gap-3 sm:grid-cols-2">
           <input
-            type="checkbox"
-            checked={form.agree}
-            onChange={(e) => setForm({ ...form, agree: e.target.checked })}
+            type="tel"
+            placeholder={L.placeholders.phone}
+            value={form.phone}
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            className={inputBase}
           />
-          <span className="small">{L.labels.agree}</span>
-        </label>
-
-        <div className="mt-16 btn-row">
-          <button className="btn btn-ghost" onClick={onBack}>
-            {L.btnBack}
-          </button>
-          <button className="btn btn-primary" onClick={handleSubmit}>
-            {L.btnNext}
-          </button>
+          <input
+            type="text"
+            placeholder={L.placeholders.location}
+            value={form.location}
+            onChange={(e) =>
+              setForm({ ...form, location: e.target.value })
+            }
+            className={inputBase}
+          />
         </div>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <p className="text-sm font-semibold text-white">{L.labels.languages}</p>
+          <p className="text-xs text-slate-400">Select one or more languages</p>
+          <div className="mt-3 grid gap-2 md:grid-cols-3">
+            {LANGUAGE_OPTIONS.map((lang) => (
+              <label
+                key={lang}
+                className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200 transition hover:border-violet-400"
+              >
+                <input
+                  type="checkbox"
+                  checked={form.languages.includes(lang)}
+                  onChange={() => toggleLanguage(lang)}
+                  className="accent-violet-400"
+                />
+                <span>{lang}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="text-sm font-semibold text-white">
+            {L.labels.servicesLegend}
+          </p>
+          <div className="mt-3 grid gap-2 md:grid-cols-2">
+            {L.servicesList.map((service) => (
+              <label
+                key={service}
+                className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200 transition hover:border-violet-400"
+              >
+                <input
+                  type="checkbox"
+                  checked={form.services.includes(service)}
+                  onChange={() => toggleService(service)}
+                  className="accent-violet-400"
+                />
+                <span>{service}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">
+        <input
+          type="checkbox"
+          checked={form.agree}
+          onChange={(e) => setForm({ ...form, agree: e.target.checked })}
+          className="accent-violet-400"
+        />
+        <span>{L.labels.agree}</span>
+      </label>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <button
+          className="rounded-2xl border border-white/20 px-5 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white transition hover:border-white/40"
+          onClick={onBack}
+        >
+          {L.btnBack}
+        </button>
+        <button
+          className="rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-500 px-5 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white transition hover:brightness-110"
+          onClick={handleSubmit}
+        >
+          {L.btnNext}
+        </button>
       </div>
     </section>
   );
 }
 
-/* ===== Step 3: Legal Terms ===== */
 function LegalTerms({
   onBack,
   onContinue,
@@ -695,46 +879,50 @@ function LegalTerms({
   const [marketing, setMarketing] = useState(false);
 
   return (
-    <section className="section-narrow">
-      <h2>{L.legalTitle}</h2>
+    <section className="max-w-4xl mx-auto space-y-6 rounded-[32px] border border-white/10 bg-white/5 px-6 py-10 shadow-2xl backdrop-blur-xl">
+      <div>
+        <p className="text-xs uppercase tracking-[0.4em] text-fuchsia-300/80">Step 3</p>
+        <h2 className="text-3xl font-semibold text-white">{L.legalTitle}</h2>
+      </div>
 
-      <div className="card mt-12">
-        <label className="check-row">
+      <div className="space-y-4 rounded-3xl border border-white/10 bg-black/20 p-6">
+        <label className="flex cursor-pointer items-start gap-3 text-sm text-slate-200">
           <input
             type="checkbox"
             checked={agree}
             onChange={(e) => setAgree(e.target.checked)}
+            className="accent-violet-400"
           />
           <span>{L.legalAgree}</span>
         </label>
 
-        <label className="check-row">
+        <label className="flex cursor-pointer items-start gap-3 text-sm text-slate-200">
           <input
             type="checkbox"
             checked={marketing}
             onChange={(e) => setMarketing(e.target.checked)}
+            className="accent-violet-400"
           />
           <span>{L.legalNews}</span>
         </label>
 
-        <p className="small mt-12">
-          Version: <strong>{POLICY_VERSION}</strong>
+        <p className="text-xs text-slate-400">
+          Version: <span className="font-semibold text-white">{POLICY_VERSION}</span>
         </p>
       </div>
 
-      <div className="mt-16 btn-row">
-        <button className="btn btn-ghost" onClick={onBack}>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <button
+          className="rounded-2xl border border-white/20 px-5 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white"
+          onClick={onBack}
+        >
           {L.btnBack}
         </button>
         <button
-          className="btn btn-primary"
+          className="rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-500 px-5 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white disabled:opacity-60"
           disabled={!agree}
           onClick={() =>
-            onContinue({
-              agree,
-              marketing,
-              timestamp: new Date().toISOString(),
-            })
+            onContinue({ agree, marketing, timestamp: new Date().toISOString() })
           }
         >
           {L.continue}
@@ -744,7 +932,6 @@ function LegalTerms({
   );
 }
 
-/* ===== Step 4: Compliance Checklist ===== */
 function ComplianceChecklist({
   onBack,
   onContinue,
@@ -757,12 +944,18 @@ function ComplianceChecklist({
   const allChecked = checks.every(Boolean);
 
   return (
-    <section className="section-narrow">
-      <h2>{L.checklistTitle}</h2>
+    <section className="max-w-4xl mx-auto space-y-6 rounded-[32px] border border-white/10 bg-white/5 px-6 py-10 shadow-2xl backdrop-blur-xl">
+      <div>
+        <p className="text-xs uppercase tracking-[0.4em] text-fuchsia-300/80">Step 4</p>
+        <h2 className="text-3xl font-semibold text-white">{L.checklistTitle}</h2>
+      </div>
 
-      <div className="card mt-12">
-        {L.confirmPoints.map((point: string, index: number) => (
-          <label key={index} className="check-row">
+      <div className="space-y-4 rounded-3xl border border-white/10 bg-black/20 p-6">
+        {L.confirmPoints.map((point, index) => (
+          <label
+            key={point}
+            className="flex cursor-pointer items-start gap-3 text-sm text-slate-200"
+          >
             <input
               type="checkbox"
               checked={checks[index]}
@@ -771,26 +964,28 @@ function ComplianceChecklist({
                 next[index] = !next[index];
                 setChecks(next);
               }}
+              className="accent-violet-400"
             />
             <span>{point}</span>
           </label>
         ))}
 
-        <p className="small mt-12">
-          Version: <strong>{POLICY_VERSION}</strong>
+        <p className="text-xs text-slate-400">
+          Version: <span className="font-semibold text-white">{POLICY_VERSION}</span>
         </p>
       </div>
 
-      <div className="mt-16 btn-row">
-        <button className="btn btn-ghost" onClick={onBack}>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <button
+          className="rounded-2xl border border-white/20 px-5 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white"
+          onClick={onBack}
+        >
           {L.btnBack}
         </button>
         <button
-          className="btn btn-primary"
+          className="rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-500 px-5 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white disabled:opacity-60"
           disabled={!allChecked}
-          onClick={() =>
-            onContinue({ checks, timestamp: new Date().toISOString() })
-          }
+          onClick={() => onContinue({ checks, timestamp: new Date().toISOString() })}
         >
           {L.continue}
         </button>
@@ -799,7 +994,6 @@ function ComplianceChecklist({
   );
 }
 
-/* ===== Step 5: Payment / Identity (Free + Paid) ===== */
 function PaymentStep({
   plan,
   formData,
@@ -817,7 +1011,6 @@ function PaymentStep({
   const router = useRouter();
 
   const requiresId = REQUIRE_ID_VERIFICATION;
-
   const isFree = plan === "free";
 
   const handleFinishWithoutId = async () => {
@@ -843,13 +1036,19 @@ function PaymentStep({
         priceMonthly,
       });
 
-      if (!userId) throw new Error("Não foi possível salvar o perfil.");
+      if (!userId) throw new Error("Failed to save the profile.");
 
       onSuccess();
       router.replace("/dashboard");
     } catch (err: any) {
-      console.error("Erro ao salvar perfil:", err);
-      setError(err?.message || "Não foi possível salvar o perfil.");
+      console.error("Error saving profile:", err);
+      console.error("Error details:", {
+        message: err?.message,
+        name: err?.name,
+        stack: err?.stack,
+        raw: JSON.stringify(err, Object.getOwnPropertyNames(err))
+      });
+      setError(err?.message || "Failed to save the profile.");
     } finally {
       setLoading(false);
     }
@@ -863,7 +1062,6 @@ function PaymentStep({
       const priceMonthly = PLANS[plan].priceMonthly;
       const planName = TXT.plans[plan].name;
 
-      // 1) Cria ou loga usuário + upsert therapist
       const { userId } = await ensureAuthAndUpsertProfile({
         email: formData.email,
         password: formData.password,
@@ -883,9 +1081,6 @@ function PaymentStep({
         throw new Error("Could not get user ID for this account.");
       }
 
-      // 2) Iniciar fluxo na API:
-      //   FREE  → Stripe Identity → redireciona direto pro perfil (/therapist/:id)
-      //   PAID  → Stripe Identity → backend /after-identity → Checkout → success → perfil
       const endpoint = isFree
         ? `${STRIPE_BACKEND}/start-identity-flow`
         : `${STRIPE_BACKEND}/start-payment-flow`;
@@ -907,9 +1102,7 @@ function PaymentStep({
         });
       } catch (err: any) {
         if (err.name === "AbortError") {
-          throw new Error(
-            "Request timed out. Please try again in a few seconds."
-          );
+          throw new Error("Request timed out. Please try again in a few seconds.");
         }
         throw new Error("Network error. Check your connection or CORS.");
       } finally {
@@ -919,12 +1112,12 @@ function PaymentStep({
       const data = (await resp.json().catch(() => ({}))) as any;
 
       if (!resp.ok) {
-        const msg = data?.error || `Error ${resp.status}`;
+        const msg = data?.error || Error ;
         throw new Error(msg);
       }
 
       if (!data?.url) {
-        throw new Error("Invalid server response (missing url).");
+        throw new Error("Invalid server response (missing url)");
       }
 
       if (typeof window !== "undefined") {
@@ -937,59 +1130,58 @@ function PaymentStep({
             timestamp: new Date().toISOString(),
           })
         );
-        // Free: abre Stripe Identity → volta direto pro perfil
-        // Paid: abre Stripe Identity → backend /after-identity → Checkout → success → perfil
         window.location.href = data.url;
       }
     } catch (err: any) {
       console.error("Payment/verification error:", err);
       setError(
         err.message ||
-          "Error starting identity verification (and payment, if applicable)."
+          "Error starting identity verification or payment."
       );
       setLoading(false);
     }
   };
 
   const trialNote = isFree
-    ? "You will complete a quick identity verification via Stripe. No payment will be charged for the Free plan. After your ID is verified, you'll be redirected directly to your public profile."
-    : "You will first complete identity verification via Stripe. After your identity is confirmed, you will be redirected to Stripe Checkout to complete the payment, and then back to your profile.";
+    ? "You will complete a quick identity verification via Stripe. No payment is charged for the Free plan. After verification you'll be redirected to your profile."
+    : "You will first complete Stripe Identity verification and then proceed to Stripe Checkout for payment before returning to your profile.";
 
   const titleLabel = requiresId
     ? isFree
-      ? "Identity Verification"
-      : "Identity + Checkout"
-    : "Finalize Profile (ID opcional no ambiente de teste)";
+      ? "Identity verification"
+      : "Identity + checkout"
+    : "Finalize profile (ID optional in this environment)";
 
   return (
-    <section className="section-narrow">
-      <h2>{L.paymentTitle}</h2>
-      <p className="muted mb-16">{L.paymentSubtitle}</p>
+    <section className="max-w-4xl mx-auto rounded-[32px] border border-white/10 bg-gradient-to-b from-white/10 to-transparent px-6 py-10 shadow-[0_25px_60px_rgba(2,3,24,0.9)] backdrop-blur-xl">
+      <div className="space-y-3">
+        <p className="text-xs uppercase tracking-[0.4em] text-fuchsia-300/80">Step 5</p>
+        <h2 className="text-3xl font-semibold text-white">{L.paymentTitle}</h2>
+        <p className="text-sm text-slate-300">{L.paymentSubtitle}</p>
+      </div>
 
       {error && (
-        <div className="alert alert-error mb-16">
+        <div className="mt-6 flex items-start gap-3 rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-100">
           <AlertCircle size={18} />
-          {error}
+          <span>{error}</span>
         </div>
       )}
 
-      <div className="payment-panel">
-        <div className="payment-title">{titleLabel}</div>
-        <h3 className="mb-8">{TXT.plans[plan].name}</h3>
-        <p className="payment-price-amount">
-          {priceLabel(PLANS[plan].priceMonthly)}
-          <span className="small payment-price-sub">
-            /month
+      <div className="mt-8 rounded-3xl border border-white/10 bg-black/40 p-6 text-center shadow-2xl">
+        <p className="text-sm uppercase tracking-[0.4em] text-slate-400">{titleLabel}</p>
+        <h3 className="mt-4 text-3xl font-semibold text-white">
+          {TXT.plans[plan].name}
+        </h3>
+        <div className="mt-2 flex items-baseline justify-center gap-2">
+          <span className="text-5xl font-bold text-white">
+            {priceLabel(PLANS[plan].priceMonthly)}
           </span>
-        </p>
-        <p className="payment-legend">
-          {requiresId
-            ? trialNote
-            : "ID verification foi desativada para este ambiente. Vamos salvar o perfil e você acessa o dashboard."}
-        </p>
+          <span className="text-sm text-slate-400">/month</span>
+        </div>
+        <p className="mt-4 text-sm text-slate-300">{trialNote}</p>
 
         <button
-          className="btn btn-primary btn-block"
+          className="mt-10 flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-500 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white disabled:opacity-60"
           disabled={loading}
           onClick={requiresId ? handlePayment : handleFinishWithoutId}
         >
@@ -1000,21 +1192,19 @@ function PaymentStep({
                 ? isFree
                   ? "Starting verification..."
                   : "Starting verification & payment..."
-                : "Salvando perfil..."}
+                : "Saving profile..."}
             </>
           ) : requiresId ? (
-            isFree ? (
-              "Start identity verification"
-            ) : (
-              "Start verification & go to payment"
-            )
+            isFree
+              ? "Start identity verification"
+              : "Start verification & go to payment"
           ) : (
-            "Finalizar perfil e ir para o dashboard"
+            "Finalize profile & go to dashboard"
           )}
         </button>
 
         <button
-          className="btn btn-ghost btn-block mt-12"
+          className="mt-4 w-full rounded-2xl border border-white/20 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white"
           disabled={loading}
           onClick={onBack}
         >
@@ -1022,156 +1212,156 @@ function PaymentStep({
         </button>
       </div>
 
-      <div className="alert alert-info mt-16 center">
+      <p className="mt-6 text-xs text-slate-400">
         {requiresId
           ? isFree
-            ? "Identity verification is processed via Stripe. No payment will be charged for the Free plan."
+            ? "Identity verification is processed via Stripe. Free plan members are never charged."
             : "Identity verification and payment are processed via Stripe."
-          : "Neste ambiente a verificação por ID está desativada para facilitar a criação do perfil."}
-      </div>
+          : "Identity verification is disabled in this environment for faster testing."}
+      </p>
     </section>
   );
 }
 
-/* ===== Step 6: Activation Status ===== */
 function ActivationStatus() {
   const L = TXT.flow;
   return (
-    <section className="section-narrow center">
-      <div className="activation-emoji mb-16">
-        ⏳
+    <section className="max-w-4xl mx-auto space-y-6 rounded-[32px] border border-white/10 bg-white/5 px-6 py-10 shadow-2xl backdrop-blur-xl">
+      <div className="space-y-3 text-center">
+        <p className="text-xs uppercase tracking-[0.4em] text-fuchsia-300/80">Step 6</p>
+        <h2 className="text-3xl font-semibold text-white">{L.activationTitle}</h2>
+        <p className="text-sm text-slate-300">{L.activationSubtitle}</p>
       </div>
-      <h2 className="mb-8">{L.activationTitle}</h2>
-      <p className="muted mb-24">{L.activationSubtitle}</p>
 
-      <div className="activation-steps">
-        <ul>
-          {L.activationSteps.map((s: string, i: number) => (
-            <li key={i}>
-              <span className="activation-step-index">{i < 3 ? "✅" : "⏳"}</span>
-              <span>{s}</span>
+      <div className="rounded-3xl border border-white/10 bg-black/40 p-6">
+        <ol className="space-y-4 text-sm text-slate-200">
+          {L.activationSteps.map((stepLabel, index) => (
+            <li
+              key={stepLabel}
+              className="flex items-center gap-3 text-white"
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-violet-500/20 text-xs font-semibold text-violet-200">
+                {index + 1}
+              </span>
+              {stepLabel}
             </li>
           ))}
-        </ul>
+        </ol>
       </div>
 
-      <div className="alert alert-warn mt-16">
-        You'll receive an email once your account is approved (24–48h).
-      </div>
+      <p className="text-sm text-slate-400">
+        You will receive an email once your account is approved (usually within 24-48h).
+      </p>
     </section>
   );
 }
 
-/* ===== Main Component ===== */
 export default function JoinPage() {
   const [step, setStep] = useState<Step>(1);
   const [selectedPlan, setSelectedPlan] = useState<PlanKey>("pro");
   const [formData, setFormData] = useState<any>({});
-  const [legalData, setLegalData] = useState<any>({});
-  const [complianceData, setComplianceData] = useState<any>({});
 
-  const L = TXT;
+  const progressLabel = PROGRESS_STEPS[Math.min(step - 1, PROGRESS_STEPS.length - 1)];
+  const progressPercent = Math.min(100, (step / PROGRESS_STEPS.length) * 100);
+
+  const scrollToPlans = () => {
+    const target = document.getElementById("plan-section");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   return (
-    <main>
-      {/* Progress Indicator */}
-      <div className="progress">
-        {[1, 2, 3, 4, 5].map((s) => (
-          <div key={s} className={`bar ${step >= s ? "is-on" : ""}`} />
-        ))}
-      </div>
-
-      {/* Hero (only step 1) */}
-      {step === 1 && (
-        <section className="join-hero">
-          <div className="container center">
-            <span className="pill">{L.heroBadge}</span>
-            <h1 className="mt-12">{L.heroTitleLine1}</h1>
-            <p className="mt-12 hero-description">
-              {L.heroTitleLine2}
-            </p>
-            <div className="mt-24 hero-stats">
-              {L.heroStats.map((stat, i) => (
-                <div key={i} className="hero-stat">
-                  <Check size={18} />
-                  <span className="hero-stat-label">
-                    {stat}
-                  </span>
-                </div>
-              ))}
+    <main className="relative min-h-screen overflow-hidden bg-[#010104] text-white selection:bg-violet-500/30 selection:text-white">
+      <Background />
+      <div className="relative z-10">
+        <div className="mx-auto max-w-6xl px-4 py-4">
+          <div className="sticky top-4 z-30">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl shadow-xl">
+              <div className="flex flex-col gap-2 text-xs uppercase tracking-[0.4em] text-slate-300 md:flex-row md:items-center md:justify-between">
+                <span>
+                  Step {Math.min(step, PROGRESS_STEPS.length)} of {PROGRESS_STEPS.length}
+                </span>
+                <span className="font-semibold text-white">{progressLabel}</span>
+              </div>
+              <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-violet-500 via-indigo-500 to-sky-400 transition-[width]"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
             </div>
           </div>
-        </section>
-      )}
+        </div>
 
-      {/* Why (only step 1) */}
-      {step === 1 && (
-        <section className="container mt-32">
-          <h2 className="center">{L.whyTitle}</h2>
-          <p className="muted center mb-24">{L.whySubtitle}</p>
-          <div className="grid">
-            {L.whyBullets.map((b, i) => (
-              <div key={i} className="card">
-                <div className="card-title">{b.title}</div>
-                <p className="muted">{b.desc}</p>
-              </div>
-            ))}
+        {step === 1 && (
+          <>
+            <JoinHero onPlanScroll={scrollToPlans} />
+            <BenefitsSection />
+            <div id="plan-section" className="px-4 pb-16">
+              <PlanSelection
+                onSelectPlan={(plan) => {
+                  setSelectedPlan(plan);
+                  setStep(2 as Step);
+                }}
+              />
+            </div>
+            <A15FAQSection />
+          </>
+        )}
+
+        {step === 2 && (
+          <div className="px-4 pb-16">
+            <RegistrationForm
+              planName={TXT.plans[selectedPlan].name}
+              onBack={() => setStep(1)}
+              onContinue={(data) => {
+                setFormData(data);
+                setStep(3 as Step);
+              }}
+            />
           </div>
-        </section>
-      )}
+        )}
 
-      {/* Steps */}
-      {step === 1 && (
-        <PlanSelection
-          onSelectPlan={(p) => {
-            setSelectedPlan(p);
-            setStep(2);
-          }}
-        />
-      )}
+        {step === 3 && (
+          <div className="px-4 pb-16">
+            <LegalTerms
+              onBack={() => setStep(2)}
+              onContinue={() => {
+                setStep(4 as Step);
+              }}
+            />
+          </div>
+        )}
 
-      {step === 2 && (
-        <RegistrationForm
-          planName={TXT.plans[selectedPlan].name}
-          onBack={() => setStep(1)}
-          onContinue={(data: any) => {
-            setFormData(data);
-            setStep(3);
-          }}
-        />
-      )}
+        {step === 4 && (
+          <div className="px-4 pb-16">
+            <ComplianceChecklist
+              onBack={() => setStep(3)}
+              onContinue={() => {
+                setStep(5 as Step);
+              }}
+            />
+          </div>
+        )}
 
-      {step === 3 && (
-        <LegalTerms
-          onBack={() => setStep(2)}
-          onContinue={(data: any) => {
-            setLegalData(data);
-            setStep(4);
-          }}
-        />
-      )}
+        {step === 5 && (
+          <div className="px-4 pb-16">
+            <PaymentStep
+              plan={selectedPlan}
+              formData={formData}
+              onBack={() => setStep(4)}
+              onSuccess={() => setStep(6 as Step)}
+            />
+          </div>
+        )}
 
-      {step === 4 && (
-        <ComplianceChecklist
-          onBack={() => setStep(3)}
-          onContinue={(data: any) => {
-            setComplianceData(data);
-            setStep(5);
-          }}
-        />
-      )}
-
-      {step === 5 && (
-        <PaymentStep
-          plan={selectedPlan}
-          formData={formData}
-          onBack={() => setStep(4)}
-          onSuccess={() => setStep(6)}
-        />
-      )}
-
-      {step === 6 && <ActivationStatus />}
+        {step === 6 && (
+          <div className="px-4 pb-16">
+            <ActivationStatus />
+          </div>
+        )}
+      </div>
     </main>
   );
 }
-

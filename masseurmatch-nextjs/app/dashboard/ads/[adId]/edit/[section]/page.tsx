@@ -1,6 +1,7 @@
 import { redirect, notFound } from 'next/navigation';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import EditSectionForm from '@/components/dashboard/EditSectionForm';
+import { sectionMap } from '@/lib/dashboard/section-config';
 
 export const metadata = {
   title: 'Edit Section | Dashboard',
@@ -85,7 +86,7 @@ export default async function EditSectionPage({
   }
 
   // Get therapist profile
-  const { data: therapist, error } = await supabase
+  const { data: therapist } = await supabase
     .from('therapists')
     .select('*')
     .eq('user_id', params.adId)
@@ -97,6 +98,7 @@ export default async function EditSectionPage({
   }
 
   const config = sectionConfig[params.section];
+  const sectionDef = sectionMap[params.section];
 
   return (
     <div className="edit-section-page">
@@ -111,9 +113,12 @@ export default async function EditSectionPage({
       </div>
 
       <EditSectionForm
-        section={params.section}
-        therapist={therapist}
         adId={params.adId}
+        sectionKey={params.section}
+        sectionLabel={config.title}
+        description={config.description}
+        sectionData={therapist || {}}
+        fields={sectionDef?.fields || []}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
 export function Background() {

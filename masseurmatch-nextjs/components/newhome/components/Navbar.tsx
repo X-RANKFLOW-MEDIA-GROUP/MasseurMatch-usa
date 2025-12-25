@@ -2,12 +2,13 @@
 
 import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, ChevronDown } from 'lucide-react';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [activeTab, setActiveTab] = useState('');
+  const [mobileAccordionOpen, setMobileAccordionOpen] = useState<string | null>(null);
   const { scrollY } = useScroll();
   const lastYRef = useRef(0);
 
@@ -19,10 +20,41 @@ export function Navbar() {
     }
   });
 
-  const links = [
-    { name: 'Find Therapist', href: '/explore' },
-    { name: 'For Masseurs', href: '/join' },
-    { name: 'About Us', href: '/about' },
+  const navSections = [
+    {
+      name: 'Find Therapists',
+      href: '/massage-therapists-by-city',
+      dropdownTitle: 'Clients',
+      dropdown: [
+        { name: 'Browse by City', href: '/massage-therapists-by-city' },
+        { name: 'Browse by Service', href: '/massage-services' },
+        { name: 'Top Cities', href: '/top-massage-cities' },
+        { name: 'Top Services', href: '/top-massage-services' },
+      ],
+    },
+    {
+      name: 'For Therapists',
+      href: '/join-as-therapist',
+      dropdownTitle: 'Professionals',
+      dropdown: [
+        { name: 'Join as a Therapist', href: '/join-as-therapist' },
+        { name: 'How It Works', href: '/how-it-works-for-therapists' },
+        { name: 'Verification Process', href: '/verification-process' },
+      ],
+    },
+    {
+      name: 'How It Works',
+      href: '/how-it-works',
+      dropdownTitle: 'About (Institutional)',
+      dropdown: [
+        { name: 'About MasseurMatch', href: '/about' },
+        { name: 'Trust & Safety', href: '/trust-safety' },
+      ],
+    },
+    {
+      name: 'Blog',
+      href: '/blog',
+    },
   ];
 
   return (
@@ -65,49 +97,100 @@ export function Navbar() {
 
             {/* Desktop Links - Framer Style Hover */}
             <div className="hidden md:flex items-center gap-1 relative z-10">
-                {links.map((link, index) => (
-                <motion.a
-                    key={link.name}
-                    href={link.href}
-                    onMouseEnter={() => setActiveTab(link.name)}
-                    onMouseLeave={() => setActiveTab('')}
-                    className="relative px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors duration-200"
+              {navSections.map((section, index) => (
+                <div
+                  key={section.name}
+                  className="relative"
+                  onMouseEnter={() => setActiveTab(section.name)}
+                  onMouseLeave={() => setActiveTab('')}
+                >
+                  <motion.a
+                    href={section.href}
+                    className="group flex items-center gap-1.5 relative px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors duration-200"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
                     whileHover={{ scale: 1.05 }}
-                >
-                    {activeTab === link.name && (
-                    <motion.div
+                  >
+                    {section.name}
+                    {section.dropdown && (
+                      <ChevronDown size={12} className="text-gray-400 group-hover:text-white transition-colors" />
+                    )}
+                    {activeTab === section.name && (
+                      <motion.span
                         layoutId="nav-hover"
                         className="absolute inset-0 bg-white/10 rounded-full -z-10"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    />
+                        transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                      />
                     )}
-                    {link.name}
-                </motion.a>
-                ))}
+                  </motion.a>
+                  {section.dropdown && (
+                    <AnimatePresence>
+                      {activeTab === section.name && (
+                        <motion.div
+                          key={`${section.name}-dropdown`}
+                          initial={{ opacity: 0, y: -6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.25 }}
+                          className="pointer-events-auto absolute top-full mt-2 w-56 rounded-3xl border border-white/10 bg-[#0b0b11]/95 shadow-2xl shadow-black/40 py-2 flex flex-col gap-1 z-40"
+                          onMouseEnter={() => setActiveTab(section.name)}
+                        >
+                          {section.dropdownTitle && (
+                            <span className="px-4 pt-2 text-[10px] uppercase tracking-[0.3em] text-gray-500">
+                              {section.dropdownTitle}
+                            </span>
+                          )}
+                          {section.dropdown.map((item) => (
+                            <a
+                              key={item.name}
+                              href={item.href}
+                              className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors rounded-2xl"
+                            >
+                              {item.name}
+                            </a>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  )}
+                </div>
+              ))}
             </div>
 
             {/* Actions */}
             <div className="flex items-center gap-2 relative z-10">
-                <motion.a
-                  href="/login?redirect=/dashboard"
-                  className="hidden sm:flex h-10 px-6 items-center justify-center bg-white text-black text-sm font-semibold hover:bg-zinc-100 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255,255,255,0.4)" }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                    Login
-                </motion.a>
-                
+              <motion.a
+                href="/join"
+                className="h-10 px-5 flex items-center justify-center rounded-full bg-gradient-to-r from-[#8b5cf6] to-[#6366f1] text-white text-sm font-semibold shadow-[0_8px_30px_rgba(99,102,241,0.45)]"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.25 }}
+                whileHover={{ scale: 1.06 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Sign Up
+              </motion.a>
+              <motion.a
+                href="/login?redirect=/dashboard"
+                className="hidden md:flex text-sm font-medium text-white/80 hover:text-white transition-colors"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.45 }}
+              >
+                Log In
+              </motion.a>
                 <button
-                    onClick={() => setIsOpen(!isOpen)}
-                    className="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors border border-white/5"
+                    onClick={() =>
+                      setIsOpen((prev) => {
+                        if (prev) setMobileAccordionOpen(null);
+                        return !prev;
+                      })
+                    }
+                    className="md:hidden flex items-center gap-1 rounded-full border border-white/20 bg-white/5 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
                 >
-                    {isOpen ? <X size={18} /> : <Menu size={18} />}
+                    <Menu size={16} />
+                    <span className="text-white/80">Menu</span>
                 </button>
             </div>
         </div>
@@ -123,23 +206,95 @@ export function Navbar() {
             transition={{ duration: 0.2 }}
             className="fixed top-24 left-4 right-4 z-40 bg-[#0F0F16] border border-white/10 rounded-3xl p-2 shadow-2xl origin-top"
           >
-            <div className="flex flex-col gap-1 p-2">
-              {links.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="px-4 py-4 rounded-2xl text-base font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center justify-between group"
-                >
-                  {link.name}
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-              ))}
-              <div className="h-px bg-white/5 my-2" />
-              <a href="/login?redirect=/dashboard" className="w-full py-4 rounded-2xl bg-white text-black text-base font-bold hover:bg-gray-200 transition-colors text-center">
-                Login
+          <div className="flex flex-col gap-1 p-2">
+            {navSections.map((section) => (
+              <div key={section.name} className="space-y-1">
+                <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-2xl bg-white/5 text-base font-semibold text-white">
+                  <a
+                    href={section.href}
+                    onClick={() => setIsOpen(false)}
+                    className="flex-1 text-left"
+                  >
+                    {section.name}
+                  </a>
+                  {section.dropdown && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setMobileAccordionOpen((prev) =>
+                          prev === section.name ? null : section.name
+                        )
+                      }
+                      className={`text-white/70 transition-transform ${
+                        mobileAccordionOpen === section.name ? 'rotate-180' : ''
+                      }`}
+                      aria-expanded={mobileAccordionOpen === section.name}
+                      aria-controls={`${section.name}-submenu`}
+                    >
+                      <ChevronDown size={18} />
+                    </button>
+                  )}
+                </div>
+                {section.dropdown && mobileAccordionOpen === section.name && (
+                  <div
+                    id={`${section.name}-submenu`}
+                    className="flex flex-col gap-1 pl-6"
+                  >
+                    {section.dropdownTitle && (
+                      <span className="px-4 text-[11px] uppercase tracking-[0.2em] text-gray-500">
+                        {section.dropdownTitle}
+                      </span>
+                    )}
+                    {section.dropdown.map((item) => (
+                      <a
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => {
+                          setIsOpen(false);
+                          setMobileAccordionOpen(null);
+                        }}
+                        className="px-4 py-2 rounded-2xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                      >
+                        {item.name}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+            <div className="mt-2 space-y-2 px-2">
+              <a
+                href="/login?redirect=/dashboard"
+                onClick={() => setIsOpen(false)}
+                className="block w-full rounded-2xl border border-white/20 bg-white/5 text-center text-base font-semibold text-white/80 hover:text-white hover:border-white/40 transition-colors px-4 py-3"
+              >
+                Log In
               </a>
             </div>
+            <div className="mt-4 border-t border-white/10 pt-3 text-sm text-white/70 space-y-1">
+              <a
+                href="/about"
+                onClick={() => setIsOpen(false)}
+                className="block hover:text-white"
+              >
+                About MasseurMatch
+              </a>
+              <a
+                href="/trust-safety"
+                onClick={() => setIsOpen(false)}
+                className="block hover:text-white"
+              >
+                Trust & Safety
+              </a>
+              <a
+                href="/contact"
+                onClick={() => setIsOpen(false)}
+                className="block hover:text-white"
+              >
+                Contact
+              </a>
+            </div>
+          </div>
           </motion.div>
         )}
       </AnimatePresence>

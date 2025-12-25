@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { cityMap, CityInfo } from '@/data/cityMap';
+import { cityMap } from '@/data/cityMap';
 import { absUrl } from '@/lib/seo';
 import CityLandingPage from '@/components/CityLandingPage';
 
@@ -53,7 +53,7 @@ export default async function CityPage({
     notFound();
   }
 
-  return <CityLandingPage city={city} segment={null} />;
+  return <CityLandingPage city={city} slug={params.city} />;
 }
 
 // Generate static params for all configured cities

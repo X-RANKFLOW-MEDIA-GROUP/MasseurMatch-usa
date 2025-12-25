@@ -1,403 +1,330 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { moderateImage } from '@/lib/sightengine';
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { moderatePhoto } from "@/lib/sightengine";
+import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE_BYTES } from "@/lib/onboarding/validators";
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-
-// Photo limits by plan
 const PHOTO_LIMITS = {
   free: 1,
   standard: 4,
   pro: 8,
   elite: 12,
-};
+} as const;
 
-interface UploadPhotoRequest {
-  file: File;
-  is_cover?: boolean;
+const formSchema = z.object({
+  is_cover: z.string().transform((value) => value === "true").optional(),
+});
+
+const deleteSchema = z.object({
+  photo_id: z.string().uuid(),
+});
+
+function normalizePlan(plan: string | null | undefined) {
+  if (!plan) return "free";
+  if (plan in PHOTO_LIMITS) {
+    return plan as keyof typeof PHOTO_LIMITS;
+  }
+  return "free";
+}
+
+function mapModerationStatus(status: string) {
+  if (status === "auto_passed") return "approved";
+  if (status === "auto_blocked") return "rejected";
+  return "pending";
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = await createServerSupabaseClient();
+    const { data: session } = await supabase.auth.getSession();
+    const userId = session.session?.user?.id;
 
-    // Get authenticated user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get form data
     const formData = await request.formData();
-    const file = formData.get('file') as File;
-    const isCover = formData.get('is_cover') === 'true';
+    const file = formData.get("file") as File | null;
+    const parsed = formSchema.safeParse({
+      is_cover: formData.get("is_cover")?.toString(),
+    });
+    const isCover = parsed.success ? parsed.data.is_cover ?? false : false;
 
     if (!file) {
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { error: 'No file provided' },
+        { error: "Invalid file type. Only JPEG, PNG, and WebP are allowed." },
         { status: 400 }
       );
     }
 
-    // Validate file type
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
       return NextResponse.json(
-        { error: 'Invalid file type. Only JPEG, PNG, and WebP are allowed.' },
+        { error: `File too large. Maximum size is ${MAX_IMAGE_SIZE_BYTES} bytes.` },
         { status: 400 }
       );
     }
 
-    // Validate file size
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
-        { error: 'File too large. Maximum size is 10MB.' },
-        { status: 400 }
-      );
-    }
-
-    // Get profile and subscription
     const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('id, user_id')
-      .eq('user_id', user.id)
+      .from("profiles")
+      .select("id")
+      .eq("user_id", userId)
       .single();
 
     if (profileError || !profile) {
-      return NextResponse.json(
-        { error: 'Profile not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
-    // Get subscription to check photo limit
     const { data: subscription } = await supabase
-      .from('subscriptions')
-      .select('plan')
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-      .single();
+      .from("subscriptions")
+      .select("plan")
+      .eq("user_id", userId)
+      .in("status", ["trialing", "active", "past_due"])
+      .order("current_period_end", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-    const plan = subscription?.plan || 'free';
-    const photoLimit = PHOTO_LIMITS[plan as keyof typeof PHOTO_LIMITS];
+    const planKey = normalizePlan(subscription?.plan);
+    const limit = PHOTO_LIMITS[planKey];
 
-    // Count existing approved photos
-    const { data: existingPhotos, error: countError } = await supabase
-      .from('media_assets')
-      .select('id')
-      .eq('profile_id', profile.id)
-      .eq('media_type', 'photo')
-      .eq('status', 'approved');
+    const { count: existingCount, error: countError } = await supabase
+      .from("media_assets")
+      .select("id", { count: "exact", head: true })
+      .eq("profile_id", profile.id)
+      .eq("type", "photo")
+      .neq("status", "rejected");
 
     if (countError) {
-      return NextResponse.json(
-        { error: 'Failed to count existing photos' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to count existing photos" }, { status: 500 });
     }
 
-    if (existingPhotos && existingPhotos.length >= photoLimit) {
+    if ((existingCount ?? 0) >= limit) {
       return NextResponse.json(
         {
-          error: `Photo limit reached. Your ${plan} plan allows ${photoLimit} photos.`,
-          current: existingPhotos.length,
-          limit: photoLimit,
+          error: `Photo limit reached. Your ${planKey} plan allows ${limit} photos.`,
+          current: existingCount,
+          limit,
         },
         { status: 403 }
       );
     }
 
-    // Upload to Supabase Storage
-    const fileExt = file.name.split('.').pop();
+    const fileExt = file.name.split(".").pop() ?? "jpg";
     const fileName = `${profile.id}/${Date.now()}.${fileExt}`;
 
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('profile-photos')
+    const { error: uploadError } = await supabase.storage
+      .from("profile-photos")
       .upload(fileName, file, {
         contentType: file.type,
         upsert: false,
       });
 
     if (uploadError) {
-      console.error('Upload error:', uploadError);
+      console.error("Upload error:", uploadError);
       return NextResponse.json(
-        { error: 'Failed to upload photo', details: uploadError.message },
+        { error: "Failed to upload photo", details: uploadError.message },
         { status: 500 }
       );
     }
 
-    // Get public URL
     const { data: urlData } = supabase.storage
-      .from('profile-photos')
+      .from("profile-photos")
       .getPublicUrl(fileName);
 
     const publicUrl = urlData.publicUrl;
 
-    // Moderate the image with Sightengine
-    let moderationStatus: 'pending' | 'approved' | 'flagged' | 'rejected' = 'pending';
-    let moderationReason: string | undefined;
+    const moderationResult = await moderatePhoto(publicUrl);
+    const status = mapModerationStatus(moderationResult.status);
 
-    try {
-      const moderationResult = await moderateImage(publicUrl);
-
-      if (moderationResult.status === 'auto_passed') {
-        moderationStatus = 'approved';
-      } else if (moderationResult.status === 'auto_flagged') {
-        moderationStatus = 'flagged';
-        moderationReason = moderationResult.reason;
-      } else if (moderationResult.status === 'auto_blocked') {
-        moderationStatus = 'rejected';
-        moderationReason = moderationResult.reason;
-
-        // Delete the uploaded file
-        await supabase.storage
-          .from('profile-photos')
-          .remove([fileName]);
-
-        return NextResponse.json(
-          {
-            error: 'Photo rejected by moderation',
-            reason: moderationReason,
-            scores: {
-              nudity: moderationResult.nudity_score,
-              weapon: moderationResult.weapon_score,
-              drug: moderationResult.drug_score,
-              gore: moderationResult.gore_score,
-              offensive: moderationResult.offensive_score,
-            },
-          },
-          { status: 400 }
-        );
-      }
-    } catch (error) {
-      console.error('Moderation error:', error);
-      // Continue with flagged status if moderation fails
-      moderationStatus = 'flagged';
-      moderationReason = 'Moderation service error - requires manual review';
+    if (status === "rejected") {
+      await supabase.storage.from("profile-photos").remove([fileName]);
+      return NextResponse.json(
+        {
+          error: "Photo rejected by moderation",
+          reason: moderationResult.reason,
+          score: moderationResult.score,
+        },
+        { status: 400 }
+      );
     }
 
-    // If this is the first photo or explicitly set as cover, mark it as cover
-    const shouldBeCover = isCover || (existingPhotos?.length === 0);
+    const shouldBeCover = isCover || (existingCount ?? 0) === 0;
 
-    // Create media asset record
-    const { data: mediaAsset, error: insertError } = await supabase
-      .from('media_assets')
+    const { data: asset, error: insertError } = await supabase
+      .from("media_assets")
       .insert({
         profile_id: profile.id,
-        media_type: 'photo',
-        url: publicUrl,
+        type: "photo",
+        status,
         storage_path: fileName,
-        status: moderationStatus,
-        moderation_notes: moderationReason,
-        is_cover_photo: shouldBeCover,
+        public_url: publicUrl,
+        thumbnail_url: null,
+        position: existingCount ?? 0,
+        is_cover: shouldBeCover,
+        sightengine_response: {
+          score: moderationResult.score,
+          reason: moderationResult.reason,
+          flags: moderationResult.flags,
+        },
+        sightengine_score: moderationResult.score,
       })
       .select()
       .single();
 
     if (insertError) {
-      console.error('Insert error:', insertError);
-      // Cleanup uploaded file
-      await supabase.storage
-        .from('profile-photos')
-        .remove([fileName]);
-
+      console.error("Insert error:", insertError);
+      await supabase.storage.from("profile-photos").remove([fileName]);
       return NextResponse.json(
-        { error: 'Failed to create photo record', details: insertError.message },
+        { error: "Failed to create photo record", details: insertError.message },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      photo: mediaAsset,
+      photo: asset,
       moderation: {
-        status: moderationStatus,
-        reason: moderationReason,
+        status: moderationResult.status,
+        score: moderationResult.score,
+        flags: moderationResult.flags,
+        reason: moderationResult.reason,
       },
       message:
-        moderationStatus === 'approved'
-          ? 'Photo uploaded and approved'
-          : moderationStatus === 'flagged'
-          ? 'Photo uploaded but flagged for review'
-          : 'Photo uploaded and pending review',
+        status === "approved"
+          ? "Photo uploaded and approved"
+          : "Photo uploaded and pending review",
     });
   } catch (error) {
-    console.error('Photo upload error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Photo upload error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = await createServerSupabaseClient();
+    const { data: session } = await supabase.auth.getSession();
+    const userId = session.session?.user?.id;
 
-    // Get authenticated user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get profile
     const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('user_id', user.id)
+      .from("profiles")
+      .select("id")
+      .eq("user_id", userId)
       .single();
 
     if (profileError || !profile) {
-      return NextResponse.json(
-        { error: 'Profile not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
-    // Get all photos
     const { data: photos, error: photosError } = await supabase
-      .from('media_assets')
-      .select('*')
-      .eq('profile_id', profile.id)
-      .eq('media_type', 'photo')
-      .order('is_cover_photo', { ascending: false })
-      .order('created_at', { ascending: false });
+      .from("media_assets")
+      .select(
+        "id, public_url, thumbnail_url, status, type, position, is_cover, sightengine_score, sightengine_response, created_at"
+      )
+      .eq("profile_id", profile.id)
+      .eq("type", "photo")
+      .order("position", { ascending: true })
+      .order("created_at", { ascending: false });
 
     if (photosError) {
-      return NextResponse.json(
-        { error: 'Failed to fetch photos' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to fetch photos" }, { status: 500 });
     }
 
-    // Get subscription to include photo limit info
     const { data: subscription } = await supabase
-      .from('subscriptions')
-      .select('plan')
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-      .single();
+      .from("subscriptions")
+      .select("plan")
+      .eq("user_id", userId)
+      .in("status", ["trialing", "active", "past_due"])
+      .order("current_period_end", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-    const plan = subscription?.plan || 'free';
-    const photoLimit = PHOTO_LIMITS[plan as keyof typeof PHOTO_LIMITS];
-    const approvedCount = photos?.filter(p => p.status === 'approved').length || 0;
+    const planKey = normalizePlan(subscription?.plan);
+    const limit = PHOTO_LIMITS[planKey];
+    const approvedCount = (photos ?? []).filter((photo) => photo.status === "approved").length;
 
     return NextResponse.json({
       success: true,
       photos,
       stats: {
-        total: photos?.length || 0,
+        total: photos?.length ?? 0,
         approved: approvedCount,
-        pending: photos?.filter(p => p.status === 'pending').length || 0,
-        flagged: photos?.filter(p => p.status === 'flagged').length || 0,
-        rejected: photos?.filter(p => p.status === 'rejected').length || 0,
-        limit: photoLimit,
-        remaining: Math.max(0, photoLimit - approvedCount),
+        pending: (photos ?? []).filter((photo) => photo.status === "pending").length,
+        rejected: (photos ?? []).filter((photo) => photo.status === "rejected").length,
+        limit,
+        remaining: Math.max(0, limit - approvedCount),
       },
     });
   } catch (error) {
-    console.error('Photos fetch error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Photos list error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(_request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = await createServerSupabaseClient();
+    const { data: session } = await supabase.auth.getSession();
+    const userId = session.session?.user?.id;
 
-    // Get authenticated user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get photo_id from query params
-    const { searchParams } = new URL(request.url);
-    const photoId = searchParams.get('photo_id');
+    const parsed = deleteSchema.safeParse({
+      photo_id: _request.nextUrl.searchParams.get("photo_id") ?? undefined,
+    });
 
-    if (!photoId) {
-      return NextResponse.json(
-        { error: 'Missing photo_id parameter' },
-        { status: 400 }
-      );
+    if (!parsed.success) {
+      return NextResponse.json({ error: "photo_id is required" }, { status: 400 });
     }
 
-    // Get profile
+    const { photo_id } = parsed.data;
     const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('user_id', user.id)
+      .from("profiles")
+      .select("id")
+      .eq("user_id", userId)
       .single();
 
     if (profileError || !profile) {
-      return NextResponse.json(
-        { error: 'Profile not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
-    // Get photo to verify ownership and get storage path
     const { data: photo, error: photoError } = await supabase
-      .from('media_assets')
-      .select('*')
-      .eq('id', photoId)
-      .eq('profile_id', profile.id)
+      .from("media_assets")
+      .select("storage_path")
+      .eq("id", photo_id)
+      .eq("profile_id", profile.id)
       .single();
 
     if (photoError || !photo) {
-      return NextResponse.json(
-        { error: 'Photo not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Photo not found" }, { status: 404 });
     }
 
-    // Delete from storage
     if (photo.storage_path) {
-      const { error: storageError } = await supabase.storage
-        .from('profile-photos')
-        .remove([photo.storage_path]);
-
-      if (storageError) {
-        console.error('Storage deletion error:', storageError);
-        // Continue anyway to delete the database record
-      }
+      await supabase.storage.from("profile-photos").remove([photo.storage_path]);
     }
 
-    // Delete database record
     const { error: deleteError } = await supabase
-      .from('media_assets')
+      .from("media_assets")
       .delete()
-      .eq('id', photoId)
-      .eq('profile_id', profile.id);
+      .eq("id", photo_id)
+      .eq("profile_id", profile.id);
 
     if (deleteError) {
-      return NextResponse.json(
-        { error: 'Failed to delete photo' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to delete photo" }, { status: 500 });
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Photo deleted successfully',
-    });
+    return NextResponse.json({ success: true, message: "Photo deleted" });
   } catch (error) {
-    console.error('Photo deletion error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Photo deletion error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

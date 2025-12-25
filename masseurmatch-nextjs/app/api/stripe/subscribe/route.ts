@@ -107,6 +107,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Create subscription record in database
+    // @ts-ignore - Stripe types are incomplete for these properties
+    const currentPeriodStart = stripeSubscription.current_period_start;
+    // @ts-ignore - Stripe types are incomplete for these properties
+    const currentPeriodEnd = stripeSubscription.current_period_end;
+
     const { data: subscription, error: insertError } = await supabase
       .from('subscriptions')
       .insert({
@@ -116,10 +121,10 @@ export async function POST(request: NextRequest) {
         stripe_subscription_id: stripeSubscription.id,
         stripe_customer_id: profile.stripe_customer_id,
         trial_end: stripeSubscription.trial_end
-          ? new Date(stripeSubscription.trial_end * 1000).toISOString()
+          ? new Date((stripeSubscription.trial_end as number) * 1000).toISOString()
           : null,
-        current_period_start: new Date(stripeSubscription.current_period_start * 1000).toISOString(),
-        current_period_end: new Date(stripeSubscription.current_period_end * 1000).toISOString(),
+        current_period_start: new Date((currentPeriodStart as number) * 1000).toISOString(),
+        current_period_end: new Date((currentPeriodEnd as number) * 1000).toISOString(),
       })
       .select()
       .single();

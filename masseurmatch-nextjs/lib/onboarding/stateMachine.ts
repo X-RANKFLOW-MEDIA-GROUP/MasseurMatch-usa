@@ -133,7 +133,7 @@ export interface ProfileRequirements {
 /**
  * Check if profile meets all requirements for admin submission
  */
-export async function canSubmitForReview(
+export function canSubmitForReview(
   profile: Profile,
   user: User,
   subscription: Subscription | null,
@@ -145,7 +145,7 @@ export async function canSubmitForReview(
     incallRates: number;
     outcallRates: number;
   }
-): Promise<ValidationResult> {
+): ValidationResult {
   const missing: string[] = [];
 
   // A) Identity

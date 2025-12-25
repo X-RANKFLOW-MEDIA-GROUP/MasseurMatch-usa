@@ -216,6 +216,59 @@ CREATE TABLE IF NOT EXISTS public.profile_hours (
 CREATE INDEX IF NOT EXISTS idx_hours_profile ON public.profile_hours(profile_id);
 
 -- ============================================================================
+-- 8. PROFILE METADATA TABLES
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS public.profile_languages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  profile_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  language TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_profile_languages_profile ON public.profile_languages(profile_id);
+
+ALTER TABLE public.profile_languages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their profile languages"
+  ON public.profile_languages FOR ALL
+  USING (profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()))
+  WITH CHECK (profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()));
+
+CREATE TABLE IF NOT EXISTS public.profile_services (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  profile_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  service TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_profile_services_profile ON public.profile_services(profile_id);
+
+ALTER TABLE public.profile_services ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their profile services"
+  ON public.profile_services FOR ALL
+  USING (profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()))
+  WITH CHECK (profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()));
+
+CREATE TABLE IF NOT EXISTS public.profile_setups (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  profile_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  setup_name TEXT NOT NULL,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_profile_setups_profile ON public.profile_setups(profile_id);
+
+ALTER TABLE public.profile_setups ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their profile setups"
+  ON public.profile_setups FOR ALL
+  USING (profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()))
+  WITH CHECK (profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()));
+
+-- ============================================================================
 -- 8. TRIGGERS
 -- ============================================================================
 

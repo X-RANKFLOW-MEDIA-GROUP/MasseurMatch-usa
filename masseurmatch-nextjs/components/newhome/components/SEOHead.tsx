@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 export function SEOHead() {
   useEffect(() => {

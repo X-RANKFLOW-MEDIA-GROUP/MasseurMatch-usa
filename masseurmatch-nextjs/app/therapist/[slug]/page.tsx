@@ -66,7 +66,7 @@ export default async function TherapistPage({
   if (canonicalSlug && canonicalSlug !== params.slug) {
     redirect(`/therapist/${canonicalSlug}`);
   }
-  return <TherapistProfile therapist={therapist} />;
+  return <TherapistProfile />;
 }
 
 // Optional: Generate static params for top therapists

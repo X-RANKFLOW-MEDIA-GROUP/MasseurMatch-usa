@@ -1,14 +1,15 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { AuthApiError } from "@supabase/supabase-js";
 
 const providers = ["google", "apple"] as const;
 
-export default function LoginPage() {
+function LoginForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const redirectTo = searchParams?.get("redirectTo") ?? "/dashboard";
@@ -54,9 +55,15 @@ export default function LoginPage() {
         setMessage("Login successful! Redirecting...");
         router.push(redirectTo);
       }
-    } catch (err: any) {
+    } catch (err) {
+      const errMessage =
+        err instanceof AuthApiError && err.status === 400
+          ? "Invalid email or password."
+          : err instanceof Error
+          ? err.message
+          : "Login failed. Please check your credentials.";
       console.error("Login error:", err);
-      setMessage(err.message || "Login failed. Please check your credentials.");
+      setMessage(errMessage);
     } finally {
       setLoading(false);
     }
@@ -274,5 +281,17 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

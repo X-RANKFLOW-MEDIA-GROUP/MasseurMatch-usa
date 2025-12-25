@@ -8,13 +8,14 @@ import { supabaseAdmin } from '@/server/supabaseAdmin';
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { data: therapist, error } = await supabaseAdmin
       .from('therapists')
       .select('*')
-      .eq('user_id', params.id)
+      .eq('user_id', id)
       .eq('status', 'active')
       .single();
 
@@ -51,12 +52,13 @@ export async function GET(
  */
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     // TODO: Add authentication check
     // const session = await getSession(request);
-    // if (!session || session.user.id !== params.id) {
+    // if (!session || session.user.id !== id) {
     //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     // }
 
@@ -127,7 +129,7 @@ export async function PUT(
     const { data, error } = await supabaseAdmin
       .from('therapists')
       .update(filteredUpdates)
-      .eq('user_id', params.id)
+      .eq('user_id', id)
       .select()
       .single();
 

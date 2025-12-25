@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
-type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+const DAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as const;
+type DayOfWeek = (typeof DAYS)[number];
+
+const DAY_TO_INDEX: Record<DayOfWeek, number> = DAYS.reduce(
+  (acc, day, index) => ({ ...acc, [day]: index }),
+  {} as Record<DayOfWeek, number>
+);
 
 interface HoursEntry {
   day: DayOfWeek;
@@ -14,15 +20,13 @@ interface UpdateHoursRequest {
   hours: HoursEntry[];
 }
 
-const VALID_DAYS: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-
 function validateTimeFormat(time: string): boolean {
   const timeRegex = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
   return timeRegex.test(time);
 }
 
 function validateHoursEntry(entry: HoursEntry): { valid: boolean; error?: string } {
-  if (!entry.day || !VALID_DAYS.includes(entry.day)) {
+  if (!entry.day || !DAYS.includes(entry.day)) {
     return { valid: false, error: `Invalid day: ${entry.day}` };
   }
 
@@ -52,34 +56,26 @@ function validateHoursEntry(entry: HoursEntry): { valid: boolean; error?: string
   return { valid: true };
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const supabase = await createClient();
+    const supabase = await createServerSupabaseClient();
 
-    // Get authenticated user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    const { data: session } = await supabase.auth.getSession();
+    const userId = session.session?.user?.id;
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get profile
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('id')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .single();
 
     if (profileError || !profile) {
-      return NextResponse.json(
-        { error: 'Profile not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
-    // Get hours
     const { data: hours, error: hoursError } = await supabase
       .from('profile_hours')
       .select('*')
@@ -87,15 +83,11 @@ export async function GET(request: NextRequest) {
       .order('day_of_week', { ascending: true });
 
     if (hoursError) {
-      return NextResponse.json(
-        { error: 'Failed to fetch hours' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to fetch hours' }, { status: 500 });
     }
 
-    // Format response
-    const formattedHours = VALID_DAYS.map(day => {
-      const dayHours = hours?.find(h => h.day_of_week === day);
+    const formattedHours = DAYS.map((day, index) => {
+      const dayHours = hours?.find((h) => h.day_of_week === index);
       return {
         day,
         is_available: dayHours?.is_available || false,
@@ -108,76 +100,51 @@ export async function GET(request: NextRequest) {
       success: true,
       hours: formattedHours,
     });
-
   } catch (error) {
     console.error('Hours fetch error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 export async function PUT(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = await createServerSupabaseClient();
 
-    // Get authenticated user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    const { data: session } = await supabase.auth.getSession();
+    const userId = session.session?.user?.id;
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Parse request body
-    const body: UpdateHoursRequest = await request.json();
-    const { hours } = body;
+    const payload: UpdateHoursRequest = await request.json();
+    const { hours } = payload;
 
     if (!hours || !Array.isArray(hours)) {
-      return NextResponse.json(
-        { error: 'hours array is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'hours array is required' }, { status: 400 });
     }
 
-    // Validate all entries
     for (const entry of hours) {
       const validation = validateHoursEntry(entry);
       if (!validation.valid) {
-        return NextResponse.json(
-          { error: validation.error },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: validation.error }, { status: 400 });
       }
     }
 
-    // Check for duplicate days
-    const days = hours.map(h => h.day);
-    const uniqueDays = new Set(days);
-    if (days.length !== uniqueDays.size) {
-      return NextResponse.json(
-        { error: 'Duplicate days found' },
-        { status: 400 }
-      );
+    const days = hours.map((h) => h.day);
+    if (new Set(days).size !== days.length) {
+      return NextResponse.json({ error: 'Duplicate days found' }, { status: 400 });
     }
 
-    // Get profile
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('id')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .single();
 
     if (profileError || !profile) {
-      return NextResponse.json(
-        { error: 'Profile not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
-    // Delete existing hours for this profile
     const { error: deleteError } = await supabase
       .from('profile_hours')
       .delete()
@@ -185,19 +152,15 @@ export async function PUT(request: NextRequest) {
 
     if (deleteError) {
       console.error('Delete error:', deleteError);
-      return NextResponse.json(
-        { error: 'Failed to update hours' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to update hours' }, { status: 500 });
     }
 
-    // Insert new hours
-    const hoursToInsert = hours.map(entry => ({
+    const hoursToInsert = hours.map((entry) => ({
       profile_id: profile.id,
-      day_of_week: entry.day,
+      day_of_week: DAY_TO_INDEX[entry.day],
       is_available: entry.is_available,
-      open_time: entry.is_available ? entry.open_time : null,
-      close_time: entry.is_available ? entry.close_time : null,
+      open_time: entry.is_available ? entry.open_time ?? null : null,
+      close_time: entry.is_available ? entry.close_time ?? null : null,
     }));
 
     const { data: insertedHours, error: insertError } = await supabase
@@ -216,14 +179,10 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({
       success: true,
       hours: insertedHours,
-      message: 'Hours updated successfully'
+      message: 'Hours updated successfully',
     });
-
   } catch (error) {
     console.error('Hours update error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -1,37 +1,58 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import styles from "./Footer.module.css";
 
-export default function Footer() {
-  const pathname = usePathname();
-  if (pathname === "/") {
-    return null;
-  }
+const columns = [
+  {
+    title: "Company",
+    links: [
+      { label: "About MasseurMatch", href: "/about" },
+      { label: "Blog", href: "/blog" },
+      { label: "Contact", href: "/contact" },
+    ],
+  },
+  {
+    title: "Find Therapists",
+    links: [
+      { label: "Browse by City", href: "/massage-therapists-by-city" },
+      { label: "Browse by Service", href: "/massage-services" },
+      { label: "Top Cities", href: "/top-massage-cities" },
+      { label: "Top Services", href: "/top-massage-services" },
+    ],
+  },
+  {
+    title: "For Therapists",
+    links: [
+      { label: "Join as a Therapist", href: "/join-as-therapist" },
+      { label: "How It Works", href: "/how-it-works-for-therapists" },
+      { label: "Verification Process", href: "/verification-process" },
+    ],
+  },
+  {
+    title: "Trust & Legal",
+    links: [
+      { label: "Trust & Safety", href: "/trust-safety" },
+      { label: "Privacy Policy", href: "/privacy-policy" },
+      { label: "Terms of Service", href: "/terms-of-service" },
+    ],
+  },
+];
 
+export default function Footer() {
   return (
     <footer className={styles.footer}>
-      <div className={styles["footer-container"]}>
+      <div className={styles["footer-content"]}>
         <div className={styles["footer-brand"]}>
           <h3 className={styles["footer-logo"]}>
             <span className={styles["brand-gradient"]}>Masseur</span>Match
           </h3>
-          <p>
-            The most inclusive massage therapist platform. Connecting wellness
-            and technology with trust.
+          <p className={styles["footer-description"]}>
+            The inclusive directory for massage therapists that prioritizes trust
+            and consistent service quality. We highlight LGBTQ+-friendly practitioners
+            and curate city/service landing pages to guide seekers to the right match.
           </p>
-
-          <div className={styles["footer-cta"]}>
-            <Link href="/join" className={styles["footer-btn-primary"]}>
-              List your services
-            </Link>
-            <Link href="/explore" className={styles["footer-btn-ghost"]}>
-              Explore therapists
-            </Link>
-          </div>
-
           <div className={styles["footer-socials"]}>
             <a
               href="https://www.instagram.com/masseurmatch"
@@ -68,105 +89,23 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className={styles["footer-links"]}>
-          <div>
-            <h4>Platform</h4>
-            <ul>
-              <li>
-                <Link href="/explore">Explore</Link>
-              </li>
-              <li>
-                <Link href="/about">How It Works</Link>
-              </li>
-              <li>
-                <Link href="/about">About Us</Link>
-              </li>
-              <li>
-                <Link href="/blog">Blog</Link>
-              </li>
-              <li>
-                <Link href="/trust">Trust & Safety</Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4>For Therapists</h4>
-            <ul>
-              <li>
-                <Link href="/join">Create Account</Link>
-              </li>
-              <li>
-                <Link href="/dashboard">Dashboard</Link>
-              </li>
-              <li>
-                <Link href="/checkout">Plans &amp; Pricing</Link>
-              </li>
-              <li>
-                <Link href="/support">Help Center</Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4>Legal</h4>
-            <ul>
-              <li>
-                <Link href="/legal/terms">Terms of Use</Link>
-              </li>
-              <li>
-                <Link href="/legal/privacy-policy">Privacy Policy</Link>
-              </li>
-              <li>
-                <Link href="/legal/community-guidelines">
-                  Community Guidelines
-                </Link>
-              </li>
-              <li>
-                <Link href="/legal/cookie-policy">Cookie Policy</Link>
-              </li>
-              <li>
-                <Link href="/legal/professional-standards">
-                  Professional Standards
-                </Link>
-              </li>
-              <li>
-                <Link href="/legal/anti-trafficking">
-                  Anti-Trafficking Policy
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4>Popular Cities</h4>
-            <ul>
-              <li>
-                <Link href="/city/miami">Miami Gay Massage</Link>
-              </li>
-              <li>
-                <Link href="/city/new-york">NYC Male Massage</Link>
-              </li>
-              <li>
-                <Link href="/city/los-angeles">LA LGBT Massage</Link>
-              </li>
-              <li>
-                <Link href="/city/san-francisco">SF Gay Massage</Link>
-              </li>
-              <li>
-                <Link href="/city/las-vegas">Vegas Gay Massage</Link>
-              </li>
-              <li>
-                <Link href="/city/chicago">Chicago M4M Massage</Link>
-              </li>
-            </ul>
-          </div>
+        <div className={styles["footer-grid"]}>
+          {columns.map((column) => (
+            <div key={column.title} className={styles["footer-column"]}>
+              <h4>{column.title}</h4>
+              <ul>
+                {column.links.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href}>{link.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
-
       <div className={styles["footer-bottom"]}>
-        <p>&copy; 2025 MasseurMatch. All rights reserved.</p>
-        <span>Made with care for everyone&apos;s well-being.</span>
+        © 2025 MasseurMatch. All rights reserved.
       </div>
     </footer>
   );

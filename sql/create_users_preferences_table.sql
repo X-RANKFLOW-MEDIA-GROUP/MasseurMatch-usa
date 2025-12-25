@@ -32,3 +32,10 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER users_preferences_updated_at_trigger
 BEFORE INSERT OR UPDATE ON public.users_preferences
 FOR EACH ROW EXECUTE FUNCTION public.users_preferences_updated_at();
+
+ALTER TABLE public.users_preferences ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their preferences"
+  ON public.users_preferences FOR ALL
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);

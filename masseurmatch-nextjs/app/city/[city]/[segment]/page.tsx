@@ -56,7 +56,7 @@ export default async function CitySegmentPage({
     notFound();
   }
 
-  return <CityLandingPage city={city} segment={segment} />;
+  return <CityLandingPage city={city} slug={params.segment} />;
 }
 
 // Generate static params for all city + segment combinations

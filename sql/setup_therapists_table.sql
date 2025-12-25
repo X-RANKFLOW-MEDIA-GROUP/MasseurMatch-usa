@@ -7,6 +7,7 @@
 CREATE TABLE IF NOT EXISTS public.therapists (
   -- Primary Key
   user_id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  slug text UNIQUE,
 
   -- Basic Information
   full_name text,
@@ -123,6 +124,7 @@ CREATE INDEX IF NOT EXISTS idx_therapists_state ON public.therapists(state);
 CREATE INDEX IF NOT EXISTS idx_therapists_status ON public.therapists(status);
 CREATE INDEX IF NOT EXISTS idx_therapists_services ON public.therapists USING gin(services);
 CREATE INDEX IF NOT EXISTS idx_therapists_rating ON public.therapists(rating DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_therapists_slug ON public.therapists(slug);
 CREATE INDEX IF NOT EXISTS idx_reviews_therapist_id ON public.reviews(therapist_id);
 
 -- 5. Enable Row Level Security (RLS)

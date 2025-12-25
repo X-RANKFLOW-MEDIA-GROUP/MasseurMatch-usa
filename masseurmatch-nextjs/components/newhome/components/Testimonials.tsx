@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Star, Quote, MapPin, Sparkles } from 'lucide-react';
+import { Star, MapPin } from 'lucide-react';
 
 const testimonials = [
   {

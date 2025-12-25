@@ -5,7 +5,7 @@ import { SITE_URL } from "@/lib/site";
 const STATIC_PAGES: Array<{
   path: string;
   priority: number;
-  changefreq: MetadataRoute.SitemapItem["changefreq"];
+  changefreq: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
 }> = [
   { path: "", priority: 1, changefreq: "daily" },
   { path: "join", priority: 0.9, changefreq: "daily" },

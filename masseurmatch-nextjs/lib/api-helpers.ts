@@ -54,10 +54,10 @@ export async function safeFetch<T = any>(
     let data: any = null;
     try {
       data = await response.json();
-    } catch (_e) {
+    } catch {
       try {
         data = await response.text();
-      } catch (_e2) {
+      } catch {
         data = null;
       }
     }

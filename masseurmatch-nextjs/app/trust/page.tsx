@@ -1,6 +1,5 @@
 ﻿import { Metadata } from "next";
 import Link from "next/link";
-import styles from "./trust.module.css";
 
 export const metadata: Metadata = {
   title: "Trust & Safety | MasseurMatch - Your Safety Is Our Priority",
@@ -288,26 +287,6 @@ export default function TrustPage() {
                 </span>
                 <div>
                   <p className="font-medium" style={{ color: "var(--text)" }}>
-                    License & Certification Check
-                  </p>
-                  <p className="text-sm" style={{ color: "var(--muted)" }}>
-                    Verification of massage therapy licenses and professional
-                    certifications
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <span
-                  className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
-                  style={{
-                    background: "rgba(139, 92, 246, 0.2)",
-                    color: "var(--violet)"
-                  }}
-                >
-                  3
-                </span>
-                <div>
-                  <p className="font-medium" style={{ color: "var(--text)" }}>
                     Profile Review
                   </p>
                   <p className="text-sm" style={{ color: "var(--muted)" }}>
@@ -324,7 +303,7 @@ export default function TrustPage() {
                     color: "var(--violet)"
                   }}
                 >
-                  4
+                  3
                 </span>
                 <div>
                   <p className="font-medium" style={{ color: "var(--text)" }}>

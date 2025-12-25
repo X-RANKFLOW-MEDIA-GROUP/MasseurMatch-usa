@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
-import { Star, ShieldCheck, MapPin, Clock, Award, Shield, Lock, Users } from 'lucide-react';
+import { Star, ShieldCheck, MapPin, Clock, Shield, Lock, Users } from 'lucide-react';
 import { cn } from '../utils/cn';
 
 // Mock Data for Therapists

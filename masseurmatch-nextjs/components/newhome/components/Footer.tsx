@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion, useInView, type Variants } from 'framer-motion';
-import { Twitter, Facebook, Linkedin, Instagram, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export function Footer() {
   const ref = React.useRef(null);

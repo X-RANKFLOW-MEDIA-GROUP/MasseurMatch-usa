@@ -1,10 +1,8 @@
-// app/admin/page.tsx
-"use client";
-
 import AdminDashboard from "@/pages/AdminDashboard";
+import { ensureAdminAccess } from "./utils";
 
-export default function AdminPage() {
-  return (
-    <AdminDashboard/>
-  );
+export default async function AdminPage() {
+  await ensureAdminAccess();
+
+  return <AdminDashboard />;
 }

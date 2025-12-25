@@ -91,6 +91,7 @@ export default function OnboardingQuiz({ onComplete }: OnboardingQuizProps) {
                     updatePreference("location", {
                       lat: position.coords.latitude,
                       lng: position.coords.longitude,
+                      zipCode: "",
                       radius: 25,
                     });
                   },
@@ -156,11 +157,11 @@ export default function OnboardingQuiz({ onComplete }: OnboardingQuizProps) {
           <div className={styles.step}>
             <h2 className={styles.stepTitle}>Preferred pressure?</h2>
             <div className={styles.optionsVertical}>
-              {[
-                { value: "light", label: "Light & Gentle", emoji: "🌸" },
-                { value: "medium", label: "Medium Pressure", emoji: "💆" },
-                { value: "firm", label: "Firm & Deep", emoji: "💪" },
-              ].map((option) => (
+              {([
+                { value: "light" as const, label: "Light & Gentle", emoji: "🌸" },
+                { value: "medium" as const, label: "Medium Pressure", emoji: "💆" },
+                { value: "firm" as const, label: "Firm & Deep", emoji: "💪" },
+              ] as const).map((option) => (
                 <button
                   key={option.value}
                   className={`${styles.optionButtonLarge} ${
@@ -181,11 +182,11 @@ export default function OnboardingQuiz({ onComplete }: OnboardingQuizProps) {
           <div className={styles.step}>
             <h2 className={styles.stepTitle}>Therapist gender preference?</h2>
             <div className={styles.optionsVertical}>
-              {[
-                { value: "male", label: "Male Therapists" },
-                { value: "female", label: "Female Therapists" },
-                { value: "any", label: "No Preference" },
-              ].map((option) => (
+              {([
+                { value: "male" as const, label: "Male Therapists" },
+                { value: "female" as const, label: "Female Therapists" },
+                { value: "any" as const, label: "No Preference" },
+              ] as const).map((option) => (
                 <button
                   key={option.value}
                   className={`${styles.optionButtonLarge} ${
@@ -205,11 +206,11 @@ export default function OnboardingQuiz({ onComplete }: OnboardingQuizProps) {
           <div className={styles.step}>
             <h2 className={styles.stepTitle}>Session location?</h2>
             <div className={styles.optionsVertical}>
-              {[
-                { value: "incall", label: "In-Call (Studio/Spa)", emoji: "🏢" },
-                { value: "outcall", label: "Out-Call (Home/Hotel)", emoji: "🏠" },
-                { value: "any", label: "Either Works", emoji: "✨" },
-              ].map((option) => (
+              {([
+                { value: "incall" as const, label: "In-Call (Studio/Spa)", emoji: "🏢" },
+                { value: "outcall" as const, label: "Out-Call (Home/Hotel)", emoji: "🏠" },
+                { value: "any" as const, label: "Either Works", emoji: "✨" },
+              ] as const).map((option) => (
                 <button
                   key={option.value}
                   className={`${styles.optionButtonLarge} ${
@@ -230,12 +231,12 @@ export default function OnboardingQuiz({ onComplete }: OnboardingQuizProps) {
           <div className={styles.step}>
             <h2 className={styles.stepTitle}>When do you need a massage?</h2>
             <div className={styles.optionsVertical}>
-              {[
-                { value: "now", label: "Available Now", emoji: "⚡" },
-                { value: "today", label: "Today", emoji: "📅" },
-                { value: "this-week", label: "This Week", emoji: "📆" },
-                { value: "anytime", label: "Anytime", emoji: "🕐" },
-              ].map((option) => (
+              {([
+                { value: "now" as const, label: "Available Now", emoji: "⚡" },
+                { value: "today" as const, label: "Today", emoji: "📅" },
+                { value: "this-week" as const, label: "This Week", emoji: "📆" },
+                { value: "anytime" as const, label: "Anytime", emoji: "🕐" },
+              ] as const).map((option) => (
                 <button
                   key={option.value}
                   className={`${styles.optionButtonLarge} ${
