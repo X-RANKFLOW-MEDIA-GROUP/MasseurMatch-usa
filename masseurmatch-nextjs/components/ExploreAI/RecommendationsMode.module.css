@@ -1,0 +1,299 @@
+/* RecommendationsMode.module.css */
+
+.recommendationsMode {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a0d2e 0%, #16213e 50%, #0f2027 100%);
+  padding: 2rem 1rem;
+}
+
+.loading {
+  text-align: center;
+  color: #f5f0e8;
+  padding: 4rem 0;
+}
+
+.emptyState {
+  text-align: center;
+  color: #f5f0e8;
+  padding: 3rem;
+}
+
+.emptyState h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.emptyState p {
+  color: rgba(245, 240, 232, 0.7);
+  margin-bottom: 1.5rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 1.5rem;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #8a2be2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #8a2be2 0%, #00d4ff 50%, #ff6ec7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: rgba(245, 240, 232, 0.7);
+  font-size: 1rem;
+}
+
+.grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: rgba(30, 20, 50, 0.6);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(138, 43, 226, 0.3);
+  border-color: rgba(138, 43, 226, 0.3);
+}
+
+.cardPhoto {
+  width: 100%;
+  height: 240px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.matchBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #8a2be2 0%, #00d4ff 100%);
+  color: white;
+  padding: 0.5rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(138, 43, 226, 0.4);
+}
+
+.verifiedBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #00d4ff 0%, #8a2be2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.cardHeader {
+  margin-bottom: 1rem;
+}
+
+.name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f5f0e8;
+  margin: 0 0 0.5rem 0;
+}
+
+.age {
+  font-weight: 400;
+  color: rgba(245, 240, 232, 0.6);
+}
+
+.meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: rgba(245, 240, 232, 0.6);
+}
+
+.distance,
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  font-size: 0.75rem;
+  color: rgba(245, 240, 232, 0.8);
+}
+
+.bio {
+  color: rgba(245, 240, 232, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.aiExplanation {
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.aiIcon {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #00d4ff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.aiText {
+  color: rgba(245, 240, 232, 0.85);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  color: #ffd700;
+  font-weight: 700;
+}
+
+.priceAmount {
+  font-size: 1.3rem;
+}
+
+.priceUnit {
+  font-size: 0.8rem;
+  color: rgba(255, 215, 0, 0.7);
+}
+
+.actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.buttonView {
+  padding: 0.7rem 1.5rem;
+  background: linear-gradient(135deg, #8a2be2 0%, #00d4ff 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+}
+
+.buttonView:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(138, 43, 226, 0.4);
+}
+
+.buttonSwipe {
+  padding: 0.7rem 1.2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f5f0e8;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.buttonSwipe:hover {
+  border-color: rgba(138, 43, 226, 0.6);
+  transform: translateY(-2px);
+}
+
+.buttonLike {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 110, 199, 0.2);
+  border: 1px solid rgba(255, 110, 199, 0.3);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.buttonLike:hover {
+  background: rgba(255, 110, 199, 0.3);
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+}

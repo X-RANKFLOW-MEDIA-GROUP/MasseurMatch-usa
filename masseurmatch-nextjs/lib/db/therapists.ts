@@ -18,7 +18,7 @@ export async function getTherapistByAnySlug(slug: string): Promise<{
   therapist: TherapistPublic | null;
   canonicalSlug: string | null;
 }> {
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
 
   const direct = await supabase
     .from("therapists")
@@ -53,9 +53,9 @@ export async function getTherapistByAnySlug(slug: string): Promise<{
 }
 
 export async function listTherapistsByCity(citySlug: string, segment?: string) {
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
 
-  let q = supabase
+  const q = supabase
     .from("therapists")
     .select("id,slug,display_name,headline,primary_photo_url,city_slug,city_name")
     .eq("city_slug", citySlug)

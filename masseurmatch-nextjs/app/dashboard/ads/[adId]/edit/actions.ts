@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { supabaseServer } from "@/lib/supabase/server";
 
 export async function saveAdSection(adId: string, section: string, payload: Record<string, any>) {
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
 
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) throw new Error("Not authenticated");

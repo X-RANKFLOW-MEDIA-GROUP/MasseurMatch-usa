@@ -21,7 +21,21 @@
       "Bash(node scripts/seed-fake-therapist.js:*)",
       "Bash(node scripts/seed-simple-therapist.js:*)",
       "Bash(node scripts/update-therapist-profile.js:*)",
-      "Bash(node test-endpoints.js:*)"
+      "Bash(node test-endpoints.js:*)",
+      "Bash(git diff:*)",
+      "Bash(git checkout:*)",
+      "Bash(timeout 10 npm run dev:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node scripts/seed-map-test-therapists.js:*)",
+      "Bash(node scripts/update-test-therapists.js:*)",
+      "Bash(node scripts/quick-seed.js:*)",
+      "Bash(node scripts/direct-seed.js:*)",
+      "Bash(node scripts/check-therapists.js:*)",
+      "Bash(node scripts/test-explore-ai.js:*)",
+      "Bash(node:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run test:run:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

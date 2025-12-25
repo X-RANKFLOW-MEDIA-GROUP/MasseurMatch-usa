@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/server/supabaseAdmin';
 
 /**
  * GET /api/therapist/dashboard/[id]

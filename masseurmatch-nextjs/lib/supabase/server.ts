@@ -1,7 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-function getCookieValue(cookieStore: ReturnType<typeof cookies>, name: string) {
+type CookieStore = Awaited<ReturnType<typeof cookies>>;
+
+function getCookieValue(cookieStore: CookieStore, name: string) {
   if (typeof cookieStore.get === "function") {
     return cookieStore.get(name)?.value;
   }
@@ -14,8 +16,8 @@ function getCookieValue(cookieStore: ReturnType<typeof cookies>, name: string) {
   return undefined;
 }
 
-function createServerSupabaseClient() {
-  const cookieStore = cookies();
+async function createServerSupabaseClient() {
+  const cookieStore = await cookies();
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

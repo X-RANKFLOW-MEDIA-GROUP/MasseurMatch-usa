@@ -1,0 +1,35 @@
+=============================================================================
+🚨 URGENT: SUPABASE SERVICE ROLE KEY REQUIRED
+=============================================================================
+
+Your app is failing because the SUPABASE_SERVICE_ROLE_KEY is missing!
+
+📋 FOLLOW THESE STEPS:
+
+1. Open your browser and go to:
+   https://supabase.com/dashboard/project/ijsdpozjfjjufjsoexod/settings/api
+
+2. Scroll down to "Project API keys" section
+
+3. Find the "service_role" key (it will be marked as secret/red)
+
+4. Click "Reveal" to show the full key
+
+5. Copy the ENTIRE JWT token (starts with eyJhbGci...)
+
+6. Open the file:
+   masseurmatch-nextjs/.env.local
+
+7. Find this line:
+   SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+8. Replace the value after the = with your REAL service role key
+
+9. Save the file
+
+10. Restart your dev server:
+    npm run dev
+
+=============================================================================
+📖 FOR MORE DETAILS, SEE: ENV_SETUP.md
+=============================================================================

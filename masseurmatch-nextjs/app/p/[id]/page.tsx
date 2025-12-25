@@ -1,5 +1,5 @@
 import { redirect, notFound } from 'next/navigation';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/server/supabaseAdmin';
 
 /**
  * Short link redirect route

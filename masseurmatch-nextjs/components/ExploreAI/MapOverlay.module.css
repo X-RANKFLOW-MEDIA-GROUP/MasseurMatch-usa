@@ -1,0 +1,102 @@
+.overlay {
+  position: relative;
+  width: 100%;
+  min-height: 60vh;
+  background: rgba(10, 8, 20, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.container {
+  width: min(1200px, 100%);
+  background: rgba(16, 24, 48, 0.9);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.header p {
+  margin: 0;
+  color: rgba(245, 240, 232, 0.65);
+}
+
+.closeButton {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f5f0e8;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.mapShell {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.mapPlaceholder {
+  flex: 2;
+  min-height: 320px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(138, 43, 226, 0.2));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(245, 240, 232, 0.7);
+  font-size: 1.1rem;
+}
+
+.pinList {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pinItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f5f0e8;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.pinItem:hover {
+  border-color: rgba(138, 43, 226, 0.5);
+  transform: translateX(4px);
+}
+
+.pinItem span {
+  font-size: 0.85rem;
+  color: #ffd700;
+}
+
+.emptyState {
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(245, 240, 232, 0.7);
+  text-align: center;
+}

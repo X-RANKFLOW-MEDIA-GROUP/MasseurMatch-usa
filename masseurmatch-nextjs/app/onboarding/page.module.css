@@ -1,0 +1,140 @@
+.page {
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  color: #111;
+}
+
+.header {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.tagline {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.notice {
+  background: #f8fafc;
+  border-left: 3px solid #6366f1;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-top: 1rem;
+  max-width: 700px;
+}
+
+.planGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.planCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+}
+
+.planPrice {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.planMicro {
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.planList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding-left: 1rem;
+  list-style: none;
+}
+
+.planList li::before {
+  content: "•";
+  color: #2563eb;
+  margin-right: 0.5rem;
+}
+
+.planButton {
+  margin-top: auto;
+  background: #111827;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 0.85rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.planButton:hover {
+  background: #1f2937;
+}
+
+.timelineSection {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 2rem;
+}
+
+.timelineGrid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.timelineCard {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  min-height: 140px;
+}
+
+.stageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.stageCard {
+  padding: 0.85rem;
+  border-radius: 0.65rem;
+  background: #f8fafc;
+  border: 1px dashed #9ca3af;
+}
+
+.checklistSection {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.checklistSection ol {
+  margin: 1rem 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footerNote {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
