@@ -1,4 +1,4 @@
-import { notFound, permanentRedirect } from "next/navigation";
+﻿import { notFound, permanentRedirect } from "next/navigation";
 import { supabaseServer } from "@/src/lib/supabaseServer";
 import { baseSEO } from "@/app/lib/seo";
 import TherapistProfile from "@/src/components/TherapistProfile";
@@ -312,14 +312,14 @@ export default async function TherapistPage({ params }: TherapistPageProps) {
       <nav aria-label="Breadcrumb" className="text-sm mb-4">
         <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex gap-2">
           <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <a itemProp="item" href="/" className="text-blue-600 hover:underline">
+            <a itemProp="item" href="/" className="text-violet-600 hover:underline">
               <span itemProp="name">Home</span>
             </a>
             <meta itemProp="position" content="1" />
             <span className="mx-2">/</span>
           </li>
           <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <a itemProp="item" href="/explore" className="text-blue-600 hover:underline">
+            <a itemProp="item" href="/explore" className="text-violet-600 hover:underline">
               <span itemProp="name">Therapists</span>
             </a>
             <meta itemProp="position" content="2" />
@@ -354,3 +354,4 @@ export default async function TherapistPage({ params }: TherapistPageProps) {
     </>
   );
 }
+

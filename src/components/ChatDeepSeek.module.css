@@ -1,4 +1,4 @@
-/* ===== Section container (scoped) ===== */
+﻿/* ===== Section container (scoped) ===== */
 .assistant-section {
   padding: 5rem 1.5rem 6rem;
   background: #0f0f1a00;
@@ -28,7 +28,7 @@
   padding: 16px 24px;
   border: 1px solid rgba(139, 92, 246, 0.3);
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%);
   backdrop-filter: blur(8px);
   color: #e7e9ee;
   font-size: 15px;
@@ -41,7 +41,7 @@
 .assistant-toggle:hover {
   transform: translateY(-2px);
   border-color: rgba(139, 92, 246, 0.5);
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(59, 130, 246, 0.12) 100%);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(99, 102, 241, 0.12) 100%);
   box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
 }
 
@@ -196,7 +196,7 @@
   margin-left: auto;
   color: #e6f1ff;
   background: linear-gradient(180deg, #0d2740, #0e2c4a);
-  border-color: rgba(59,130,246,.35);
+  border-color: rgba(99,102,241,.35);
 }
 
 .assistant-bubble.bot {
@@ -250,9 +250,9 @@
   font-weight: 600;
   border: 0;
   border-radius: 12px;
-  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(168,85,247,.28);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.28);
   cursor: pointer;
   transition: filter .2s ease, transform .2s ease;
   text-decoration: none; /* ensure no underline */
@@ -351,3 +351,4 @@
   80% { transform: translateY(0); opacity: 0.55; }
   100% { opacity: 0.55; }
 }
+

@@ -1,14 +1,14 @@
-.about {
+﻿.about {
   min-height: 100vh;
   padding: 6rem 1.5rem 4rem;
   background: radial-gradient(
       1200px 600px at 50% -10%,
-      #101024 0%,
-      #050513 55%,
-      #04040a 100%
+      #0f0f16 0%,
+      #050505 60%,
+      #050505 100%
     );
   color: #e5e7eb;
-  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
     sans-serif;
 }
 
@@ -24,7 +24,7 @@
   font-weight: 800;
   letter-spacing: 0.01em;
   margin-bottom: 0.75rem;
-  background: linear-gradient(90deg, #c4b5fd, #818cf8, #22c55e);
+  background: linear-gradient(90deg, #c4b5fd, #8b5cf6, #6366f1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -55,13 +55,13 @@
   margin: 0 auto;
   font-size: 0.85rem;
   color: #9ca3af;
-  background: rgba(15, 23, 42, 0.9);
+  background: rgba(12, 12, 18, 0.9);
   border-radius: 12px;
   padding: 0.9rem 1rem;
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* BOTÕES LOCAIS */
+/* BOTÃ•ES LOCAIS */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -83,38 +83,38 @@
 
 .btn--primary {
   color: #fff;
-  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.45);
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.45);
 }
 
 .btn--primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 30px rgba(168, 85, 247, 0.6);
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.6);
 }
 
 .btn--ghost {
   color: #e5e7eb;
-  background: rgba(15, 23, 42, 0.95);
-  border-color: rgba(148, 163, 184, 0.6);
+  background: rgba(12, 12, 18, 0.95);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .btn--ghost:hover {
-  background: rgba(15, 23, 42, 1);
-  border-color: #818cf8;
+  background: rgba(12, 12, 18, 1);
+  border-color: #6366f1;
 }
 
 .btn--link {
-  color: #a5b4fc;
+  color: #c4b5fd;
   background: transparent;
   border-color: transparent;
 }
 
 .btn--link:hover {
-  color: #c4b5fd;
+  color: #e0d7ff;
   text-decoration: underline;
 }
 
-/* SEÇÕES GENÉRICAS */
+/* SEÃ‡Ã•ES GENÃ‰RICAS */
 .about__section {
   max-width: 960px;
   margin: 0 auto 2.8rem;
@@ -143,10 +143,10 @@
 }
 
 .about__card {
-  background: rgba(15, 23, 42, 0.92);
+  background: rgba(12, 12, 18, 0.92);
   border-radius: 14px;
   padding: 0.9rem 1rem;
-  border: 1px solid rgba(30, 64, 175, 0.4);
+  border: 1px solid rgba(99, 102, 241, 0.35);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
 }
 
@@ -159,10 +159,10 @@
 
 /* ADDRESS / LEGAL */
 .about__address {
-  background: rgba(15, 23, 42, 0.92);
+  background: rgba(12, 12, 18, 0.92);
   border-radius: 14px;
   padding: 1rem 1.1rem;
-  border: 1px solid rgba(148, 163, 184, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   font-style: normal;
   display: flex;
   flex-direction: column;
@@ -174,13 +174,13 @@
 }
 
 .about__link {
-  color: #a5b4fc;
+  color: #c4b5fd;
   text-decoration: none;
   font-size: 0.9rem;
 }
 
 .about__link:hover {
-  color: #c4b5fd;
+  color: #e0d7ff;
   text-decoration: underline;
 }
 
@@ -213,7 +213,7 @@
 /* CITY LINKS (SEO Internal Linking) */
 .about__cityLink {
   display: block;
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
   border: 1px solid rgba(139, 92, 246, 0.4);
   border-radius: 12px;
   padding: 0.75rem 1rem;
@@ -226,7 +226,7 @@
 }
 
 .about__cityLink:hover {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(59, 130, 246, 0.25) 100%);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
   border-color: #a855f7;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(168, 85, 247, 0.3);
@@ -243,7 +243,7 @@
   padding-top: 1.5rem;
 }
 
-/* REVEAL ANIMATION – precisa estar escopado com .about */
+/* REVEAL ANIMATION â€“ precisa estar escopado com .about */
 .about [data-reveal] {
   opacity: 0;
   transform: translateY(16px);
@@ -257,7 +257,7 @@
   transform: translateY(0) !important;
 }
 
-/* FOCUS VISÍVEL */
+/* FOCUS VISÃVEL */
 .btn:focus-visible,
 .about__link:focus-visible {
   outline: 2px solid #8b5cf6;
@@ -289,7 +289,7 @@
   }
 }
 
-/* REDUZIR MOTION SE O USUÁRIO PREFERIR */
+/* REDUZIR MOTION SE O USUÃRIO PREFERIR */
 @media (prefers-reduced-motion: reduce) {
   .about [data-reveal] {
     transition: none;
@@ -297,3 +297,5 @@
     transform: none;
   }
 }
+
+

@@ -1,9 +1,9 @@
-/* ===== SECTION WRAPPER ===== */
+﻿/* ===== SECTION WRAPPER ===== */
 .testimonials {
   background: #050513;
   color: #fff;
   padding: 72px 8% 80px;
-  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
     sans-serif;
   position: relative;
   overflow: hidden;
@@ -16,7 +16,7 @@
   inset: -40%;
   background:
     radial-gradient(40% 40% at 0% 0%, rgba(168, 85, 247, 0.22), transparent 60%),
-    radial-gradient(45% 45% at 100% 100%, rgba(56, 189, 248, 0.14), transparent 65%);
+    radial-gradient(45% 45% at 100% 100%, rgba(99, 102, 241, 0.14), transparent 65%);
   opacity: 0.6;
   pointer-events: none;
   z-index: 0;
@@ -82,7 +82,7 @@
   inset: 0;
   background: radial-gradient(
     circle at top right,
-    rgba(244, 114, 182, 0.18),
+    rgba(139, 92, 246, 0.2),
     transparent 60%
   );
   opacity: 0;
@@ -95,7 +95,7 @@
   box-shadow:
     0 0 26px rgba(129, 140, 248, 0.5),
     0 22px 55px rgba(0, 0, 0, 0.95);
-  border-color: rgba(168, 85, 247, 0.7);
+  border-color: rgba(139, 92, 246, 0.7);
 }
 
 .testimonial-card:hover::after {
@@ -111,7 +111,7 @@
 
 .quote-icon {
   opacity: 0.7;
-  color: #a855f7;
+  color: #8b5cf6;
 }
 
 /* ===== TEXT ===== */
@@ -203,3 +203,4 @@
     transform: none;
   }
 }
+
