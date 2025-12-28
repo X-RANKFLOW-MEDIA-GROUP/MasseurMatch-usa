@@ -71,10 +71,6 @@ export async function proxy(req: NextRequest) {
     },
   });
 
-  // Validate required environment variables
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
   // ====================================
   // AUTH PROTECTION (Protected Routes)
   // ====================================
