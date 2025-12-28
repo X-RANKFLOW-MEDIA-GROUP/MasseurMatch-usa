@@ -1,0 +1,99 @@
+
+> masseurmatch-nextjs@0.1.0 lint
+> eslint
+
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\app\api\onboarding\hours\route.ts
+  59:27  warning  '_request' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\app\api\onboarding\photos\route.ts
+  206:27  warning  'request' is defined but never used   @typescript-eslint/no-unused-vars
+  271:30  warning  '_request' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\app\api\onboarding\profile\submit\route.ts
+  10:28  warning  '_request' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\app\api\onboarding\rates\route.ts
+  49:27  warning  '_request' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\app\api\onboarding\status\route.ts
+  15:27  warning  '_request' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\app\api\preferences\route.ts
+  51:27  warning  '_request' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\app\api\stripe\customer\route.ts
+  9:28  warning  'request' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\app\api\stripe\setup-intent\route.ts
+  9:28  warning  'request' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\app\legal\[slug]\page.tsx
+  261:6  warning  'LegalPageData' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\app\therapist\[slug]\page-dynamic.tsx
+  19:11  warning  'reviews' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\app\trust\page.tsx
+  3:8  warning  'styles' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\components\ExploreAI\ai.ts
+  233:47  error  Parsing error: ',' expected
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\components\ExploreTherapists.tsx
+  195:10  warning  'fetchError' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\components\Header.tsx
+  20:3  error  React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  60:3  error  React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  69:3  error  React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  78:3  error  React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\components\LegalPage.tsx
+  25:10  warning  'Separator' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\components\UnifiedExplore.tsx
+  22:10  warning  'userPreferences' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\components\explore\SwipeCard.tsx
+  6:9  error  Parsing error: Identifier expected
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\components\newhome\components\HowItWorks.tsx
+    4:43  warning  'useSpring' is defined but never used             @typescript-eslint/no-unused-vars
+    8:3   warning  'Phone' is defined but never used                 @typescript-eslint/no-unused-vars
+    9:3   warning  'FileText' is defined but never used              @typescript-eslint/no-unused-vars
+   12:3   warning  'CheckCircle' is defined but never used           @typescript-eslint/no-unused-vars
+   16:3   warning  'Users' is defined but never used                 @typescript-eslint/no-unused-vars
+   18:3   warning  'MapPin' is defined but never used                @typescript-eslint/no-unused-vars
+   25:3   warning  'Zap' is defined but never used                   @typescript-eslint/no-unused-vars
+   28:10  warning  'ImageWithFallback' is defined but never used     @typescript-eslint/no-unused-vars
+  249:7   warning  'PhoneMockup' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  517:7   warning  'ChatMockup' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  633:9   warning  'y' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  649:9   warning  'slide' is assigned a value but never used        @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\components\newhome\components\ScrollToTop.tsx
+  5:10  warning  'ArrowUp' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\components\onboarding\steps\IdentityVerification.tsx
+  19:10  warning  'sessionUrl' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  48:15  warning  'profile' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\components\onboarding\steps\PaymentStep.tsx
+  20:38  warning  '_clientSecret' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\components\onboarding\steps\ReviewSubmit.tsx
+  23:10  warning  'profile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\context\ProfileContext.tsx
+  203:5  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\lib\supabase\server.ts
+  6:10  warning  'getCookieValue' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\computer\Documents\GitHub\MasseurMatch-usa\masseurmatch-nextjs\vitest.setup.ts
+  1:10  warning  'expect' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 41 problems (6 errors, 35 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+
