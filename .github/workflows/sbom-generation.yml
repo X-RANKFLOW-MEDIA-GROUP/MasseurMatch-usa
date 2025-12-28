@@ -60,14 +60,14 @@ jobs:
           echo "- Commit SHA: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload CycloneDX SBOM
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: sbom-cyclonedx
           path: sbom-cyclonedx.json
           retention-days: 90
 
       - name: Upload SPDX SBOM
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: sbom-spdx
           path: sbom-spdx.json
