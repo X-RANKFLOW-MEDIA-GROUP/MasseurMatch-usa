@@ -2,7 +2,7 @@
 
 export type IdentityStatus = 'pending' | 'verified' | 'failed';
 export type UserRole = 'user' | 'admin';
-export type SubscriptionPlan = 'standard' | 'pro' | 'elite';
+export type SubscriptionPlan = 'free' | 'standard' | 'pro' | 'elite';
 export type SubscriptionStatus = 'trialing' | 'active' | 'past_due' | 'canceled';
 export type OnboardingStage =
   | 'profile_setup'

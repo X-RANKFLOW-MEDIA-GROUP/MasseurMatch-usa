@@ -56,11 +56,11 @@ export async function POST(req: NextRequest) {
         signErr.message?.toLowerCase().includes("user already registered");
 
       if (alreadyExists) {
-        // User exists - get their ID by querying the therapists table
+        // User exists - get their ID by querying the profiles table
         const { data: existingProfile, error: getProfileErr } = await supabaseAdmin
-          .from("therapists")
+          .from("profiles")
           .select("user_id")
-          .eq("email", email.trim())
+          .eq("user_id", (await supabaseAdmin.auth.admin.listUsers()).data?.users.find(u => u.email === email.trim())?.id || "")
           .single();
 
         if (getProfileErr || !existingProfile) {
@@ -68,6 +68,7 @@ export async function POST(req: NextRequest) {
           const { data: usersData, error: listErr } = await supabaseAdmin.auth.admin.listUsers();
 
           if (listErr || !usersData?.users) {
+            console.error("Failed to list users:", listErr);
             return NextResponse.json(
               { error: "User exists but could not be found. Please try logging in instead." },
               { status: 400 }
@@ -90,6 +91,7 @@ export async function POST(req: NextRequest) {
 
         console.log("User already exists, updating profile:", userId);
       } else {
+        console.error("Failed to create user:", signErr);
         return NextResponse.json(
           { error: signErr.message || "Failed to create user account" },
           { status: 400 }
@@ -106,7 +108,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Insert/update therapist profile (using service role to bypass RLS)
+    // 2. Insert/update profiles table (basic user profile)
+    const { error: profileErr } = await supabaseAdmin
+      .from("profiles")
+      .upsert({
+        id: userId,
+        user_id: userId,
+        email: email.trim(),
+        onboarding_stage: "needs_plan",
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "id" });
+
+    if (profileErr) {
+      console.error("Error saving profile:", profileErr);
+      return NextResponse.json(
+        { error: profileErr.message || "Failed to save profile" },
+        { status: 500 }
+      );
+    }
+
+    // 3. Insert/update therapist profile (detailed information - using service role to bypass RLS)
     const therapistPayload = {
       user_id: userId,
       full_name: fullName.trim(),
@@ -136,7 +157,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3. Return success with userId
+    // 4. Return success with userId
     const isUpdate = !!signErr;
     return NextResponse.json({
       success: true,

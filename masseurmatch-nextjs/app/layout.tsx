@@ -5,6 +5,8 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { Navbar } from "@/components/newhome/components/Navbar";
 import Footer from "@/components/Footer";
 
+export const dynamic = "force-dynamic";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

@@ -1,5 +1,3 @@
-const sightengine = require("sightengine");
-
 const apiUser = process.env.SIGHTENGINE_API_USER;
 const apiSecret = process.env.SIGHTENGINE_API_SECRET;
 
@@ -9,10 +7,35 @@ if (!apiUser || !apiSecret) {
   );
 }
 
-const client =
-  apiUser && apiSecret
-    ? new sightengine.SightengineClient(apiUser, apiSecret)
-    : null;
+const SIGHTENGINE_ENDPOINT = "https://api.sightengine.com/1.0/check.json";
+
+/**
+ * Call Sightengine API directly using native fetch (no vulnerable dependencies)
+ */
+async function checkImage(models: string[], imageUrl: string) {
+  if (!apiUser || !apiSecret) {
+    throw new Error("Sightengine API credentials not configured");
+  }
+
+  const params = new URLSearchParams({
+    models: models.join(","),
+    url: imageUrl,
+    api_user: apiUser,
+    api_secret: apiSecret,
+  });
+
+  const response = await fetch(`${SIGHTENGINE_ENDPOINT}?${params.toString()}`, {
+    headers: {
+      "User-Agent": "MasseurMatch-NextJS/1.0",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Sightengine API error: ${response.status} ${response.statusText}`);
+  }
+
+  return response.json();
+}
 
 export interface PhotoModerationResult {
   status: "auto_passed" | "auto_flagged" | "auto_blocked";
@@ -36,7 +59,7 @@ const extractScore = (value: number | undefined): number =>
   Number.isFinite(value) && value !== undefined ? Math.min(1, Math.max(0, value)) : 0;
 
 export async function moderatePhoto(imageUrl: string): Promise<PhotoModerationResult> {
-  if (!client) {
+  if (!apiUser || !apiSecret) {
     return {
       status: "auto_flagged",
       score: 0.5,
@@ -46,9 +69,7 @@ export async function moderatePhoto(imageUrl: string): Promise<PhotoModerationRe
   }
 
   try {
-    const result = await client
-      .check(["nudity", "wad", "offensive", "gore"])
-      .set_url(imageUrl);
+    const result = await checkImage(["nudity", "wad", "offensive", "gore"], imageUrl);
 
     const nudityScore = extractScore(result?.nudity?.raw);
     const weaponScore = extractScore(result?.weapon);

@@ -1,5 +1,7 @@
 import { LegalPage } from "@/app/legal/LegalPage";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata() {
   const url = "https://www.masseurmatch.com/terms";
 

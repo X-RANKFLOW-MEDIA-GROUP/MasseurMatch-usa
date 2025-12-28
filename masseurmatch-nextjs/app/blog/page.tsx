@@ -2,6 +2,9 @@
 import Link from "next/link";
 import { getAllPosts } from "./data/posts";
 
+export const dynamic = "force-dynamic";
+
+
 export const metadata: Metadata = {
   title: "Blog | MasseurMatch - Wellness & Massage Therapy Insights",
   description:

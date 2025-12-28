@@ -19,6 +19,19 @@ interface Plan {
 
 const PLANS: Plan[] = [
   {
+    id: "free",
+    name: "Free",
+    price: "Free",
+    description: "7-day trial, no credit card required",
+    features: [
+      "1 approved photo",
+      "Basic profile listing",
+      "Identity verification required",
+      "7-day trial period",
+      "Community support",
+    ],
+  },
+  {
     id: "standard",
     name: "Standard",
     price: "$29/month",
@@ -87,7 +100,7 @@ export function PlanSelection({ onNext, onPlanSelected }: PlanSelectionProps) {
         <p className="text-slate-400">Select the plan that best fits your needs</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {PLANS.map((plan, index) => (
           <motion.div
             key={plan.id}

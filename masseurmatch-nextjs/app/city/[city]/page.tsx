@@ -9,9 +9,10 @@ export const revalidate = 3600;
 export async function generateMetadata({
   params,
 }: {
-  params: { city: string };
+  params: Promise<{ city: string }>;
 }): Promise<Metadata> {
-  const city = cityMap[params.city];
+  const { city: citySlug } = await params;
+  const city = cityMap[citySlug];
 
   if (!city) {
     return {
@@ -45,20 +46,14 @@ export async function generateMetadata({
 export default async function CityPage({
   params,
 }: {
-  params: { city: string };
+  params: Promise<{ city: string }>;
 }) {
-  const city = cityMap[params.city];
+  const { city: citySlug } = await params;
+  const city = cityMap[citySlug];
 
   if (!city) {
     notFound();
   }
 
-  return <CityLandingPage city={city} slug={params.city} />;
-}
-
-// Generate static params for all configured cities
-export async function generateStaticParams() {
-  return Object.keys(cityMap).map((citySlug) => ({
-    city: citySlug,
-  }));
+  return <CityLandingPage city={city} slug={citySlug} />;
 }

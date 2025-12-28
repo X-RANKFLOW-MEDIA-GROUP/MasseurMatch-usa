@@ -2,6 +2,8 @@ import { LegalPage } from "@/app/legal/LegalPage";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 // Legal Pages Data
 const LEGAL_PAGES = {
   "terms": {
@@ -302,12 +304,6 @@ export async function generateMetadata({
       description: pageData.description,
     },
   };
-}
-
-export async function generateStaticParams() {
-  return Object.keys(LEGAL_PAGES).map((slug) => ({
-    slug,
-  }));
 }
 
 export default async function LegalSlugPage({

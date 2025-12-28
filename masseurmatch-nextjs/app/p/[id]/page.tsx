@@ -12,13 +12,14 @@ import { supabaseAdmin } from '@/server/supabaseAdmin';
 export default async function ShortLinkPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   // Get therapist by numeric ID or UUID
   const { data: therapist, error } = await supabaseAdmin
     .from('therapists')
     .select('slug')
-    .eq('user_id', params.id) // Assuming user_id is UUID
+    .eq('user_id', id) // Assuming user_id is UUID
     .eq('status', 'active')
     .single();
 
@@ -46,12 +47,13 @@ export default async function ShortLinkPage({
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const { data: therapist } = await supabaseAdmin
     .from('therapists')
     .select('slug, display_name')
-    .eq('user_id', params.id)
+    .eq('user_id', id)
     .eq('status', 'active')
     .single();
 

@@ -64,35 +64,71 @@ const MasseurCard = ({
   targetScale: number;
 }) => {
   const scale = useTransform(progress, range, [1, targetScale]);
-  
+  const opacity = useTransform(progress, range, [1, 0.5]);
+  const y = useTransform(progress, range, [0, -50]);
+
   return (
     <div className="h-screen flex items-center justify-center sticky top-0 px-4 relative">
-      <motion.div 
-        style={{ 
+      <motion.div
+        style={{
           scale,
+          opacity,
+          y,
           top: `calc(10vh + ${index * 35}px)`
-        }} 
-        className="relative flex flex-col md:flex-row w-full max-w-5xl h-[600px] rounded-[32px] overflow-hidden bg-[#0c0c11] border border-white/10 shadow-2xl origin-top"
+        }}
+        whileHover={{
+          scale: targetScale + 0.02,
+          transition: { duration: 0.3, ease: "easeOut" }
+        }}
+        className="relative flex flex-col md:flex-row w-full max-w-5xl h-[600px] rounded-[32px] overflow-hidden bg-[#0c0c11] border border-white/10 shadow-2xl origin-top group"
       >
         {/* Gradient Overlay - Silver/Chrome Aesthetic */}
         <div className={cn("absolute inset-0 bg-gradient-to-br opacity-10 pointer-events-none", data.gradient)} />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
         
         {/* Left Side: Image */}
-        <div className="md:w-5/12 h-64 md:h-full relative overflow-hidden group">
-            <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10" />
-            <img 
-              src={data.imageUrl} 
-              alt={data.name} 
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        <div className="md:w-5/12 h-64 md:h-full relative overflow-hidden group/image">
+            <motion.div
+                className="absolute inset-0 bg-black/10 z-10"
+                initial={{ opacity: 1 }}
+                whileHover={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
             />
-            
+            <motion.img
+              src={data.imageUrl}
+              alt={data.name}
+              className="w-full h-full object-cover"
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            />
+
             {/* Overlay Info on Image */}
-            <div className="absolute bottom-4 left-4 z-20 flex gap-2">
-                <div className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-xs font-medium text-white flex items-center gap-1 shadow-lg">
-                    <ShieldCheck className="w-3 h-3 text-violet-300" /> Verified
-                </div>
-            </div>
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="absolute bottom-4 left-4 z-20 flex gap-2"
+            >
+                <motion.div
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-xs font-medium text-white flex items-center gap-1 shadow-lg cursor-pointer"
+                >
+                    <motion.div
+                        animate={{ rotate: [0, 360] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    >
+                        <ShieldCheck className="w-3 h-3 text-violet-300" />
+                    </motion.div>
+                    <span>Verified</span>
+                </motion.div>
+            </motion.div>
+
+            {/* Gradient overlay on hover */}
+            <motion.div
+                className="absolute inset-0 bg-gradient-to-t from-violet-500/30 via-transparent to-transparent opacity-0 z-10"
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+            />
         </div>
 
         {/* Right Side: Content */}
@@ -178,22 +214,51 @@ const MasseurCard = ({
                 <div className="text-sm flex flex-col gap-2">
                     {/* VISITING NOW Badge - Only for Lucas Montgomery (id: 3) */}
                     {data.id === 3 && (
-                        <div className="flex items-center gap-1.5 mb-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                        <motion.div
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.5, type: "spring" }}
+                            className="flex items-center gap-1.5 mb-1"
+                        >
+                            <motion.span
+                                animate={{ scale: [1, 1.3, 1] }}
+                                transition={{ duration: 1.5, repeat: Infinity }}
+                                className="w-1.5 h-1.5 rounded-full bg-indigo-400"
+                            />
                             <span className="text-indigo-400 font-bold text-xs uppercase tracking-wider">
                                 VISITING NOW
                             </span>
-                        </div>
+                        </motion.div>
                     )}
                     <span className="text-zinc-500 text-xs uppercase tracking-wider font-semibold">Availability</span>
                     <span className="text-violet-300 font-medium flex items-center gap-1.5 mt-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                        <motion.span
+                            animate={{ scale: [1, 1.2, 1], opacity: [1, 0.5, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="w-1.5 h-1.5 rounded-full bg-violet-400"
+                        />
                         Today, 4:00 PM
                     </span>
                 </div>
-                <button className="h-12 px-8 bg-white text-black font-semibold hover:bg-zinc-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_25px_rgba(255,255,255,0.25)]">
-                    View Profile
-                </button>
+                <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.05, x: 5 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    className="relative h-12 px-8 bg-white text-black font-semibold overflow-hidden group/btn"
+                >
+                    <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-violet-500/20 via-indigo-500/20 to-violet-500/20"
+                        initial={{ x: "-100%" }}
+                        whileHover={{ x: "100%" }}
+                        transition={{ duration: 0.6 }}
+                    />
+                    <span className="relative z-10">View Profile</span>
+                    <motion.div
+                        className="absolute inset-0 bg-white opacity-0 group-hover/btn:opacity-10"
+                        transition={{ duration: 0.3 }}
+                    />
+                </motion.button>
             </div>
         </div>
       </motion.div>

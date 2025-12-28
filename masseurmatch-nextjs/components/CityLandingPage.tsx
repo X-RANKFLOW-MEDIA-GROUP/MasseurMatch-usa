@@ -43,12 +43,12 @@ export default function CityLandingPage({ city, slug }: Props) {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link
+            <a
               href="/join"
               className="inline-flex items-center justify-center rounded-lg bg-violet-400 px-5 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-violet-500/30 transition hover:-translate-y-[1px] hover:shadow-violet-500/40"
             >
               I am a massage therapist - Join waitlist
-            </Link>
+            </a>
             <a
               href={therapistMailto}
               className="inline-flex items-center justify-center rounded-lg border border-violet-300/60 px-5 py-3 text-sm font-semibold text-violet-100 transition hover:border-violet-200 hover:text-white hover:bg-violet-300/10"
@@ -133,12 +133,12 @@ export default function CityLandingPage({ city, slug }: Props) {
               providers get priority placement when we open in {name}.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link
+              <a
                 href="/join/form"
                 className="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:-translate-y-[1px]"
               >
                 Complete the therapist intake
-              </Link>
+              </a>
               <a
                 href={therapistMailto}
                 className="inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-violet-300/60"
@@ -179,12 +179,12 @@ export default function CityLandingPage({ city, slug }: Props) {
                 >
                   Request coverage in my area
                 </a>
-                <Link
+                <a
                   href="/therapist"
                   className="inline-flex items-center justify-center rounded-lg border border-white/15 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-violet-300/60"
                 >
                   Browse active cities
-                </Link>
+                </a>
               </div>
               <div className="grid gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-200 sm:grid-cols-2">
                 <div>

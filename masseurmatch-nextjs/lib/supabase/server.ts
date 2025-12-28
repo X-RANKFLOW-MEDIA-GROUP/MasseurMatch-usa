@@ -17,7 +17,29 @@ function getCookieValue(cookieStore: CookieStore, name: string) {
 }
 
 async function createServerSupabaseClient() {
-  const cookieStore = await cookies();
+  // Handle case where cookies() is called outside request context (e.g., during build)
+  let cookieStore: CookieStore;
+
+  try {
+    cookieStore = await cookies();
+  } catch (error) {
+    // During static generation, create a client without cookies
+    // This allows read-only operations to work during build
+    return createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return [];
+          },
+          setAll() {
+            // No-op during static generation
+          },
+        },
+      }
+    );
+  }
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

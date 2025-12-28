@@ -39,6 +39,8 @@ export function Hero() {
   const { scrollY } = useScroll();
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   const y = useTransform(scrollY, [0, 300], [0, 50]);
+  const scale = useTransform(scrollY, [0, 300], [1, 0.95]);
+  const blur = useTransform(scrollY, [0, 300], [0, 10]);
 
   // Geolocation State
   const [location, setLocation] = useState<string | null>(null);
@@ -46,6 +48,39 @@ export function Hero() {
 
   // Explore Modal State
   const [isExploreModalOpen, setIsExploreModalOpen] = useState(false);
+
+  // Animated counters for social proof
+  const [therapistsCount, setTherapistsCount] = useState(0);
+  const [sessionsCount, setSessionsCount] = useState(0);
+  const [onlineCount, setOnlineCount] = useState(0);
+
+  // Animated counter effect
+  useEffect(() => {
+    const animateCounter = (setter: (val: number) => void, target: number, duration: number) => {
+      let start = 0;
+      const increment = target / (duration / 16);
+      const timer = setInterval(() => {
+        start += increment;
+        if (start >= target) {
+          setter(target);
+          clearInterval(timer);
+        } else {
+          setter(Math.floor(start));
+        }
+      }, 16);
+      return timer;
+    };
+
+    const timer1 = animateCounter(setTherapistsCount, 2547, 2000);
+    const timer2 = animateCounter(setSessionsCount, 12847, 2500);
+    const timer3 = animateCounter(setOnlineCount, 342, 1500);
+
+    return () => {
+      clearInterval(timer1);
+      clearInterval(timer2);
+      clearInterval(timer3);
+    };
+  }, []);
 
   useEffect(() => {
     setLocating(true);
@@ -157,25 +192,109 @@ export function Hero() {
               </span>
             </motion.h1>
 
-            {/* Trust Badges */}
+            {/* Animated Stats - Social Proof */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="grid grid-cols-3 gap-4 mb-8"
+            >
+                <motion.div
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    className="relative group"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-indigo-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="relative bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-2xl p-4 hover:border-violet-500/30 transition-all duration-300">
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.3 }}
+                            className="text-3xl font-bold text-white mb-1"
+                        >
+                            {therapistsCount.toLocaleString()}+
+                        </motion.div>
+                        <div className="text-xs text-zinc-400 font-medium">Therapists</div>
+                    </div>
+                </motion.div>
+
+                <motion.div
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    className="relative group"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-indigo-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="relative bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-2xl p-4 hover:border-violet-500/30 transition-all duration-300">
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.4 }}
+                            className="text-3xl font-bold text-white mb-1"
+                        >
+                            {sessionsCount.toLocaleString()}+
+                        </motion.div>
+                        <div className="text-xs text-zinc-400 font-medium">Sessions</div>
+                    </div>
+                </motion.div>
+
+                <motion.div
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    className="relative group"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-indigo-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="relative bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-2xl p-4 hover:border-violet-500/30 transition-all duration-300">
+                        <div className="flex items-center gap-2 mb-1">
+                            <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.5 }}
+                                className="text-3xl font-bold text-white"
+                            >
+                                {onlineCount}
+                            </motion.div>
+                            <motion.div
+                                animate={{ scale: [1, 1.2, 1] }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                className="w-2 h-2 rounded-full bg-green-400"
+                            />
+                        </div>
+                        <div className="text-xs text-zinc-400 font-medium">Online Now</div>
+                    </div>
+                </motion.div>
+            </motion.div>
+
+            {/* Trust Badges */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 className="flex flex-wrap items-center gap-3 mb-10"
             >
-                <div className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-violet-500/20 bg-violet-500/5 backdrop-blur-sm">
+                <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-violet-500/20 bg-violet-500/5 backdrop-blur-sm cursor-pointer hover:bg-violet-500/10 transition-all"
+                >
                     <UserCheck className="w-4 h-4 text-violet-300" />
                     <span className="text-sm font-medium text-violet-200">Verified Profiles</span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-violet-500/20 bg-violet-500/5 backdrop-blur-sm">
+                </motion.div>
+                <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-violet-500/20 bg-violet-500/5 backdrop-blur-sm cursor-pointer hover:bg-violet-500/10 transition-all"
+                >
                     <Lock className="w-4 h-4 text-violet-300" />
                     <span className="text-sm font-medium text-violet-200">Secure Contact</span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-violet-500/20 bg-violet-500/5 backdrop-blur-sm">
+                </motion.div>
+                <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-violet-500/20 bg-violet-500/5 backdrop-blur-sm cursor-pointer hover:bg-violet-500/10 transition-all"
+                >
                     <Shield className="w-4 h-4 text-violet-300" />
                     <span className="text-sm font-medium text-violet-200">Privacy Protected</span>
-                </div>
+                </motion.div>
             </motion.div>
 
             {/* Call to Actions */}
@@ -185,34 +304,90 @@ export function Hero() {
                 transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="flex flex-col sm:flex-row items-start gap-4 w-full"
             >
-              <button
+              <motion.button
                 type="button"
                 onClick={() => setIsExploreModalOpen(true)}
-                className="group relative h-16 px-10 bg-white text-black text-lg font-semibold tracking-tight hover:bg-zinc-100 transition-all duration-200 flex items-center gap-2"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                className="group relative h-16 px-10 bg-white text-black text-lg font-semibold tracking-tight overflow-hidden flex items-center gap-2"
               >
-                Find Your Match
-                <Sparkles className="w-5 h-5" />
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
-              </button>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-violet-500 via-indigo-500 to-violet-500"
+                  animate={{
+                    x: ["-100%", "100%"],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                  style={{ opacity: 0 }}
+                  whileHover={{ opacity: 0.1 }}
+                />
+                <span className="relative z-10">Find Your Match</span>
+                <motion.div
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                >
+                  <Sparkles className="w-5 h-5 relative z-10" />
+                </motion.div>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-indigo-500/20 blur-xl"
+                  animate={{
+                    opacity: [0, 0.5, 0],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              </motion.button>
 
-              <a
+              <motion.a
                 href="/join"
-                className="group relative h-16 px-8 border border-white/10 bg-white/[0.02] backdrop-blur-md text-zinc-300 font-medium hover:bg-white/5 hover:text-white hover:border-white/20 transition-all flex items-center gap-3"
+                whileHover={{ scale: 1.03, x: 5 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                className="group relative h-16 px-8 border border-white/10 bg-white/[0.02] backdrop-blur-md text-zinc-300 font-medium hover:bg-white/5 hover:text-white hover:border-white/20 transition-all flex items-center gap-3 overflow-hidden"
               >
                 <span>For Professionals</span>
-                <div className="w-8 h-8 bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                <motion.div
+                  className="w-8 h-8 bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors"
+                  whileHover={{ rotate: -45 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
                     <ArrowRight className="w-4 h-4 text-white" />
-                </div>
-              </a>
+                </motion.div>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: "100%" }}
+                  transition={{ duration: 0.5 }}
+                />
+              </motion.a>
             </motion.div>
         </div>
 
         {/* --- Right Column: Dynamic Chat UI --- */}
         <div className="relative flex justify-center lg:justify-end perspective-[2000px] h-full items-center">
-            <motion.div 
-                initial={{ opacity: 0, scale: 0.9, rotateY: -15, rotateX: 5 }}
-                animate={{ opacity: 1, scale: 1, rotateY: -8, rotateX: 0 }}
-                transition={{ duration: 1.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.8, rotateY: -25, rotateX: 10 }}
+                animate={{ opacity: 1, scale: 1, rotateY: -5, rotateX: 0 }}
+                transition={{
+                  duration: 1.8,
+                  delay: 0.4,
+                  ease: [0.16, 1, 0.3, 1],
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20
+                }}
+                whileHover={{
+                  scale: 1.02,
+                  rotateY: 0,
+                  transition: { duration: 0.3 }
+                }}
                 className="relative w-full max-w-[500px]"
             >
                 {/* 3D Glass Layer Effects */}

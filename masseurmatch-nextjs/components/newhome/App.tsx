@@ -5,6 +5,7 @@ import { Background } from './components/Background';
 import { Hero } from './components/Hero';
 import { Features } from './components/Features';
 import { Marquee } from './components/Marquee';
+import { StatsSection } from './components/StatsSection';
 import { HowItWorks } from './components/HowItWorks';
 import { MassageTypes } from './components/MassageTypes';
 import { Testimonials } from './components/Testimonials';
@@ -46,6 +47,7 @@ function App() {
         <div className="relative z-0">
           <Hero />
           <Marquee />
+          <StatsSection />
           <Features />
           <HowItWorks />
           <MassageTypes />

@@ -1,5 +1,17 @@
 import { supabaseAdmin } from '@/server/supabaseAdmin';
 
+export type WeeklyPromotion = {
+  id: string;
+  title: string;
+  description?: string | null;
+  discount_text?: string | null;
+  start_date: string;
+  end_date: string;
+  badge_color?: string | null;
+};
+
+export type AvailabilityStatus = 'available' | 'visiting_now' | 'visiting_soon' | 'offline';
+
 export type TherapistRecord = {
   user_id: string;
   slug: string;
@@ -34,9 +46,30 @@ export type TherapistRecord = {
   mobile_service_radius?: number | null;
   languages?: string[] | string | null;
   availability?: unknown;
+  availability_status?: AvailabilityStatus | null;
+  last_status_update?: string | null;
+  travel_city?: string | null;
+  travel_state?: string | null;
+  travel_start_date?: string | null;
+  travel_end_date?: string | null;
   services_headline?: string | null;
   status?: string | null;
+  active_promotions?: WeeklyPromotion[] | null;
 };
+
+async function fetchActivePromotions(userId: string): Promise<WeeklyPromotion[]> {
+  const { data } = await supabaseAdmin
+    .from('therapist_promotions')
+    .select('id, title, description, discount_text, start_date, end_date, badge_color')
+    .eq('therapist_id', userId)
+    .eq('is_active', true)
+    .lte('start_date', new Date().toISOString())
+    .gte('end_date', new Date().toISOString())
+    .order('display_order', { ascending: true })
+    .limit(3);
+
+  return data || [];
+}
 
 export async function getTherapistBySlug(
   slug: string
@@ -49,7 +82,11 @@ export async function getTherapistBySlug(
     .maybeSingle();
 
   if (therapist) {
-    return { therapist, canonicalSlug: therapist.slug };
+    const promotions = await fetchActivePromotions(therapist.user_id);
+    return {
+      therapist: { ...therapist, active_promotions: promotions },
+      canonicalSlug: therapist.slug
+    };
   }
 
   const { data: redirect } = await supabaseAdmin
@@ -69,8 +106,16 @@ export async function getTherapistBySlug(
     .eq('status', 'active')
     .maybeSingle();
 
+  if (therapistById) {
+    const promotions = await fetchActivePromotions(therapistById.user_id);
+    return {
+      therapist: { ...therapistById, active_promotions: promotions },
+      canonicalSlug: therapistById.slug,
+    };
+  }
+
   return {
-    therapist: therapistById,
-    canonicalSlug: therapistById?.slug ?? null,
+    therapist: null,
+    canonicalSlug: null,
   };
 }

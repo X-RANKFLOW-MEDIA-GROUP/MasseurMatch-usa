@@ -1,18 +1,19 @@
 import { redirect, notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { supabaseAdmin } from '@/server/supabaseAdmin';
 import { absUrl, stripHtml, truncate } from '@/lib/seo';
-import TherapistProfile from '@/components/TherapistProfile';
-import { getTherapistBySlug } from './data';
+import PublicTherapistProfile from '@/components/PublicTherapistProfile';
+import { getTherapistBySlug, type TherapistRecord } from './data';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // Revalidate every hour
 
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { therapist, canonicalSlug } = await getTherapistBySlug(params.slug);
+  const { slug } = await params;
+  const { therapist, canonicalSlug } = await getTherapistBySlug(slug);
 
   if (!therapist) {
     return {
@@ -54,30 +55,19 @@ export async function generateMetadata({
 export default async function TherapistPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const { therapist, canonicalSlug } = await getTherapistBySlug(params.slug);
+  const { slug } = await params;
+  const { therapist, canonicalSlug } = await getTherapistBySlug(slug);
 
   if (!therapist) {
     notFound();
   }
 
   // Redirect to canonical slug if different
-  if (canonicalSlug && canonicalSlug !== params.slug) {
+  if (canonicalSlug && canonicalSlug !== slug) {
     redirect(`/therapist/${canonicalSlug}`);
   }
-  return <TherapistProfile />;
-}
 
-// Optional: Generate static params for top therapists
-export async function generateStaticParams() {
-  const { data: therapists } = await supabaseAdmin
-    .from('therapists')
-    .select('slug')
-    .eq('status', 'active')
-    .limit(100); // Generate top 100 at build time
-
-  return (therapists || []).map((t) => ({
-    slug: t.slug,
-  }));
+  return <PublicTherapistProfile therapist={therapist} />;
 }

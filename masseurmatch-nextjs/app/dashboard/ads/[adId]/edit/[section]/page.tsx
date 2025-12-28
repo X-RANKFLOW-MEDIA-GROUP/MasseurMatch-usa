@@ -67,10 +67,12 @@ const sectionConfig: Record<string, { title: string; description: string }> = {
 export default async function EditSectionPage({
   params,
 }: {
-  params: { adId: string; section: string };
+  params: Promise<{ adId: string; section: string }>;
 }) {
+  const { adId, section } = await params;
+
   // Validate section
-  if (!validSections.includes(params.section)) {
+  if (!validSections.includes(section)) {
     notFound();
   }
 
@@ -89,7 +91,7 @@ export default async function EditSectionPage({
   const { data: therapist } = await supabase
     .from('therapists')
     .select('*')
-    .eq('user_id', params.adId)
+  .eq('user_id', adId)
     .single();
 
   // Check authorization
@@ -97,8 +99,8 @@ export default async function EditSectionPage({
     redirect('/dashboard/ads');
   }
 
-  const config = sectionConfig[params.section];
-  const sectionDef = sectionMap[params.section];
+  const config = sectionConfig[section];
+  const sectionDef = sectionMap[section];
 
   return (
     <div className="edit-section-page">
@@ -107,14 +109,14 @@ export default async function EditSectionPage({
           <h1>{config.title}</h1>
           <p className="section-description">{config.description}</p>
         </div>
-        <a href={`/dashboard/ads/${params.adId}/edit`} className="btn-secondary">
+        <a href={`/dashboard/ads/${adId}/edit`} className="btn-secondary">
           ← Back to All Sections
         </a>
       </div>
 
       <EditSectionForm
-        adId={params.adId}
-        sectionKey={params.section}
+        adId={adId}
+        sectionKey={section}
         sectionLabel={config.title}
         description={config.description}
         sectionData={therapist || {}}

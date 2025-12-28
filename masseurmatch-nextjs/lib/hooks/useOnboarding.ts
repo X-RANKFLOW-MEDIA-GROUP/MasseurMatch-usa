@@ -9,6 +9,29 @@ import type {
   MediaAsset,
 } from "@/lib/types/database";
 
+type ParsedErrorResponse = {
+  error?: string;
+  message?: string;
+  error_code?: string;
+  details?: any;
+  raw?: string;
+} | null;
+
+async function readErrorResponse(response: Response): Promise<ParsedErrorResponse> {
+  try {
+    const text = await response.clone().text();
+    if (!text) return null;
+
+    try {
+      return JSON.parse(text);
+    } catch {
+      return { raw: text };
+    }
+  } catch {
+    return null;
+  }
+}
+
 export function useOnboarding() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,8 +70,19 @@ export function useOnboarding() {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Failed to select plan");
+        const errorPayload = await readErrorResponse(response);
+        console.error(
+          "API Error:",
+          errorPayload ?? { status: response.status, statusText: response.statusText }
+        );
+        const message =
+          errorPayload?.message ??
+          errorPayload?.error ??
+          errorPayload?.error_code ??
+          errorPayload?.raw ??
+          response.statusText ??
+          "Failed to select plan";
+        throw new Error(message);
       }
 
       const data = await response.json();

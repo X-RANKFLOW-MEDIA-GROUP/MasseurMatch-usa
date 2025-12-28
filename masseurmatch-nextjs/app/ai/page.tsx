@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./ai.css";
 import AiClient from "./AiClient";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "AI Automation Partner | MasseurMatch",
   description:

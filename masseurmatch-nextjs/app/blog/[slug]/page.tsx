@@ -3,16 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug } from "../data/posts";
 
+export const dynamic = "force-dynamic";
+
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
-
-export async function generateStaticParams() {
-  const posts = getAllPosts();
-  return posts.map((post) => ({
-    slug: post.slug
-  }));
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -352,5 +348,4 @@ export default async function BlogPostPage({ params }: Props) {
     </>
   );
 }
-
 
