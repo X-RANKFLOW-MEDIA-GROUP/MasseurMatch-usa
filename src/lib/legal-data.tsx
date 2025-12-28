@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { 
   Shield, FileText, Cookie, Scale, Lock, MessageSquare, CreditCard, 
   FileSignature, AlertTriangle, Globe, Activity, Copyright, Ban, 
@@ -76,8 +76,8 @@ export const legalDocuments: LegalDocument[] = [
     content: (
       <div className="space-y-6">
         <PlatformNature />
-        <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 p-4 rounded-lg text-sm mb-6">
-          <p className="font-medium text-amber-900 dark:text-amber-200">
+        <div className="bg-violet-50 dark:bg-violet-950/20 border border-violet-200 dark:border-violet-800 p-4 rounded-lg text-sm mb-6">
+          <p className="font-medium text-violet-900 dark:text-violet-200">
             MasseurMatch is not affiliated, endorsed, sponsored, or associated with MasseurFinder, RentMasseur, RentMen, or any similar directory. Similarities in descriptive industry terms (such as “masseur”) are non-exclusive and do not imply any connection between the platforms.
           </p>
         </div>
@@ -666,3 +666,4 @@ export const legalDocuments: LegalDocument[] = [
     )
   }
 ];
+

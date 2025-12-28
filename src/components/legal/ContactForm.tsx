@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
@@ -45,10 +45,10 @@ export function ContactForm({ defaultSubject }: ContactFormProps) {
 
   if (isSuccess) {
     return (
-      <Card className="w-full border-green-500/20 bg-green-50/50 dark:bg-green-950/10">
+      <Card className="w-full border-violet-500/20 bg-violet-50/50 dark:bg-violet-950/10">
         <CardContent className="pt-6 text-center space-y-4">
-          <div className="mx-auto w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
-            <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400" />
+          <div className="mx-auto w-12 h-12 rounded-full bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center">
+            <CheckCircle2 className="w-6 h-6 text-violet-600 dark:text-violet-400" />
           </div>
           <div className="space-y-2">
             <h3 className="text-xl font-semibold">Message Received</h3>
@@ -124,3 +124,4 @@ export function ContactForm({ defaultSubject }: ContactFormProps) {
     </Card>
   );
 }
+

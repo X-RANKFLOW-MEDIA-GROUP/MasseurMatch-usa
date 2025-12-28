@@ -12,6 +12,9 @@ export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
   const drawerRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
+  if (pathname === "/") {
+    return null;
+  }
 
   // carrega se é admin
   useEffect(() => {

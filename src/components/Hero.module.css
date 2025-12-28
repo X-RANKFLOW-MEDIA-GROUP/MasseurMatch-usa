@@ -1,4 +1,4 @@
-/* ===== HERO WRAPPER ===== */
+﻿/* ===== HERO WRAPPER ===== */
 .hero {
   position: relative;
   width: 100%;
@@ -19,7 +19,7 @@
   pointer-events: none;
   background:
     radial-gradient(40% 50% at 35% 20%, rgba(139, 92, 246, 0.28), transparent 60%),
-    radial-gradient(35% 45% at 70% 30%, rgba(59, 130, 246, 0.24), transparent 60%),
+    radial-gradient(35% 45% at 70% 30%, rgba(99, 102, 241, 0.24), transparent 60%),
     radial-gradient(30% 40% at 65% 65%, rgba(236, 72, 153, 0.22), transparent 60%),
     radial-gradient(50% 60% at 50% 40%, rgba(0, 0, 0, 0.35), transparent 70%);
   filter: blur(12px);
@@ -60,7 +60,7 @@
   margin-top: 12px;
   font-size: clamp(32px, 5.6vw, 74px);
   font-weight: 700;
-  background: linear-gradient(90deg, #a855f7 0%, #3b82f6 45%, #ec4899 100%);
+  background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 50%, #7c3aed 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -188,7 +188,7 @@
   border-radius: 12px;
   font-weight: 600;
   color: #fff;
-  background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 50%, #ec4899 100%);
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #8b5cf6 100%);
   box-shadow: 0 6px 18px rgba(124, 58, 237, 0.35);
   cursor: pointer;
   transition:
@@ -326,3 +326,4 @@
     padding: 0 1rem;
   }
 }
+

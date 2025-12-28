@@ -1,4 +1,4 @@
-import { supabaseServer } from "@/src/lib/supabaseServer";
+﻿import { supabaseServer } from "@/src/lib/supabaseServer";
 import { baseSEO } from "@/app/lib/seo";
 import { cityMap } from "@/app/data/cities";
 import { neighbors } from "@/app/data/cityNeighbors";
@@ -293,14 +293,14 @@ export default async function SegmentPage({ params }: SegmentPageProps) {
       <nav aria-label="Breadcrumb" className="text-sm">
         <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex gap-2">
           <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <a itemProp="item" href="/" className="text-blue-600 hover:underline">
+            <a itemProp="item" href="/" className="text-violet-600 hover:underline">
               <span itemProp="name">Home</span>
             </a>
             <meta itemProp="position" content="1" />
             <span className="mx-2">/</span>
           </li>
           <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <a itemProp="item" href={`/city/${params.city}`} className="text-blue-600 hover:underline">
+            <a itemProp="item" href={`/city/${params.city}`} className="text-violet-600 hover:underline">
               <span itemProp="name">{info.label}</span>
             </a>
             <meta itemProp="position" content="2" />
@@ -398,28 +398,28 @@ export default async function SegmentPage({ params }: SegmentPageProps) {
         <h2 className="text-2xl font-semibold">Other Services in {info.label}</h2>
         <p>Explore more massage options in {info.label}:</p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          <a href={`/city/${params.city}/gay-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/gay-massage`} className="text-violet-600 hover:underline">
             Gay Massage
           </a>
-          <a href={`/city/${params.city}/male-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/male-massage`} className="text-violet-600 hover:underline">
             Male Massage
           </a>
-          <a href={`/city/${params.city}/m4m-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/m4m-massage`} className="text-violet-600 hover:underline">
             M4M Massage
           </a>
-          <a href={`/city/${params.city}/deep-tissue`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/deep-tissue`} className="text-violet-600 hover:underline">
             Deep Tissue
           </a>
-          <a href={`/city/${params.city}/sports-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/sports-massage`} className="text-violet-600 hover:underline">
             Sports Massage
           </a>
-          <a href={`/city/${params.city}/relaxation`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/relaxation`} className="text-violet-600 hover:underline">
             Relaxation
           </a>
-          <a href={`/city/${params.city}/hotel-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/hotel-massage`} className="text-violet-600 hover:underline">
             Hotel Massage
           </a>
-          <a href={`/city/${params.city}/mobile-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/mobile-massage`} className="text-violet-600 hover:underline">
             Mobile Massage
           </a>
         </div>
@@ -433,7 +433,7 @@ export default async function SegmentPage({ params }: SegmentPageProps) {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {neighbors[cityKey].map(n => (
-              <a key={n} href={`/city/${n}`} className="text-blue-600 hover:underline">
+              <a key={n} href={`/city/${n}`} className="text-violet-600 hover:underline">
                 {cityMap[n]?.label || n} Gay Massage
               </a>
             ))}
@@ -443,3 +443,4 @@ export default async function SegmentPage({ params }: SegmentPageProps) {
     </main>
   );
 }
+
