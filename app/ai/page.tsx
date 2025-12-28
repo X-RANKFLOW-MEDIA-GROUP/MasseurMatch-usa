@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import AiLanding from "@/src/components/AiLanding";
+import "./ai.css";
+import AiClient from "./AiClient";
 
 export const metadata: Metadata = {
-  title: "Lando AI | Automate Smarter. Grow Faster.",
-  description: "AI automation partner for modern businesses. Build, launch, and scale AI-powered workflows with Lando.",
+  title: "AI Automation Partner | MasseurMatch",
+  description:
+    "A new AI landing experience showcasing automation strategy, secure copilots, and scalable workflows built for modern teams.",
 };
 
 export default function AIPage() {
-  return <AiLanding />;
+  return <AiClient />;
 }

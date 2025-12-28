@@ -1,10 +1,10 @@
-/* ===== FEATURED SECTION WRAPPER ===== */
+﻿/* ===== FEATURED SECTION WRAPPER ===== */
 .featured {
   background: radial-gradient(1200px 600px at 50% -10%, #101020 0%, #050511 55%, #04040a 100%);
   color: #fff;
   padding: 80px 10%;
   text-align: center;
-  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 /* limita largura em telas muito grandes */
@@ -45,14 +45,14 @@
   width: 260px;
   overflow: hidden;
   box-shadow:
-    0 0 16px rgba(125, 0, 255, 0.18),
+    0 0 16px rgba(139, 92, 246, 0.18),
     0 18px 40px rgba(0, 0, 0, 0.85);
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease,
     border-color 0.3s ease;
   position: relative;
-  border: 1px solid rgba(140, 0, 255, 0.25);
+  border: 1px solid rgba(139, 92, 246, 0.25);
 }
 
 .card::before {
@@ -60,7 +60,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(circle at top right, rgba(224, 64, 251, 0.14), transparent 60%);
+  background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.16), transparent 60%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -68,9 +68,9 @@
 .card:hover {
   transform: translateY(-6px) translateZ(0);
   box-shadow:
-    0 0 28px rgba(160, 0, 255, 0.45),
+    0 0 28px rgba(139, 92, 246, 0.4),
     0 22px 45px rgba(0, 0, 0, 0.9);
-  border-color: rgba(192, 80, 255, 0.55);
+  border-color: rgba(139, 92, 246, 0.55);
 }
 
 .card:hover::before {
@@ -97,29 +97,29 @@
 }
 
 .badge-highest-rated {
-  background: linear-gradient(90deg, #b026ff, #6f00ff);
+  background: linear-gradient(90deg, #a78bfa, #6366f1);
 }
 
 .badge-top-promotion {
-  background: linear-gradient(90deg, #ff4d00, #ff8800);
+  background: linear-gradient(90deg, #8b5cf6, #4f46e5);
 }
 
 .badge-clients--favorite {
-  background: linear-gradient(90deg, #00d4ff, #007bff);
+  background: linear-gradient(90deg, #c4b5fd, #818cf8);
 }
 
 .badge-expert {
-  background: linear-gradient(90deg, #ff00b7, #c400ff);
+  background: linear-gradient(90deg, #7c3aed, #4f46e5);
 }
 
 .badge-popular {
-  background: linear-gradient(90deg, #14c24a, #00ffb7);
+  background: linear-gradient(90deg, #a78bfa, #8b5cf6);
 }
 
 /* verificado */
 .verified {
-  background: rgba(0, 255, 140, 0.14);
-  color: #00ff9d;
+  background: rgba(139, 92, 246, 0.16);
+  color: #c4b5fd;
   border-radius: 999px;
   padding: 3px 8px;
   display: inline-flex;
@@ -161,7 +161,7 @@
 }
 
 .rating {
-  color: #e6d36b;
+  color: #c4b5fd;
 }
 
 /* ===== TAGS ===== */
@@ -174,17 +174,17 @@
 
 .tags span {
   background: #1e1e2b;
-  color: #b0b0ff;
+  color: #c4b5fd;
   padding: 4px 8px;
   border-radius: 10px;
   font-size: 0.74rem;
-  border: 1px solid rgba(116, 130, 255, 0.35);
+  border: 1px solid rgba(139, 92, 246, 0.35);
 }
 
-/* ===== BOTÃO VER PERFIL ===== */
+/* ===== BOTÃƒO VER PERFIL ===== */
 .btn-view {
   width: 100%;
-  background: linear-gradient(90deg, #8b00ff, #c800ff);
+  background: linear-gradient(90deg, #8b5cf6, #6366f1);
   color: #fff;
   padding: 11px 0;
   border: none;
@@ -200,7 +200,7 @@
 
 .btn-view:hover {
   filter: brightness(1.15);
-  box-shadow: 0 0 12px rgba(155, 0, 255, 0.9);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.7);
   transform: translateY(-1px);
 }
 
@@ -208,10 +208,10 @@
   transform: translateY(1px);
 }
 
-/* Foco acessível */
+/* Foco acessÃ­vel */
 .btn-view:focus-visible,
 .card:focus-within {
-  outline: 2px solid #a855f7;
+  outline: 2px solid #8b5cf6;
   outline-offset: 3px;
 }
 
@@ -255,10 +255,11 @@
   }
 }
 
-/* reduz animação pra quem não gosta de motion */
+/* reduz animaÃ§Ã£o pra quem nÃ£o gosta de motion */
 @media (prefers-reduced-motion: reduce) {
   .card,
   .btn-view {
     transition: none;
   }
 }
+

@@ -1,10 +1,10 @@
-.footer {
-  background: radial-gradient(110% 120% at 50% 0%, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.05) 30%, #0c0c14 55%),
+﻿.footer {
+  background: radial-gradient(110% 120% at 50% 0%, rgba(139, 92, 246, 0.08), rgba(99, 102, 241, 0.06) 30%, #0c0c14 55%),
     #0c0c14;
   color: #d1d5db;
   padding: 3.5rem 2rem 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
     sans-serif;
 }
 
@@ -27,7 +27,7 @@
   font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(90deg, #8b5cf6 0%, #ec4899 50%, #ffffff 100%);
+  background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 50%, #ffffff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -68,7 +68,7 @@
 }
 
 .footer-btn-primary {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(236, 72, 153, 0.32));
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(139, 92, 246, 0.32));
   border-color: rgba(255, 255, 255, 0.16);
   color: #ffffff;
   box-shadow:
@@ -202,3 +202,5 @@
   outline: 2px solid #8b5cf6;
   outline-offset: 3px;
 }
+
+

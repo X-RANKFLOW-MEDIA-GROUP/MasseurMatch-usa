@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Star, Quote } from "lucide-react";
 import styles from "./Testimonials.module.css";
@@ -14,13 +14,12 @@ interface Testimonial {
 // Função para gerar cor baseada no nome
 function getColorFromName(name: string): string {
   const colors = [
-    "#8b5cf6", // purple
-    "#ec4899", // pink
-    "#3b82f6", // blue
-    "#10b981", // green
-    "#f59e0b", // amber
-    "#ef4444", // red
-    "#06b6d4", // cyan
+    "#8b5cf6",
+    "#6366f1",
+    "#7c3aed",
+    "#a78bfa",
+    "#c4b5fd",
+    "#4f46e5",
   ];
   const index = name.charCodeAt(0) % colors.length;
   return colors[index];
@@ -57,7 +56,7 @@ const testimonials: Testimonial[] = [
     text:
       "My schedule has tripled since I joined the platform! The support is excellent and the quality of clients is great. Worth every penny of the Elite plan.",
     name: "Ana Beatriz",
-    role: "Therapist – Elite Plan",
+    role: "Therapist - Elite Plan",
     since: "2022",
   },
 ];
@@ -142,3 +141,4 @@ export default function Testimonials() {
     </section>
   );
 }
+

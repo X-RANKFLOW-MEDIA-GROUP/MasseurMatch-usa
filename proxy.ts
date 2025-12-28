@@ -1,4 +1,7 @@
 // proxy.ts - SEO & Security Control + Auth Protection
+// NOTE: Next.js treats this file as the sole middleware entrypoint. Do not add
+// middleware.ts alongside this file, or Next will fail with a duplicate
+// middleware/proxy error.
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
@@ -60,6 +63,17 @@ function normalizePath(pathname: string) {
 
 export async function proxy(req: NextRequest) {
   const pathname = normalizePath(req.nextUrl.pathname);
+  // Shared response instance so that any cookies set during auth are preserved
+  // for the rest of the middleware chain.
+  let res = NextResponse.next({
+    request: {
+      headers: req.headers,
+    },
+  });
+
+  // Validate required environment variables
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   // ====================================
   // AUTH PROTECTION (Protected Routes)
@@ -69,49 +83,23 @@ export async function proxy(req: NextRequest) {
   );
 
   if (isProtectedRoute) {
-    let response = NextResponse.next({
-      request: {
-        headers: req.headers,
-      },
-    });
-
     const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      supabaseUrl,
+      supabaseAnonKey,
       {
         cookies: {
           get(name: string) {
             return req.cookies.get(name)?.value;
           },
           set(name: string, value: string, options: CookieOptions) {
-            req.cookies.set({
-              name,
-              value,
-              ...options,
-            });
-            response = NextResponse.next({
-              request: {
-                headers: req.headers,
-              },
-            });
-            response.cookies.set({
+            res.cookies.set({
               name,
               value,
               ...options,
             });
           },
           remove(name: string, options: CookieOptions) {
-            req.cookies.set({
-              name,
-              value: "",
-              ...options,
-            });
-            response = NextResponse.next({
-              request: {
-                headers: req.headers,
-              },
-            });
-            response.cookies.set({
+            res.cookies.set({
               name,
               value: "",
               ...options,
@@ -192,8 +180,6 @@ export async function proxy(req: NextRequest) {
   // ====================================
   // RESPONSE (headers)
   // ====================================
-  const res = NextResponse.next();
-
   // ====================================
   // NOINDEX ROUTES (Private/User Areas)
   // ====================================
@@ -237,7 +223,7 @@ export async function proxy(req: NextRequest) {
       "font-src 'self' data: https:",
       "style-src 'self' 'unsafe-inline'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-      "connect-src 'self' https:",
+      "connect-src 'self' https: wss:",
       "upgrade-insecure-requests",
     ].join("; ")
   );

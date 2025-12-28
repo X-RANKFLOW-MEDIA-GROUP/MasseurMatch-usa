@@ -1,4 +1,4 @@
-/* ===== Scoped CTA Section ===== */
+﻿/* ===== Scoped CTA Section ===== */
 .cta-section {
   position: relative;
   padding: 4rem 1.5rem 5rem;
@@ -20,7 +20,7 @@
     90deg,
     rgba(139, 92, 246, 0.35),
     rgba(236, 72, 153, 0.35),
-    rgba(59, 130, 246, 0.35)
+    rgba(99, 102, 241, 0.35)
   );
   opacity: 0.35;
 }
@@ -151,3 +151,4 @@
     transition: none;
   }
 }
+
