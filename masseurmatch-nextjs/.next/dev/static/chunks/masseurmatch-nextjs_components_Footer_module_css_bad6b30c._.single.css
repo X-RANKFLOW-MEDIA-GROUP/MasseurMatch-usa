@@ -1,0 +1,119 @@
+/* [project]/masseurmatch-nextjs/components/Footer.module.css [app-client] (css) */
+.Footer-module__2cSwwq__footer {
+  color: #d1d5db;
+  background: radial-gradient(110% 120% at 50% 0, #8b5cf614, #6366f10f 30%, #0c0c14 55%), #0c0c14;
+  padding: 4rem 1.5rem 2rem;
+}
+
+.Footer-module__2cSwwq__footer-content {
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.Footer-module__2cSwwq__footer-brand {
+  max-width: 360px;
+}
+
+.Footer-module__2cSwwq__footer-logo {
+  background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 50%, #fff 100%);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  margin-bottom: .5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.Footer-module__2cSwwq__footer-description {
+  color: #b0b3bf;
+  margin-bottom: 1rem;
+  font-size: .95rem;
+  line-height: 1.6;
+}
+
+.Footer-module__2cSwwq__footer-socials {
+  gap: .6rem;
+  display: inline-flex;
+}
+
+.Footer-module__2cSwwq__footer-socials a {
+  color: #d1d5db;
+  background: #13131c;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  justify-content: center;
+  align-items: center;
+  width: 38px;
+  height: 38px;
+  transition: background .2s, color .2s;
+  display: inline-flex;
+}
+
+.Footer-module__2cSwwq__footer-socials a:hover {
+  color: #fff;
+  background: #8b5cf6;
+}
+
+.Footer-module__2cSwwq__footer-grid {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.5rem;
+  display: grid;
+}
+
+.Footer-module__2cSwwq__footer-column h4 {
+  color: #fff;
+  letter-spacing: .05em;
+  margin-bottom: .8rem;
+  font-size: .95rem;
+  font-weight: 600;
+}
+
+.Footer-module__2cSwwq__footer-column ul {
+  flex-direction: column;
+  gap: .45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
+
+.Footer-module__2cSwwq__footer-column a {
+  color: #b0b3bf;
+  font-size: .9rem;
+  text-decoration: none;
+  transition: color .2s, transform .15s;
+}
+
+.Footer-module__2cSwwq__footer-column a:hover {
+  color: #fff;
+  transform: translateX(3px);
+}
+
+.Footer-module__2cSwwq__footer-bottom {
+  text-align: center;
+  color: #9ca3af;
+  border-top: 1px solid #ffffff14;
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  font-size: .8rem;
+}
+
+@media (min-width: 1024px) {
+  .Footer-module__2cSwwq__footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .Footer-module__2cSwwq__footer-grid {
+    flex: 1;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 1.5rem;
+    display: grid;
+  }
+}
+
+/*# sourceMappingURL=masseurmatch-nextjs_components_Footer_module_css_bad6b30c._.single.css.map*/
