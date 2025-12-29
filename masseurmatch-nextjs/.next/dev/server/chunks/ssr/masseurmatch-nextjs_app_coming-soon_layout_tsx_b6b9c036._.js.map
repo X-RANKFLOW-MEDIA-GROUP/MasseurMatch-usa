@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/computer/Documents/GitHub/MasseurMatch-usa/masseurmatch-nextjs/app/coming-soon/layout.tsx"],"sourcesContent":["export default function ComingSoonLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  // Standalone layout - no navbar, no footer, just pure content\n  return (\n    <html lang=\"en\">\n      <body className=\"antialiased bg-slate-950 text-white overflow-x-hidden\">\n        {children}\n      </body>\n    </html>\n  );\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS,iBAAiB,EACvC,QAAQ,EAGT;IACC,8DAA8D;IAC9D,qBACE,wQAAC;QAAK,MAAK;kBACT,cAAA,wQAAC;YAAK,WAAU;sBACb;;;;;;;;;;;AAIT"}}]
+}
