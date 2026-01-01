@@ -1,20 +1,14 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
-    // Strict mode configurations (enterprise-grade)
     "strict": true,
-    "noUncheckedIndexedAccess": false,
-    "noImplicitOverride": true,
-    "exactOptionalPropertyTypes": true,
-    "noPropertyAccessFromIndexSignature": false,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-    "noImplicitReturns": true,
-    "forceConsistentCasingInFileNames": true,
-    // Emit configurations
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -29,7 +23,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -37,17 +33,13 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "_import/**",
-    "dashboard-vite/**",
-    "dashboard-vite/src/App.tsx",
-    "dashboard-vite/src/main.tsx",
-    "dashboard-vite/src/supabase/**",
-    "dashboard-vite/src/vite-env.d.ts",
-    "dashboard-vite/vite.config.ts"
+    "masseurmatch-nextjs",
+    "dashboard-vite",
+    "ia-backend",
+    "nextjs-implementation"
   ]
 }
