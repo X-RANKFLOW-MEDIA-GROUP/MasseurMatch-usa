@@ -221,7 +221,7 @@ export default async function CityPage({ params }: CityPageProps) {
       </p>
 
       {fetchError && (
-        <p className="rounded-md bg-violet-50 p-4 text-sm text-violet-800">
+        <p className="rounded-md bg-yellow-50 p-4 text-sm text-yellow-800">
           We are having trouble loading live therapist data right now. You can still explore city insights below while we work on restoring the connection.
         </p>
       )}
