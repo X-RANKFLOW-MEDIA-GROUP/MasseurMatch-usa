@@ -95,8 +95,12 @@ export default function BlogPage() {
                 className="group block overflow-hidden rounded-3xl bg-[#111123] border border-[#2a2a48] hover:border-purple-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20"
               >
                 <div className="grid gap-8 p-8 md:grid-cols-2 md:p-12">
-                  <div className="flex aspect-video items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20">
-                    <span className="text-7xl">📖</span>
+                  <div className="relative aspect-video overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+                    <img
+                      src={`https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&h=600&fit=crop`}
+                      alt={posts[0].title}
+                      className="absolute inset-0 w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                    />
                   </div>
                   <div className="flex flex-col justify-center">
                     <span className="mb-3 inline-block w-fit rounded-full bg-purple-500/15 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-purple-400">
@@ -144,8 +148,12 @@ export default function BlogPage() {
                   href={`/blog/${post.slug}`}
                   className="group flex flex-col overflow-hidden rounded-2xl bg-[#111123] border border-[#2a2a48] hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 hover:-translate-y-1"
                 >
-                  <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-purple-500/15 to-pink-500/15">
-                    <span className="text-5xl transition-transform group-hover:scale-110">✨</span>
+                  <div className="relative flex aspect-video items-center justify-center bg-gradient-to-br from-purple-500/15 to-pink-500/15 overflow-hidden">
+                    <img
+                      src={`https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=600&h=400&fit=crop`}
+                      alt={post.title}
+                      className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-300"
+                    />
                   </div>
                   <div className="flex flex-1 flex-col p-6">
                     <div className="mb-3 flex flex-wrap gap-2">
