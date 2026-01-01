@@ -6,30 +6,36 @@ import "./ai.css";
 const industries = [
   {
     title: "Modern businesses",
-    description: "Built for teams that need velocity, automation, and reliable support.",
+    description:
+      "Built for teams that need velocity, automation, and reliable support.",
   },
   {
     title: "Professional services",
-    description: "Streamline workflows, client updates, and recurring task automation.",
+    description:
+      "Streamline workflows, client updates, and recurring task automation.",
   },
   {
     title: "Government",
-    description: "Enterprise-grade security paired with intuitive data visibility.",
+    description:
+      "Enterprise-grade security paired with intuitive data visibility.",
   },
 ];
 
 const highlights = [
   {
     title: "AI Automation Partner",
-    description: "Cut complexity with orchestration, integrations, and measurable ROI.",
+    description:
+      "Cut complexity with orchestration, integrations, and measurable ROI.",
   },
   {
     title: "Design & workflows",
-    description: "We map your current state, then deploy the exact automations you need.",
+    description:
+      "We map your current state, then deploy the exact automations you need.",
   },
   {
     title: "Support that scales",
-    description: "From first call to rollout, our team ships, iterates, and improves fast.",
+    description:
+      "From first call to rollout, our team ships, iterates, and improves fast.",
   },
 ];
 
@@ -96,8 +102,18 @@ export default function AiPageClient() {
   return (
     <div className="ai-page">
       <div className="ai-hero">
-        <div className="ai-orb ai-orb--left" ref={(el) => (floatingRefs.current[0] = el)} />
-        <div className="ai-orb ai-orb--right" ref={(el) => (floatingRefs.current[1] = el)} />
+        <div
+          className="ai-orb ai-orb--left"
+          ref={(el) => {
+            floatingRefs.current[0] = el;
+          }}
+        />
+        <div
+          className="ai-orb ai-orb--right"
+          ref={(el) => {
+            floatingRefs.current[1] = el;
+          }}
+        />
 
         <div className="ai-hero__inner">
           <div className="ai-badge ai-fade">NEXT-GEN AI AUTOMATION PARTNER</div>
@@ -105,8 +121,8 @@ export default function AiPageClient() {
             Automate Smarter. Grow Faster. <span>With AI.</span>
           </h1>
           <p className="ai-lead ai-fade">
-            AI automation for modern businesses made simple. Bring your data, we build the
-            workflows and ship results.
+            AI automation for modern businesses made simple. Bring your data, we
+            build the workflows and ship results.
           </p>
 
           <div className="ai-actions ai-fade">
@@ -114,7 +130,10 @@ export default function AiPageClient() {
             <button className="ai-btn ai-btn--ghost">Get Lando</button>
           </div>
 
-          <div className="ai-logo-belt ai-fade" aria-label="Industries we serve">
+          <div
+            className="ai-logo-belt ai-fade"
+            aria-label="Industries we serve"
+          >
             {industries.map((industry) => (
               <div className="ai-pill" key={industry.title}>
                 <div className="ai-pill__dot" />
@@ -140,14 +159,19 @@ export default function AiPageClient() {
       <section className="ai-section ai-section--panel ai-fade">
         <div className="ai-section__header">
           <p className="ai-eyebrow">We analyze your data</p>
-          <h2>We find what to automate, who your users are & how AI can optimize your workflow.</h2>
+          <h2>
+            We find what to automate, who your users are & how AI can optimize
+            your workflow.
+          </h2>
           <p className="ai-body">
-            Best part is we also build and launch real solutions tailored to your stack and business
-            goals.
+            Best part is we also build and launch real solutions tailored to
+            your stack and business goals.
           </p>
         </div>
         <div className="ai-quote">
-          <div className="ai-avatar" aria-hidden="true">LC</div>
+          <div className="ai-avatar" aria-hidden="true">
+            LC
+          </div>
           <div>
             <p className="ai-quote__name">Leo Costa</p>
             <p className="ai-quote__role">Co-founder & AI Strategy Lead</p>
@@ -171,8 +195,9 @@ export default function AiPageClient() {
             <p className="ai-eyebrow">Analyze. Automate. Ship.</p>
             <h2>Why choose us?</h2>
             <p className="ai-body">
-              We turn complex data into simple, powerful workflows. From discovery to deployment,
-              our team builds AI automations that deliver measurable impact.
+              We turn complex data into simple, powerful workflows. From
+              discovery to deployment, our team builds AI automations that
+              deliver measurable impact.
             </p>
             <div className="ai-bullets">
               <span className="ai-chip">Strategy</span>
@@ -198,19 +223,26 @@ export default function AiPageClient() {
           <p className="ai-eyebrow">Get a live demo</p>
           <h2>See how we can automate your business with AI.</h2>
           <p className="ai-body">
-            Book a free call to explore your use cases. We map the opportunities, design the
-            solution, and launch with you.
+            Book a free call to explore your use cases. We map the
+            opportunities, design the solution, and launch with you.
           </p>
           <div className="ai-actions">
             <button className="ai-btn ai-btn--primary">Book a Free Call</button>
-            <button className="ai-btn ai-btn--ghost">Explore our templates</button>
+            <button className="ai-btn ai-btn--ghost">
+              Explore our templates
+            </button>
           </div>
         </div>
-        <div className="ai-cta__panel" ref={(el) => (floatingRefs.current[2] = el)}>
+        <div
+          className="ai-cta__panel"
+          ref={(el) => {
+            floatingRefs.current[2] = el;
+          }}
+        >
           <div className="ai-cta__badge">Secure & Reliable</div>
           <p className="ai-body">
-            SOC2-ready infrastructure, encryption in transit and at rest, and white-glove onboarding
-            to keep your data safe.
+            SOC2-ready infrastructure, encryption in transit and at rest, and
+            white-glove onboarding to keep your data safe.
           </p>
           <div className="ai-meter">
             <div className="ai-meter__fill" />
