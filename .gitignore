@@ -40,3 +40,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env*.local
+
+desktop.ini
+node_modules/
+
+# Security and compliance reports
+sbom-*.json
+licenses.json
+npm-audit-report.json
+snyk-report.json
+trivy-report.json

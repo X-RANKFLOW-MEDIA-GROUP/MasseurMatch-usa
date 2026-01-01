@@ -1,4 +1,4 @@
-// src/components/TherapistProfile.tsx
+﻿// src/components/TherapistProfile.tsx
 "use client";
 
 import { useMemo, useRef, useState, useId, useEffect } from "react";
@@ -1209,8 +1209,8 @@ export default function TherapistProfile() {
         <div
           style={{
             background:
-              "radial-gradient(circle at top left, rgba(234, 179, 8, 0.2), rgba(15, 23, 42, 0.95))",
-            border: "1px solid rgba(234, 179, 8, 0.5)",
+              "radial-gradient(circle at top left, rgba(139, 92, 246, 0.2), rgba(15, 23, 42, 0.95))",
+            border: "1px solid rgba(139, 92, 246, 0.5)",
             borderRadius: "1.1rem",
             padding: "1.125rem 1.25rem",
             marginBottom: "1.5rem",
@@ -1797,3 +1797,4 @@ export default function TherapistProfile() {
     </main>
   );
 }
+

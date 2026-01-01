@@ -1,4 +1,4 @@
-/* Root container fixado no canto inferior */
+﻿/* Root container fixado no canto inferior */
 .cookie-consent-root {
   position: fixed;
   left: 16px;
@@ -124,7 +124,7 @@
 
 .cookie-consent-btn-primary {
   border-radius: 6px;
-  background: linear-gradient(90deg, #2563eb, #8b5cf6);
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
   border: none;
   color: #ffffff;
 }
@@ -149,3 +149,4 @@
     right: 16px;
   }
 }
+

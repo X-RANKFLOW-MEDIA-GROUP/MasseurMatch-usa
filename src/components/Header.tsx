@@ -12,6 +12,9 @@ export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
   const drawerRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
+  if (pathname === "/") {
+    return null;
+  }
 
   // carrega se é admin
   useEffect(() => {
@@ -118,6 +121,9 @@ export default function Header() {
             </Link>
             <Link href="/explore" className={navLinkClass("/explore")}>
               Explore
+            </Link>
+            <Link href="/blog" className={navLinkClass("/blog")}>
+              Blog
             </Link>
             <Link href="/about" className={navLinkClass("/about")}>
               About
@@ -240,6 +246,13 @@ export default function Header() {
             onClick={() => setOpen(false)}
           >
             Explore
+          </Link>
+          <Link
+            href="/blog"
+            className={drawerLinkClass("/blog")}
+            onClick={() => setOpen(false)}
+          >
+            Blog
           </Link>
           <Link
             href="/about"

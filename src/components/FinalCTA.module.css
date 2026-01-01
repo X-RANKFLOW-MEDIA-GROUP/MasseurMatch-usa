@@ -1,4 +1,4 @@
-/* ===== Scoped CTA Section ===== */
+﻿/* ===== Scoped CTA Section ===== */
 .cta-section {
   position: relative;
   padding: 4rem 1.5rem 5rem;
@@ -20,7 +20,7 @@
     90deg,
     rgba(139, 92, 246, 0.35),
     rgba(236, 72, 153, 0.35),
-    rgba(59, 130, 246, 0.35)
+    rgba(99, 102, 241, 0.35)
   );
   opacity: 0.35;
 }
@@ -73,15 +73,20 @@
   border: 1px solid transparent;
 }
 
-/* Primary (gradient) */
+/* Primary (gradient with glass effect) */
 .cta-primary {
   color: #fff;
-  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.35);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .cta-primary:hover {
-  filter: brightness(1.05);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.4) 0%, rgba(139, 92, 246, 0.4) 100%);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   transform: translateY(-1px);
 }
 
@@ -146,3 +151,4 @@
     transition: none;
   }
 }
+

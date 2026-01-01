@@ -1,0 +1,3 @@
+{
+  "/city/[city]/[segment]/page": "app/city/[city]/[segment]/page.js"
+}

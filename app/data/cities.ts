@@ -49,10 +49,6 @@ const fallbackCityContent = (slug: string): CityContent => {
         answer: "Most guests split time between the central hotel corridor and nearby arts or dining districts, so look for therapists who can meet in those areas or offer mobile visits.",
       },
       {
-        question: `Is it easy to book day-of sessions in ${label}?`,
-        answer: "Same-day appointments can work when therapists are already in the city core. Evening and event weekends book fast, so messaging early in the day helps secure a slot.",
-      },
-      {
         question: `What should LGBT clients ask before booking in ${label}?`,
         answer: "Confirm inclusivity, comfort with pronouns, and any building check-in rules. Profiles on MasseurMatch highlight boundaries, payment methods, and mobility radius to simplify planning.",
       },
@@ -656,6 +652,469 @@ export const cityMap: Record<string, CityContent> = {
       {
         question: "How does weather affect timing?",
         answer: "Wind and winter ice can slow traffic. Sharing parking details and adding a small buffer keeps arrivals on schedule.",
+      },
+    ],
+  },
+  // ========================
+  // UK CITIES
+  // ========================
+  london: {
+    label: "London",
+    state: "UK",
+    description:
+      "London blends historic landmarks with modern districts, from Westminster and the West End to Shoreditch and Canary Wharf. Visitors split time between museums, theatre shows, business meetings, and late-night venues, so the city moves around the clock across its diverse zones.",
+    lgbtContext:
+      "Soho remains the historic heart of London's queer scene, with bars, clubs, and inclusive venues stretching into Vauxhall and East London. Pride in London draws massive crowds each summer, and the city's policies and culture strongly support LGBT visibility and safety.",
+    neighborhoods: [
+      { name: "Soho & West End", vibe: "Theatre district, gay bars, and hotels where visitors seek post-show recovery sessions." },
+      { name: "Shoreditch & East London", vibe: "Creative hubs, street art, and late-night venues with next-day wellness demand." },
+      { name: "Canary Wharf", vibe: "Financial district with corporate travellers needing stress relief after meetings." },
+      { name: "Camden & King's Cross", vibe: "Music venues, markets, and Eurostar arrivals seeking mobile massage options." },
+    ],
+    events: [
+      { name: "Pride in London", detail: "June parade through central London with massive hotel demand in Soho and Westminster." },
+      { name: "West End theatre season", detail: "Year-round shows keep tourists walking miles between venues and restaurants." },
+      { name: "Notting Hill Carnival", detail: "August street festival creating waves of demand in West London." },
+    ],
+    weather:
+      "Mild, damp climate with frequent rain year-round. Indoor sessions are popular, and winter evenings make cosy studio visits appealing.",
+    tourism:
+      "Global business hub with constant international arrivals at Heathrow and City Airport. Hotels in Kensington, Westminster, and Shoreditch see steady wellness requests.",
+    culture:
+      "Fast-paced and cosmopolitan. Clients value punctuality, professionalism, and clear communication, especially around Tube accessibility and building entry protocols.",
+    massageReasons: [
+      "Post-flight tension after long-haul arrivals into Heathrow or Gatwick.",
+      "Desk and shoulder strain from corporate work in the City and Canary Wharf.",
+      "Foot and leg relief after walking between museums, markets, and West End shows.",
+      "Stress management for visitors navigating the Tube and packed schedules.",
+      "Discreet, LGBT-welcoming care near Soho, Vauxhall, and East London venues.",
+    ],
+    faqs: [
+      {
+        question: "Where do visitors usually book massage in London?",
+        answer: "Central areas like Soho, Westminster, and Shoreditch are most popular. Mobile therapists often plan routes around Tube zones to stay punctual.",
+      },
+      {
+        question: "Is hotel massage common in London?",
+        answer: "Yes. Many hotels in Kensington, Bloomsbury, and the West End allow registered guests to host therapists, though front desk policies vary.",
+      },
+      {
+        question: "How does London's size affect scheduling?",
+        answer: "Traffic and Tube delays can add time. Booking therapists within 2-3 Tube zones of your location keeps arrivals predictable.",
+      },
+    ],
+  },
+  manchester: {
+    label: "Manchester",
+    state: "UK",
+    description:
+      "Manchester mixes industrial heritage with modern culture, from the Northern Quarter's indie shops to Deansgate's high-rises. Visitors balance football matches, live music, and business in Spinningfields, keeping the city lively most nights.",
+    lgbtContext:
+      "Canal Street anchors one of the UK's most vibrant LGBT scenes, with bars, clubs, and community spaces. Manchester Pride is a major annual event, and the city's inclusive culture makes queer visitors feel welcomed across most districts.",
+    neighborhoods: [
+      { name: "Canal Street & Village", vibe: "Heart of LGBT nightlife with hotels and bars where recovery sessions are in demand." },
+      { name: "Northern Quarter", vibe: "Creative district with vintage shops, cafes, and guests who favour unique, design-led studios." },
+      { name: "Spinningfields", vibe: "Business district with corporate travellers seeking stress relief near the office." },
+      { name: "Deansgate & Castlefield", vibe: "Waterside dining and apartments with steady local wellness bookings." },
+    ],
+    events: [
+      { name: "Manchester Pride", detail: "August bank holiday festival filling Canal Street hotels and driving demand citywide." },
+      { name: "Football matches", detail: "United and City games bring matchday crowds and post-match recovery requests." },
+      { name: "Parklife Festival", detail: "June music festival creates waves of bookings near Heaton Park." },
+    ],
+    weather:
+      "Rainy and overcast much of the year, with mild winters. Indoor sessions are year-round favourites, especially on damp evenings.",
+    tourism:
+      "Music history, football culture, and northern business travel keep hotels full. Visitors often rely on trams, so proximity to stops helps.",
+    culture:
+      "Friendly, down-to-earth, and proud of its working-class roots. Service expectations centre on warmth, reliability, and no-nonsense communication.",
+    massageReasons: [
+      "Recovery after football matches and live music at the Arena.",
+      "Stress relief for corporate visitors in Spinningfields and MediaCityUK.",
+      "Post-night-out sessions near Canal Street and the Northern Quarter.",
+      "Cooling, calming work after walking between tram stops and venues.",
+      "LGBT-affirming care that matches Manchester's inclusive reputation.",
+    ],
+    faqs: [
+      {
+        question: "Where do most visitors book in Manchester?",
+        answer: "Canal Street, the Northern Quarter, and city centre hotels. Mobile therapists often plan around tram routes to avoid traffic delays.",
+      },
+      {
+        question: "Is Manchester LGBT-friendly for massage?",
+        answer: "Absolutely. Canal Street is openly queer, and many therapists highlight inclusive practices and pronoun awareness.",
+      },
+      {
+        question: "How busy is Pride weekend?",
+        answer: "Extremely. Book 48 hours ahead to secure slots, as therapists fill up fast around the August bank holiday.",
+      },
+    ],
+  },
+  birmingham: {
+    label: "Birmingham",
+    state: "UK",
+    description:
+      "Birmingham is the UK's second city, blending canals, corporate districts, and creative quarters like Digbeth. Visitors split time between business meetings, the Bullring shopping, and live events at arenas and theatres.",
+    lgbtContext:
+      "The Gay Village around Hurst Street hosts bars, clubs, and community events. Birmingham Pride draws huge crowds each May, and the city's diverse, welcoming culture supports inclusive service providers.",
+    neighborhoods: [
+      { name: "Gay Village & Hurst Street", vibe: "Nightlife hub with hotels and recovery demand after late events." },
+      { name: "Digbeth", vibe: "Warehouse venues, street art, and creative spaces with regular local clients." },
+      { name: "City Centre & Bullring", vibe: "Shopping and business district with foot traffic needing relief after long days." },
+      { name: "Jewellery Quarter", vibe: "Historic quarter with boutique hotels and quieter wellness bookings." },
+    ],
+    events: [
+      { name: "Birmingham Pride", detail: "May bank holiday festival centred on the Gay Village with parades and concerts." },
+      { name: "Crufts and NEC events", detail: "Convention centre events drive hotel bookings and mobile massage requests." },
+      { name: "Arena concerts", detail: "Touring acts at Utilita Arena create post-event demand citywide." },
+    ],
+    weather:
+      "Mild and rainy, with grey skies common. Indoor sessions are popular, especially in autumn and winter months.",
+    tourism:
+      "Convention travel, shopping weekends, and Midlands business keep demand steady. Visitors often arrive via New Street station and rely on local trams.",
+    culture:
+      "Diverse, multicultural, and hardworking. Clients appreciate punctuality, clear rates, and friendly, respectful conversation.",
+    massageReasons: [
+      "Foot and leg relief after shopping the Bullring and walking the canals.",
+      "Stress reduction for convention and NEC visitors.",
+      "Post-night-out recovery near the Gay Village and Broad Street.",
+      "Desk strain for corporate travellers staying near New Street.",
+      "LGBT-welcoming care in a city known for its inclusive Pride events.",
+    ],
+    faqs: [
+      {
+        question: "Where do visitors usually book in Birmingham?",
+        answer: "City centre hotels, the Gay Village, and Jewellery Quarter. Mobile therapists often plan routes to avoid peak-hour traffic on the ring road.",
+      },
+      {
+        question: "Is Birmingham inclusive for LGBT massage clients?",
+        answer: "Yes. The Gay Village is highly visible, and Pride's scale reflects the city's welcoming approach to queer visitors.",
+      },
+      {
+        question: "How does convention season affect bookings?",
+        answer: "NEC events fill hotels fast. Booking a day ahead helps secure preferred times, especially mid-week.",
+      },
+    ],
+  },
+  edinburgh: {
+    label: "Edinburgh",
+    state: "UK",
+    description:
+      "Edinburgh blends medieval Old Town cobbles with Georgian New Town elegance. Visitors climb to the Castle, stroll the Royal Mile, and explore Princes Street, often walking miles between historic sites and cultural venues.",
+    lgbtContext:
+      "The Pink Triangle around Broughton Street hosts LGBT bars and community spaces. Edinburgh's Fringe and Pride events celebrate inclusivity, and the city's culture is welcoming to queer visitors seeking respectful, discreet service.",
+    neighborhoods: [
+      { name: "Old Town & Royal Mile", vibe: "Tourist heart with hotels and guests needing relief after climbing hills." },
+      { name: "New Town & Princes Street", vibe: "Georgian architecture, shopping, and business travellers seeking calm sessions." },
+      { name: "Broughton Street & Pink Triangle", vibe: "LGBT quarter with bars, cafes, and regular wellness bookings." },
+      { name: "Leith", vibe: "Waterfront dining and creative spaces with locals favouring trusted providers." },
+    ],
+    events: [
+      { name: "Edinburgh Fringe", detail: "August arts festival flooding the city with performers and visitors needing recovery work." },
+      { name: "Edinburgh Pride", detail: "June celebration with parades and parties centred on Broughton Street." },
+      { name: "Hogmanay", detail: "New Year's street party creating waves of demand for post-celebration sessions." },
+    ],
+    weather:
+      "Cool and windy year-round, with chilly winters. Indoor, warm sessions are especially appealing after outdoor sightseeing.",
+    tourism:
+      "Year-round tourism peaks during Fringe and Hogmanay. Visitors often stay near Waverley station and rely on buses or walk the compact city centre.",
+    culture:
+      "Polite, cultured, and proud of heritage. Service expectations emphasise professionalism, punctuality, and respectful conversation.",
+    massageReasons: [
+      "Leg and foot relief after climbing Castle Hill and walking the Royal Mile.",
+      "Stress management during the hectic Fringe festival season.",
+      "Post-flight recovery for arrivals via Edinburgh Airport.",
+      "Warming, calming sessions after windy walks along Princes Street.",
+      "LGBT-affirming care near Broughton Street and the Pink Triangle.",
+    ],
+    faqs: [
+      {
+        question: "Where do visitors book most often in Edinburgh?",
+        answer: "Old Town hotels, New Town apartments, and Broughton Street. Hilly streets mean mobile therapists plan carefully for parking and access.",
+      },
+      {
+        question: "How busy is Fringe season for massage?",
+        answer: "Extremely. August bookings should be made 48-72 hours ahead to avoid sold-out schedules.",
+      },
+      {
+        question: "Is Edinburgh welcoming for LGBT clients?",
+        answer: "Yes. The Pink Triangle is openly queer, and many providers note inclusive policies and pronoun awareness.",
+      },
+    ],
+  },
+  glasgow: {
+    label: "Glasgow",
+    state: "UK",
+    description:
+      "Glasgow is Scotland's largest city, known for Victorian architecture, live music, and a thriving arts scene. Visitors move between the Style Mile shopping, West End culture, and the Merchant City's bars and restaurants.",
+    lgbtContext:
+      "The Merchant City and surrounding areas host LGBT bars, clubs, and community hubs. Glasgow Pride is a major event, and the city's friendly, unpretentious culture makes inclusive service the norm for most providers.",
+    neighborhoods: [
+      { name: "Merchant City", vibe: "Historic quarter with bars, hotels, and recovery demand after nightlife." },
+      { name: "West End", vibe: "University area with cafes, galleries, and locals booking regular wellness sessions." },
+      { name: "City Centre & Style Mile", vibe: "Shopping and business district with foot traffic needing relief after long days." },
+      { name: "Finnieston", vibe: "Trendy dining and nightlife strip attracting younger, design-conscious clients." },
+    ],
+    events: [
+      { name: "Glasgow Pride", detail: "July celebration with parades and events centred on the Merchant City." },
+      { name: "Celtic Connections", detail: "January music festival drawing crowds for late-night concerts and sessions." },
+      { name: "Football matches", detail: "Rangers and Celtic games create matchday energy and post-game demand." },
+    ],
+    weather:
+      "Damp and cool most of the year, with frequent rain. Indoor sessions are popular, especially on grey winter evenings.",
+    tourism:
+      "Music, football, and arts tourism keep hotels steady. Visitors often arrive via Central or Queen Street stations and rely on the Subway for short trips.",
+    culture:
+      "Warm, humorous, and no-nonsense. Clients value friendliness, punctuality, and straightforward communication.",
+    massageReasons: [
+      "Recovery after football matches and live music at the Hydro.",
+      "Stress relief for business travellers in the City Centre.",
+      "Post-night-out sessions near the Merchant City and Finnieston.",
+      "Foot and leg relief after walking the West End and Style Mile.",
+      "LGBT-welcoming care that reflects Glasgow's inclusive Pride culture.",
+    ],
+    faqs: [
+      {
+        question: "Where do most bookings happen in Glasgow?",
+        answer: "City Centre hotels, the Merchant City, and West End apartments. The Subway makes short trips easy, so proximity to stations helps.",
+      },
+      {
+        question: "Is Glasgow LGBT-friendly for massage clients?",
+        answer: "Yes. Pride and the Merchant City scene are highly visible, and many therapists highlight inclusive practices.",
+      },
+      {
+        question: "How do football matches affect scheduling?",
+        answer: "Matchdays bring crowds and traffic. Booking early in the day or after crowds clear keeps arrivals on time.",
+      },
+    ],
+  },
+  bristol: {
+    label: "Bristol",
+    state: "UK",
+    description:
+      "Bristol blends maritime history with modern creativity, from the harbourside to Clifton's Georgian terraces. Visitors explore street art, independent shops, and live music venues, often walking or cycling between districts.",
+    lgbtContext:
+      "Old Market and Stokes Croft host LGBT bars and community spaces, with Bristol Pride drawing large summer crowds. The city's progressive culture makes inclusive, respectful service widely expected.",
+    neighborhoods: [
+      { name: "Harbourside", vibe: "Waterfront dining and hotels with tourists seeking post-walk recovery." },
+      { name: "Clifton", vibe: "Georgian elegance and the Suspension Bridge, attracting upscale wellness bookings." },
+      { name: "Stokes Croft & Old Market", vibe: "Street art, LGBT venues, and creative spaces with regular local clients." },
+      { name: "Broadmead & City Centre", vibe: "Shopping and business district with steady foot traffic and stress relief demand." },
+    ],
+    events: [
+      { name: "Bristol Pride", detail: "July festival with parades and events centred on Old Market and the city centre." },
+      { name: "Harbour Festival", detail: "Summer waterfront celebration creating waves of demand along the docks." },
+      { name: "Balloon Fiesta", detail: "August hot air balloon event drawing crowds to Ashton Court and citywide hotels." },
+    ],
+    weather:
+      "Mild and rainy, with southwest winds. Indoor sessions are popular, especially in autumn and winter months.",
+    tourism:
+      "Arts, university life, and harbourside tourism keep demand steady. Visitors often rely on buses and cycling, so clear directions help.",
+    culture:
+      "Independent, creative, and environmentally conscious. Clients value authenticity, punctuality, and friendly, relaxed conversation.",
+    massageReasons: [
+      "Leg relief after walking the harbourside and climbing to Clifton.",
+      "Stress management for university visitors and business travellers.",
+      "Post-festival recovery near Stokes Croft and Old Market venues.",
+      "Cooling, calming work after cycling around the city's hilly terrain.",
+      "LGBT-affirming care that matches Bristol's progressive reputation.",
+    ],
+    faqs: [
+      {
+        question: "Where do visitors book most often in Bristol?",
+        answer: "Harbourside hotels, Clifton apartments, and Old Market. Mobile therapists often plan around bus routes and parking restrictions.",
+      },
+      {
+        question: "Is Bristol welcoming for LGBT massage clients?",
+        answer: "Yes. Pride and Old Market venues are highly visible, and many providers note inclusive policies.",
+      },
+      {
+        question: "How does the hilly terrain affect mobile sessions?",
+        answer: "Clifton and other hills can slow parking. Sharing exact addresses and stairwell access keeps arrivals smooth.",
+      },
+    ],
+  },
+  liverpool: {
+    label: "Liverpool",
+    state: "UK",
+    description:
+      "Liverpool blends Beatles heritage with a vibrant waterfront. Visitors explore Albert Dock, Baltic Triangle creativity, and football culture, often walking between museums, venues, and the iconic Cavern Club.",
+    lgbtContext:
+      "The Stanley Street Quarter hosts LGBT bars and community events, with LiverpoolPride drawing summer crowds. The city's friendly, welcoming culture supports inclusive service across most districts.",
+    neighborhoods: [
+      { name: "Stanley Street Quarter", vibe: "LGBT nightlife hub with bars, hotels, and recovery demand after late events." },
+      { name: "Albert Dock & Waterfront", vibe: "Tourist centre with museums, dining, and guests seeking post-walk sessions." },
+      { name: "Baltic Triangle", vibe: "Creative warehouses, street food, and design-conscious wellness bookings." },
+      { name: "City Centre & Liverpool One", vibe: "Shopping district with foot traffic and stress relief demand." },
+    ],
+    events: [
+      { name: "LiverpoolPride", detail: "July festival centred on Stanley Street with parades and community events." },
+      { name: "Liverpool International Music Festival", detail: "Summer concerts at Sefton Park creating post-event demand." },
+      { name: "Football matches", detail: "Liverpool FC and Everton games drive matchday energy and recovery requests." },
+    ],
+    weather:
+      "Rainy and windy, with mild winters. Indoor sessions are popular year-round, especially on grey Atlantic days.",
+    tourism:
+      "Music tourism, football, and waterfront culture keep hotels busy. Visitors often arrive via Lime Street station and rely on buses or walk the compact centre.",
+    culture:
+      "Warm, humorous, and fiercely proud. Service expectations centre on friendliness, reliability, and down-to-earth conversation.",
+    massageReasons: [
+      "Foot and leg relief after walking Albert Dock and the waterfront.",
+      "Recovery after football matches and nights out near Stanley Street.",
+      "Stress reduction for music tourists and conference visitors.",
+      "Post-travel sessions for arrivals via Lime Street or John Lennon Airport.",
+      "LGBT-welcoming care in a city known for its inclusive Pride scene.",
+    ],
+    faqs: [
+      {
+        question: "Where do visitors book most often in Liverpool?",
+        answer: "City centre hotels, Stanley Street, and Albert Dock. Mobile therapists often plan around matchday traffic and pedestrian zones.",
+      },
+      {
+        question: "Is Liverpool LGBT-friendly for massage?",
+        answer: "Yes. Stanley Street is openly queer, and Pride's scale reflects the city's welcoming culture.",
+      },
+      {
+        question: "How do football matches affect timing?",
+        answer: "Matchdays bring heavy crowds. Booking early in the day or after kick-off keeps arrivals predictable.",
+      },
+    ],
+  },
+  leeds: {
+    label: "Leeds",
+    state: "UK",
+    description:
+      "Leeds is a northern powerhouse blending Victorian arcades with modern shopping and business districts. Visitors split time between Leeds Dock, the Calls, and corporate meetings, often walking or using the city's compact layout.",
+    lgbtContext:
+      "The Lower Briggate area and surrounding venues host LGBT bars and community spaces. Leeds Pride is a growing event, and the city's culture is increasingly inclusive and welcoming to queer visitors.",
+    neighborhoods: [
+      { name: "Lower Briggate & Call Lane", vibe: "Nightlife and LGBT venues with recovery demand after late events." },
+      { name: "Leeds Dock", vibe: "Waterfront dining and apartments with steady wellness bookings." },
+      { name: "City Centre & Victoria Quarter", vibe: "Shopping arcades and business district with foot traffic and stress relief demand." },
+      { name: "Headingley", vibe: "Student area with locals booking regular maintenance sessions near the university." },
+    ],
+    events: [
+      { name: "Leeds Pride", detail: "August celebration centred on Lower Briggate with parades and community events." },
+      { name: "Leeds Festival", detail: "August music festival at Bramham Park creating waves of demand citywide." },
+      { name: "First Direct Arena concerts", detail: "Touring acts and events driving post-show recovery requests." },
+    ],
+    weather:
+      "Cool and rainy, with cold winters. Indoor sessions are popular, especially during grey autumn and winter months.",
+    tourism:
+      "Business travel, university life, and shopping weekends keep hotels steady. Visitors often arrive via Leeds station and rely on buses or walk.",
+    culture:
+      "Friendly, hardworking, and down-to-earth. Clients value punctuality, clear communication, and no-nonsense service.",
+    massageReasons: [
+      "Desk and shoulder strain for corporate travellers in the business district.",
+      "Foot relief after shopping Victoria Quarter and walking the city centre.",
+      "Recovery after concerts and festivals near the Arena and Bramham Park.",
+      "Stress management for university visitors and student locals.",
+      "LGBT-affirming care that matches Leeds' growing inclusive reputation.",
+    ],
+    faqs: [
+      {
+        question: "Where do most bookings happen in Leeds?",
+        answer: "City centre hotels, Lower Briggate, and Leeds Dock. Mobile therapists often plan around peak shopping hours and student areas.",
+      },
+      {
+        question: "Is Leeds LGBT-friendly for massage clients?",
+        answer: "Yes. Pride and Lower Briggate venues are increasingly visible, and many therapists note inclusive practices.",
+      },
+      {
+        question: "How does festival season affect bookings?",
+        answer: "Leeds Festival weekend fills hotels fast. Booking 48 hours ahead helps secure slots.",
+      },
+    ],
+  },
+  newcastle: {
+    label: "Newcastle",
+    state: "UK",
+    description:
+      "Newcastle blends Tyneside heritage with modern culture, from the Quayside to Northumberland Street shopping. Visitors explore bridges, nightlife, and the Baltic arts centre, often walking steep hills between districts.",
+    lgbtContext:
+      "The Times Square area and surrounding venues host LGBT bars and community events. Newcastle Pride is a major summer celebration, and the city's welcoming, unpretentious culture supports inclusive service.",
+    neighborhoods: [
+      { name: "Times Square & Pink Triangle", vibe: "LGBT nightlife hub with bars and recovery demand after events." },
+      { name: "Quayside", vibe: "Riverside dining, galleries, and guests seeking post-walk sessions." },
+      { name: "City Centre & Northumberland Street", vibe: "Shopping district with foot traffic and stress relief demand." },
+      { name: "Jesmond", vibe: "Leafy residential area with regular local wellness bookings." },
+    ],
+    events: [
+      { name: "Northern Pride", detail: "July celebration centred on Town Moor with parades and festivals." },
+      { name: "Great North Run", detail: "September half-marathon bringing runners and supporters citywide." },
+      { name: "Utilita Arena concerts", detail: "Touring acts creating post-event demand near the Quayside." },
+    ],
+    weather:
+      "Cool and windy, with cold winters. Indoor sessions are popular, especially after outdoor sightseeing or events.",
+    tourism:
+      "Nightlife, football, and arts tourism keep hotels steady. Visitors often arrive via Central Station and rely on the Metro for short trips.",
+    culture:
+      "Warm, funny, and fiercely loyal. Service expectations centre on friendliness, punctuality, and straightforward conversation.",
+    massageReasons: [
+      "Leg and foot relief after climbing Newcastle's steep hills and bridges.",
+      "Recovery after football matches and nights out near Times Square.",
+      "Stress management for business travellers and Great North Run participants.",
+      "Post-travel sessions for arrivals via Central Station or Newcastle Airport.",
+      "LGBT-welcoming care that reflects Northern Pride's inclusive culture.",
+    ],
+    faqs: [
+      {
+        question: "Where do visitors book most often in Newcastle?",
+        answer: "City centre hotels, Quayside apartments, and Times Square. The Metro makes short trips easy, so proximity to stations helps.",
+      },
+      {
+        question: "Is Newcastle LGBT-friendly for massage?",
+        answer: "Yes. Northern Pride and Times Square are highly visible, and many therapists highlight inclusive practices.",
+      },
+      {
+        question: "How do the hills affect mobile sessions?",
+        answer: "Steep streets can slow parking and access. Sharing exact addresses and stairwell details keeps arrivals smooth.",
+      },
+    ],
+  },
+  brighton: {
+    label: "Brighton",
+    state: "UK",
+    description:
+      "Brighton is the UK's seaside capital of bohemian culture, blending pebble beaches with pier amusements and the vibrant Lanes. Visitors walk the seafront, explore independent shops, and enjoy one of Europe's most visible LGBT scenes.",
+    lgbtContext:
+      "Brighton is famously queer-friendly, with LGBT venues throughout the city centre, Kemptown, and St James's Street. Pride is huge here, and inclusive service is the default expectation across hospitality and wellness providers.",
+    neighborhoods: [
+      { name: "Kemptown & St James's Street", vibe: "Heart of LGBT nightlife with bars, clubs, and regular wellness bookings." },
+      { name: "The Lanes & North Laine", vibe: "Independent shops, cafes, and design-conscious visitors seeking unique studios." },
+      { name: "Seafront & Palace Pier", vibe: "Tourist hub with hotels and guests needing relief after long beach walks." },
+      { name: "Hanover & Seven Dials", vibe: "Residential hills with locals booking trusted, regular providers." },
+    ],
+    events: [
+      { name: "Brighton Pride", detail: "August festival with parades, park events, and massive hotel demand citywide." },
+      { name: "Brighton Festival", detail: "May arts festival creating waves of cultural tourism and wellness requests." },
+      { name: "Burning the Clocks", detail: "Winter solstice parade bringing crowds to the seafront and city centre." },
+    ],
+    weather:
+      "Mild coastal climate with sea breezes. Winters are cool but not harsh, and summer afternoons make beachside sessions appealing.",
+    tourism:
+      "Year-round tourism peaks during Pride and summer weekends. Visitors often arrive via Brighton station and walk or use buses along the coast.",
+    culture:
+      "Creative, bohemian, and fiercely inclusive. Service expectations emphasise authenticity, respect for diversity, and relaxed professionalism.",
+    massageReasons: [
+      "Foot and leg relief after walking the seafront, pier, and Lanes.",
+      "Recovery after Pride festivities and late-night Kemptown events.",
+      "Stress management for creative professionals and festival visitors.",
+      "Post-travel sessions for arrivals from London and Gatwick Airport.",
+      "LGBT-affirming care in the UK's most openly queer city.",
+    ],
+    faqs: [
+      {
+        question: "Where do visitors book most often in Brighton?",
+        answer: "Seafront hotels, Kemptown, and the Lanes. Mobile therapists often plan around seafront traffic and Pride road closures.",
+      },
+      {
+        question: "Is Brighton the best UK city for LGBT massage clients?",
+        answer: "It's among the most visible and inclusive. Many therapists are queer themselves and explicitly welcome LGBT clients.",
+      },
+      {
+        question: "How busy is Pride weekend for bookings?",
+        answer: "Extremely. Book at least 72 hours ahead, as therapists fill up fast during August Pride.",
       },
     ],
   },

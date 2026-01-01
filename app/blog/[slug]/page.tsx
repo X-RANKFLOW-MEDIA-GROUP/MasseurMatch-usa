@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+﻿import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug } from "../data/posts";
@@ -297,7 +297,7 @@ export default async function BlogPostPage({ params }: Props) {
           className="mt-16 rounded-2xl p-8 text-center"
           style={{
             background:
-              "linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))"
+              "linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.2))"
           }}
         >
           <h2
@@ -352,3 +352,5 @@ export default async function BlogPostPage({ params }: Props) {
     </>
   );
 }
+
+

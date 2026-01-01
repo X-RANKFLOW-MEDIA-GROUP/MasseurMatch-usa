@@ -17,7 +17,14 @@ export default function TherapistMePage() {
         return;
       }
 
-      router.replace(`/therapist/${uid}`);
+      const { data: profile } = await supabase
+        .from("therapists")
+        .select("slug")
+        .eq("user_id", uid)
+        .maybeSingle();
+
+      const slug = profile?.slug || uid;
+      router.replace(`/therapist/${slug}`);
     })();
   }, [router]);
 

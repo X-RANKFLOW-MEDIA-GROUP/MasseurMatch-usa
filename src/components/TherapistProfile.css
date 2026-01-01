@@ -1,25 +1,24 @@
-/* ===========================
+﻿/* ===========================
    BASE / LAYOUT GERAL
 =========================== */
 
 :root {
-  --tp-bg: #16162d;
-  --tp-surface: #1e1e3a;
-  --tp-surface-soft: #252545;
-  --tp-surface-alt: #0f0f1f;
-  --tp-border-soft: rgba(255, 255, 255, 0.06);
-  --tp-border-strong: rgba(255, 255, 255, 0.12);
-  --tp-text-main: #ffffff;
-  --tp-text-soft: #a0a0b8;
-  --tp-text-muted: #707088;
+  --tp-bg: #050505;
+  --tp-surface: #0a0a0f;
+  --tp-surface-soft: #111118;
+  --tp-surface-alt: #0b0b12;
+  --tp-border-soft: rgba(255, 255, 255, 0.08);
+  --tp-border-strong: rgba(255, 255, 255, 0.16);
+  --tp-text-main: #f8f9ff;
+  --tp-text-soft: #b6b6c6;
+  --tp-text-muted: #8a8a9a;
 
-  /* Rosa principal igual ao Figma (#ff4081) */
-  --tp-accent: #ff4081;
-  --tp-accent-soft: rgba(255, 64, 129, 0.18);
-  --tp-accent-strong: #ff5a92;
-  --tp-accent-dark: #e73278;
+  --tp-accent: #8b5cf6;
+  --tp-accent-soft: rgba(139, 92, 246, 0.18);
+  --tp-accent-strong: #a78bfa;
+  --tp-accent-dark: #7c3aed;
 
-  --tp-danger: #ff6b6b;
+  --tp-danger: #ef4444;
   --tp-radius-lg: 1.25rem;
   --tp-radius-md: 0.875rem;
   --tp-radius-pill: 999px;
@@ -36,17 +35,17 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #16162d;
+  background: var(--tp-bg);
   color: var(--tp-text-main);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Inter", "Roboto", sans-serif;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", sans-serif;
 }
 
 main.tp.container {
   min-height: 100vh;
   /* Afastar mais do topo */
   padding: 2.75rem 1rem 5rem;
-  background: #16162d;
+  background: var(--tp-bg);
   max-width: 1100px;
   margin: 0 auto;
   position: relative;
@@ -216,7 +215,7 @@ main.tp.container {
 
 .star--full,
 .star--half {
-  color: #fbbf24;
+  color: #c4b5fd;
 }
 
 .star--empty {
@@ -667,7 +666,7 @@ main.tp.container {
 }
 
 .tp-stars {
-  color: #fbbf24;
+  color: #c4b5fd;
   font-size: 0.95rem;
 }
 
@@ -779,3 +778,4 @@ main.tp.container {
     padding: 2rem 1.75rem;
   }
 }
+

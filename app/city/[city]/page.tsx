@@ -1,7 +1,9 @@
-import { supabaseServer } from "@/src/lib/supabaseServer";
+﻿import { supabaseServer } from "@/src/lib/supabaseServer";
 import { baseSEO } from "@/app/lib/seo";
 import { cityMap } from "@/app/data/cities";
 import { neighbors } from "@/app/data/cityNeighbors";
+import CityLandingPage from "@/src/components/CityLandingPage";
+import { getExpansionCity } from "@/app/data/expansionCities";
 
 type CityPageProps = { params: { city: string } };
 
@@ -11,6 +13,26 @@ type CityPageProps = { params: { city: string } };
 export async function generateMetadata({ params }: CityPageProps) {
   const key = params.city.toLowerCase();
   const info = cityMap[key];
+  const expansionCity = getExpansionCity(key);
+
+  if (!info && expansionCity) {
+    const { name, state } = expansionCity;
+
+    return baseSEO({
+      title: `Gay Massage ${name} ${state} | Male Massage Therapists | MasseurMatch`,
+      description: `Find LGBT-friendly massage therapists in ${name}, ${state}. Professional male bodywork, gay massage, and inclusive wellness services. Join our expanding network.`,
+      keywords: [
+        `gay massage ${name}`,
+        `male massage ${name}`,
+        `LGBT massage ${state}`,
+        `m4m massage ${name}`,
+        `gay spa ${name}`,
+        `male bodywork ${name}`,
+        `inclusive massage ${name}`
+      ],
+      url: `https://www.masseurmatch.com/city/${params.city}`
+    });
+  }
 
   if (!info) {
     return baseSEO({
@@ -42,6 +64,11 @@ export async function generateMetadata({ params }: CityPageProps) {
 export default async function CityPage({ params }: CityPageProps) {
   const key = params.city.toLowerCase();
   const info = cityMap[key];
+  const expansionCity = getExpansionCity(key);
+
+  if (!info && expansionCity) {
+    return <CityLandingPage city={expansionCity} slug={params.city} />;
+  }
 
   if (!info) {
     return (
@@ -172,7 +199,7 @@ export default async function CityPage({ params }: CityPageProps) {
       <nav aria-label="Breadcrumb" className="text-sm">
         <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex gap-2">
           <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <a itemProp="item" href="/" className="text-blue-600 hover:underline">
+            <a itemProp="item" href="/" className="text-violet-600 hover:underline">
               <span itemProp="name">Home</span>
             </a>
             <meta itemProp="position" content="1" />
@@ -275,31 +302,31 @@ export default async function CityPage({ params }: CityPageProps) {
         <h2 className="text-2xl font-semibold">Popular Services in {info.label}</h2>
         <p>Explore specialized massage services tailored for the LGBT community in {info.label}:</p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          <a href={`/city/${params.city}/gay-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/gay-massage`} className="text-violet-600 hover:underline">
             Gay Massage in {info.label}
           </a>
-          <a href={`/city/${params.city}/male-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/male-massage`} className="text-violet-600 hover:underline">
             Male Massage in {info.label}
           </a>
-          <a href={`/city/${params.city}/m4m-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/m4m-massage`} className="text-violet-600 hover:underline">
             M4M Massage in {info.label}
           </a>
-          <a href={`/city/${params.city}/lgbt-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/lgbt-massage`} className="text-violet-600 hover:underline">
             LGBT Massage in {info.label}
           </a>
-          <a href={`/city/${params.city}/deep-tissue`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/deep-tissue`} className="text-violet-600 hover:underline">
             Deep Tissue Massage
           </a>
-          <a href={`/city/${params.city}/sports-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/sports-massage`} className="text-violet-600 hover:underline">
             Sports Massage
           </a>
-          <a href={`/city/${params.city}/relaxation`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/relaxation`} className="text-violet-600 hover:underline">
             Relaxation Massage
           </a>
-          <a href={`/city/${params.city}/hotel-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/hotel-massage`} className="text-violet-600 hover:underline">
             Hotel Massage
           </a>
-          <a href={`/city/${params.city}/mobile-massage`} className="text-blue-600 hover:underline">
+          <a href={`/city/${params.city}/mobile-massage`} className="text-violet-600 hover:underline">
             Mobile Massage
           </a>
         </div>
@@ -314,7 +341,7 @@ export default async function CityPage({ params }: CityPageProps) {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {neighbors[key].map(n => (
-              <a key={n} href={`/city/${n}`} className="text-blue-600 hover:underline">
+              <a key={n} href={`/city/${n}`} className="text-violet-600 hover:underline">
                 {cityMap[n]?.label || n} Gay Massage
               </a>
             ))}
@@ -325,3 +352,4 @@ export default async function CityPage({ params }: CityPageProps) {
     </main>
   );
 }
+

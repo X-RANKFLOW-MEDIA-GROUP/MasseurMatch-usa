@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+﻿import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -54,7 +54,7 @@ export default function TrustPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(trustSchema) }}
       />
-      <main
+      <div
         className="mx-auto max-w-4xl px-6 py-12"
         style={{ background: "var(--bg)", color: "var(--text)" }}
       >
@@ -114,7 +114,7 @@ export default function TrustPage() {
           >
             <div
               className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full"
-              style={{ background: "rgba(34, 197, 94, 0.15)" }}
+              style={{ background: "rgba(139, 92, 246, 0.16)" }}
             >
               <svg
                 className="h-6 w-6"
@@ -231,7 +231,7 @@ export default function TrustPage() {
             >
               <span
                 className="flex h-10 w-10 items-center justify-center rounded-full"
-                style={{ background: "rgba(34, 197, 94, 0.15)" }}
+                style={{ background: "rgba(139, 92, 246, 0.16)" }}
               >
                 <svg
                   className="h-5 w-5"
@@ -618,11 +618,11 @@ export default function TrustPage() {
             >
               <span
                 className="flex h-10 w-10 items-center justify-center rounded-full"
-                style={{ background: "rgba(249, 115, 22, 0.15)" }}
+                style={{ background: "rgba(139, 92, 246, 0.16)" }}
               >
                 <svg
                   className="h-5 w-5"
-                  style={{ color: "#f97316" }}
+                  style={{ color: "#8b5cf6" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -973,7 +973,8 @@ export default function TrustPage() {
             </Link>
           </div>
         </section>
-      </main>
+      </div>
     </>
   );
 }
+
