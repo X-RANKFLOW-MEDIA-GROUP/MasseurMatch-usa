@@ -39,7 +39,7 @@ export function Navbar() {
       dropdown: [
         { name: 'Join as a Therapist', href: '/join-as-therapist' },
         { name: 'How It Works', href: '/how-it-works-for-therapists' },
-        { name: 'Verification Process', href: '/verification-process' },
+        { name: 'Professional Standards', href: '/legal/professional-standards' },
       ],
     },
     {
@@ -68,7 +68,7 @@ export function Navbar() {
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         className="fixed top-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none"
       >
-        <div className="pointer-events-auto bg-[#0a0a0f]/60 backdrop-blur-md border border-white/10 rounded-full pl-6 pr-2 py-2 flex items-center justify-between gap-12 shadow-2xl shadow-black/20 ring-1 ring-white/5 relative overflow-hidden">
+        <div className="pointer-events-auto bg-[#0a0a0f]/60 backdrop-blur-md border border-white/10 rounded-full pl-6 pr-2 py-2 flex items-center justify-between gap-12 shadow-2xl shadow-black/20 ring-1 ring-white/5 relative overflow-visible">
             {/* Glossy sheen overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
 

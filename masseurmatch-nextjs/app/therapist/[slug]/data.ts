@@ -27,6 +27,13 @@ export type TherapistRecord = {
   gallery?: Array<string | { id?: string; url?: string }> | null;
   services?: string[] | string | null;
   massage_techniques?: string[] | string | null;
+  additional_services?: string[] | string | null;
+  mobile_extras?: string[] | string | null;
+  certifications?: string[] | string | null;
+  payment_methods?: string[] | string | null;
+  years_experience?: number | null;
+  massage_start_date?: string | null;
+  gender?: string | null;
   rating?: number | null;
   override_reviews_count?: number | null;
   phone?: string | null;

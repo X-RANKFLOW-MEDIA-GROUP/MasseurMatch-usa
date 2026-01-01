@@ -4,14 +4,14 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Trust & Safety | MasseurMatch - Your Safety Is Our Priority",
   description:
-    "Learn about MasseurMatch's commitment to safety, verification processes, community guidelines, and how we protect both clients and therapists on our platform.",
+    "Learn about MasseurMatch's commitment to safety, reporting tools, community standards, and privacy protections for our directory.",
   keywords: [
     "massage safety",
-    "verified therapists",
     "trust and safety",
     "secure platform",
     "lgbtq safe space",
-    "background check"
+    "community standards",
+    "reporting tools"
   ],
   alternates: {
     canonical: "https://www.masseurmatch.com/trust"
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Trust & Safety | MasseurMatch",
     description:
-      "Your safety is our priority. Learn how we verify therapists and protect our community.",
+      "Your safety is our priority. Learn how we protect our community with clear standards and reporting.",
     url: "https://www.masseurmatch.com/trust",
     siteName: "MasseurMatch",
     type: "website"
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Trust & Safety | MasseurMatch",
     description:
-      "Your safety is our priority. Learn how we verify therapists and protect our community."
+      "Your safety is our priority. Learn how we protect our community with clear standards and reporting."
   }
 };
 
@@ -37,7 +37,7 @@ const trustSchema = {
   "@type": "WebPage",
   name: "Trust & Safety | MasseurMatch",
   description:
-    "Learn about MasseurMatch's commitment to safety, verification processes, and community protection.",
+    "Learn about MasseurMatch's commitment to safety, reporting tools, and community protection.",
   url: "https://www.masseurmatch.com/trust",
   mainEntity: {
     "@type": "Organization",
@@ -135,10 +135,10 @@ export default function TrustPage() {
               className="mb-2 text-lg font-semibold"
               style={{ color: "var(--text)" }}
             >
-              Verified Profiles
+              Profile Standards
             </h3>
             <p className="text-sm" style={{ color: "var(--muted)" }}>
-              Every therapist goes through our verification process
+              Profiles follow clear rules and are moderated for compliance
             </p>
           </div>
           <div
@@ -217,7 +217,7 @@ export default function TrustPage() {
 
         {/* Detailed Sections */}
         <div className="space-y-12">
-          {/* Verification Process */}
+          {/* Profile Standards */}
           <section
             className="rounded-2xl p-8"
             style={{
@@ -248,11 +248,11 @@ export default function TrustPage() {
                   />
                 </svg>
               </span>
-              Therapist Verification Process
+              Profile Standards &amp; Enforcement
             </h2>
             <p className="mb-6" style={{ color: "var(--muted)" }}>
-              We take verification seriously. Every therapist on MasseurMatch
-              goes through a comprehensive screening process:
+              We do not verify identities or licenses. Instead, we maintain
+              clear standards and take action on violations:
             </p>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
@@ -267,11 +267,11 @@ export default function TrustPage() {
                 </span>
                 <div>
                   <p className="font-medium" style={{ color: "var(--text)" }}>
-                    Identity Verification
+                    Self-Declared Profiles
                   </p>
                   <p className="text-sm" style={{ color: "var(--muted)" }}>
-                    Government-issued ID verification to confirm therapist
-                    identity
+                    Providers manage their own listings. We do not verify
+                    identity or professional licenses.
                   </p>
                 </div>
               </li>
@@ -287,11 +287,11 @@ export default function TrustPage() {
                 </span>
                 <div>
                   <p className="font-medium" style={{ color: "var(--text)" }}>
-                    Profile Review
+                    Content Standards
                   </p>
                   <p className="text-sm" style={{ color: "var(--muted)" }}>
-                    Manual review of profile information, photos, and service
-                    descriptions
+                    Listings must follow our community guidelines and photo
+                    rules. We remove content that violates policy.
                   </p>
                 </div>
               </li>
@@ -307,11 +307,11 @@ export default function TrustPage() {
                 </span>
                 <div>
                   <p className="font-medium" style={{ color: "var(--text)" }}>
-                    Ongoing Monitoring
+                    Reporting &amp; Moderation
                   </p>
                   <p className="text-sm" style={{ color: "var(--muted)" }}>
-                    Continuous monitoring of reviews and reports to maintain
-                    quality standards
+                    We review reports and enforce policies. There are no
+                    reviews or ratings on the platform.
                   </p>
                 </div>
               </li>
@@ -785,7 +785,7 @@ export default function TrustPage() {
                   />
                 </svg>
                 <p style={{ color: "var(--muted)" }}>
-                  Secure payment processing through trusted partners
+                  No payment data collected or processed on the platform
                 </p>
               </div>
               <div className="flex items-start gap-3">

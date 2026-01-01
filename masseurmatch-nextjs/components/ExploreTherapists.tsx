@@ -40,6 +40,7 @@ export type Therapist = {
   outcall?: boolean;
   isFeatured?: boolean;
   distanceMiles?: number;
+  gender?: string;
 };
 
 type LatLng = { lat: number; lng: number };
@@ -192,7 +193,7 @@ function ExploreTherapistsContent() {
 
   const [therapists, setTherapists] = useState<Therapist[]>([]);
   const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState<any | null>(null);
+  const [, setFetchError] = useState<any | null>(null);
   const [mapCollapsed, setMapCollapsed] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
   const [showMap, setShowMap] = useState(true);
@@ -217,6 +218,7 @@ function ExploreTherapistsContent() {
   );
 
   const allowedSorts = new Set(["distance", "availability", "featured", "price", "rating"]);
+  const excludedGenders = ["female", "woman", "mulher", "f"];
 
   /* Sync filters & sort from URL */
   useEffect(() => {
@@ -338,6 +340,7 @@ function ExploreTherapistsContent() {
         const { therapists: rows, error } = await fetchTherapistsAPI({
           limit: 50, // Reduced for better initial performance
           offset: 0,
+          excludeGender: excludedGenders.join(","),
         });
 
         if (!mounted) return;
@@ -402,11 +405,16 @@ function ExploreTherapistsContent() {
             incall: typeof t.incall === "boolean" ? t.incall : Math.random() > 0.35,
             outcall: typeof t.outcall === "boolean" ? t.outcall : Math.random() > 0.5,
             isFeatured: false,
+            gender: typeof t.gender === "string" ? t.gender : undefined,
           };
         });
 
         if (!mounted) return;
-        setTherapists(mapped);
+        const filtered = mapped.filter((t) => {
+          if (!t.gender) return true;
+          return !excludedGenders.includes(t.gender.toLowerCase());
+        });
+        setTherapists(filtered);
         setFetchError(null);
       } catch (e) {
         console.error("Unexpected error loading therapists:", e);

@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cd masseurmatch-nextjs && next dev",
-    "build": "cd masseurmatch-nextjs && next build",
-    "start": "cd masseurmatch-nextjs && next start",
-    "lint": "cd masseurmatch-nextjs && eslint",
+    "dev": "npm --prefix masseurmatch-nextjs run dev",
+    "build": "npm --prefix masseurmatch-nextjs run build",
+    "start": "npm --prefix masseurmatch-nextjs run start",
+    "lint": "npm --prefix masseurmatch-nextjs run lint",
     "create-test-user": "ts-node scripts/create-test-user.ts"
   },
   "dependencies": {

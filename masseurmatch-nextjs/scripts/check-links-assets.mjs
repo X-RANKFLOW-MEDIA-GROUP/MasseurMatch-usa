@@ -136,7 +136,7 @@ for (const file of files) {
 
     const ext = path.extname(cleaned);
     if (ext && assetExts.has(ext)) {
-      const assetPath = path.join(publicDir, cleaned.replace(/^\\//, ""));
+      const assetPath = path.join(publicDir, cleaned.replace(/^\//, ""));
       if (!fs.existsSync(assetPath)) {
         assetErrors.push({ file, value });
       }

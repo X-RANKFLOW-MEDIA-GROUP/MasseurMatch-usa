@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/lib/hooks/useOnboarding";
 import { CheckCircle, XCircle, AlertCircle, Loader2, Send } from "lucide-react";
 import { motion } from "framer-motion";
-import type { Profile } from "@/lib/types/database";
 
 interface ReviewSubmitProps {
   onBack: () => void;
@@ -20,7 +19,6 @@ interface ValidationItem {
 }
 
 export function ReviewSubmit({ onBack, onComplete }: ReviewSubmitProps) {
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [validationItems, setValidationItems] = useState<ValidationItem[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
@@ -28,16 +26,10 @@ export function ReviewSubmit({ onBack, onComplete }: ReviewSubmitProps) {
 
   useEffect(() => {
     const loadProfile = async () => {
-      const profileData = await getCurrentProfile();
-      setProfile(profileData);
+      await getCurrentProfile();
 
       // Build validation checklist
       const items: ValidationItem[] = [
-        {
-          label: "Identity Verification",
-          status: "success", // Check users.identity_status
-          message: "Identity verified with Stripe",
-        },
         {
           label: "Content Moderation",
           status: "success", // Check profiles.auto_moderation
@@ -49,19 +41,14 @@ export function ReviewSubmit({ onBack, onComplete }: ReviewSubmitProps) {
           message: "All required fields completed",
         },
         {
-          label: "Pricing Rates",
-          status: "success", // Check valid rates
-          message: "Rates configured within limits",
-        },
-        {
           label: "Photos Approved",
           status: "success", // Check media_assets
           message: "At least one photo approved",
         },
         {
-          label: "Subscription Active",
-          status: "success", // Check subscription status for paid plans
-          message: "Payment method confirmed",
+          label: "Contact Details",
+          status: "success", // Check contact fields
+          message: "Contact methods provided",
         },
       ];
 
@@ -174,9 +161,9 @@ export function ReviewSubmit({ onBack, onComplete }: ReviewSubmitProps) {
               <span className="text-sm font-bold text-purple-400">3</span>
             </div>
             <div>
-              <p className="text-white font-medium">Start Receiving Clients</p>
+              <p className="text-white font-medium">Start Receiving Inquiries</p>
               <p className="text-sm text-slate-400">
-                You'll appear in search results and can start getting bookings
+                You'll appear in search results and can receive direct inquiries
               </p>
             </div>
           </div>

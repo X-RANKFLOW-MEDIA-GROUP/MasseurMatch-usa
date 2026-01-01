@@ -108,7 +108,6 @@ export function Footer() {
             <h4 className="text-base font-bold text-white mb-3">Support</h4>
             <ul className="space-y-2.5">
               <li><a href="mailto:support@masseurmatch.com" className="text-[#B0B0B0] hover:text-violet-300 transition-colors text-sm">Support: support@masseurmatch.com</a></li>
-              <li><a href="mailto:billing@masseurmatch.com" className="text-[#B0B0B0] hover:text-violet-300 transition-colors text-sm">Billing: billing@masseurmatch.com</a></li>
               <li><a href="mailto:legal@masseurmatch.com" className="text-[#B0B0B0] hover:text-violet-300 transition-colors text-sm">Legal: legal@masseurmatch.com</a></li>
             </ul>
           </motion.div>
@@ -118,7 +117,7 @@ export function Footer() {
             <h4 className="text-base font-bold text-white mb-3">Trust & Safety</h4>
             <ul className="space-y-2.5">
               <li><a href="/trust" className="text-[#B0B0B0] hover:text-violet-300 transition-colors text-sm">Trust and Safety</a></li>
-              <li><a href="/professional-standards" className="text-[#B0B0B0] hover:text-violet-300 transition-colors text-sm">Verification Scope</a></li>
+              <li><a href="/legal/professional-standards" className="text-[#B0B0B0] hover:text-violet-300 transition-colors text-sm">Professional Standards</a></li>
               <li><a href="/privacy-policy" className="text-[#B0B0B0] hover:text-violet-300 transition-colors text-sm">Privacy Policy</a></li>
               <li><a href="/terms" className="text-[#B0B0B0] hover:text-violet-300 transition-colors text-sm">Terms of Use</a></li>
             </ul>
@@ -162,7 +161,7 @@ export function Footer() {
         >
           {/* Legal */}
           <p className="text-[#B0B0B0] leading-relaxed max-w-2xl">
-            Â© {new Date().getFullYear()} MasseurMatch. All rights reserved. Directory platform only. No bookings or payments are processed on this website.
+            Â© {new Date().getFullYear()} MasseurMatch. All rights reserved. Directory platform only. No bookings, payments, messaging, reviews, or verification are processed on this website.
           </p>
 
           {/* Social Links */}

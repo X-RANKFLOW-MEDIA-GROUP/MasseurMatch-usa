@@ -4,26 +4,13 @@ import type { Database } from "@/types/supabase";
 
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
 
-function getCookieValue(cookieStore: CookieStore, name: string) {
-  if (typeof cookieStore.get === "function") {
-    return cookieStore.get(name)?.value;
-  }
-  if (typeof cookieStore.getAll === "function") {
-    return cookieStore
-      .getAll()
-      .find((cookie) => cookie.name === name)
-      ?.value;
-  }
-  return undefined;
-}
-
 async function createServerSupabaseClient() {
   // Handle case where cookies() is called outside request context (e.g., during build)
   let cookieStore: CookieStore;
 
   try {
     cookieStore = await cookies();
-  } catch (error) {
+  } catch {
     // During static generation, create a client without cookies
     // This allows read-only operations to work during build
     return createServerClient<Database>(

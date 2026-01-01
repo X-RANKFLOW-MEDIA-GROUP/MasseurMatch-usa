@@ -39,8 +39,6 @@ export function Hero() {
   const { scrollY } = useScroll();
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   const y = useTransform(scrollY, [0, 300], [0, 50]);
-  const scale = useTransform(scrollY, [0, 300], [1, 0.95]);
-  const blur = useTransform(scrollY, [0, 300], [0, 10]);
 
   // Geolocation State
   const [location, setLocation] = useState<string | null>(null);

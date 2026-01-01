@@ -173,14 +173,16 @@ export async function fetchTherapistsAPI(opts?: {
   offset?: number;
   city?: string;
   services?: string;
+  excludeGender?: string;
 }) {
-  const { limit = 100, offset = 0, city, services } = opts || {};
+  const { limit = 100, offset = 0, city, services, excludeGender } = opts || {};
 
   const params = new URLSearchParams();
   if (limit) params.set('limit', String(limit));
   if (offset) params.set('offset', String(offset));
   if (city) params.set('city', city);
   if (services) params.set('services', services);
+  if (excludeGender) params.set('excludeGender', excludeGender);
 
   const url = `/api/therapists${params.toString() ? `?${params.toString()}` : ''}`;
 

@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
-import { Star, ShieldCheck, MapPin, Clock, Shield, Lock, Users } from 'lucide-react';
+import { Star, ShieldCheck, MapPin, Clock, Shield, Lock, Users, Sparkles } from 'lucide-react';
 import { cn } from '../utils/cn';
 
 // Mock Data for Therapists
@@ -19,7 +19,8 @@ const therapists = [
     bio: "Specializing in injury recovery and performance optimization for elite athletes. Former team therapist for Olympic track & field.",
     imageUrl: "https://images.unsplash.com/photo-1649751361457-01d3a696c7e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWxlJTIwbWFzc2FnZSUyMHRoZXJhcGlzdCUyMHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0fGVufDF8fHx8MTc2NjE4OTk5M3ww&ixlib=rb-4.1.0&q=80&w=1080",
     gradient: "from-violet-500/10 to-black",
-    accent: "text-violet-300"
+    accent: "text-violet-300",
+    isFeatured: false
   },
   {
     id: 2,
@@ -32,7 +33,8 @@ const therapists = [
     bio: "Focused on solving chronic pain patterns through precise neuromuscular therapy. Certified in advanced structural integration.",
     imageUrl: "https://images.unsplash.com/photo-1527629300531-2e61183c1438?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBtYWxlJTIwdGhlcmFwaXN0JTIwY2xpbmljfGVufDF8fHx8MTc2NjE4OTk5M3ww&ixlib=rb-4.1.0&q=80&w=1080",
     gradient: "from-violet-500/10 to-black",
-    accent: "text-violet-300"
+    accent: "text-violet-300",
+    isFeatured: false
   },
   {
     id: 3,
@@ -46,7 +48,38 @@ const therapists = [
     bio: "Bringing the spa experience to your home. Dedicated to holistic stress relief and relaxation for busy professionals.",
     imageUrl: "https://images.unsplash.com/photo-1649751361457-01d3a696c7e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWxlJTIwd2VsbG5lc3MlMjB0aGVyYXBpc3QlMjBwcm9mZXNzaW9uYWx8ZW58MXx8fHwxNzY2MTgxNjQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",
     gradient: "from-violet-500/10 to-black",
-    accent: "text-violet-300"
+    accent: "text-violet-300",
+    isFeatured: false
+  },
+  {
+    id: 4,
+    name: "Ethan Cole",
+    title: "Recovery & Mobility Specialist",
+    rating: 5.0,
+    reviews: 189,
+    location: "Uptown Wellness",
+    experience: "9 years",
+    specialties: ["Sports Recovery", "Mobility", "Trigger Point"],
+    bio: "Focused on improving mobility and reducing soreness for active clients. Known for a calm, precise, and restorative approach.",
+    imageUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=1080",
+    gradient: "from-violet-500/10 to-black",
+    accent: "text-violet-300",
+    isFeatured: true
+  },
+  {
+    id: 5,
+    name: "Mateo Vance",
+    title: "Therapeutic Massage Specialist",
+    rating: 4.9,
+    reviews: 168,
+    location: "Midtown Studio",
+    experience: "11 years",
+    specialties: ["Deep Tissue", "Swedish", "Relaxation"],
+    bio: "Delivers tailored sessions that balance pressure with relaxation. Clients appreciate his natural, grounded style.",
+    imageUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=1080",
+    gradient: "from-violet-500/10 to-black",
+    accent: "text-violet-300",
+    isFeatured: true
   },
 ];
 
@@ -122,6 +155,13 @@ const MasseurCard = ({
                     <span>Verified</span>
                 </motion.div>
             </motion.div>
+
+            {data.isFeatured && (
+              <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-200">
+                <Sparkles className="w-3.5 h-3.5" />
+                Featured
+              </div>
+            )}
 
             {/* Gradient overlay on hover */}
             <motion.div

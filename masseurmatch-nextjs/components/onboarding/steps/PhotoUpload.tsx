@@ -60,7 +60,7 @@ export function PhotoUpload({ onNext, onBack }: PhotoUploadProps) {
 
   const handleFiles = async (files: FileList) => {
     if (photos.length >= maxPhotos) {
-      alert(`You can only upload up to ${maxPhotos} photos with your current plan`);
+      alert(`You can only upload up to ${maxPhotos} photos.`);
       return;
     }
 

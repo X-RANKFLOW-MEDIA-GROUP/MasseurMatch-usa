@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { colors, statusConfig } from "@/lib/design-tokens";
+import { statusConfig } from "@/lib/design-tokens";
 import { Star, MapPin, Calendar, Users } from "lucide-react";
 
 type AvailabilityStatus = "available" | "visiting_now" | "visiting_soon" | "offline";

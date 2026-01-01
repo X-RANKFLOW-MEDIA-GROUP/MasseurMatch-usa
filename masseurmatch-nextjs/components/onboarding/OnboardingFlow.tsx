@@ -9,19 +9,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const ONBOARDING_STEPS = [
   {
-    id: "plan",
-    label: "Choose Plan",
-    description: "Select your tier",
-  },
-  {
-    id: "payment",
-    label: "Payment",
-    description: "Billing info",
-  },
-  {
-    id: "identity",
-    label: "Verification",
-    description: "Verify ID",
+    id: "account",
+    label: "Account",
+    description: "Basic setup",
   },
   {
     id: "profile",
@@ -34,9 +24,14 @@ const ONBOARDING_STEPS = [
     description: "Upload images",
   },
   {
+    id: "policies",
+    label: "Policies",
+    description: "Confirm guidelines",
+  },
+  {
     id: "review",
     label: "Review",
-    description: "Final check",
+    description: "Publish profile",
   },
 ];
 
@@ -171,11 +166,10 @@ export function OnboardingFlow({ initialStep = 0 }: OnboardingFlowProps) {
 
 function getStepDescription(step: number): string {
   const descriptions = [
-    "Choose the plan that best fits your needs",
-    "Enter your payment information to get started",
-    "Verify your identity to ensure trust and safety",
+    "Create your account and basic profile settings",
     "Tell us about yourself and your services",
     "Upload photos to showcase your practice",
+    "Confirm you agree to the community guidelines",
     "Review your information before submitting",
   ];
   return descriptions[step] || "";
@@ -185,20 +179,17 @@ function renderStepContent(step: number) {
   // Placeholder content for each step
   // These will be replaced with actual form components
   const content = [
-    <div key="plan" className="space-y-4">
-      <p className="text-slate-300">Plan selection content goes here...</p>
-    </div>,
-    <div key="payment" className="space-y-4">
-      <p className="text-slate-300">Payment form goes here...</p>
-    </div>,
-    <div key="identity" className="space-y-4">
-      <p className="text-slate-300">Identity verification goes here...</p>
+    <div key="account" className="space-y-4">
+      <p className="text-slate-300">Account setup content goes here...</p>
     </div>,
     <div key="profile" className="space-y-4">
       <p className="text-slate-300">Profile form goes here...</p>
     </div>,
     <div key="photos" className="space-y-4">
       <p className="text-slate-300">Photo upload goes here...</p>
+    </div>,
+    <div key="policies" className="space-y-4">
+      <p className="text-slate-300">Guidelines acknowledgment goes here...</p>
     </div>,
     <div key="review" className="space-y-4">
       <p className="text-slate-300">Review summary goes here...</p>

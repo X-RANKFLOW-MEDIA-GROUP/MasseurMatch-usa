@@ -1,22 +1,15 @@
-﻿"use client";
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, useScroll, useTransform, PanInfo } from 'framer-motion';
-import { 
-  Search, 
-  User, 
-  Eye,
-  Mail,
+import {
+  Search,
   ChevronLeft,
   ChevronRight,
-  TrendingUp,
-  Star,
-  Award,
-  ArrowUpRight,
   MessageSquare,
   CheckCircle2,
   Sparkles,
-  Lock,
+  Lock,
   Shield
 } from 'lucide-react';
 
@@ -36,37 +29,63 @@ const KnottyVideoMockup = () => {
         {/* Glow Effect */}
         <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/20 via-indigo-500/10 to-transparent blur-2xl -z-10" />
         
-        {/* Video Element - Replace src with actual video URL */}
+        {/* Animated Chat Preview */}
         <div className="relative aspect-video bg-gradient-to-br from-zinc-900 via-black to-zinc-950">
-          <video
-            muted
-            playsInline
-            preload="none"
-            className="w-full h-full object-cover"
-            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect fill='%23000' width='800' height='450'/%3E%3C/svg%3E"
-          />
-          
-          {/* Placeholder Overlay (remove when video is ready) */}
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-zinc-900 via-black to-zinc-950">
-            <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-violet-500/10 border border-violet-500/30 flex items-center justify-center">
-                <MessageSquare className="w-10 h-10 text-violet-400" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(139,92,246,0.18),_transparent_60%)]" />
+          <div className="relative h-full p-6">
+            <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/40 backdrop-blur">
+              <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3 text-xs text-zinc-300">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="uppercase tracking-[0.2em] text-[10px]">Live chat</span>
+                <span className="ml-auto text-[10px] text-zinc-500">Knotty AI</span>
               </div>
-              <p className="text-zinc-400 text-sm font-medium mb-1">Knotty Chat Preview</p>
+              <div className="relative flex-1 overflow-hidden px-4 py-3">
+                <motion.div
+                  className="space-y-3"
+                  animate={{ y: ["0%", "-50%"] }}
+                  transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                >
+                  {[
+                    { from: "user", text: "Looking for a deep tissue session near Downtown." },
+                    { from: "knotty", text: "Got it. I can match you with verified therapists within 2 miles." },
+                    { from: "user", text: "Prefer evening availability and mobile." },
+                    { from: "knotty", text: "Three options fit. Want the top-rated profile first?" },
+                    { from: "user", text: "Yes, show me the best match." },
+                    { from: "knotty", text: "Sending profile and contact details now." },
+                  ]
+                    .concat([
+                      { from: "user", text: "Looking for a deep tissue session near Downtown." },
+                      { from: "knotty", text: "Got it. I can match you with verified therapists within 2 miles." },
+                      { from: "user", text: "Prefer evening availability and mobile." },
+                      { from: "knotty", text: "Three options fit. Want the top-rated profile first?" },
+                      { from: "user", text: "Yes, show me the best match." },
+                      { from: "knotty", text: "Sending profile and contact details now." },
+                    ])
+                    .map((message, index) => (
+                      <div
+                        key={`${message.from}-${index}`}
+                        className={`max-w-[80%] rounded-2xl px-4 py-2 text-xs leading-relaxed ${
+                          message.from === "user"
+                            ? "ml-auto bg-violet-500/20 text-violet-100"
+                            : "mr-auto bg-white/10 text-zinc-200"
+                        }`}
+                      >
+                        {message.text}
+                      </div>
+                    ))}
+                </motion.div>
+                <div className="absolute bottom-3 left-4 right-4 flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-3 py-2 text-xs text-zinc-400">
+                  <span className="h-2 w-2 rounded-full bg-violet-400 animate-pulse" />
+                  <span className="flex-1">Knotty is typing</span>
+                  <div className="flex gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-zinc-500 animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-zinc-500 animate-bounce" style={{ animationDelay: "120ms" }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-zinc-500 animate-bounce" style={{ animationDelay: "240ms" }} />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          
-          {/* Play Button Overlay */}
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-          >
-            <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
-              <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-white border-b-[8px] border-b-transparent ml-1" />
-            </div>
-          </motion.div>
         </div>
 
         {/* Video UI Chrome */}
@@ -178,13 +197,110 @@ const FindTherapistVideoMockup = () => {
   );
 };
 
+// Dashboard Mockup Component (For Therapists)
+const DashboardMockup = () => {
+  const stats = [
+    { label: 'Profile Views', value: '10.4k', trend: '+24%' },
+    { label: 'Inquiries', value: '312', trend: '+12%' },
+    { label: 'Bookings', value: '86', trend: '+9%' }
+  ];
+
+  const activity = [
+    { label: 'New client request', detail: 'Swedish • 60 min', time: '5m ago' },
+    { label: 'Profile approved', detail: 'Visible in search', time: '1h ago' },
+    { label: 'Payment received', detail: '$120 session', time: '3h ago' }
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 60, rotateX: 15 }}
+      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+      className="relative w-full max-w-[600px] mx-auto"
+      style={{ perspective: '1200px' }}
+    >
+      <div className="relative rounded-3xl overflow-hidden border-2 border-emerald-500/30 shadow-2xl bg-zinc-950">
+        <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/20 via-teal-500/10 to-transparent blur-2xl -z-10" />
+
+        <div className="relative p-6 md:p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-emerald-300" />
+              </div>
+              <div>
+                <p className="text-white text-sm font-semibold">Therapist Dashboard</p>
+                <p className="text-zinc-400 text-xs">Performance overview</p>
+              </div>
+            </div>
+            <span className="px-3 py-1 rounded-full text-xs bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
+              Live
+            </span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            {stats.map((stat) => (
+              <div key={stat.label} className="p-3 rounded-xl bg-white/5 border border-white/10">
+                <p className="text-xs text-zinc-500">{stat.label}</p>
+                <p className="text-xl text-white font-semibold">{stat.value}</p>
+                <p className="text-xs text-emerald-300">{stat.trend}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-2xl bg-white/5 border border-white/10 p-4 mb-6">
+            <p className="text-xs text-zinc-500 mb-3">Weekly activity</p>
+            <div className="flex items-end gap-2 h-16">
+              {[32, 48, 40, 72, 52, 60, 38].map((height) => (
+                <div
+                  key={height}
+                  className="flex-1 rounded-md bg-gradient-to-t from-emerald-500/40 to-emerald-500/10"
+                  style={{ height: `${height}%` }}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {activity.map((item) => (
+              <div key={item.label} className="flex items-start gap-3">
+                <div className="mt-1 w-6 h-6 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-white font-semibold">{item.label}</p>
+                  <p className="text-xs text-zinc-400">{item.detail}</p>
+                </div>
+                <span className="text-xs text-zinc-500">{item.time}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ delay: 0.8, type: "spring" }}
+        className="absolute -top-4 -left-4 px-4 py-2 rounded-xl bg-emerald-500 border border-emerald-400 shadow-lg"
+      >
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          <span className="text-sm font-semibold text-white">Preview</span>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const slides = [
   {
     id: 'knotty',
     category: 'AI Chat Companion',
     title: 'Chat with Knotty',
     subtitle: 'Your AI assistant for finding therapists',
-    description: 'Knotty is your AI-powered assistant that helps you find therapists, compare services, and get answers 24/7. Get instant recommendations, pricing info, and connect with the right professionalâ€”all through direct conversation.',
+    description: 'Knotty is your AI-powered assistant that helps you find therapists, compare services, and get answers 24/7. Get instant recommendations, pricing info, and connect with the right professional—all through direct conversation.',
     impact: [
       { metric: '24/7', label: 'Available' },
       { metric: 'Instant', label: 'Responses' },
@@ -203,7 +319,7 @@ const slides = [
     category: 'For Clients',
     title: 'Find your perfect therapist',
     subtitle: 'Browse, choose, and connect directly',
-    description: 'Search verified massage therapists by specialty, location, and ratings. View detailed profiles with reviews and credentials. Contact them directlyâ€”no middleman, no hassle.',
+    description: 'Search verified massage therapists by specialty, location, and ratings. View detailed profiles with reviews and credentials. Contact them directly—no middleman, no hassle.',
     impact: [
       { metric: '100%', label: 'Direct Contact' },
       { metric: '2,500+', label: 'Therapists' },
@@ -213,7 +329,7 @@ const slides = [
     steps: [
       { number: '01', title: 'Browse & Search', description: 'Filter by specialty, location, ratings & availability' },
       { number: '02', title: 'View Profiles', description: 'Read reviews, credentials & therapist background' },
-      { number: '03', title: 'Contact Directly', description: 'Get contact info and reach outâ€”simple and direct' }
+      { number: '03', title: 'Contact Directly', description: 'Get contact info and reach out—simple and direct' }
     ],
     mockupType: 'phone'
   },
@@ -222,7 +338,7 @@ const slides = [
     category: 'For Therapists',
     title: 'Grow your practice',
     subtitle: 'Create profile, get visibility, receive contacts',
-    description: 'Join MasseurMatch to increase your visibility and connect with clients. Create your profile, appear in search results, and receive direct contactâ€”100% of your earnings stay with you.',
+    description: 'Join MasseurMatch to increase your visibility and connect with clients. Create your profile, appear in search results, and receive direct contact—100% of your earnings stay with you.',
     impact: [
       { metric: '100%', label: 'Your Earnings' },
       { metric: '10k+', label: 'Monthly Views' },
@@ -232,388 +348,11 @@ const slides = [
     steps: [
       { number: '01', title: 'Create Profile', description: 'Add specialties, credentials, photos & availability' },
       { number: '02', title: 'Get Discovered', description: 'Appear in search results for clients in your area' },
-      { number: '03', title: 'Receive Contacts', description: 'Clients reach you directlyâ€”manage your schedule your way' }
+      { number: '03', title: 'Receive Contacts', description: 'Clients reach you directly—manage your schedule your way' }
     ],
     mockupType: 'dashboard'
   }
 ];
-
-// Phone Mockup Component (For Clients)
-const PhoneMockup = () => {
-  const [searchFocused, setSearchFocused] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setSearchFocused(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 60, rotateX: 15 }}
-      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-      className="relative"
-      style={{ perspective: '1200px' }}
-    >
-      {/* Phone Frame */}
-      <div className="relative w-[320px] mx-auto">
-        {/* Phone Shell */}
-        <div className="relative bg-black rounded-[50px] p-4 border-[12px] border-zinc-900 shadow-2xl">
-          {/* Notch */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-3xl z-20" />
-          
-          {/* Screen */}
-          <div className="relative bg-white rounded-[38px] overflow-hidden h-[640px]">
-            {/* Status Bar */}
-            <div className="px-6 py-3 flex justify-between items-center text-xs bg-white">
-              <span className="font-semibold text-black">9:41</span>
-              <div className="flex gap-1 items-center">
-                <div className="w-4 h-3 border border-black rounded-sm" />
-                <div className="w-3 h-3 border border-black rounded-full" />
-                <div className="w-5 h-3 bg-black rounded-sm" />
-              </div>
-            </div>
-
-            {/* App Content */}
-            <div className="bg-zinc-50 h-full p-5 overflow-hidden">
-              {/* Header */}
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="mb-5"
-              >
-                <h1 className="text-2xl font-bold text-black mb-1">Find a Therapist</h1>
-                <p className="text-sm text-zinc-600">Search by specialty or location</p>
-              </motion.div>
-
-              {/* Search Bar */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ 
-                  opacity: 1, 
-                  scale: 1,
-                  boxShadow: searchFocused ? '0 10px 40px rgba(99, 102, 241, 0.2)' : '0 2px 10px rgba(0,0,0,0.1)'
-                }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-                className="relative mb-5 bg-white rounded-2xl p-4 border-2 border-indigo-500/30 shadow-lg"
-              >
-                <div className="flex items-center gap-3">
-                  <Search className="w-5 h-5 text-indigo-600" />
-                  <div className="flex-1">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: searchFocused ? '100%' : 0 }}
-                      transition={{ delay: 0.8, duration: 0.6 }}
-                      className="h-0.5 bg-indigo-600 mb-1"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Deep Tissue, Sports..."
-                      className="w-full bg-transparent text-sm text-black placeholder:text-zinc-400 focus:outline-none"
-                      disabled
-                    />
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Therapist Cards */}
-              <div className="space-y-3">
-                {[
-                  { name: 'Marcus Rivera', specialty: 'Deep Tissue', rating: '4.9', reviews: '142' },
-                  { name: 'Lucas Montgomery', specialty: 'Swedish', rating: '5.0', reviews: '215' }
-                ].map((therapist, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.9 + i * 0.15, duration: 0.5 }}
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-white rounded-2xl p-4 border border-zinc-200 shadow-md"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-black mb-0.5 truncate">{therapist.name}</h3>
-                        <p className="text-xs text-zinc-600 mb-2">{therapist.specialty}</p>
-                        <div className="flex items-center gap-2">
-                          <div className="flex gap-0.5">
-                            {[...Array(5)].map((_, i) => (
-                              <Star key={i} className="w-3 h-3 fill-violet-400 text-violet-400" />
-                            ))}
-                          </div>
-                          <span className="text-xs text-zinc-600">{therapist.rating} ({therapist.reviews})</span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Glow Effect */}
-        <div className="absolute inset-0 bg-gradient-to-t from-indigo-600/30 via-transparent to-transparent rounded-[50px] blur-2xl -z-10" />
-      </div>
-    </motion.div>
-  );
-};
-
-// Dashboard Mockup Component (For Therapists)
-const DashboardMockup = () => {
-  const stats = [
-    { label: 'Profile Views', value: '1,247', change: '+12%', icon: Eye },
-    { label: 'Contact Requests', value: '89', change: '+45%', icon: Mail },
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 60, rotateX: -10 }}
-      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-      className="relative"
-      style={{ perspective: '1200px' }}
-    >
-      {/* Dashboard Container */}
-      <div className="relative bg-zinc-950 rounded-3xl border border-zinc-800 p-8 shadow-2xl max-w-lg mx-auto overflow-hidden">
-        {/* Gradient Glow */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-violet-600/20 rounded-full blur-[120px] pointer-events-none" />
-        
-        {/* Header */}
-        <div className="relative z-10 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="flex items-center justify-between mb-6"
-          >
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-1">Dashboard</h2>
-              <p className="text-sm text-zinc-500">Your practice at a glance</p>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
-              <User className="w-6 h-6 text-white" />
-            </div>
-          </motion.div>
-
-          {/* Stats Grid */}
-          <motion.div className="grid grid-cols-2 gap-4 mb-8">
-            {stats.map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.7 + i * 0.1, duration: 0.5 }}
-                  whileHover={{ scale: 1.05, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
-                  className="p-5 rounded-2xl bg-white/5 border border-white/10 transition-all"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                      <Icon className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-xs text-zinc-500 uppercase tracking-wider">{stat.label}</span>
-                  </div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-white">{stat.value}</span>
-                    <span className="text-sm font-medium text-white">{stat.change}</span>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-
-          {/* Specialties */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.6 }}
-            className="mb-8"
-          >
-            <p className="text-xs text-zinc-600 uppercase tracking-wider mb-3 font-semibold">Specialties</p>
-            <div className="flex flex-wrap gap-2">
-              {['Deep Tissue', 'Sports Recovery', 'Myofascial'].map((spec, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1 + i * 0.05, duration: 0.3 }}
-                  className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-xs font-medium text-white"
-                >
-                  {spec}
-                </motion.span>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Rating */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1, duration: 0.6 }}
-            className="mt-auto p-5 rounded-2xl bg-white/5 border border-white/10"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-zinc-500 mb-1 uppercase tracking-wider">Average Rating</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-3xl font-bold text-white">5.0</span>
-                  <div className="flex gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-white text-white" />
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-xs text-zinc-500 mb-1">From</p>
-                <p className="text-xl font-bold text-white">247 reviews</p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Floating Labels */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, y: 10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ delay: 1.3, type: "spring" }}
-        className="absolute -top-6 -right-6 px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-lg"
-      >
-        <div className="flex items-center gap-2">
-          <TrendingUp className="w-4 h-4 text-black" />
-          <span className="text-sm font-semibold text-black">Growing</span>
-        </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, y: -10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ delay: 1.5, type: "spring" }}
-        className="absolute -bottom-6 -left-6 px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg"
-      >
-        <div className="flex items-center gap-2">
-          <Award className="w-4 h-4 text-white" />
-          <span className="text-sm font-semibold text-white">0% Fees</span>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
-
-// Chat Mockup Component (For Knotty)
-const ChatMockup = () => {
-  const messages = [
-    { sender: 'knotty', text: 'Hello! How can I assist you today with your wellness needs?' },
-    { sender: 'user', text: 'I\'m looking for a deep tissue massage therapist in New York.' },
-    { sender: 'knotty', text: 'Sure! I can help with that. Let me find the best match for you.' },
-    { sender: 'knotty', text: 'Marcus Rivera is a highly rated deep tissue therapist in New York. Would you like his contact?' }
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 60, rotateX: 15 }}
-      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-      className="relative"
-      style={{ perspective: '1200px' }}
-    >
-      {/* Chat Frame */}
-      <div className="relative w-[320px] mx-auto">
-        {/* Chat Shell */}
-        <div className="relative bg-black rounded-[50px] p-4 border-[12px] border-zinc-900 shadow-2xl">
-          {/* Notch */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-3xl z-20" />
-          
-          {/* Screen */}
-          <div className="relative bg-white rounded-[38px] overflow-hidden h-[640px]">
-            {/* Status Bar */}
-            <div className="px-6 py-3 flex justify-between items-center text-xs bg-white">
-              <span className="font-semibold text-black">9:41</span>
-              <div className="flex gap-1 items-center">
-                <div className="w-4 h-3 border border-black rounded-sm" />
-                <div className="w-3 h-3 border border-black rounded-full" />
-                <div className="w-5 h-3 bg-black rounded-sm" />
-              </div>
-            </div>
-
-            {/* App Content */}
-            <div className="bg-zinc-50 h-full flex flex-col">
-              {/* Header */}
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="p-5 pb-3 border-b border-zinc-200"
-              >
-                <h1 className="text-xl font-bold text-black mb-0.5">Knotty</h1>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-violet-400" />
-                  <p className="text-xs text-zinc-600">Online now</p>
-                </div>
-              </motion.div>
-
-              {/* Chat Messages */}
-              <div className="flex-1 p-5 space-y-3 overflow-y-auto">
-                {messages.map((msg, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 + i * 0.15, duration: 0.5 }}
-                    className={`flex ${msg.sender === 'knotty' ? 'justify-start' : 'justify-end'}`}
-                  >
-                    <div
-                      className={`${
-                        msg.sender === 'knotty' 
-                          ? 'bg-violet-500 text-white' 
-                          : 'bg-white text-black border border-zinc-200'
-                      } rounded-2xl px-4 py-3 max-w-[75%] shadow-sm`}
-                    >
-                      <p className="text-xs leading-relaxed">
-                        {msg.text}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Input Field */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2, duration: 0.5 }}
-                className="p-4 border-t border-zinc-200 bg-white"
-              >
-                <div className="flex items-center gap-2 bg-zinc-100 rounded-full px-4 py-3">
-                  <MessageSquare className="w-4 h-4 text-zinc-500 flex-shrink-0" />
-                  <input
-                    type="text"
-                    placeholder="Type a message..."
-                    className="flex-1 bg-transparent text-sm text-black placeholder:text-zinc-400 focus:outline-none"
-                    disabled
-                  />
-                  <div className="w-8 h-8 rounded-full bg-violet-500 flex items-center justify-center flex-shrink-0">
-                    <ArrowUpRight className="w-4 h-4 text-white" />
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-
-        {/* Glow Effect */}
-        <div className="absolute inset-0 bg-gradient-to-t from-violet-600/30 via-transparent to-transparent rounded-[50px] blur-2xl -z-10" />
-      </div>
-    </motion.div>
-  );
-};
 
 export const HowItWorks: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -638,8 +377,6 @@ export const HowItWorks: React.FC = () => {
       setCurrentSlide(currentSlide - 1);
     }
   };
-
-  const slide = slides[currentSlide];
 
   return (
     <section 
@@ -718,7 +455,7 @@ export const HowItWorks: React.FC = () => {
 
                   {/* Tagline */}
                   <p className="text-xl text-violet-200 mb-4 font-medium leading-relaxed">
-                    Connect instantly with Knotty â€“ your private chat companion for exploring wellness and connections.
+                    Connect instantly with Knotty – your private chat companion for exploring wellness and connections.
                   </p>
 
                   {/* Description */}
@@ -986,5 +723,8 @@ export const HowItWorks: React.FC = () => {
     </section>
   );
 };
+
+
+
 
 

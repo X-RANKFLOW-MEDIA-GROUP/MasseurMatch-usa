@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { Users, Heart, Star, TrendingUp, Shield, Zap } from 'lucide-react';
 
 interface StatCardProps {

@@ -79,7 +79,7 @@ export default function ComingSoonContent() {
           char === ' ' ? '&nbsp;' : char
         );
 
-        titleRef.current.innerHTML = letters.map((letter, i) =>
+        titleRef.current.innerHTML = letters.map((letter) =>
           `<span class="letter inline-block" style="display:inline-block;transform-origin:50% 100%">${letter}</span>`
         ).join('');
 

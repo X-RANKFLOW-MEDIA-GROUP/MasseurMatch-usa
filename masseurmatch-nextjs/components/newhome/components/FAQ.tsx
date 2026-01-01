@@ -23,7 +23,7 @@ const faqs = [
   },
   {
     question: 'Are therapists verified on MasseurMatch?',
-    answer: 'Therapists go through a basic identity and profile consistency check. This is not professional licensing or certification.'
+    answer: 'No. MasseurMatch does not verify identities or licenses. Profiles are self-declared, and clients should confirm credentials directly.'
   },
   {
     question: 'Does MasseurMatch charge clients?',
@@ -31,7 +31,7 @@ const faqs = [
   },
   {
     question: 'How do therapists get visibility on MasseurMatch?',
-    answer: 'Therapists create a profile and choose a subscription tier that affects visibility and features.'
+    answer: 'Visibility is based on profile completeness, location relevance, and compliance with our guidelines. There are no paid tiers for placement.'
   },
   {
     question: 'Is MasseurMatch focused on LGBTQ+ and inclusion?',

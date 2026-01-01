@@ -26,6 +26,7 @@ async function fetchTherapistsWithRetry(opts: {
     'longitude',
     'services',
     'profile_photo',
+    'gender',
     'zip_code',
     'phone',
     'city',
@@ -139,6 +140,11 @@ export async function GET(request: NextRequest) {
     const services = searchParams.get('services');
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
+    const excludeGenderRaw = searchParams.get('excludeGender') || '';
+    const excludeGenders = excludeGenderRaw
+      .split(',')
+      .map((value) => value.trim().toLowerCase())
+      .filter(Boolean);
 
     const { data, error, count, status } = await fetchTherapistsWithRetry({
       city,
@@ -148,10 +154,20 @@ export async function GET(request: NextRequest) {
       retry: 2,
     });
 
+    const filteredData =
+      excludeGenders.length > 0
+        ? (data ?? []).filter((row: any) => {
+            const gender = typeof row?.gender === 'string' ? row.gender.toLowerCase() : '';
+            return !gender || !excludeGenders.includes(gender);
+          })
+        : data ?? [];
+
+    const filteredCount = excludeGenders.length > 0 ? filteredData.length : count ?? 0;
+
     const devPayload = {
       ok: !error,
       status,
-      data,
+      data: filteredData,
       error,
     };
 
@@ -181,8 +197,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      therapists: data,
-      total: count,
+      therapists: filteredData,
+      total: filteredCount,
       limit,
       offset,
     });

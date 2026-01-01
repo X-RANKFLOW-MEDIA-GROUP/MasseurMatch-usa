@@ -4,30 +4,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { StepIndicator } from "./StepIndicator";
-import { PlanSelection } from "./steps/PlanSelection";
-import { PaymentStep } from "./steps/PaymentStep";
-import { IdentityVerification } from "./steps/IdentityVerification";
 import { ProfileBuilder } from "./steps/ProfileBuilder";
 import { PhotoUpload } from "./steps/PhotoUpload";
 import { ReviewSubmit } from "./steps/ReviewSubmit";
-import type { SubscriptionPlan } from "@/lib/types/database";
 
 const ONBOARDING_STEPS = [
-  {
-    id: "plan",
-    label: "Choose Plan",
-    description: "Select your tier",
-  },
-  {
-    id: "payment",
-    label: "Payment",
-    description: "Billing info",
-  },
-  {
-    id: "identity",
-    label: "Verification",
-    description: "Verify ID",
-  },
   {
     id: "profile",
     label: "Profile",
@@ -41,7 +22,7 @@ const ONBOARDING_STEPS = [
   {
     id: "review",
     label: "Review",
-    description: "Final check",
+    description: "Publish profile",
   },
 ];
 
@@ -52,8 +33,6 @@ interface OnboardingFlowProps {
 export function OnboardingFlowIntegrated({ initialStep = 0 }: OnboardingFlowProps) {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(initialStep);
-  const [selectedPlan] = useState<SubscriptionPlan>("standard");
-  const [requiresPayment, setRequiresPayment] = useState(true);
 
   const progress = ((currentStep + 1) / ONBOARDING_STEPS.length) * 100;
 
@@ -69,10 +48,6 @@ export function OnboardingFlowIntegrated({ initialStep = 0 }: OnboardingFlowProp
     }
   };
 
-  const handlePlanSelected = (needsPayment: boolean) => {
-    setRequiresPayment(needsPayment);
-  };
-
   const handleComplete = () => {
     // Redirect to dashboard or waiting page
     router.push("/pending");
@@ -81,31 +56,10 @@ export function OnboardingFlowIntegrated({ initialStep = 0 }: OnboardingFlowProp
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
-        return (
-          <PlanSelection
-            onNext={handleNext}
-            onPlanSelected={handlePlanSelected}
-          />
-        );
-      case 1:
-        return requiresPayment ? (
-          <PaymentStep
-            selectedPlan={selectedPlan}
-            onNext={handleNext}
-            onBack={handleBack}
-          />
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-slate-400">Skipping payment for free plan...</p>
-          </div>
-        );
-      case 2:
-        return <IdentityVerification onNext={handleNext} onBack={handleBack} />;
-      case 3:
         return <ProfileBuilder onNext={handleNext} onBack={handleBack} />;
-      case 4:
+      case 1:
         return <PhotoUpload onNext={handleNext} onBack={handleBack} />;
-      case 5:
+      case 2:
         return <ReviewSubmit onBack={handleBack} onComplete={handleComplete} />;
       default:
         return null;

@@ -74,8 +74,8 @@ export function CookieConsent() {
           <p className="cookie-consent-text">
             We use cookies to ensure our platform works correctly and to improve
             your experience. See our{" "}
-            <a href="/legal/cookies" className="cookie-consent-link">
-              Cookies Policy
+            <a href="/legal/cookie-policy" className="cookie-consent-link">
+              Cookie Policy
             </a>
             .
           </p>

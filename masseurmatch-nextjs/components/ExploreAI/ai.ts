@@ -230,7 +230,7 @@ export function generateAiExplanation(preferences: Preferences, therapist: Thera
   return `Recomendado porque ${reasons.slice(0, 3).join("; ")}.`;
 }
 
-export function buildBaseCard(row: TherapistRow, preferences: Preferences): Omit<TherapistCard, "matchScore" | "aiExplanation"> {
+export function buildBaseCard(row: TherapistRow): Omit<TherapistCard, "matchScore" | "aiExplanation"> {
   const lat = row.latitude ? Number(row.latitude) : undefined;
   const lng = row.longitude ? Number(row.longitude) : undefined;
   const distanceKm = row.distance ? Number(row.distance) / 1000 : 0;
@@ -267,7 +267,7 @@ export function buildBaseCard(row: TherapistRow, preferences: Preferences): Omit
 }
 
 export function buildTherapistCard(row: TherapistRow, preferences: Preferences): TherapistCard {
-  const base = buildBaseCard(row, preferences);
+  const base = buildBaseCard(row);
   const score = Math.round(
     Math.min(100, Math.max(60, calculateMatchScore(preferences, base) + (Math.random() - 0.5) * 4))
   );

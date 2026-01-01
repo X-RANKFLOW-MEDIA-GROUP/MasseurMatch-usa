@@ -1,5 +1,6 @@
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://www.masseurmatch.com';
+import { SITE_URL as BASE_SITE_URL } from "./site";
+
+export const SITE_URL = BASE_SITE_URL;
 
 /**
  * Generate absolute URL from relative path

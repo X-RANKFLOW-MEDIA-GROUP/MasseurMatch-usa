@@ -1,39 +1,17 @@
-import { cityMap } from "@/app/data/cities";
-import { expansionCities } from "@/app/data/expansionCities";
+import { cityMap } from "@/data/cityMap";
+import { segmentConfig } from "@/data/segmentConfig";
+import { SITE_URL } from "@/lib/site";
 
-const baseUrl = "https://www.masseurmatch.com";
+const segmentSlugs = Object.values(segmentConfig).map((segment) => segment.slug);
 
-const segmentSlugs = [
-  "gay-massage",
-  "male-massage",
-  "m4m-massage",
-  "lgbt-massage",
-  "gay-friendly-massage",
-  "men-only-massage",
-  "gay-spa",
-  "gay-bodywork",
-  "deep-tissue",
-  "sports-massage",
-  "relaxation",
-  "thai-massage",
-  "stress-relief",
-  "back-pain",
-  "neck-pain",
-  "hotel-massage",
-  "mobile-massage",
-  "late-night-massage",
-];
-
-const citySlugs = Array.from(
-  new Set([...Object.keys(cityMap), ...Object.keys(expansionCities)])
-);
+const citySlugs = Object.keys(cityMap);
 
 export async function GET() {
   const lastmod = new Date().toISOString();
 
   const urls = citySlugs.flatMap((city) =>
     segmentSlugs.map((segment) => ({
-      loc: `${baseUrl}/city/${city}/${segment}`,
+      loc: `${SITE_URL}/city/${city}/${segment}`,
       lastmod,
       changefreq: "weekly",
       priority: "0.7",

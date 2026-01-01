@@ -1,4 +1,3 @@
-﻿import Link from "next/link";
 import { CityInfo } from "@/data/cityMap";
 
 type Props = {

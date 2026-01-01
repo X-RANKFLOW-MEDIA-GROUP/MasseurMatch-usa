@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { ProfileView } from "@/components/profile/ProfileView";
-import { useProfile, useProfileReviews } from "@/lib/hooks/useProfile";
+import { useProfile } from "@/lib/hooks/useProfile";
 import { ProfileCardSkeleton } from "@/components/ui/loading-skeleton";
 import { ErrorState } from "@/components/ui/error-state";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -16,8 +16,6 @@ export default function TherapistProfilePage() {
   const profileId = slug; // Temporary - should convert slug to ID via API
 
   const { profile, isLoading, error, toggleFavorite } = useProfile(profileId);
-  const { reviews } = useProfileReviews(profileId);
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950/20 to-slate-950 p-4">

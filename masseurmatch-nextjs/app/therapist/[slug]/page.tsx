@@ -2,7 +2,7 @@ import { redirect, notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { absUrl, stripHtml, truncate } from '@/lib/seo';
 import PublicTherapistProfile from '@/components/PublicTherapistProfile';
-import { getTherapistBySlug, type TherapistRecord } from './data';
+import { getTherapistBySlug } from './data';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // Revalidate every hour

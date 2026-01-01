@@ -1,24 +1,32 @@
 ﻿import React from 'react';
-import { 
-  Shield, FileText, Cookie, MessageSquare, CreditCard, 
-  FileSignature, AlertTriangle, Globe, Activity, Copyright, Ban, 
-  ListChecks, AlertCircle, ShieldOff, Users, Megaphone, Accessibility, 
-  Camera, LayoutTemplate, HelpCircle, Briefcase, Gavel
+import {
+  Shield,
+  FileText,
+  Cookie,
+  AlertTriangle,
+  Copyright,
+  Ban,
+  ListChecks,
+  AlertCircle,
+  ShieldOff,
+  Users,
+  Megaphone,
+  Accessibility,
+  Camera,
+  LayoutTemplate,
+  HelpCircle,
+  Briefcase,
+  Gavel,
 } from 'lucide-react';
 
 export type DocumentSlug = 
   | 'terms' 
-  | 'sms-terms' 
   | 'subpoena' 
-  | 'refund' 
-  | 'recording-payment' 
   | 'phishing-scam' 
-  | 'modern-slavery' 
-  | 'health-data' 
   | 'dmca' 
   | 'repeat-infringer' 
-  | 'cookies' 
-  | 'content-guidelines' 
+  | 'cookie-policy' 
+  | 'community-guidelines' 
   | 'complaints' 
   | 'anti-trafficking' 
   | 'non-discrimination' 
@@ -26,9 +34,10 @@ export type DocumentSlug =
   | 'accessibility' 
   | 'photo-rules' 
   | 'ad-rules' 
-  | 'privacy' 
+  | 'privacy-policy' 
   | 'faq' 
-  | 'advertiser-policy';
+  | 'advertiser-policy'
+  | 'professional-standards';
 
 export interface LegalDocument {
   slug: DocumentSlug;
@@ -42,7 +51,7 @@ const PlatformNature = () => (
   <div className="bg-muted/50 p-4 rounded-lg text-sm text-muted-foreground mb-6 border">
     <h4 className="font-semibold text-foreground mb-1">Nature of the Service</h4>
     <p>
-      MasseurMatch is an advertising-only directory. We do not arrange, facilitate, negotiate, process, or manage bookings, payments, appointments, or service transactions of any kind. We do not host or permit sexual content, escorting, solicitation, or explicit services. All advertisers operate independently and are fully responsible for their own conduct and compliance with the law.
+      MasseurMatch is a discovery-only directory. We do not arrange, facilitate, negotiate, process, or manage bookings, payments, appointments, or service transactions, and we do not hold funds. We do not offer in-platform messaging, SMS, reviews, or ratings, and we do not verify identities or professional licenses. We do not host or permit sexual content, escorting, solicitation, or explicit services. All advertisers operate independently and are fully responsible for their own conduct and compliance with the law.
     </p>
   </div>
 );
@@ -90,7 +99,7 @@ export const legalDocuments: LegalDocument[] = [
         <section>
           <h3 className="text-lg font-semibold text-foreground mb-2">2. Nature of the Platform</h3>
           <p className="text-muted-foreground leading-relaxed mb-2">
-            MasseurMatch is an advertising-only directory. We do not arrange, facilitate, negotiate, process, or manage bookings, payments, appointments, or service transactions of any kind. We do not host or permit sexual content, escorting, solicitation, or explicit services.
+            MasseurMatch is a discovery-only directory. We do not arrange, facilitate, negotiate, process, or manage bookings, payments, appointments, or service transactions of any kind. We do not host or permit sexual content, escorting, solicitation, or explicit services.
           </p>
           <p className="text-muted-foreground leading-relaxed">
             <strong>Independent Contractor / No Agency:</strong> Advertisers are independent self-employed individuals. No employment, agency, partnership, or joint venture relationship exists between MasseurMatch and any advertiser.
@@ -101,14 +110,11 @@ export const legalDocuments: LegalDocument[] = [
           <p className="text-muted-foreground leading-relaxed mb-2">
             Keep credentials confidential. You are responsible for activity on your account.
           </p>
-          <p className="text-muted-foreground leading-relaxed">
-            <strong>Stripe Identity Verification:</strong> Identity verification is performed exclusively by Stripe Identity. MasseurMatch does not manually review ID documents, nor do we store any identification data. Stripe handles all verification procedures, including document validation, fraud analysis, and age confirmation, according to their compliance standards (GDPR, CCPA, PCI).
-          </p>
         </section>
         <section>
           <h3 className="text-lg font-semibold text-foreground mb-2">4. Advertiser Standards</h3>
           <p className="text-muted-foreground leading-relaxed mb-2">
-            <strong>No License Verification:</strong> MasseurMatch does not conduct background checks, criminal screenings, license validation, or in-person verification of advertisers.
+            <strong>No Identity or License Verification:</strong> MasseurMatch does not conduct background checks, identity verification, license validation, or in-person verification of advertisers.
           </p>
           <p className="text-muted-foreground leading-relaxed mb-2">
             <strong>Local-Law Compliance:</strong> Advertisers are solely responsible for compliance with all local, state, and federal laws relating to massage practice, licensing, zoning, advertising, and professional regulations.
@@ -118,12 +124,9 @@ export const legalDocuments: LegalDocument[] = [
           </p>
         </section>
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">5. Payments and Plans</h3>
-          <p className="text-muted-foreground leading-relaxed mb-2">
-            All fees are for advertising exposure only. Plans (Free/Standard/Pro/Elite) and add‑ons are governed by the Refund Policy.
-          </p>
+          <h3 className="text-lg font-semibold text-foreground mb-2">5. Payments and Transactions</h3>
           <p className="text-muted-foreground leading-relaxed">
-            <strong>Auto-Renewal:</strong> All subscriptions renew automatically unless canceled at least 24 hours before the renewal date. Refunds are not provided for unused time, partial billing cycles, or suspended accounts. Users may cancel at any time through the account dashboard.
+            We do not process payments, bookings, or subscriptions on the Platform, and we do not hold funds. All contact and transactions happen off-platform between users and advertisers. If paid advertising plans are introduced later, we will publish updated terms and pricing before they take effect.
           </p>
         </section>
         <section>
@@ -156,7 +159,7 @@ export const legalDocuments: LegalDocument[] = [
         <section>
           <h3 className="text-lg font-semibold text-foreground mb-2">10. Termination</h3>
           <p className="text-muted-foreground leading-relaxed">
-            <strong>Right to Remove:</strong> MasseurMatch may suspend, restrict, or terminate any account or listing, with or without notice, at our sole discretion. This includes cases involving policy violations, suspicious activity, user complaints, legal risk, or reputational harm. No refunds will be issued for removals that result from policy violations.
+            <strong>Right to Remove:</strong> MasseurMatch may suspend, restrict, or terminate any account or listing, with or without notice, at our sole discretion. This includes cases involving policy violations, suspicious activity, user complaints, legal risk, or reputational harm.
           </p>
         </section>
         <section>
@@ -189,35 +192,29 @@ export const legalDocuments: LegalDocument[] = [
             Advertisers are solely responsible for compliance with all local, state, and federal laws relating to massage practice, licensing, zoning, advertising, and professional regulations.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            MasseurMatch does not conduct background checks, criminal screenings, license validation, or in-person verification of advertisers.
+            MasseurMatch does not conduct background checks, identity verification, license validation, or in-person verification of advertisers.
           </p>
         </section>
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">3. Identity Verification</h3>
-          <p className="text-muted-foreground leading-relaxed">
-            Identity verification is performed exclusively by Stripe Identity. MasseurMatch does not manually review ID documents, nor do we store any identification data. Stripe handles all verification procedures, including document validation, fraud analysis, and age confirmation, according to their compliance standards.
-          </p>
-        </section>
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">4. Performance & Results</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-2">3. Performance & Results</h3>
           <p className="text-muted-foreground leading-relaxed">
             MasseurMatch does not guarantee visibility, ranking, customer volume, leads, or earnings. Advertising performance varies and is outside our control.
           </p>
         </section>
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">5. Prohibited Conduct</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-2">4. Prohibited Conduct</h3>
           <p className="text-muted-foreground leading-relaxed mb-2">
             MasseurMatch enforces a strict zero-tolerance policy against trafficking, exploitation, coercion, or illegal services. Listings that suggest, imply, or facilitate illegal activity will be removed immediately.
           </p>
         </section>
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">6. Right to Remove</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-2">5. Right to Remove</h3>
           <p className="text-muted-foreground leading-relaxed">
-            MasseurMatch may suspend, restrict, or terminate any account or listing, with or without notice, at our sole discretion. This includes cases involving policy violations, suspicious activity, user complaints, legal risk, or reputational harm. No refunds will be issued for removals that result from policy violations.
+            MasseurMatch may suspend, restrict, or terminate any account or listing, with or without notice, at our sole discretion. This includes cases involving policy violations, suspicious activity, user complaints, legal risk, or reputational harm.
           </p>
         </section>
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">7. Liability</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-2">6. Liability</h3>
           <p className="text-muted-foreground leading-relaxed">
             MasseurMatch is not responsible for the quality, safety, legality, availability, or outcome of services provided by advertisers. All interactions that occur outside the Platform are at the sole risk of the user. MasseurMatch does not supervise, monitor, or endorse any advertiser.
           </p>
@@ -227,8 +224,8 @@ export const legalDocuments: LegalDocument[] = [
     )
   },
   {
-    slug: 'content-guidelines',
-    title: 'Content Guidelines',
+    slug: 'community-guidelines',
+    title: 'Community Guidelines',
     icon: <ListChecks className="w-4 h-4 mr-2" />,
     lastUpdated: 'January 2025',
     content: (
@@ -265,6 +262,54 @@ export const legalDocuments: LegalDocument[] = [
           <h3 className="text-lg font-semibold text-foreground mb-2">4. Enforcement</h3>
           <p className="text-muted-foreground leading-relaxed">
             We may edit, refuse, or remove any content and suspend accounts.
+          </p>
+        </section>
+        <ContactInfo />
+      </div>
+    )
+  },
+  {
+    slug: 'professional-standards',
+    title: 'Professional Standards',
+    icon: <Shield className="w-4 h-4 mr-2" />,
+    lastUpdated: 'January 2025',
+    content: (
+      <div className="space-y-6">
+        <PlatformNature />
+        <section>
+          <h3 className="text-lg font-semibold text-foreground mb-2">1. Licensing and qualifications</h3>
+          <p className="text-muted-foreground leading-relaxed mb-2">
+            Therapists are responsible for holding all required licenses, permits, and insurance for their jurisdiction. Misrepresentation of credentials is grounds for removal.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            Provide clear descriptions of modalities offered, experience, and any scope limitations. Do not perform services you are not trained or licensed to deliver.
+          </p>
+        </section>
+        <section>
+          <h3 className="text-lg font-semibold text-foreground mb-2">2. Safety, hygiene, and environment</h3>
+          <p className="text-muted-foreground leading-relaxed mb-2">
+            Maintain clean linens, sanitized equipment, and safe workspaces. Communicate draping practices and respect client comfort and privacy at all times.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            Mobile sessions must follow the same standards for cleanliness and professionalism as studio sessions.
+          </p>
+        </section>
+        <section>
+          <h3 className="text-lg font-semibold text-foreground mb-2">3. Ethics and boundaries</h3>
+          <p className="text-muted-foreground leading-relaxed mb-2">
+            Follow consent-first care, including ongoing check-ins about pressure and comfort. Sexual services, coercion, or harassment are prohibited.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            Keep communication transparent, professional, and free of misleading claims. Respect cancellation policies and timing commitments.
+          </p>
+        </section>
+        <section>
+          <h3 className="text-lg font-semibold text-foreground mb-2">4. Quality assurance and feedback</h3>
+          <p className="text-muted-foreground leading-relaxed mb-2">
+            Respond to client feedback constructively. Repeat patterns of poor conduct, no-shows, or unsafe behavior can lead to moderation, suspension, or removal.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            We may request that advertisers update or clarify profile information to keep listings accurate. We do not verify credentials or licenses.
           </p>
         </section>
         <ContactInfo />
@@ -333,7 +378,7 @@ export const legalDocuments: LegalDocument[] = [
   },
   {
     slug: 'anti-trafficking',
-    title: 'Anti‑Trafficking Statement',
+    title: 'Anti-Trafficking Statement',
     icon: <ShieldOff className="w-4 h-4 mr-2" />,
     lastUpdated: 'January 2025',
     content: (
@@ -349,66 +394,6 @@ export const legalDocuments: LegalDocument[] = [
           <h3 className="text-lg font-semibold text-foreground mb-2">Reporting</h3>
           <p className="text-muted-foreground leading-relaxed">
             Report suspected trafficking to support@masseurmatch.com or local authorities. We cooperate with legally valid investigations.
-          </p>
-        </section>
-        <ContactInfo />
-      </div>
-    )
-  },
-  {
-    slug: 'refund',
-    title: 'Refund Policy',
-    icon: <CreditCard className="w-4 h-4 mr-2" />,
-    lastUpdated: 'January 2025',
-    content: (
-      <div className="space-y-6">
-        <PlatformNature />
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">1. No Performance Guarantees</h3>
-          <p className="text-muted-foreground leading-relaxed">
-            MasseurMatch does not guarantee visibility, ranking, customer volume, leads, or earnings. Advertising performance varies and is outside our control. Fees purchase advertising exposure, not outcomes.
-          </p>
-        </section>
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">2. Right to Remove</h3>
-          <p className="text-muted-foreground leading-relaxed">
-            MasseurMatch may suspend, restrict, or terminate any account or listing, with or without notice, at our sole discretion. No refunds will be issued for removals that result from policy violations.
-          </p>
-        </section>
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">3. Auto-Renewal</h3>
-          <p className="text-muted-foreground leading-relaxed">
-            All subscriptions renew automatically unless canceled at least 24 hours before the renewal date. Refunds are not provided for unused time, partial billing cycles, or suspended accounts. Users may cancel at any time through the account dashboard.
-          </p>
-        </section>
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">4. Refund Eligibility</h3>
-          <p className="text-muted-foreground leading-relaxed">
-            Refunds may be considered only for: duplicate charge; technical failure preventing publication; failure to deliver plan due solely to MasseurMatch; confirmed fraudulent payment. Request within 5 business days of charge with evidence.
-          </p>
-        </section>
-        <ContactInfo />
-      </div>
-    )
-  },
-  {
-    slug: 'recording-payment',
-    title: 'Recording & Payment Agreement',
-    icon: <FileSignature className="w-4 h-4 mr-2" />,
-    lastUpdated: 'January 2025',
-    content: (
-      <div className="space-y-6">
-        <PlatformNature />
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">1. Auto-Renewal</h3>
-          <p className="text-muted-foreground leading-relaxed">
-            All subscriptions renew automatically unless canceled at least 24 hours before the renewal date. Refunds are not provided for unused time, partial billing cycles, or suspended accounts.
-          </p>
-        </section>
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">2. Payment Methods</h3>
-          <p className="text-muted-foreground leading-relaxed">
-            Payments are handled by third‑party processors. We do not store full card numbers or bank credentials.
           </p>
         </section>
         <ContactInfo />
@@ -440,7 +425,7 @@ export const legalDocuments: LegalDocument[] = [
     )
   },
   {
-    slug: 'privacy',
+    slug: 'privacy-policy',
     title: 'Privacy Policy',
     icon: <Shield className="w-4 h-4 mr-2" />,
     lastUpdated: 'January 2025',
@@ -448,46 +433,27 @@ export const legalDocuments: LegalDocument[] = [
       <div className="space-y-6">
         <PlatformNature />
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">1. Identity Verification</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-2">1. Data We Collect</h3>
           <p className="text-muted-foreground leading-relaxed">
-            Identity verification is performed exclusively by Stripe Identity. MasseurMatch does not manually review ID documents, nor do we store any identification data. Stripe handles all verification procedures, including document validation, fraud analysis, and age confirmation, according to their compliance standards.
+            Account email, optional phone number, password hash, and listing content (public business information). We also collect basic analytics and security logs to keep the Platform stable and secure.
           </p>
         </section>
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">2. No License Verification</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-2">2. What We Do Not Collect</h3>
           <p className="text-muted-foreground leading-relaxed">
-            MasseurMatch does not conduct background checks, criminal screenings, license validation, or in-person verification of advertisers.
+            We do not collect government ID documents, payment card data, health or medical information (PHI), or professional license files. We do not offer in-platform messaging, SMS, reviews, or ratings, so we do not collect message or review content.
           </p>
         </section>
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">3. No Duty to Monitor</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-2">3. Cookies and Analytics</h3>
+          <p className="text-muted-foreground leading-relaxed">
+            We use essential cookies for authentication and security and limited analytics to understand site usage. See the Cookie Policy for details.
+          </p>
+        </section>
+        <section>
+          <h3 className="text-lg font-semibold text-foreground mb-2">4. No Duty to Monitor</h3>
           <p className="text-muted-foreground leading-relaxed">
             MasseurMatch reserves the right, but has no obligation, to monitor user content. Any monitoring is conducted at our discretion and not as a legal duty or service guarantee.
-          </p>
-        </section>
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">4. Data We Collect</h3>
-          <p className="text-muted-foreground leading-relaxed">
-            Account email, optional phone, password hash, listing content. We do not collect health/medical data.
-          </p>
-        </section>
-        <ContactInfo />
-      </div>
-    )
-  },
-  // Keeping other documents as is (or simplified for brevity if not modified)
-  {
-    slug: 'sms-terms',
-    title: 'SMS Terms & Conditions',
-    icon: <MessageSquare className="w-4 h-4 mr-2" />,
-    lastUpdated: 'January 2025',
-    content: (
-      <div className="space-y-6">
-        <PlatformNature />
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-2">1. Opt‑In and Purpose</h3>
-          <p className="text-muted-foreground leading-relaxed">
-            By opting in, you agree to receive informational/transactional texts. Reply STOP to end.
           </p>
         </section>
         <ContactInfo />
@@ -528,36 +494,6 @@ export const legalDocuments: LegalDocument[] = [
     )
   },
   {
-    slug: 'modern-slavery',
-    title: 'Modern Slavery & Anti‑Trafficking',
-    icon: <Globe className="w-4 h-4 mr-2" />,
-    lastUpdated: 'January 2025',
-    content: (
-      <div className="space-y-6">
-        <PlatformNature />
-        <p className="text-muted-foreground leading-relaxed">
-           We prohibit content or conduct involving forced labor, human trafficking, sexual exploitation, or coercion.
-        </p>
-        <ContactInfo />
-      </div>
-    )
-  },
-  {
-    slug: 'health-data',
-    title: 'Health Data Disclaimer',
-    icon: <Activity className="w-4 h-4 mr-2" />,
-    lastUpdated: 'January 2025',
-    content: (
-      <div className="space-y-6">
-        <PlatformNature />
-        <p className="text-muted-foreground leading-relaxed">
-            We do not collect, store, or process protected health information (PHI).
-        </p>
-        <ContactInfo />
-      </div>
-    )
-  },
-  {
     slug: 'dmca',
     title: 'DMCA Policy',
     icon: <Copyright className="w-4 h-4 mr-2" />,
@@ -588,8 +524,8 @@ export const legalDocuments: LegalDocument[] = [
     )
   },
   {
-    slug: 'cookies',
-    title: 'Cookies Policy',
+    slug: 'cookie-policy',
+    title: 'Cookie Policy',
     icon: <Cookie className="w-4 h-4 mr-2" />,
     lastUpdated: 'January 2025',
     content: (
@@ -626,7 +562,7 @@ export const legalDocuments: LegalDocument[] = [
       <div className="space-y-6">
         <PlatformNature />
         <p className="text-muted-foreground leading-relaxed">
-            Ads must be truthful and not misleading.
+            This policy applies to advertiser listings on MasseurMatch. We do not run third-party ad networks. Ads must be truthful and not misleading.
         </p>
         <ContactInfo />
       </div>
@@ -659,6 +595,14 @@ export const legalDocuments: LegalDocument[] = [
           <div>
             <h3 className="font-semibold text-foreground mb-1">Q: Does MasseurMatch manage bookings?</h3>
             <p className="text-muted-foreground leading-relaxed">A: No. We only provide ad listings.</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground mb-1">Q: Do you process payments or subscriptions?</h3>
+            <p className="text-muted-foreground leading-relaxed">A: No. All contact and transactions happen off platform between users and advertisers.</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground mb-1">Q: Do you offer messaging, SMS, reviews, or ratings?</h3>
+            <p className="text-muted-foreground leading-relaxed">A: No. MasseurMatch is a discovery-only directory.</p>
           </div>
         </div>
         <ContactInfo />

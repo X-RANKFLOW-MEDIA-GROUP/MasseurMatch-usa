@@ -71,15 +71,15 @@ export default function About() {
         "name": "How do I join MasseurMatch as a massage therapist?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Independent massage therapists can join by creating a profile at masseurmatch.com/join. You must be 18+ years old, comply with local laws, and agree to our terms of service. Profile creation is free, with optional paid promotional features available."
+          "text": "Independent massage therapists can join by creating a profile at masseurmatch.com/join. You must be 18+ years old, comply with local laws, and agree to our terms of service. Profile creation is free and there are no paid promotional features at this time."
         }
       },
       {
         "@type": "Question",
-        "name": "What are the paid promotional features?",
+        "name": "Do you offer paid promotional features?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "We offer Travel Boost and Masseur of the Day placements for enhanced visibility. These are paid promotional options and do not constitute endorsements by MasseurMatch. All providers maintain independence regardless of promotional status."
+          "text": "No. We do not offer paid promotional features currently. If this changes, we will update our terms and policies before launch."
         }
       },
       {
@@ -87,7 +87,7 @@ export default function About() {
         "name": "Can I trust the therapists on MasseurMatch?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "MasseurMatch provides a platform for discovery, but we do not endorse or guarantee any provider. We recommend verifying credentials, reading reviews, checking references, and communicating clearly before booking. Trust your instincts and prioritize your safety."
+          "text": "MasseurMatch provides a platform for discovery, but we do not endorse or guarantee any provider. We recommend verifying credentials, checking references, and communicating clearly before booking. Trust your instincts and prioritize your safety."
         }
       },
       {
@@ -113,7 +113,7 @@ export default function About() {
         {/* HERO SECTION */}
         <header className={styles.about__hero} data-reveal>
           <h1 className={styles.about__title}>
-            About MasseurMatch — Your Trusted Gay Massage &amp; Male Massage Directory
+            About MasseurMatch - Your Trusted Gay Massage &amp; Male Massage Directory
           </h1>
 
           <p className={styles.about__tagline}>
@@ -151,7 +151,11 @@ export default function About() {
           </div>
 
           <div className={styles.about__note}>
-            <strong>Platform Transparency:</strong> MasseurMatch is a visibility platform for independent providers — not an employment agency or booking service. By joining, you confirm that you operate independently, manage your own client relationships, and comply with all applicable local laws and professional standards.
+            <strong>Platform Transparency:</strong> MasseurMatch is a visibility
+            platform for independent providers - not an employment agency or
+            booking service. By joining, you confirm that you operate
+            independently, manage your own client relationships, and comply with
+            all applicable local laws and professional standards.
           </div>
         </header>
 
@@ -172,25 +176,30 @@ export default function About() {
           <ul className={styles.about__grid}>
             <li className={styles.about__card}>
               <div className={styles.about__cardHead}>
-                <h3>🏳️‍🌈 LGBTQ+ Inclusive</h3>
+                <h3>LGBTQ+ Inclusive</h3>
               </div>
               <p>
-                We proudly support gay massage therapists, male bodyworkers, and LGBT clients. Discrimination is non-negotiable — hate speech, harassment, or exclusionary practices result in immediate removal.
+                We proudly support gay massage therapists, male bodyworkers, and
+                LGBT clients. Discrimination is non-negotiable - hate speech,
+                harassment, or exclusionary practices result in immediate
+                removal.
               </p>
             </li>
 
             <li className={styles.about__card}>
               <div className={styles.about__cardHead}>
-                <h3>🔍 Nationwide Coverage</h3>
+                <h3>Nationwide Coverage</h3>
               </div>
               <p>
-                Find gay massage and male massage therapists in major cities across the USA — from Miami to NYC, Los Angeles to San Francisco, Las Vegas to Chicago, and everywhere in between.
+                Find gay massage and male massage therapists in major cities
+                across the USA - from Miami to NYC, Los Angeles to San
+                Francisco, Las Vegas to Chicago, and everywhere in between.
               </p>
             </li>
 
             <li className={styles.about__card}>
               <div className={styles.about__cardHead}>
-                <h3>💼 Provider Independence</h3>
+                <h3>Provider Independence</h3>
               </div>
               <p>
                 You are not employed by MasseurMatch. You operate your own business, set your own rates, manage client communications, and control your schedule. We&apos;re a visibility tool, not an intermediary.
@@ -199,7 +208,7 @@ export default function About() {
 
             <li className={styles.about__card}>
               <div className={styles.about__cardHead}>
-                <h3>🛡️ Safety &amp; Transparency</h3>
+                <h3>Safety &amp; Transparency</h3>
               </div>
               <p>
                 We provide clear disclaimers, transparent policies, and encourage direct verification. While we don&apos;t verify credentials, we empower clients to ask questions, check references, and make informed decisions.
@@ -208,16 +217,18 @@ export default function About() {
 
             <li className={styles.about__card}>
               <div className={styles.about__cardHead}>
-                <h3>📍 Local Search Optimization</h3>
+                <h3>Local Search Optimization</h3>
               </div>
               <p>
-                Search by city and service type — from gay massage in Miami to male massage in NYC. Our platform is optimized to help clients find exactly what they need in their local area.
+                Search by city and service type - from gay massage in Miami to
+                male massage in NYC. Our platform is optimized to help clients
+                find exactly what they need in their local area.
               </p>
             </li>
 
             <li className={styles.about__card}>
               <div className={styles.about__cardHead}>
-                <h3>✅ Professional Standards</h3>
+                <h3>Professional Standards</h3>
               </div>
               <p>
                 We expect lawful, professional massage therapy only. No illegal services, no medical claims without proper licensing, and no content that misrepresents your qualifications or services.
@@ -266,10 +277,10 @@ export default function About() {
 
             <article className={styles.about__legalItem}>
               <div className={styles.about__cardHead}>
-                <h3>4. Optional Promotions</h3>
+                <h3>4. No Paid Promotions</h3>
               </div>
               <p>
-                Providers can boost visibility with paid features like Travel Boost or Masseur of the Day. These are promotional placements and do not constitute endorsements or guarantees of quality.
+                We do not sell paid boosts, subscriptions, or featured placements. Visibility is based on profile completeness and local relevance.
               </p>
             </article>
           </div>
@@ -301,10 +312,10 @@ export default function About() {
 
             <li className={styles.about__card}>
               <div className={styles.about__cardHead}>
-                <h3>No Endorsements</h3>
+                <h3>No Paid Promotions</h3>
               </div>
               <p>
-                Featured placements like &quot;Travel Boost&quot; or &quot;Masseur of the Day&quot; are paid promotional options. These do not reflect quality endorsements, recommendations, or guarantees by MasseurMatch.
+                We do not sell featured placements or endorsements. Listings are not ranked by payment.
               </p>
             </li>
 
@@ -328,7 +339,7 @@ export default function About() {
 
             <li className={styles.about__card}>
               <div className={styles.about__cardHead}>
-                <h3>Directory Only — No Bookings</h3>
+                <h3>Directory Only - No Bookings</h3>
               </div>
               <p>
                 We are not a marketplace or booking platform. MasseurMatch does not process payments, manage appointments, or act as an intermediary. All transactions happen directly between you and providers.
@@ -356,78 +367,126 @@ export default function About() {
             <h2 id="faq-title">Frequently Asked Questions</h2>
           </div>
 
-          <div className={styles.about__legal}>
-            <article className={styles.about__legalItem}>
-              <div className={styles.about__cardHead}>
-                <h3>What is MasseurMatch?</h3>
+          <div className={styles.about__faq}>
+            <details className={styles.about__faqItem}>
+              <summary className={styles.about__faqSummary}>
+                What is MasseurMatch?
+              </summary>
+              <div className={styles.about__faqContent}>
+                <p>
+                  MasseurMatch is an inclusive directory platform connecting
+                  clients with independent massage therapists across the USA. We
+                  specialize in LGBT-friendly wellness services, including gay
+                  massage, male massage, and therapeutic bodywork. Our platform
+                  is a visibility tool, not an agency or booking service.
+                </p>
               </div>
-              <p>
-                MasseurMatch is an inclusive directory platform connecting clients with independent massage therapists across the USA. We specialize in LGBT-friendly wellness services, including gay massage, male massage, and therapeutic bodywork. Our platform is a visibility tool, not an agency or booking service.
-              </p>
-            </article>
+            </details>
 
-            <article className={styles.about__legalItem}>
-              <div className={styles.about__cardHead}>
-                <h3>Are massage therapists on MasseurMatch licensed and verified?</h3>
+            <details className={styles.about__faqItem}>
+              <summary className={styles.about__faqSummary}>
+                Are massage therapists on MasseurMatch licensed and verified?
+              </summary>
+              <div className={styles.about__faqContent}>
+                <p>
+                  MasseurMatch does not verify licenses or credentials. All
+                  profile information is self-declared by independent providers.
+                  We encourage clients to confirm credentials, certifications,
+                  and qualifications directly with therapists before booking
+                  sessions.
+                </p>
               </div>
-              <p>
-                MasseurMatch does not verify licenses or credentials. All profile information is self-declared by independent providers. We encourage clients to confirm credentials, certifications, and qualifications directly with therapists before booking sessions.
-              </p>
-            </article>
+            </details>
 
-            <article className={styles.about__legalItem}>
-              <div className={styles.about__cardHead}>
-                <h3>Is MasseurMatch LGBT-friendly and inclusive?</h3>
+            <details className={styles.about__faqItem}>
+              <summary className={styles.about__faqSummary}>
+                Is MasseurMatch LGBT-friendly and inclusive?
+              </summary>
+              <div className={styles.about__faqContent}>
+                <p>
+                  Yes. MasseurMatch is proudly LGBTQ+ inclusive. We support gay
+                  massage therapists, male bodyworkers, and clients seeking
+                  LGBT-friendly wellness services. Discrimination, hate speech,
+                  or harassment is prohibited and results in immediate account
+                  removal.
+                </p>
               </div>
-              <p>
-                Yes. MasseurMatch is proudly LGBTQ+ inclusive. We support gay massage therapists, male bodyworkers, and clients seeking LGBT-friendly wellness services. Discrimination, hate speech, or harassment is prohibited and results in immediate account removal.
-              </p>
-            </article>
+            </details>
 
-            <article className={styles.about__legalItem}>
-              <div className={styles.about__cardHead}>
-                <h3>Does MasseurMatch handle bookings or payments?</h3>
+            <details className={styles.about__faqItem}>
+              <summary className={styles.about__faqSummary}>
+                Does MasseurMatch handle bookings or payments?
+              </summary>
+              <div className={styles.about__faqContent}>
+                <p>
+                  No. MasseurMatch is a directory platform only. We do not
+                  process payments, manage bookings, or facilitate messaging.
+                  All communication, scheduling, and payment arrangements happen
+                  directly between clients and independent providers.
+                </p>
               </div>
-              <p>
-                No. MasseurMatch is a directory platform only. We do not process payments, manage bookings, or facilitate messaging. All communication, scheduling, and payment arrangements happen directly between clients and independent providers.
-              </p>
-            </article>
+            </details>
 
-            <article className={styles.about__legalItem}>
-              <div className={styles.about__cardHead}>
-                <h3>How do I join MasseurMatch as a massage therapist?</h3>
+            <details className={styles.about__faqItem}>
+              <summary className={styles.about__faqSummary}>
+                How do I join MasseurMatch as a massage therapist?
+              </summary>
+              <div className={styles.about__faqContent}>
+                <p>
+                  Independent massage therapists can join by creating a profile
+                  at <Link href="/join">masseurmatch.com/join</Link>. You must be
+                  18+ years old, comply with local laws, and agree to our{" "}
+                  <Link href="/legal/terms">terms of service</Link>. Profile
+                  creation is free, and we do not offer paid promotional
+                  features at this time.
+                </p>
               </div>
-              <p>
-                Independent massage therapists can join by creating a profile at <Link href="/join">masseurmatch.com/join</Link>. You must be 18+ years old, comply with local laws, and agree to our <Link href="/legal/terms">terms of service</Link>. Profile creation is free, with optional paid promotional features available.
-              </p>
-            </article>
+            </details>
 
-            <article className={styles.about__legalItem}>
-              <div className={styles.about__cardHead}>
-                <h3>What are the paid promotional features?</h3>
+            <details className={styles.about__faqItem}>
+              <summary className={styles.about__faqSummary}>
+                Do you offer paid promotional features?
+              </summary>
+              <div className={styles.about__faqContent}>
+                <p>
+                  No. We do not offer paid promotional features currently. If
+                  this changes, we will update our terms and policies before
+                  launch.
+                </p>
               </div>
-              <p>
-                We offer Travel Boost and Masseur of the Day placements for enhanced visibility. These are paid promotional options and do not constitute endorsements by MasseurMatch. All providers maintain independence regardless of promotional status.
-              </p>
-            </article>
+            </details>
 
-            <article className={styles.about__legalItem}>
-              <div className={styles.about__cardHead}>
-                <h3>Can I trust the therapists on MasseurMatch?</h3>
+            <details className={styles.about__faqItem}>
+              <summary className={styles.about__faqSummary}>
+                Can I trust the therapists on MasseurMatch?
+              </summary>
+              <div className={styles.about__faqContent}>
+                <p>
+                  MasseurMatch provides a platform for discovery, but we do not
+                  endorse or guarantee any provider. We recommend verifying
+                  credentials, checking references, and communicating clearly
+                  before booking. Trust your instincts and prioritize your
+                  safety.
+                </p>
               </div>
-              <p>
-                MasseurMatch provides a platform for discovery, but we do not endorse or guarantee any provider. We recommend verifying credentials, reading reviews, checking references, and communicating clearly before booking. Trust your instincts and prioritize your safety.
-              </p>
-            </article>
+            </details>
 
-            <article className={styles.about__legalItem}>
-              <div className={styles.about__cardHead}>
-                <h3>What services are allowed on MasseurMatch?</h3>
+            <details className={styles.about__faqItem}>
+              <summary className={styles.about__faqSummary}>
+                What services are allowed on MasseurMatch?
+              </summary>
+              <div className={styles.about__faqContent}>
+                <p>
+                  MasseurMatch is for lawful, professional massage therapy and
+                  wellness services only. We prohibit illegal activities,
+                  commercial sexual services, and any content violating our{" "}
+                  <Link href="/legal/community-guidelines">
+                    community guidelines
+                  </Link>
+                  . Providers must comply with all local laws and regulations.
+                </p>
               </div>
-              <p>
-                MasseurMatch is for lawful, professional massage therapy and wellness services only. We prohibit illegal activities, commercial sexual services, and any content violating our <Link href="/legal/community-guidelines">community guidelines</Link>. Providers must comply with all local laws and regulations.
-              </p>
-            </article>
+            </details>
           </div>
         </section>
 
@@ -479,32 +538,32 @@ export default function About() {
           <ul className={styles.about__links}>
             <li>
               <Link href="/legal/terms" className={styles.about__link}>
-                → Terms of Service
+                Terms of Service
               </Link>
             </li>
             <li>
               <Link href="/legal/privacy-policy" className={styles.about__link}>
-                → Privacy Policy
+                Privacy Policy
               </Link>
             </li>
             <li>
               <Link href="/legal/community-guidelines" className={styles.about__link}>
-                → Community Guidelines
+                Community Guidelines
               </Link>
             </li>
             <li>
               <Link href="/legal/cookie-policy" className={styles.about__link}>
-                → Cookie Policy
+                Cookie Policy
               </Link>
             </li>
             <li>
               <Link href="/legal/professional-standards" className={styles.about__link}>
-                → Professional Standards
+                Professional Standards
               </Link>
             </li>
             <li>
               <Link href="/legal/anti-trafficking" className={styles.about__link}>
-                → Anti-Trafficking Policy
+                Anti-Trafficking Policy
               </Link>
             </li>
           </ul>
@@ -579,3 +638,4 @@ export default function About() {
     </>
   );
 }
+

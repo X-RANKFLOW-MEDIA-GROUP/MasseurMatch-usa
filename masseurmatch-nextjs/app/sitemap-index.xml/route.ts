@@ -1,24 +1,25 @@
-import { cityMap } from "@/data/cityMap";
 import { SITE_URL } from "@/lib/site";
 
-const citySlugs = Object.keys(cityMap);
+const sitemapPaths = [
+  "/sitemap.xml",
+  "/sitemap-city.xml",
+  "/sitemap-city-segments.xml",
+  "/legal/sitemap.xml",
+];
 
 export async function GET() {
   const lastmod = new Date().toISOString();
-
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${citySlugs
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapPaths
   .map(
-    (slug) => `  <url>
-    <loc>${SITE_URL}/city/${slug}</loc>
+    (path) => `  <sitemap>
+    <loc>${SITE_URL}${path}</loc>
     <lastmod>${lastmod}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>`
+  </sitemap>`
   )
   .join("\n")}
-</urlset>`;
+</sitemapindex>`;
 
   return new Response(xml, {
     headers: {

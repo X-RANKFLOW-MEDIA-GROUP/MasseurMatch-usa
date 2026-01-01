@@ -26,7 +26,7 @@ import "./KnottyBot.css";
 const CONFIG = {
   name: "Knotty",
   role: "MasseurMatch Guide",
-  version: "1.2 – Enhanced Knowledge Base",
+  version: "1.3 - Enhanced Knowledge Base",
   disclaimer:
     "Knotty provides general information only and does not offer legal advice. For legal matters contact legal@masseurmatch.com.",
 };
@@ -52,20 +52,20 @@ const getBotResponse = (input: string): string => {
       /(traffic|exploit|coercion|forced|safe|danger|trust)/,
     )
   ) {
-    return "Safety is our top priority. We enforce a strict zero-tolerance policy against trafficking and exploitation. While we verify identities via Stripe, we cannot guarantee the safety of offline interactions. Always exercise caution and meet in public or professional settings first.";
+    return "Safety is our top priority. We enforce a strict zero-tolerance policy against trafficking and exploitation. We do not verify identities or licenses and cannot guarantee the safety of offline interactions. Always exercise caution and meet in public or professional settings first.";
   }
 
   // --- LEGAL & DOCUMENTS (Priority 2) ---
 
   // Refund Policy
   if (lowerInput.match(/(refund|money back|reimburse)/)) {
-    return "You can find our full Refund Policy in the Legal Hub. generally, fees are for advertising exposure and are non-refundable once a listing is active. However, we consider refunds for technical errors or duplicate charges within 5 days.";
+    return "MasseurMatch does not process payments or subscriptions on the platform, so refunds are not applicable. Any transactions happen off platform between users and advertisers.";
   }
 
   // Terms & Guidelines
   if (
     lowerInput.match(
-      /(term|condition|rule|guideline|policy|allowed|prohibited)/,
+      /(term|condition|rule|guideline|policy|allowed|prohibited|legal|document)/,
     )
   ) {
     return "You can access all our official documents in the Legal Hub. This includes our Terms of Service, Content Guidelines, and Advertiser Policies. We recommend reviewing the 'Content Guidelines' to understand what is allowed on your profile.";
@@ -100,13 +100,13 @@ const getBotResponse = (input: string): string => {
     return "Photos must be professional, recent (within 12 months), and fully clothed. We do not allow shirtless images (unless relevant to a specific therapeutic modality and professional context), nudity, or suggestive poses. You can update photos directly in your listing editor.";
   }
 
-  // Verification / Stripe
+  // Verification / IDs
   if (
     lowerInput.match(
       /(verify|verification|id|stripe|document|passport|license|how long)/,
     )
   ) {
-    return "Identity verification is handled exclusively by Stripe Identity to ensure privacy and security. We do not store your ID documents. Verification is usually instant but can take up to 24 hours. You can start this process in your dashboard under the 'Verification' tab.";
+    return "We do not perform identity or license verification. Please do not send ID documents. If you have concerns about a listing, contact support and we will review it.";
   }
 
   // Auth / Login / Password
@@ -123,15 +123,15 @@ const getBotResponse = (input: string): string => {
     return "We'd be sad to see you go! You can deactivate your account safely from the 'Account Settings' page in your dashboard. This will hide all your listings immediately.";
   }
 
-  // --- SUBSCRIPTIONS & BILLING (Priority 4) ---
+  // --- PAYMENTS & BILLING (Priority 4) ---
 
   // Subscription Management
   if (
     lowerInput.match(
-      /(subscri|plan|cancel|upgrade|downgrade|cost|price|fee|billing)/,
+      /(subscri|plan|cancel|upgrade|downgrade|cost|price|fee|billing|payment|payments)/,
     )
   ) {
-    return "We offer various plans (Free, Standard, Pro, Elite) to suit your needs. You can upgrade, downgrade, or cancel your subscription at any time via the 'Billing' tab in your dashboard. Cancellations prevent future renewals but do not refund the current cycle.";
+    return "MasseurMatch does not offer subscriptions or recurring billing for end users. Listings are discovery-only, and any transactions happen off platform between users and advertisers.";
   }
 
   // --- PLATFORM INFO (Priority 5) ---
@@ -142,7 +142,7 @@ const getBotResponse = (input: string): string => {
       /(mission|about|value|why|what is)/,
     )
   ) {
-    return "MasseurMatch is an advertising-only directory dedicated to connecting independent wellness professionals with clients. Our mission is to provide a clean, professional, and safe environment for advertising massage and bodywork services, free from the stigma often associated with the industry.";
+    return "MasseurMatch is a discovery-only directory dedicated to connecting independent wellness professionals with clients. Our mission is to provide a clean, professional, and safe environment for advertising massage and bodywork services, free from the stigma often associated with the industry.";
   }
 
   // Data / Privacy
@@ -151,7 +151,7 @@ const getBotResponse = (input: string): string => {
       /(data|privacy|collect|store|info|gdpr|ccpa)/,
     )
   ) {
-    return "We value your privacy. We collect only essential account data (email, listing content). We DO NOT collect health data (PHI) or store government IDs. All payment info is handled securely by our processors. Check our Privacy Policy in the Legal Hub for full details.";
+    return "We value your privacy. We collect only essential account data (email, listing content) and basic security logs. We do not collect health data (PHI), government IDs, payment card data, or message content. Check our Privacy Policy in the Legal Hub for full details.";
   }
 
   // Advertising Only Concept
@@ -160,7 +160,7 @@ const getBotResponse = (input: string): string => {
       /(booking|appoint|schedule|manage)/,
     )
   ) {
-    return "Remember, MasseurMatch is an 'Advertising-Only' platform. We are like a directory or a billboard. We do not manage your calendar, process booking fees, or facilitate the actual appointment. You handle your own clients directly!";
+    return "Remember, MasseurMatch is a discovery-only directory. We do not manage calendars, process booking fees, or provide messaging. You handle your own clients directly off platform.";
   }
 
   // --- GENERAL / FALLBACK ---
@@ -170,10 +170,10 @@ const getBotResponse = (input: string): string => {
       /(help|support|contact)/,
     )
   ) {
-    return "I'm here to help! For specific account issues, you can email support@masseurmatch.com. Otherwise, feel free to ask me about verifying your account, setting up your profile, or our platform rules.";
+    return "I'm here to help! For specific account issues, you can email support@masseurmatch.com. Otherwise, feel free to ask me about listing setup, photo rules, or platform scope.";
   }
 
-  return "I'm here to be a helpful guide! You can ask me about:\n\n• Verifying your identity\n• Setting up a listing\n• Subscription plans\n• Our strict safety rules\n• Finding legal documents\n\nHow can I assist you today?";
+  return "I'm here to help. You can ask me about:\n\n- Listing setup and photo rules\n- Platform scope (no payments or messaging)\n- Safety and prohibited content\n- Legal documents and policies\n\nHow can I assist you today?";
 };
 
 interface Message {
@@ -188,7 +188,7 @@ export function KnottyBot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
-      text: "Hello! I'm Knotty, your friendly MasseurMatch assistant. 🌟\n\nI can help you navigate the Legal Hub, explain our plans, or guide you through setting up your professional profile.\n\nHow can I help you today?",
+      text: "Hello! I'm Knotty, your friendly MasseurMatch assistant.\n\nI can help you navigate the Legal Hub, explain platform rules, or guide you through setting up your professional profile.\n\nHow can I help you today?",
       sender: "bot",
       timestamp: new Date(),
     },
@@ -254,10 +254,10 @@ export function KnottyBot() {
   }, [messages, isTyping, isOpen]);
 
   const QUICK_PROMPTS = [
-    "How do I get verified?",
-    "Cancel subscription",
+    "Do you verify identities?",
     "Photo rules",
-    "Refund policy",
+    "Do you process payments?",
+    "Where are the legal documents?",
   ];
 
   return (
@@ -323,9 +323,9 @@ export function KnottyBot() {
                 <div className="knotty-banner-inner">
                   <Shield className="knotty-banner-icon" />
                   <p>
-                    MasseurMatch is an advertising-only directory. We
-                    verify via Stripe but do not guarantee safety. Sexual
-                    content is strictly prohibited.
+                    MasseurMatch is a discovery-only directory. We
+                    do not verify identities or licenses and do not
+                    guarantee safety. Sexual content is strictly prohibited.
                   </p>
                 </div>
               </div>

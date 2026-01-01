@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createSetupIntent } from '@/lib/stripe';
 
@@ -6,7 +6,7 @@ import { createSetupIntent } from '@/lib/stripe';
  * POST /api/stripe/setup-intent
  * Create a setup intent for collecting payment method
  */
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const supabase = await createClient();
 

@@ -46,7 +46,7 @@ for (const line of existing) {
     continue;
   }
 
-  const [key, ...rest] = line.split("=");
+  const [key] = line.split("=");
   if (updates.has(key)) {
     output.push(`${key}=${updates.get(key)}`);
     seen.add(key);

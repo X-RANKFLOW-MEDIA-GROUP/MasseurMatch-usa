@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next';
 import { legalDocuments } from '@/lib/legal-data';
+import { SITE_URL } from '@/lib/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://masseurmatch.com';
+  const baseUrl = SITE_URL;
 
   // Static routes
   const routes = [

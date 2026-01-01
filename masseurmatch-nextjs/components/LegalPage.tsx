@@ -302,7 +302,7 @@ export function LegalPage() {
                 <div className="legal-sidebar-docs-header">
                   <h2>Documents</h2>
                   <Badge variant="outline" className="legal-version-badge">
-                    v1.1
+                    v1.2
                   </Badge>
                 </div>
 
@@ -380,7 +380,7 @@ export function LegalPage() {
                 <span>Latest Update: Jan 2025</span>
               </p>
               <p className="legal-changelog-sub">
-                v1.1: Added SMS STOP/HELP clause
+                v1.2: Directory-only scope and updated privacy details
               </p>
             </div>
           </div>

@@ -459,6 +459,6 @@ export interface Database {
       media_type_enum: "photo" | "video";
       rate_context_enum: "incall" | "outcall";
     };
-    CompositeTypes: {};
+    CompositeTypes: Record<string, never>;
   };
 }

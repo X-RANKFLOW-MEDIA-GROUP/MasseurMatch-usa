@@ -8,9 +8,10 @@ type Section = {
 
 type LegalPageProps = {
   title: string;
-  description: string;
+  description?: string;
   slug: string;
-  sections: Section[];
+  sections?: Section[];
+  content?: React.ReactNode;
   lastUpdated?: string;
 };
 
@@ -33,8 +34,19 @@ const CONTACT_BLOCK = (
   </div>
 );
 
-export function LegalPage({ title, description, slug, sections, lastUpdated }: LegalPageProps) {
-  const updatedLabel = lastUpdated ?? "Last updated: December 3, 2025";
+export function LegalPage({
+  title,
+  description,
+  slug,
+  sections,
+  content,
+  lastUpdated
+}: LegalPageProps) {
+  const updatedLabel = lastUpdated
+    ? lastUpdated.startsWith("Last updated")
+      ? lastUpdated
+      : `Last updated: ${lastUpdated}`
+    : "Last updated: December 3, 2025";
 
   return (
     <main
@@ -51,9 +63,11 @@ export function LegalPage({ title, description, slug, sections, lastUpdated }: L
         <h1 className="text-3xl font-bold" style={{ color: "var(--text)" }}>
           {title}
         </h1>
-        <p className="text-base" style={{ color: "var(--muted)" }}>
-          {description}
-        </p>
+        {description && (
+          <p className="text-base" style={{ color: "var(--muted)" }}>
+            {description}
+          </p>
+        )}
         <p className="text-sm" style={{ color: "var(--muted)" }}>
           {updatedLabel}
         </p>
@@ -85,16 +99,20 @@ export function LegalPage({ title, description, slug, sections, lastUpdated }: L
       </nav>
 
       <section className="space-y-6">
-        {sections.map(section => (
-          <article key={section.heading} className="space-y-2">
-            <h2 className="text-2xl font-semibold" style={{ color: "var(--text)" }}>
-              {section.heading}
-            </h2>
-            <div className="space-y-3" style={{ color: "var(--muted)" }}>
-              {section.body}
-            </div>
-          </article>
-        ))}
+        {content ? (
+          <div className="space-y-6">{content}</div>
+        ) : (
+          sections?.map(section => (
+            <article key={section.heading} className="space-y-2">
+              <h2 className="text-2xl font-semibold" style={{ color: "var(--text)" }}>
+                {section.heading}
+              </h2>
+              <div className="space-y-3" style={{ color: "var(--muted)" }}>
+                {section.body}
+              </div>
+            </article>
+          ))
+        )}
       </section>
 
       <section

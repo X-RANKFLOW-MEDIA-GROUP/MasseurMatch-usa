@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,27 +11,22 @@ interface Message {
 }
 
 const faqDatabase = [
-  { q: "verify licenses", a: "We perform basic verification for all therapists. Professional license verification is the responsibility of the therapist." },
+  { q: "verify licenses", a: "We do not verify identities or licenses. Profiles are self-declared, and clients should confirm credentials directly." },
   { q: "book session", a: "No. MasseurMatch does not handle bookings. Contact therapists directly using the info on their profiles." },
-  { q: "safe info privacy", a: "Yes. MasseurMatch prioritizes your privacy. All communications happen outside the platform with end-to-end encryption." },
+  { q: "safe info privacy", a: "We collect limited account data and do not host messaging. Contact happens off platform using the details on each profile." },
   { q: "contact therapist", a: "Click on a therapist's profile and use the contact information they provide. Simple and direct." },
   { q: "services available massage", a: "You can search by service type: Deep Tissue, Swedish, Sports, Thai, Hot Stone, and Aromatherapy massage." },
   { q: "top cities location", a: "Top cities include New York, Los Angeles, Chicago, Miami, San Francisco, and 50+ others. Use filters to narrow your search." },
-  { q: "knotty ai chat", a: "I'm Knotty, your AI chat companion! I help you explore wellness services, match with therapists, and answer questions about MasseurMatch." },
-  { q: "pricing cost fee", a: "MasseurMatch is 100% free for clients. Therapists keep 100% of their earnings. We take 0% commission." },
-  { q: "how works platform", a: "Simple: 1) Browse therapists by location and specialty, 2) View profiles and reviews, 3) Contact them directly. No middleman!" },
-  { 
-    q: "therapist search find looking browse", 
-    a: `Here are 3 top-rated therapists near you:
+  { q: "knotty ai chat", a: "I'm Knotty, your AI chat companion! I help you explore wellness services, find therapists, and answer questions about MasseurMatch." },
+  { q: "pricing cost fee", a: "MasseurMatch is free for clients to browse. We do not process payments or take commissions. Transactions happen off platform." },
+  { q: "how works platform", a: "Simple: 1) Browse therapists by location and specialty, 2) View profiles and services, 3) Contact them directly. No middleman!" },
+  {
+    q: "therapist search find looking browse",
+    a: `Here are a few sample profiles near you:
 
-ðŸŒŸ Marcus Rivera - Deep Tissue Specialist
-ðŸ“ Downtown â€¢ â­ 4.9 (142 reviews)
-
-ðŸŒŸ Lucas Montgomery - Swedish Massage
-ðŸ“ Westside â€¢ â­ 5.0 (215 reviews)
-
-ðŸŒŸ James Anderson - Sports Recovery
-ðŸ“ Midtown â€¢ â­ 4.8 (187 reviews)
+- Marcus Rivera - Deep Tissue Specialist (Downtown)
+- Lucas Montgomery - Swedish Massage (Westside)
+- James Anderson - Sports Recovery (Midtown)
 
 Want to see more therapists? Visit our Explore page to browse all profiles, filter by location, and view detailed credentials!`
   }
@@ -67,7 +62,7 @@ export function KnottyChat() {
 
   useEffect(() => {
     if (isOpen && !isMinimized && messages.length === 0) {
-      // Delay de 2 segundos antes de comeÃ§ar
+      // Delay de 2 segundos antes de começar
       const timer = setTimeout(() => {
         setIsTyping(true);
         setTimeout(() => {
@@ -77,8 +72,8 @@ export function KnottyChat() {
             sender: 'bot',
             timestamp: new Date()
           }]);
-        }, 2500); // Efeito de digitaÃ§Ã£o por 2.5s
-      }, 2000); // Espera 2s antes de comeÃ§ar
+        }, 2500); // Efeito de digitação por 2.5s
+      }, 2000); // Espera 2s antes de começar
       return () => clearTimeout(timer);
     }
   }, [isOpen, isMinimized, messages.length]);
@@ -182,7 +177,7 @@ export function KnottyChat() {
                   <h3 className="font-bold text-white">Knotty Assistant</h3>
                   <p className="text-xs text-white/80 flex items-center gap-1">
                     <Lock className="w-3 h-3" />
-                    Secure & Private
+                    Directory-only
                   </p>
                 </div>
               </div>
@@ -287,7 +282,7 @@ export function KnottyChat() {
                     </button>
                   </div>
                   <p className="text-[10px] text-zinc-600 mt-2 text-center">
-                    Powered by AI â€¢ End-to-end encrypted
+                    Powered by AI
                   </p>
                 </div>
               </>
@@ -298,3 +293,4 @@ export function KnottyChat() {
     </>
   );
 }
+

@@ -1,8 +1,7 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import ExploreAIClient from "./ExploreAI/ExploreAIClient";
 import ExploreTherapists from "./ExploreTherapists";
-import { Preferences } from "./ExploreAI/ai";
 import styles from "./UnifiedExplore.module.css";
 
 type ExploreMode = "ai" | "grid";
@@ -19,25 +18,6 @@ export default function UnifiedExplore({
   onClose
 }: UnifiedExploreProps) {
   const [mode, setMode] = useState<ExploreMode>(defaultMode);
-  const [userPreferences, setUserPreferences] = useState<Preferences | null>(null);
-
-  useEffect(() => {
-    // Load user preferences from API
-    const loadPreferences = async () => {
-      try {
-        const response = await fetch("/api/preferences");
-        if (response.ok) {
-          const payload = await response.json();
-          if (payload?.preferences) {
-            setUserPreferences(payload.preferences);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to load preferences", error);
-      }
-    };
-    loadPreferences();
-  }, []);
 
   const handleModeSwitch = useCallback((newMode: ExploreMode) => {
     setMode(newMode);

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { supabaseServer } from "@/lib/supabase/server";
 import { SITE_URL } from "@/lib/site";
+import { getAllPosts } from "@/app/blog/data/posts";
 
 const STATIC_PAGES: Array<{
   path: string;
@@ -9,18 +10,13 @@ const STATIC_PAGES: Array<{
 }> = [
   { path: "", priority: 1, changefreq: "daily" },
   { path: "join", priority: 0.9, changefreq: "daily" },
-  { path: "login", priority: 0.8, changefreq: "weekly" },
-  { path: "forgot-password", priority: 0.7, changefreq: "monthly" },
   { path: "explore", priority: 0.8, changefreq: "weekly" },
+  { path: "explore-ai", priority: 0.6, changefreq: "weekly" },
   { path: "ai", priority: 0.6, changefreq: "monthly" },
-  { path: "dashboard", priority: 0.6, changefreq: "weekly" },
   { path: "blog", priority: 0.7, changefreq: "weekly" },
   { path: "trust", priority: 0.6, changefreq: "monthly" },
   { path: "about", priority: 0.6, changefreq: "monthly" },
-  { path: "community-guidelines", priority: 0.5, changefreq: "monthly" },
   { path: "legal", priority: 0.5, changefreq: "monthly" },
-  { path: "privacy-policy", priority: 0.5, changefreq: "monthly" },
-  { path: "cookie-policy", priority: 0.5, changefreq: "monthly" },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -32,6 +28,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: page.priority,
     changefreq: page.changefreq,
     lastModified,
+  }));
+
+  const blogPosts = getAllPosts();
+  const blogItems: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    priority: 0.6,
+    changefreq: "monthly",
+    lastModified: post.updatedAt ? new Date(post.updatedAt) : new Date(post.publishedAt),
   }));
 
   const { data: therapists } = await supabase
@@ -51,5 +55,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   );
 
-  return [...staticItems, ...dynamicTherapists];
+  return [...staticItems, ...blogItems, ...dynamicTherapists];
 }
