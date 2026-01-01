@@ -51,7 +51,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=sha,prefix={{branch}}-
+            type=sha,prefix=sha-
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build Docker image
@@ -72,13 +72,13 @@ jobs:
       - name: Run Trivy vulnerability scanner on image
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
           format: 'sarif'
           output: 'trivy-image-results.sarif'
           severity: 'CRITICAL,HIGH'
 
       - name: Upload Trivy results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: 'trivy-image-results.sarif'
@@ -86,7 +86,7 @@ jobs:
       - name: Run Trivy for JSON report
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
           format: 'json'
           output: 'trivy-image-report.json'
           severity: 'CRITICAL,HIGH,MEDIUM'
