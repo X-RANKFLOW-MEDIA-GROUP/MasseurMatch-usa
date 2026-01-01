@@ -7,6 +7,12 @@ import type { NextRequest } from "next/server";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 
 // ====================================
+// SUPABASE ENVIRONMENT VARIABLES
+// ====================================
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+// ====================================
 // BLOCKED COUNTRIES (ISO 3166-1 alpha-2)
 // ====================================
 // Reasons: Anti-LGBTQ+ laws, US sanctions, high fraud/trafficking risk
@@ -57,7 +63,8 @@ const LEGAL_REDIRECTS: Record<string, string> = {
 };
 
 function normalizePath(pathname: string) {
-  if (pathname.length > 1 && pathname.endsWith("/")) return pathname.slice(0, -1);
+  if (pathname.length > 1 && pathname.endsWith("/"))
+    return pathname.slice(0, -1);
   return pathname;
 }
 
@@ -65,7 +72,7 @@ export async function proxy(req: NextRequest) {
   const pathname = normalizePath(req.nextUrl.pathname);
   // Shared response instance so that any cookies set during auth are preserved
   // for the rest of the middleware chain.
-  let res = NextResponse.next({
+  const res = NextResponse.next({
     request: {
       headers: req.headers,
     },
@@ -79,31 +86,27 @@ export async function proxy(req: NextRequest) {
   );
 
   if (isProtectedRoute) {
-    const supabase = createServerClient(
-      supabaseUrl,
-      supabaseAnonKey,
-      {
-        cookies: {
-          get(name: string) {
-            return req.cookies.get(name)?.value;
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            res.cookies.set({
-              name,
-              value,
-              ...options,
-            });
-          },
-          remove(name: string, options: CookieOptions) {
-            res.cookies.set({
-              name,
-              value: "",
-              ...options,
-            });
-          },
+    const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+      cookies: {
+        get(name: string) {
+          return req.cookies.get(name)?.value;
         },
-      }
-    );
+        set(name: string, value: string, options: CookieOptions) {
+          res.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+        },
+        remove(name: string, options: CookieOptions) {
+          res.cookies.set({
+            name,
+            value: "",
+            ...options,
+          });
+        },
+      },
+    });
 
     const {
       data: { session },
@@ -149,6 +152,7 @@ export async function proxy(req: NextRequest) {
   // ====================================
   // 301 REDIRECTS - Legal Pages Migration
   // ====================================
+  // eslint-disable-next-line security/detect-object-injection
   const legalTarget = LEGAL_REDIRECTS[pathname];
   if (legalTarget) {
     const newUrl = req.nextUrl.clone();
