@@ -24,6 +24,9 @@ export async function createServerSupabaseClient() {
                 limit: async () => ({ data: [], error: null }),
               }),
             }),
+            contains: () => ({
+              limit: async () => ({ data: [], error: null }),
+            }),
           }),
           order: () => ({
             limit: async () => ({ data: [], error: null }),
