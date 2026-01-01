@@ -14,6 +14,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  IMAGE_TAG_SHA: sha-${{ github.sha }}
 
 jobs:
   build-and-sign:
@@ -62,7 +63,9 @@ jobs:
           file: ./Dockerfile
           push: false
           load: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_SHA }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -72,21 +75,21 @@ jobs:
       - name: Run Trivy vulnerability scanner on image
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_SHA }}
           format: 'sarif'
           output: 'trivy-image-results.sarif'
           severity: 'CRITICAL,HIGH'
 
       - name: Upload Trivy results to GitHub Security
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
+        if: ${{ always() && hashFiles('trivy-image-results.sarif') != '' }}
         with:
           sarif_file: 'trivy-image-results.sarif'
 
       - name: Run Trivy for JSON report
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_SHA }}
           format: 'json'
           output: 'trivy-image-report.json'
           severity: 'CRITICAL,HIGH,MEDIUM'
@@ -111,7 +114,9 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_SHA }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -157,7 +162,7 @@ jobs:
           echo "**Provenance:** Generated ✅" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Trivy image report
-        if: always()
+        if: ${{ always() && hashFiles('trivy-image-report.json') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: trivy-image-report
