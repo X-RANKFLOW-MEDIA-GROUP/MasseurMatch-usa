@@ -1,11 +1,185 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Bell, Shield, Eye, Trash2, Mail, Smartphone } from "lucide-react";
+import { Bell, Shield, Eye, Trash2, Mail, Smartphone, BadgeCheck, AlertCircle, Loader2, ExternalLink } from "lucide-react";
 import { supabase } from "@/src/lib/supabase";
 
-export default function SettingsPage() {
+function VerificationSection() {
+  const searchParams = useSearchParams();
+  const verificationComplete = searchParams?.get("verification") === "complete";
+
+  const [verificationStatus, setVerificationStatus] = useState<{
+    verified: boolean;
+    status: string;
+    lastError?: string;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [starting, setStarting] = useState(false);
+
+  useEffect(() => {
+    checkVerificationStatus();
+  }, [verificationComplete]);
+
+  const checkVerificationStatus = async () => {
+    try {
+      const response = await fetch("/api/stripe/check-verification-status");
+      const data = await response.json();
+      if (!data.error) {
+        setVerificationStatus(data);
+      }
+    } catch (error) {
+      console.error("Error checking verification:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const startVerification = async () => {
+    setStarting(true);
+    try {
+      const response = await fetch("/api/stripe/create-verification-session", {
+        method: "POST",
+      });
+      const data = await response.json();
+
+      if (data.error) {
+        if (data.error === "Stripe not configured") {
+          alert("Identity verification requires Stripe configuration. Please contact support.");
+          return;
+        }
+        throw new Error(data.error);
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error("Error starting verification:", error);
+      alert("Failed to start verification. Please try again.");
+    } finally {
+      setStarting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
+      >
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        </div>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
+    >
+      <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <BadgeCheck className="h-5 w-5 text-violet-400" />
+        Identity Verification
+      </h3>
+
+      {verificationStatus?.verified ? (
+        <div className="flex items-center gap-3 p-4 rounded-xl bg-green-500/10 border border-green-500/20">
+          <BadgeCheck className="h-6 w-6 text-green-400" />
+          <div>
+            <p className="font-medium text-green-400">Verified</p>
+            <p className="text-sm text-slate-400">Your identity has been verified</p>
+          </div>
+        </div>
+      ) : verificationStatus?.status === "pending" || verificationStatus?.status === "processing" ? (
+        <div className="flex items-center gap-3 p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+          <Loader2 className="h-6 w-6 text-yellow-400 animate-spin" />
+          <div>
+            <p className="font-medium text-yellow-400">Verification in Progress</p>
+            <p className="text-sm text-slate-400">We&apos;re reviewing your documents</p>
+          </div>
+        </div>
+      ) : verificationStatus?.status === "requires_input" ? (
+        <div className="space-y-4">
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+            <AlertCircle className="h-6 w-6 text-red-400 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-red-400">Action Required</p>
+              <p className="text-sm text-slate-400">
+                {verificationStatus.lastError || "Please provide additional information to complete verification"}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={startVerification}
+            disabled={starting}
+            className="flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 font-medium text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+          >
+            {starting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Starting...
+              </>
+            ) : (
+              <>
+                <ExternalLink className="h-4 w-4" />
+                Continue Verification
+              </>
+            )}
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <p className="text-slate-400">
+            Verify your identity to get a verified badge and build trust with clients.
+            We use Stripe Identity to securely verify your government-issued ID.
+          </p>
+          <ul className="text-sm text-slate-400 space-y-2">
+            <li className="flex items-center gap-2">
+              <BadgeCheck className="h-4 w-4 text-violet-400" />
+              Verified badge on your profile
+            </li>
+            <li className="flex items-center gap-2">
+              <Shield className="h-4 w-4 text-violet-400" />
+              Increased trust and visibility
+            </li>
+            <li className="flex items-center gap-2">
+              <Eye className="h-4 w-4 text-violet-400" />
+              Priority in search results
+            </li>
+          </ul>
+          <button
+            onClick={startVerification}
+            disabled={starting}
+            className="flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 font-medium text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+          >
+            {starting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Starting...
+              </>
+            ) : (
+              <>
+                <BadgeCheck className="h-4 w-4" />
+                Start Verification
+              </>
+            )}
+          </button>
+          <p className="text-xs text-slate-500">
+            You&apos;ll need a valid government-issued ID (driver&apos;s license, passport, or national ID card)
+          </p>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+function SettingsContent() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [notifications, setNotifications] = useState({
@@ -38,8 +212,8 @@ export default function SettingsPage() {
 
       if (data) {
         setPhone(data.phone || "");
-        setNotifications(data.notifications || notifications);
-        setPrivacy(data.privacy || privacy);
+        if (data.notifications) setNotifications(data.notifications);
+        if (data.privacy) setPrivacy(data.privacy);
       }
       setLoading(false);
     }
@@ -66,7 +240,6 @@ export default function SettingsPage() {
     if (!confirm("Are you sure you want to delete your account? This action cannot be undone.")) return;
     if (!confirm("This will permanently delete all your data. Type 'DELETE' to confirm.")) return;
 
-    // In production, this would call a secure server endpoint
     alert("Please contact support to delete your account.");
   };
 
@@ -84,6 +257,11 @@ export default function SettingsPage() {
     <div className="max-w-2xl">
       <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
       <p className="text-slate-400 mb-8">Manage your account preferences</p>
+
+      {/* Identity Verification */}
+      <Suspense fallback={<div className="h-48 bg-white/5 rounded-2xl animate-pulse mb-6" />}>
+        <VerificationSection />
+      </Suspense>
 
       {/* Account Section */}
       <motion.div
@@ -234,5 +412,18 @@ export default function SettingsPage() {
         </button>
       </motion.div>
     </div>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-2xl space-y-6">
+        <div className="h-12 w-48 bg-white/5 rounded animate-pulse" />
+        <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />
+      </div>
+    }>
+      <SettingsContent />
+    </Suspense>
   );
 }
