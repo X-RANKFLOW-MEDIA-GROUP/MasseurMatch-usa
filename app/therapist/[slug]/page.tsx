@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { supabaseServer } from "@/src/lib/supabaseServer";
 import { baseSEO } from "@/app/lib/seo";
@@ -312,9 +313,9 @@ export default async function TherapistPage({ params }: TherapistPageProps) {
       <nav aria-label="Breadcrumb" className="text-sm mb-4">
         <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex gap-2">
           <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <a itemProp="item" href="/" className="text-blue-600 hover:underline">
+            <Link itemProp="item" href="/" className="text-blue-600 hover:underline">
               <span itemProp="name">Home</span>
-            </a>
+            </Link>
             <meta itemProp="position" content="1" />
             <span className="mx-2">/</span>
           </li>

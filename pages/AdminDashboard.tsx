@@ -77,7 +77,7 @@ function PlanBadge({
 }
 
 function PaymentStatus({ row }: { row: TherapistRow }) {
-  const now = Date.now();
+  const now = useMemo(() => Date.now(), []);
   const sub = (row.subscription_status || "").toLowerCase();
   const paidUntilMs = row.paid_until ? Date.parse(row.paid_until) : NaN;
   const hasPaidUntil = !Number.isNaN(paidUntilMs);

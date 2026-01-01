@@ -41,13 +41,14 @@ function AuthCallbackContent() {
           // If no code and no error, redirect to login
           router.replace("/login");
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("OAuth callback error:", err);
-        setError(err.message || "Authentication failed");
+        setError(err instanceof Error ? err.message : "Authentication failed");
 
         // Redirect to login after showing error
+        const errorMessage = err instanceof Error ? err.message : "Authentication failed";
         setTimeout(() => {
-          router.replace(`/login?error=${encodeURIComponent(err.message || "Authentication failed")}`);
+          router.replace(`/login?error=${encodeURIComponent(errorMessage)}`);
         }, 3000);
       }
     };

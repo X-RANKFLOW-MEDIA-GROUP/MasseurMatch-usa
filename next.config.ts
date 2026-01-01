@@ -22,15 +22,11 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false, // Disable source maps in production
 
   // ====================================
-  // TYPESCRIPT & LINTING
+  // TYPESCRIPT
   // ====================================
   typescript: {
     // Fail build on type errors
     ignoreBuildErrors: false,
-  },
-  eslint: {
-    // Fail build on lint errors
-    ignoreDuringBuilds: false,
   },
 
   // ====================================

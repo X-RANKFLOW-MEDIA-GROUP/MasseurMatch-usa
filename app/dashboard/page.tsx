@@ -1,9 +1,7 @@
 "use client";
 
-import "@/dashboard-vite/src/index.css";
-import "@/dashboard-vite/src/styles/globals.css";
-import { Dashboard } from "@/dashboard-vite/src/components/Dashboard";
-import { Toaster } from "@/dashboard-vite/src/components/ui/sonner";
+import { Dashboard } from "@/src/components/dashboard/Dashboard";
+import { Toaster } from "@/src/components/ui/sonner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "@/src/lib/supabase";
