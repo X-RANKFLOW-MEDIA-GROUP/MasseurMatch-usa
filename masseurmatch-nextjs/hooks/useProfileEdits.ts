@@ -8,15 +8,15 @@ export interface ProfileEdit {
   id: string;
   therapist_id: string;
   edited_data: any;
-  pending_profile_photo?: string;
-  pending_gallery?: string[];
+  pending_profile_photo?: string | null;
+  pending_gallery?: string[] | null;
   original_data: any;
-  original_profile_photo?: string;
-  original_gallery?: string[];
+  original_profile_photo?: string | null;
+  original_gallery?: string[] | null;
   status: EditStatus;
-  admin_notes?: string;
-  reviewed_by?: string;
-  reviewed_at?: string;
+  admin_notes?: string | null;
+  reviewed_by?: string | null;
+  reviewed_at?: string | null;
   submitted_at: string;
   created_at: string;
   updated_at: string;
@@ -25,7 +25,7 @@ export interface ProfileEdit {
 export interface EditNotification {
   id: string;
   therapist_id: string;
-  edit_id?: string;
+  edit_id?: string | null;
   type: 'pending' | 'approved' | 'rejected';
   message: string;
   read: boolean;
@@ -236,7 +236,7 @@ export function useAdminEdits() {
     if (fetchError) throw fetchError;
 
     // Apply changes to therapist profile
-    const updateData: any = { ...edit.edited_data };
+    const updateData: Record<string, any> = { ...(edit.edited_data as Record<string, any>) };
     
     if (edit.pending_profile_photo) {
       updateData.profile_photo = edit.pending_profile_photo;

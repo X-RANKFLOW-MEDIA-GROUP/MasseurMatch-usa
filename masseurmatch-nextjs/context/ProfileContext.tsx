@@ -144,7 +144,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
     // 3. Se já existir, retorna
     if (data) {
-      return data as Therapist;
+      return {
+        ...(data as Omit<Therapist, "id">),
+        id: data.user_id ?? user.id,
+      } as Therapist;
     }
 
     // 4. Se NÃO existir, cria um novo registro básico
@@ -165,7 +168,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       return null;
     }
 
-    return inserted as Therapist;
+    return {
+      ...(inserted as Omit<Therapist, "id">),
+      id: inserted.user_id ?? user.id,
+    } as Therapist;
   }
 
   async function loadProfile() {

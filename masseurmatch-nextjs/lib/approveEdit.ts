@@ -25,8 +25,8 @@ export async function approveEdit(editId: string) {
     throw new Error("Could not load edit");
   }
 
-  const edited: Record<string, any> = edit.edited_data || {};
-  const original: Record<string, any> = edit.original_data || {};
+  const edited = (edit.edited_data ?? {}) as Record<string, any>;
+  const original = (edit.original_data ?? {}) as Record<string, any>;
   const pendingGallery: string[] | null = edit.pending_gallery;
   const originalGallery: string[] | null = edit.original_gallery;
 
@@ -48,7 +48,7 @@ export async function approveEdit(editId: string) {
   const { error: updateError } = await supabase
     .from("therapists")
     .update(finalData)
-    .eq("id", edit.therapist_id);
+    .eq("user_id", edit.therapist_id);
 
   if (updateError) {
     console.error("Error updating therapist", updateError);
@@ -60,7 +60,7 @@ export async function approveEdit(editId: string) {
     .from("profile_edits")
     .update({
       status: "approved",
-      approved_at: new Date().toISOString(),
+      reviewed_at: new Date().toISOString(),
     })
     .eq("id", editId);
 
@@ -101,8 +101,8 @@ export async function rejectEdit(editId: string, reason?: string) {
     .from("profile_edits")
     .update({
       status: "rejected",
-      rejected_at: new Date().toISOString(),
-      rejection_reason: reason || null,
+      reviewed_at: new Date().toISOString(),
+      admin_notes: reason || null,
     })
     .eq("id", editId);
 

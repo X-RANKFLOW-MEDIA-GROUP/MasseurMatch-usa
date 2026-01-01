@@ -1,10 +1,15 @@
 export const ONBOARDING_STAGES = [
-  "profile_setup",
-  "review_pending",
-  "choose_plan",
-  "payment_pending",
-  "identity_verify",
+  "start",
+  "needs_plan",
+  "needs_payment",
+  "needs_identity",
+  "build_profile",
+  "upload_photos",
+  "fix_moderation",
+  "submit_admin",
+  "waiting_admin",
   "live",
+  "blocked",
 ] as const;
 
 export type OnboardingStage = (typeof ONBOARDING_STAGES)[number];

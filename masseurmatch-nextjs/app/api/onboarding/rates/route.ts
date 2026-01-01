@@ -4,7 +4,7 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 type SupabaseClientInstance = Awaited<ReturnType<typeof createServerSupabaseClient>>;
 
-const CONTEXTS = ["incall", "outcall", "event"] as const;
+const CONTEXTS = ["incall", "outcall"] as const;
 
 const createRateSchema = z.object({
   context: z.enum(CONTEXTS),
@@ -64,10 +64,9 @@ export async function GET() {
       return NextResponse.json({ error: "Failed to fetch rates" }, { status: 500 });
     }
 
-    const grouped: { incall: any[]; outcall: any[]; event: any[] } = {
+    const grouped: { incall: any[]; outcall: any[] } = {
       incall: [],
       outcall: [],
-      event: [],
     };
 
     (rates ?? []).forEach((rate) => {

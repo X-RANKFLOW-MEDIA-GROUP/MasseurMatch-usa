@@ -90,7 +90,7 @@ export async function GET() {
       const dayHours = hours?.find((h) => h.day_of_week === index);
       return {
         day,
-        is_available: dayHours?.is_available || false,
+        is_available: !(dayHours?.is_closed ?? false),
         open_time: dayHours?.open_time || null,
         close_time: dayHours?.close_time || null,
       };
@@ -158,7 +158,7 @@ export async function PUT(request: NextRequest) {
     const hoursToInsert = hours.map((entry) => ({
       profile_id: profile.id,
       day_of_week: DAY_TO_INDEX[entry.day],
-      is_available: entry.is_available,
+      is_closed: !entry.is_available,
       open_time: entry.is_available ? entry.open_time ?? null : null,
       close_time: entry.is_available ? entry.close_time ?? null : null,
     }));

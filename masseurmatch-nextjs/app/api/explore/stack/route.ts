@@ -15,9 +15,12 @@ export async function GET(request: NextRequest) {
 
     const { data: swipes } = await supabase
       .from("explore_swipe_events")
-      .select("profile_id")
+      .select("therapist_id")
       .eq("user_id", userId);
-    const swipedIds = swipes?.map((row) => row.profile_id) ?? [];
+    const swipedIds =
+      swipes
+        ?.map((row) => row.therapist_id)
+        .filter((id): id is string => typeof id === "string") ?? [];
 
     let query = supabase
       .from("profiles")

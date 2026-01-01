@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { constructWebhookEvent, stripe } from "@/lib/stripe";
 import Stripe from "stripe";
 import { supabaseAdmin } from "@/server/supabaseAdmin";
+import type { Database } from "@/types/supabase";
+
+type SubscriptionPlan = Database["public"]["Enums"]["subscription_plan_enum"];
+type SubscriptionStatus = Database["public"]["Enums"]["subscription_status_enum"];
 
 const WEBHOOK_SECRET =
   process.env.STRIPE_SUBSCRIPTION_WEBHOOK_SECRET ?? process.env.STRIPE_WEBHOOK_SECRET;
@@ -61,7 +65,7 @@ async function handleCheckoutSession(session: Stripe.Checkout.Session) {
   await handleSubscriptionUpsert(subscription);
 }
 
-function mapStripeStatus(status: Stripe.Subscription.Status) {
+function mapStripeStatus(status: Stripe.Subscription.Status): SubscriptionStatus {
   switch (status) {
     case "active":
       return "active";
@@ -80,6 +84,12 @@ function mapStripeStatus(status: Stripe.Subscription.Status) {
   }
 }
 
+function normalizePlan(plan: string | null | undefined): SubscriptionPlan {
+  const allowed: SubscriptionPlan[] = ["free", "standard", "pro", "elite"];
+  if (!plan) return "standard";
+  return allowed.includes(plan as SubscriptionPlan) ? (plan as SubscriptionPlan) : "standard";
+}
+
 function toIso(timestamp?: number | null) {
   return timestamp ? new Date(timestamp * 1000).toISOString() : null;
 }
@@ -91,7 +101,9 @@ async function handleSubscriptionUpsert(subscription: Stripe.Subscription) {
     return;
   }
 
-  const plan = subscription.metadata?.plan ?? subscription.items.data[0]?.price?.nickname ?? "standard";
+  const planRaw =
+    subscription.metadata?.plan ?? subscription.items.data[0]?.price?.nickname ?? "standard";
+  const plan = normalizePlan(planRaw);
   const status = mapStripeStatus(subscription.status);
 
   // @ts-ignore - Stripe types are incomplete for these properties
@@ -129,13 +141,13 @@ async function resolveUserIdFromSubscription(subscription: Stripe.Subscription) 
     return null;
   }
 
-  const { data: profile } = await supabaseAdmin
-    .from("profiles")
-    .select("user_id")
+  const { data: userRecord } = await supabaseAdmin
+    .from("users")
+    .select("id")
     .eq("stripe_customer_id", subscription.customer as string)
     .maybeSingle();
 
-  return profile?.user_id ?? null;
+  return userRecord?.id ?? null;
 }
 
 async function handleSubscriptionDeletion(subscription: Stripe.Subscription) {

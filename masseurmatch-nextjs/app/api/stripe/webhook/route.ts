@@ -237,8 +237,8 @@ function mapStripeStatus(stripeStatus: Stripe.Subscription.Status): string {
       return 'canceled';
     case 'incomplete':
     case 'incomplete_expired':
-      return 'incomplete';
+      return 'past_due';
     default:
-      return 'unknown';
+      return 'past_due';
   }
 }

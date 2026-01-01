@@ -69,8 +69,8 @@ export async function POST(request: NextRequest) {
     .select("ai_feedback")
     .eq("user_id", userId)
     .single();
-  const feedback = stored?.ai_feedback ?? {};
-  const signals = initializeSignals(feedback.signals);
+  const feedback = (stored?.ai_feedback ?? {}) as AiFeedback;
+  const signals = initializeSignals(feedback?.signals);
   const updatedSignals = applyContext(signals, direction, context);
   await supabaseAdmin
     .from("users_preferences")

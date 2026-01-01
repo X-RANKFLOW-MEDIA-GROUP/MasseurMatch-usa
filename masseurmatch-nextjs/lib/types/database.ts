@@ -5,14 +5,19 @@ export type UserRole = 'user' | 'admin';
 export type SubscriptionPlan = 'free' | 'standard' | 'pro' | 'elite';
 export type SubscriptionStatus = 'trialing' | 'active' | 'past_due' | 'canceled';
 export type OnboardingStage =
-  | 'profile_setup'
-  | 'review_pending'
-  | 'choose_plan'
-  | 'payment_pending'
-  | 'identity_verify'
-  | 'live';
+  | 'start'
+  | 'needs_plan'
+  | 'needs_payment'
+  | 'needs_identity'
+  | 'build_profile'
+  | 'upload_photos'
+  | 'fix_moderation'
+  | 'submit_admin'
+  | 'waiting_admin'
+  | 'live'
+  | 'blocked';
 export type AutoModeration = 'draft' | 'auto_passed' | 'auto_flagged' | 'auto_blocked';
-export type AdminStatus = 'pending_admin' | 'approved' | 'rejected';
+export type AdminStatus = 'pending_admin' | 'approved' | 'rejected' | 'changes_requested';
 export type PublicationStatus = 'private' | 'public';
 export type MediaStatus = 'pending' | 'approved' | 'rejected';
 export type MediaType = 'photo' | 'video';
@@ -50,11 +55,11 @@ export interface Profile {
   auto_moderation: AutoModeration;
   admin_status: AdminStatus;
   publication_status: PublicationStatus;
-  submitted_at?: string;
-  approved_at?: string;
-  admin_notes?: string;
-  rejection_reason?: string;
-  base_rate_per_min_cents: number;
+  submitted_at?: string | null;
+  approved_at?: string | null;
+  admin_notes?: string | null;
+  rejection_reason?: string | null;
+  base_rate_per_min_cents: number | null;
   created_at: string;
   updated_at: string;
 }

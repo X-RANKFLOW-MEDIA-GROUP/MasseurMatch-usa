@@ -9,13 +9,21 @@ export async function saveAdSection(adId: string, section: string, payload: Reco
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) throw new Error("Not authenticated");
 
-  const adRes = await supabase.from("ads").select("id,owner_id,data").eq("id", adId).maybeSingle();
-  if (!adRes.data) throw new Error("Ad not found");
-  if (adRes.data.owner_id !== auth.user.id) throw new Error("Forbidden");
+  const profileRes = await supabase
+    .from("therapists")
+    .select("user_id")
+    .eq("user_id", adId)
+    .maybeSingle();
 
-  const nextData = { ...(adRes.data.data ?? {}), [section]: payload };
+  if (!profileRes.data) throw new Error("Profile not found");
+  if (profileRes.data.user_id !== auth.user.id) throw new Error("Forbidden");
 
-  const upd = await supabase.from("ads").update({ data: nextData }).eq("id", adId);
+  const updates = {
+    ...payload,
+    updated_at: new Date().toISOString(),
+  };
+
+  const upd = await supabase.from("therapists").update(updates).eq("user_id", adId);
   if (upd.error) throw upd.error;
 
   revalidatePath(`/dashboard/ads/${adId}/edit/${section}`);

@@ -6,17 +6,17 @@
 -- 1. ENUMS
 -- ============================================================================
 
-CREATE TYPE identity_status_enum AS ENUM ('pending', 'verified', 'failed');
-CREATE TYPE user_role_enum AS ENUM ('user', 'admin');
+CREATE TYPE IF NOT EXISTS identity_status_enum AS ENUM ('pending', 'verified', 'failed');
+CREATE TYPE IF NOT EXISTS user_role_enum AS ENUM ('user', 'admin');
 
-CREATE TYPE subscription_plan_enum AS ENUM ('standard', 'pro', 'elite');
-CREATE TYPE subscription_status_enum AS ENUM ('trialing', 'active', 'past_due', 'canceled');
+CREATE TYPE IF NOT EXISTS subscription_plan_enum AS ENUM ('free', 'standard', 'pro', 'elite');
+CREATE TYPE IF NOT EXISTS subscription_status_enum AS ENUM ('trialing', 'active', 'past_due', 'canceled');
 
-CREATE TYPE auto_moderation_enum AS ENUM ('draft', 'auto_passed', 'auto_flagged', 'auto_blocked');
-CREATE TYPE admin_status_enum AS ENUM ('pending_admin', 'approved', 'rejected', 'changes_requested');
-CREATE TYPE publication_status_enum AS ENUM ('private', 'public');
+CREATE TYPE IF NOT EXISTS auto_moderation_enum AS ENUM ('draft', 'auto_passed', 'auto_flagged', 'auto_blocked');
+CREATE TYPE IF NOT EXISTS admin_status_enum AS ENUM ('pending_admin', 'approved', 'rejected', 'changes_requested');
+CREATE TYPE IF NOT EXISTS publication_status_enum AS ENUM ('private', 'public');
 
-CREATE TYPE onboarding_stage_enum AS ENUM (
+CREATE TYPE IF NOT EXISTS onboarding_stage_enum AS ENUM (
   'start',
   'needs_plan',
   'needs_payment',
@@ -30,10 +30,10 @@ CREATE TYPE onboarding_stage_enum AS ENUM (
   'blocked'
 );
 
-CREATE TYPE media_status_enum AS ENUM ('pending', 'approved', 'rejected');
-CREATE TYPE media_type_enum AS ENUM ('photo', 'video');
+CREATE TYPE IF NOT EXISTS media_status_enum AS ENUM ('pending', 'approved', 'rejected');
+CREATE TYPE IF NOT EXISTS media_type_enum AS ENUM ('photo', 'video');
 
-CREATE TYPE rate_context_enum AS ENUM ('incall', 'outcall');
+CREATE TYPE IF NOT EXISTS rate_context_enum AS ENUM ('incall', 'outcall');
 
 -- ============================================================================
 -- 2. USERS TABLE (extends Supabase auth.users)
@@ -44,6 +44,7 @@ ALTER TABLE public.users ADD COLUMN IF NOT EXISTS identity_status identity_statu
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS role user_role_enum DEFAULT 'user';
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS stripe_customer_id VARCHAR(255);
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS stripe_identity_session_id VARCHAR(255);
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS identity_verified_at TIMESTAMPTZ;
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_users_identity_status ON public.users(identity_status);
@@ -61,6 +62,7 @@ CREATE TABLE IF NOT EXISTS public.subscriptions (
   status subscription_status_enum NOT NULL DEFAULT 'active',
 
   -- Stripe IDs
+  stripe_customer_id VARCHAR(255),
   stripe_subscription_id VARCHAR(255) UNIQUE,
   stripe_payment_method_id VARCHAR(255),
 

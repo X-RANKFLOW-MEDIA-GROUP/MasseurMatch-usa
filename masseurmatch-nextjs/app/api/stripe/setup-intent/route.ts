@@ -21,9 +21,9 @@ export async function POST(request: NextRequest) {
 
     // Get Stripe customer ID
     const { data: profile, error: profileError } = await supabase
-      .from('profiles')
+      .from('users')
       .select('stripe_customer_id')
-      .eq('user_id', user.id)
+      .eq('id', user.id)
       .single();
 
     if (profileError || !profile.stripe_customer_id) {

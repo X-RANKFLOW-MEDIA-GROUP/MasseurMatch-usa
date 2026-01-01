@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import type { Database } from "@/types/supabase";
 
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
 
@@ -25,7 +26,7 @@ async function createServerSupabaseClient() {
   } catch (error) {
     // During static generation, create a client without cookies
     // This allows read-only operations to work during build
-    return createServerClient(
+    return createServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -41,7 +42,7 @@ async function createServerSupabaseClient() {
     );
   }
 
-  return createServerClient(
+  return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {

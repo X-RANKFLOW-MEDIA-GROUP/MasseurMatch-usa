@@ -23,24 +23,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid plan selection" }, { status: 400 });
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("id, stripe_customer_id")
-      .eq("user_id", userId)
+    const { data: userRecord, error: userError } = await supabase
+      .from("users")
+      .select("stripe_customer_id")
+      .eq("id", userId)
       .single();
 
-    if (profileError || !profile) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+    if (userError || !userRecord) {
+      return NextResponse.json({ error: "User record not found" }, { status: 404 });
     }
 
-    let customerId = profile.stripe_customer_id;
+    let customerId = userRecord.stripe_customer_id;
     if (!customerId) {
       const customer = await createCustomer({
         email: session.session?.user?.email ?? "",
         metadata: { user_id: userId },
       });
       customerId = customer.id;
-      await supabase.from("profiles").update({ stripe_customer_id: customerId }).eq("id", profile.id);
+      await supabase.from("users").update({ stripe_customer_id: customerId }).eq("id", userId);
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";

@@ -59,18 +59,81 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Ensure user record exists in public.users
+    const { data: userRecord, error: userError } = await supabase
+      .from("users")
+      .select("stripe_customer_id")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (userError && userError.code !== 'PGRST116') {
+      console.error("User fetch error:", userError);
+      return respondWithError({
+        status: 500,
+        code: "DATABASE_ERROR",
+        message: "Failed to fetch user record.",
+        details: { reason: userError.message },
+      });
+    }
+
+    // Create user record if it doesn't exist
+    if (!userRecord) {
+      const { error: insertError } = await supabase
+        .from("users")
+        .insert({
+          id: userId,
+          identity_status: "pending",
+          role: "user",
+        });
+
+      if (insertError) {
+        console.error("Failed to create user record:", insertError);
+        return respondWithError({
+          status: 500,
+          code: "USER_CREATION_FAILED",
+          message: "Failed to create user record.",
+          details: { reason: insertError.message },
+        });
+      }
+    }
+
+    // Ensure profile record exists (profiles.id is the FK to auth.users.id)
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("id, stripe_customer_id")
-      .eq("user_id", userId)
-      .single();
+      .select("id, user_id")
+      .eq("id", userId)
+      .maybeSingle();
 
-    if (profileError || !profile) {
+    if (profileError && profileError.code !== 'PGRST116') {
+      console.error("Profile fetch error:", profileError);
       return respondWithError({
-        status: 404,
-        code: "PROFILE_NOT_FOUND",
-        message: "Profile not found.",
+        status: 500,
+        code: "DATABASE_ERROR",
+        message: "Failed to fetch profile.",
+        details: { reason: profileError.message },
       });
+    }
+
+    // Create profile record if it doesn't exist
+    if (!profile) {
+      const { error: insertError } = await supabase
+        .from("profiles")
+        .insert({
+          id: userId,
+          user_id: userId,
+          email: session.session?.user?.email,
+          onboarding_stage: "needs_plan",
+        });
+
+      if (insertError) {
+        console.error("Failed to create profile record:", insertError);
+        return respondWithError({
+          status: 500,
+          code: "PROFILE_CREATION_FAILED",
+          message: "Failed to create profile record.",
+          details: { reason: insertError.message },
+        });
+      }
     }
 
     // FREE plan: no payment required, only identity verification
@@ -128,7 +191,7 @@ export async function POST(request: NextRequest) {
       const { error: stageUpdateError } = await supabase
         .from("profiles")
         .update({ onboarding_stage: "needs_identity" })
-        .eq("id", profile.id);
+        .eq("id", userId);
 
       if (stageUpdateError) {
         console.error("Failed to update onboarding stage:", stageUpdateError);
@@ -149,14 +212,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Paid plans (standard, pro, elite): require Stripe checkout
-    let customerId = profile.stripe_customer_id;
+    // Re-fetch user record to get the latest data after potential creation
+    const { data: latestUserRecord } = await supabase
+      .from("users")
+      .select("stripe_customer_id")
+      .eq("id", userId)
+      .single();
+
+    let customerId = latestUserRecord?.stripe_customer_id ?? null;
     if (!customerId) {
       const customer = await createCustomer({
         email: session.session?.user?.email ?? "",
         metadata: { user_id: userId },
       });
       customerId = customer.id;
-      await supabase.from("profiles").update({ stripe_customer_id: customerId }).eq("id", profile.id);
+      await supabase.from("users").update({ stripe_customer_id: customerId }).eq("id", userId);
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";

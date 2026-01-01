@@ -10,6 +10,7 @@ import React, {
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useProfile } from "@/context/ProfileContext";
+import type { Database, Json } from "@/types/supabase";
 
 // CSS global
 import "@/styles/edit-profile.css";
@@ -833,10 +834,10 @@ export default function EditProfile() {
         pendingPhotos.gallery = form.gallery.filter(Boolean);
       }
 
-      const payload = {
+      const payload: Database["public"]["Tables"]["profile_edits"]["Insert"] = {
         therapist_id: therapist.id,
-        edited_data: editedData,
-        original_data: originalData,
+        edited_data: editedData as Json,
+        original_data: originalData as Json,
         pending_gallery: pendingPhotos.gallery || null,
         original_gallery: therapist.gallery || null,
         status: "pending",

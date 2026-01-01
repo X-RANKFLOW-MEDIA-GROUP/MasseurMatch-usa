@@ -21,9 +21,9 @@ export async function POST(request: NextRequest) {
 
     // Check if user already has a Stripe customer ID
     const { data: profile, error: profileError } = await supabase
-      .from('profiles')
+      .from('users')
       .select('stripe_customer_id')
-      .eq('user_id', user.id)
+      .eq('id', user.id)
       .single();
 
     if (profileError) {
@@ -54,9 +54,9 @@ export async function POST(request: NextRequest) {
 
     // Update profile with Stripe customer ID
     const { error: updateError } = await supabase
-      .from('profiles')
+      .from('users')
       .update({ stripe_customer_id: customer.id })
-      .eq('user_id', user.id);
+      .eq('id', user.id);
 
     if (updateError) {
       console.error('Failed to update profile with Stripe customer ID:', updateError);

@@ -12,7 +12,7 @@ const ALLOWED_FIELDS = new Set([
   "city",
   "state",
   "country",
-  "zipcode",
+  "zip_code",
   "languages",
   "services",
   "agree_terms",
@@ -33,6 +33,10 @@ const ALLOWED_FIELDS = new Set([
 function sanitizePayload(body: Record<string, any>) {
   const sanitized: Record<string, any> = {};
   for (const key of Object.keys(body)) {
+    if (key === "zipcode") {
+      sanitized.zip_code = body[key];
+      continue;
+    }
     if (ALLOWED_FIELDS.has(key)) {
       sanitized[key] = body[key];
     }

@@ -25,7 +25,11 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body: StartIdentityRequest = await request.json();
-    const returnUrl = body.return_url || `${process.env.NEXT_PUBLIC_APP_URL}/onboarding`;
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      request.nextUrl.origin;
+    const returnUrl = body.return_url || `${baseUrl}/onboarding`;
 
     // Check if user already has verified identity
     const { data: userData } = await supabase
@@ -56,7 +60,7 @@ export async function POST(request: NextRequest) {
     const { error: updateError } = await supabase
       .from('users')
       .update({
-        identity_verification_session_id: verificationSession.id,
+        stripe_identity_session_id: verificationSession.id,
         identity_status: 'pending',
       })
       .eq('id', user.id);

@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+﻿import { createServerSupabaseClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
 export const metadata = {
@@ -59,20 +59,20 @@ export default async function AdsPage() {
               <p className="ad-headline">{ad.headline}</p>
 
               <div className="ad-meta">
-                <span>📍 {ad.city}, {ad.state}</span>
-                <span>📦 {ad.plan || 'free'}</span>
-                <span>🕒 Updated: {new Date(ad.updated_at).toLocaleDateString()}</span>
+                <span>ðŸ“ {ad.city}, {ad.state}</span>
+                <span>ðŸ“¦ {ad.plan || 'free'}</span>
+                <span>ðŸ•’ Updated: {ad.updated_at ? new Date(ad.updated_at).toLocaleDateString() : "N/A"}</span>
               </div>
 
               <div className="ad-actions">
                 <Link href={`/therapist/${ad.slug}`} target="_blank">
-                  👁️ View Public Profile
+                  ðŸ‘ï¸ View Public Profile
                 </Link>
                 <Link href={`/dashboard/ads/${ad.user_id}/edit`}>
-                  ✏️ Edit
+                  âœï¸ Edit
                 </Link>
                 <Link href={`/dashboard/ads/${ad.user_id}/edit/basic`}>
-                  ⚙️ Edit Sections
+                  âš™ï¸ Edit Sections
                 </Link>
               </div>
             </div>
@@ -82,3 +82,4 @@ export default async function AdsPage() {
     </div>
   );
 }
+

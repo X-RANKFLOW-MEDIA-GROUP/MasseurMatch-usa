@@ -1,4 +1,5 @@
 import { createBrowserClient } from "@supabase/ssr";
+import type { Database } from "@/types/supabase";
 
 function requireEnv(name: string, value: string | undefined): string {
   if (!value) {
@@ -14,7 +15,7 @@ const supabaseAnonKey = requireEnv(
 );
 
 export function createClient() {
-  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+  return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
 }
 
 export const supabase = createClient();

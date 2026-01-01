@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+﻿import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
@@ -112,7 +112,7 @@ export default async function DashboardPage() {
                         {ad.profile_photo && (
                           <img
                             src={ad.profile_photo}
-                            alt={ad.display_name}
+                            alt={ad.display_name ?? "Profile photo"}
                             className="w-16 h-16 rounded-lg object-cover"
                           />
                         )}
@@ -148,7 +148,7 @@ export default async function DashboardPage() {
                         Plan: <span className="text-purple-400 font-semibold">{ad.plan || 'Free'}</span>
                       </span>
                       <span className="text-slate-400">
-                        Updated: {new Date(ad.updated_at).toLocaleDateString()}
+                        Updated: {ad.updated_at ? new Date(ad.updated_at).toLocaleDateString() : "N/A"}
                       </span>
                     </div>
 
@@ -228,3 +228,4 @@ export default async function DashboardPage() {
     </div>
   );
 }
+

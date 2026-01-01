@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { moderatePhoto } from "@/lib/sightengine";
 import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE_BYTES } from "@/lib/onboarding/validators";
+import type { Database, Json } from "@/types/supabase";
 
 const PHOTO_LIMITS = {
   free: 1,
@@ -27,7 +28,9 @@ function normalizePlan(plan: string | null | undefined) {
   return "free";
 }
 
-function mapModerationStatus(status: string) {
+type MediaStatus = Database["public"]["Tables"]["media_assets"]["Row"]["status"];
+
+function mapModerationStatus(status: string): MediaStatus {
   if (status === "auto_passed") return "approved";
   if (status === "auto_blocked") return "rejected";
   return "pending";
@@ -153,24 +156,34 @@ export async function POST(request: NextRequest) {
 
     const shouldBeCover = isCover || (existingCount ?? 0) === 0;
 
+    const sightengineResponse: Json = {
+      score: moderationResult.score,
+      reason: moderationResult.reason ?? null,
+      flags: {
+        nudity: moderationResult.flags?.nudity ?? null,
+        weapon: moderationResult.flags?.weapon ?? null,
+        drug: moderationResult.flags?.drug ?? null,
+        gore: moderationResult.flags?.gore ?? null,
+        offensive: moderationResult.flags?.offensive ?? null,
+      },
+    };
+
+    const insertPayload: Database["public"]["Tables"]["media_assets"]["Insert"] = {
+      profile_id: profile.id,
+      type: "photo",
+      status,
+      storage_path: fileName,
+      public_url: publicUrl,
+      thumbnail_url: null,
+      position: existingCount ?? 0,
+      is_cover: shouldBeCover,
+      sightengine_response: sightengineResponse,
+      sightengine_score: moderationResult.score,
+    };
+
     const { data: asset, error: insertError } = await supabase
       .from("media_assets")
-      .insert({
-        profile_id: profile.id,
-        type: "photo",
-        status,
-        storage_path: fileName,
-        public_url: publicUrl,
-        thumbnail_url: null,
-        position: existingCount ?? 0,
-        is_cover: shouldBeCover,
-        sightengine_response: {
-          score: moderationResult.score,
-          reason: moderationResult.reason,
-          flags: moderationResult.flags,
-        },
-        sightengine_score: moderationResult.score,
-      })
+      .insert(insertPayload)
       .select()
       .single();
 

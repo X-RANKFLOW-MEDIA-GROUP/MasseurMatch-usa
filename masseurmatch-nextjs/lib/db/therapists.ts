@@ -1,17 +1,17 @@
 import { supabaseServer } from "@/lib/supabase/server";
 
 export type TherapistPublic = {
-  id: string;
-  slug: string;
-  display_name: string;
+  user_id: string;
+  slug: string | null;
+  display_name: string | null;
   headline: string | null;
-  bio: string | null;
+  about: string | null;
   phone: string | null;
-  city_slug: string | null;
-  city_name: string | null;
-  primary_photo_url: string | null;
-  updated_at: string;
-  is_published: boolean;
+  city: string | null;
+  state: string | null;
+  profile_photo: string | null;
+  updated_at: string | null;
+  status: string | null;
 };
 
 export async function getTherapistByAnySlug(slug: string): Promise<{
@@ -31,7 +31,7 @@ export async function getTherapistByAnySlug(slug: string): Promise<{
   }
 
   const history = await supabase
-    .from("therapist_slug_history")
+    .from("therapist_slug_redirects")
     .select("therapist_id,new_slug")
     .eq("old_slug", slug)
     .maybeSingle();
@@ -43,7 +43,7 @@ export async function getTherapistByAnySlug(slug: string): Promise<{
   const canonical = await supabase
     .from("therapists")
     .select("*")
-    .eq("id", history.data.therapist_id)
+    .eq("user_id", history.data.therapist_id)
     .maybeSingle();
 
   return {
@@ -56,10 +56,9 @@ export async function listTherapistsByCity(citySlug: string, segment?: string) {
   const supabase = await supabaseServer();
 
   const q = supabase
-    .from("therapists")
-    .select("id,slug,display_name,headline,primary_photo_url,city_slug,city_name")
+    .from("public_profiles")
+    .select("id,slug,display_name,profile_photo,city_slug,updated_at")
     .eq("city_slug", citySlug)
-    .eq("is_published", true)
     .order("updated_at", { ascending: false })
     .limit(60);
 
@@ -68,10 +67,12 @@ export async function listTherapistsByCity(citySlug: string, segment?: string) {
   }
 
   const res = await q;
-  return (res.data ?? []) as Array<
-    Pick<
-      TherapistPublic,
-      "id" | "slug" | "display_name" | "headline" | "primary_photo_url" | "city_slug" | "city_name"
-    >
-  >;
+  return (res.data ?? []) as Array<{
+    id: string;
+    slug: string | null;
+    display_name: string | null;
+    profile_photo: string | null;
+    city_slug: string | null;
+    updated_at: string | null;
+  }>;
 }

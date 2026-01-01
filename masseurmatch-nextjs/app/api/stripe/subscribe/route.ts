@@ -43,13 +43,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Get Stripe customer ID
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('id, stripe_customer_id')
-      .eq('user_id', user.id)
+    const { data: userRecord, error: userError } = await supabase
+      .from('users')
+      .select('stripe_customer_id')
+      .eq('id', user.id)
       .single();
 
-    if (profileError || !profile.stripe_customer_id) {
+    if (userError || !userRecord?.stripe_customer_id) {
       return NextResponse.json(
         { error: 'Stripe customer not found. Please create a customer first.' },
         { status: 404 }
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
 
     // Create Stripe subscription
     const stripeSubscription = await createSubscription({
-      customerId: profile.stripe_customer_id,
+      customerId: userRecord.stripe_customer_id,
       priceId,
       paymentMethodId: payment_method_id,
       trialDays,
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Determine subscription status
-    let subscriptionStatus: 'active' | 'trialing' | 'incomplete' = 'incomplete';
+    let subscriptionStatus: 'active' | 'trialing' | 'past_due' = 'past_due';
     if (stripeSubscription.status === 'trialing') {
       subscriptionStatus = 'trialing';
     } else if (stripeSubscription.status === 'active') {
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
         plan,
         status: subscriptionStatus,
         stripe_subscription_id: stripeSubscription.id,
-        stripe_customer_id: profile.stripe_customer_id,
+        stripe_customer_id: userRecord.stripe_customer_id,
         trial_end: stripeSubscription.trial_end
           ? new Date((stripeSubscription.trial_end as number) * 1000).toISOString()
           : null,

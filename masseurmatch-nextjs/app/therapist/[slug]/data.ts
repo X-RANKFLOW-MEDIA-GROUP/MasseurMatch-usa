@@ -14,7 +14,7 @@ export type AvailabilityStatus = 'available' | 'visiting_now' | 'visiting_soon' 
 
 export type TherapistRecord = {
   user_id: string;
-  slug: string;
+  slug: string | null;
   display_name?: string | null;
   full_name?: string | null;
   headline?: string | null;

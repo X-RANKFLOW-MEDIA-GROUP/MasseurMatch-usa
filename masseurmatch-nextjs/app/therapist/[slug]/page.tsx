@@ -25,7 +25,7 @@ export async function generateMetadata({
   const canonicalPath = `/therapist/${canonicalSlug}`;
   const url = absUrl(canonicalPath);
 
-  const title = `${therapist.display_name} – ${therapist.headline || 'Massage Therapist'} in ${therapist.city}${therapist.state ? `, ${therapist.state}` : ''} | MasseurMatch`;
+  const title = `${therapist.display_name} - ${therapist.headline || 'Massage Therapist'} in ${therapist.city}${therapist.state ? `, ${therapist.state}` : ''} | MasseurMatch`;
 
   const description = truncate(
     stripHtml(therapist.headline || therapist.about || `Book ${therapist.display_name} in ${therapist.city}.`),
@@ -71,3 +71,4 @@ export default async function TherapistPage({
 
   return <PublicTherapistProfile therapist={therapist} />;
 }
+

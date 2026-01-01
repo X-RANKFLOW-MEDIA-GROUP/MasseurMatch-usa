@@ -46,7 +46,10 @@ export async function createCheckoutSession(params: CreateCheckoutSessionParams)
   const priceId = STRIPE_PRICE_IDS[params.plan];
 
   if (!priceId) {
-    throw new Error(`Price ID is not configured for the ${params.plan} plan`);
+    throw new Error(
+      `Price ID is not configured for the ${params.plan} plan. ` +
+      `Please set STRIPE_PRICE_${params.plan.toUpperCase()} in your environment variables.`
+    );
   }
 
   return stripe.checkout.sessions.create({

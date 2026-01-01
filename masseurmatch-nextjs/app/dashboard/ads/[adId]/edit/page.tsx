@@ -263,14 +263,16 @@ export default async function EditAdPage({
                               />
                             ) : section.slug === 'photos' && field.key === 'photos' && Array.isArray(field.value) ? (
                               <div className="grid grid-cols-4 gap-2">
-                                {field.value.map((photo: string, i: number) => (
-                                  <img
-                                    key={i}
-                                    src={photo}
-                                    alt={`Photo ${i + 1}`}
-                                    className="w-24 h-24 rounded-lg object-cover"
-                                  />
-                                ))}
+                                {field.value
+                                  .filter((photo): photo is string => typeof photo === "string")
+                                  .map((photo, i) => (
+                                    <img
+                                      key={i}
+                                      src={photo}
+                                      alt={`Photo ${i + 1}`}
+                                      className="w-24 h-24 rounded-lg object-cover"
+                                    />
+                                  ))}
                               </div>
                             ) : typeof field.value === 'object' ? (
                               <pre className="text-sm bg-black/20 p-3 rounded-lg overflow-x-auto">

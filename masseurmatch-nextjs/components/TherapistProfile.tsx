@@ -5,6 +5,7 @@ import { useMemo, useRef, useState, useId, useEffect } from "react";
 import "./TherapistProfile.css";
 import { useRouter, useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import type { Database } from "@/types/supabase";
 
 /** ===== Tipos visuais ===== */
 export type Status = "online" | "away" | "busy" | "offline";
@@ -957,13 +958,13 @@ export default function TherapistProfile() {
     const uid = await getUid();
     setSaving(true);
     try {
-      const payload: Partial<DbTherapist> = {
+      const payload: Database["public"]["Tables"]["therapists"]["Update"] = {
         profile_photo: partial.profilePhoto ?? data.profilePhoto,
         gallery: (partial.gallery ?? data.gallery).map((g) =>
           typeof g === "string" ? g : (g as any).url
         ),
         updated_at: new Date().toISOString(),
-      } as any;
+      };
 
       const { error } = await supabase
         .from("therapists")

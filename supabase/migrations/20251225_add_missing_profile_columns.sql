@@ -11,9 +11,21 @@
 ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS display_name VARCHAR(100);
 
+-- Headline
+ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS headline VARCHAR(160);
+
 -- Bio
 ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS bio TEXT;
+
+-- Short bio (for SEO snippets)
+ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS bio_short TEXT;
+
+-- Long bio (full profile)
+ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS bio_long TEXT;
 
 -- Date of birth
 ALTER TABLE public.profiles
@@ -27,6 +39,13 @@ ALTER TABLE public.profiles
 ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS city_slug VARCHAR(100);
 
+-- City and state display values
+ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS city VARCHAR(100);
+
+ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS state VARCHAR(40);
+
 -- Full address
 ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS address_line1 TEXT;
@@ -35,7 +54,7 @@ ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS address_line2 TEXT;
 
 ALTER TABLE public.profiles
-  ADD COLUMN IF NOT EXISTS zipcode VARCHAR(20);
+  ADD COLUMN IF NOT EXISTS zip_code VARCHAR(20);
 
 -- Coordinates for geolocation
 ALTER TABLE public.profiles

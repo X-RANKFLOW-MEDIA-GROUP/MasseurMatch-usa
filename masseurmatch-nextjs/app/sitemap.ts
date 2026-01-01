@@ -36,8 +36,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const { data: therapists } = await supabase
     .from("therapists")
-    .select("slug,updated_at,is_published")
-    .eq("is_published", true)
+    .select("slug,updated_at,status")
+    .eq("status", "active")
     .limit(50000);
 
   const dynamicTherapists: MetadataRoute.Sitemap = (therapists ?? []).map(
