@@ -10,13 +10,13 @@
  * Requer: Variáveis de ambiente configuradas no .env.local
  */
 
-const { getSupabaseClient } = require("./lib/supabase-client");
+const { getSupabaseAdminClient } = require("./supabase-admin");
 
 let supabase;
 try {
-  supabase = getSupabaseClient();
+  supabase = getSupabaseAdminClient();
 } catch (error) {
-  console.error(error.message);
+  console.error(error.userMessage || error.message);
   process.exit(1);
 }
 

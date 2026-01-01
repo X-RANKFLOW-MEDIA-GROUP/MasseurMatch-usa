@@ -3,13 +3,13 @@
  * Usa o email test@test.com para encontrar o usuário
  */
 
-const { getSupabaseClient } = require("./lib/supabase-client");
+const { getSupabaseAdminClient } = require("./supabase-admin");
 
 let supabase;
 try {
-  supabase = getSupabaseClient();
+  supabase = getSupabaseAdminClient();
 } catch (error) {
-  console.error(error.message);
+  console.error(error.userMessage || error.message);
   process.exit(1);
 }
 
