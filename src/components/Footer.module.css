@@ -190,9 +190,31 @@
 }
 
 @media (max-width: 600px) {
+  .footer {
+    padding: 2.5rem 1.25rem 1.5rem;
+  }
+
   .footer-links {
     grid-template-columns: 1fr;
     text-align: center;
+  }
+
+  .footer-cta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 390px) {
+  .footer {
+    padding: 2rem 1rem 1.25rem;
+  }
+
+  .footer-brand p {
+    font-size: 0.875rem;
+  }
+
+  .footer-logo {
+    font-size: 1.25rem;
   }
 }
 

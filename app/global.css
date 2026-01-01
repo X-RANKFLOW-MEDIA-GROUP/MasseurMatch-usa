@@ -8,6 +8,7 @@
    THEME / BASE VARIABLES
    =========================== */
 :root {
+  /* Dark theme (default - já que o site é focado em dark) */
   --bg: #0b0b14;
   --panel: #111123;
   --panel-2: #0f0f1f;
@@ -36,6 +37,24 @@
     sans-serif;
   --font-body: "Figtree", Inter, system-ui, "Segoe UI", Roboto, Arial,
     sans-serif;
+}
+
+/* Light theme - adapta cores se o usuário preferir tema claro */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f8f9fa;
+    --panel: #ffffff;
+    --panel-2: #f1f3f5;
+    --panel-3: #e9ecef;
+    --text: #212529;
+    --muted: #6c757d;
+    --stroke: #dee2e6;
+    --shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    --focus: 0 0 0 3px rgba(139, 92, 246, 0.25),
+      0 0 0 1.5px rgba(139, 92, 246, 0.6) inset;
+    --chip: #f1f3f5;
+    --chip-stroke: #dee2e6;
+  }
 }
 
 /* Status colors */
@@ -279,5 +298,58 @@ a.tp-link {
   * {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* ===========================
+   MOBILE-FRIENDLY UTILITIES
+   =========================== */
+
+/* Melhorar espaçamentos em mobile */
+@media (max-width: 640px) {
+  /* Reduzir padding excessivo em containers */
+  .container-mobile-friendly {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Ajustar fontes grandes em mobile */
+  .t-h1 {
+    font-size: 2.5rem;
+  }
+
+  .t-h2 {
+    font-size: 2rem;
+  }
+
+  .t-h3 {
+    font-size: 1.75rem;
+  }
+
+  /* Melhorar touch targets (mínimo 44px) */
+  button, .btn, a[role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Espaçamento confortável entre seções */
+  section {
+    margin-bottom: 3rem;
+  }
+
+  /* Prevenir overflow horizontal */
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* Tablets e telas médias */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .t-h1 {
+    font-size: 3.5rem;
+  }
+
+  .t-h2 {
+    font-size: 2.75rem;
   }
 }
