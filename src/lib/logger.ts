@@ -18,7 +18,7 @@
 type LogLevel = "debug" | "info" | "warn" | "error";
 
 interface LogContext {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface LogEntry {

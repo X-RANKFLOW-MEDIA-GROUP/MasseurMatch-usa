@@ -50,9 +50,9 @@ function ResetPasswordForm() {
         }
 
         setError("Código de recuperação não encontrado. Abra o link enviado no e-mail.");
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!cancelled) {
-          setError(err?.message || "Não foi possível validar o link de recuperação.");
+          setError(err instanceof Error ? err.message : "Não foi possível validar o link de recuperação.");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -92,8 +92,8 @@ function ResetPasswordForm() {
 
       setStatus("Senha atualizada com sucesso. Você já pode fazer login.");
       setTimeout(() => router.replace("/login"), 1200);
-    } catch (err: any) {
-      setError(err?.message || "Não foi possível atualizar a senha.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Não foi possível atualizar a senha.");
     } finally {
       setLoading(false);
     }

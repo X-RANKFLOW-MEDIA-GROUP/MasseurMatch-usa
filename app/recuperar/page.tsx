@@ -34,8 +34,8 @@ export default function RecuperarPage() {
       if (resetErr) throw resetErr;
 
       setStatus("Enviamos um e-mail com o link para redefinir a senha.");
-    } catch (err: any) {
-      setError(err?.message || "Não foi possível iniciar a recuperação.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Não foi possível iniciar a recuperação.");
     } finally {
       setLoading(false);
     }

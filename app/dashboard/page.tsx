@@ -8,7 +8,7 @@ import { supabase } from "@/src/lib/supabase";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [profile, setProfile] = useState<any | null>(null);
+  const [profile, setProfile] = useState<Record<string, unknown> | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [profileError, setProfileError] = useState<string | null>(null);
 
@@ -24,7 +24,7 @@ export default function DashboardPage() {
 
       // Redirect to login
       router.replace("/login");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Logout error:", err);
       // Even if there's an error, redirect to login
       router.replace("/login");
@@ -59,9 +59,9 @@ export default function DashboardPage() {
 
         if (error) throw error;
         if (!cancelled) setProfile(data);
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!cancelled)
-          setProfileError(err?.message || "Não foi possível carregar o perfil.");
+          setProfileError(err instanceof Error ? err.message : "Não foi possível carregar o perfil.");
       } finally {
         if (!cancelled) setLoadingProfile(false);
       }
