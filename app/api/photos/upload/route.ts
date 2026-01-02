@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/src/lib/supabase-server";
 import { moderateImage } from "@/src/lib/sightengine";
-import { canUploadPhoto, getUpgradeMessage, SubscriptionPlan } from "@/src/lib/subscription-limits";
+import { canUploadPhoto, getUpgradeMessage, SubscriptionPlan, PHOTO_LIMITS } from "@/src/lib/subscription-limits";
 import { createClient } from "@supabase/supabase-js";
 
 // Use service role for storage operations
@@ -48,25 +48,24 @@ export async function POST(req: NextRequest) {
 
     const plan: SubscriptionPlan = (profile?.subscription_plan as SubscriptionPlan) || "free";
 
-    // Count existing photos
+    // Count ALL existing photos (profile + gallery combined)
     const { count } = await supabase
       .from("photos")
       .select("*", { count: "exact", head: true })
       .eq("user_id", user.id)
-      .eq("type", type)
       .eq("status", "approved");
 
     const currentCount = count || 0;
 
-    // Check subscription limits
-    const uploadCheck = canUploadPhoto(plan, type, currentCount);
+    // Check subscription limits (total photos, not per type)
+    const uploadCheck = canUploadPhoto(plan, currentCount);
 
     if (!uploadCheck.allowed) {
       return NextResponse.json({
         error: "Photo limit reached",
         limit: uploadCheck.limit,
         current: currentCount,
-        upgrade: getUpgradeMessage(plan, type),
+        upgrade: getUpgradeMessage(plan),
       }, { status: 403 });
     }
 
@@ -157,7 +156,7 @@ export async function POST(req: NextRequest) {
       limits: {
         plan,
         current: currentCount + (moderation.approved ? 1 : 0),
-        limit: uploadCheck.limit,
+        limit: PHOTO_LIMITS[plan],
         remaining: uploadCheck.remaining - (moderation.approved ? 1 : 0),
       },
     });
