@@ -1,86 +1,62 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import { Ban, Mail, AlertTriangle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Access Restricted | MasseurMatch",
-  description: "MasseurMatch is not available in your region.",
-  robots: {
-    index: false,
-    follow: false
-  }
+  title: "Account Blocked | MasseurMatch",
+  description: "Your account has been blocked.",
 };
 
 export default function BlockedPage() {
   return (
-    <main
-      className="flex min-h-screen flex-col items-center justify-center px-6 py-12 text-center"
-      style={{ background: "var(--bg)", color: "var(--text)" }}
-    >
-      <div className="max-w-md">
-        {/* Icon */}
-        <div
-          className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full"
-          style={{
-            background: "linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1))"
-          }}
-        >
-          <svg
-            className="h-12 w-12"
-            style={{ color: "var(--danger)" }}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+    <div className="min-h-screen flex items-center justify-center px-6 bg-[#0a0a0f]">
+      <div className="max-w-md w-full text-center">
+        <div className="mb-8">
+          <div className="w-20 h-20 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-6">
+            <Ban className="h-10 w-10 text-red-400" />
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-4">Account Blocked</h1>
+          <p className="text-slate-400">
+            Your account has been blocked due to a violation of our community guidelines or terms of service.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-red-500/30 bg-red-500/5 p-6 mb-8">
+          <div className="flex items-start gap-3 text-left">
+            <AlertTriangle className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
+            <div>
+              <h3 className="font-semibold text-white mb-2">Why was my account blocked?</h3>
+              <p className="text-sm text-slate-400">
+                Accounts may be blocked for violations such as harassment, fraud, misrepresentation,
+                or other breaches of our terms. If you believe this was a mistake, please contact support.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-8">
+          <h2 className="font-semibold text-white mb-4 flex items-center justify-center gap-2">
+            <Mail className="h-5 w-5 text-violet-400" />
+            Appeal Process
+          </h2>
+          <p className="text-sm text-slate-400 mb-4">
+            If you believe your account was blocked in error, you can submit an appeal to our trust & safety team.
+          </p>
+          <a
+            href="mailto:appeals@masseurmatch.com"
+            className="text-violet-400 hover:text-violet-300 transition-colors"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
+            appeals@masseurmatch.com
+          </a>
         </div>
 
-        {/* Title */}
-        <h1
-          className="mb-4 text-3xl font-bold md:text-4xl"
-          style={{ color: "var(--text)" }}
+        <Link
+          href="/"
+          className="block w-full rounded-xl border border-white/10 py-3 font-medium text-white hover:bg-white/5 transition-colors"
         >
-          Access Restricted
-        </h1>
-
-        {/* Message */}
-        <p className="mb-6 text-lg" style={{ color: "var(--muted)" }}>
-          MasseurMatch is not available in your region due to local regulations
-          or service limitations.
-        </p>
-
-        {/* Additional info */}
-        <div
-          className="rounded-xl p-6"
-          style={{
-            background: "var(--panel)",
-            border: "1px solid var(--stroke)"
-          }}
-        >
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
-            If you believe this is an error or you are using a VPN, please try
-            accessing from a different connection or contact our support team.
-          </p>
-        </div>
-
-        {/* Contact */}
-        <div className="mt-8">
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
-            Questions?{" "}
-            <a
-              href="mailto:support@masseurmatch.com"
-              style={{ color: "var(--violet)" }}
-              className="underline"
-            >
-              Contact Support
-            </a>
-          </p>
-        </div>
+          Return Home
+        </Link>
       </div>
-    </main>
+    </div>
   );
 }

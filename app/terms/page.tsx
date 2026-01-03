@@ -1,74 +1,95 @@
-import { LegalPage } from "@/app/legal/LegalPage";
+import { Metadata } from "next";
+import Link from "next/link";
 
-export async function generateMetadata() {
-  const url = "https://www.masseurmatch.com/terms";
-
-  return {
-    title: "Terms of Use | MasseurMatch",
-    description:
-      "Official Terms of Use explaining how the MasseurMatch platform works, user responsibilities, therapist independence, safety standards, and legal limitations.",
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title: "Terms of Use | MasseurMatch",
-      description: "Official MasseurMatch Terms of Use for clients and therapists.",
-      url,
-      siteName: "MasseurMatch",
-      type: "article",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Terms of Use | MasseurMatch",
-      description: "Official MasseurMatch Terms of Use for clients and therapists.",
-    },
-  };
-}
+export const metadata: Metadata = {
+  title: "Terms of Service | MasseurMatch",
+  description: "Read the terms and conditions for using MasseurMatch platform.",
+};
 
 export default function TermsPage() {
   return (
-    <LegalPage
-      title="Terms of Service"
-      description="Official Terms of Use explaining how the MasseurMatch platform works, user responsibilities, therapist independence, safety standards, and legal limitations."
-      slug="/terms"
-      sections={[
-        {
-          heading: "Eligibility and accounts",
-          body: (
-            <>
-              <p>You must be of legal age in your jurisdiction and able to form a binding contract. Keep account credentials secure and notify us if you suspect unauthorized access. We may suspend accounts for policy violations or safety concerns.</p>
-              <p>Profile information must be accurate. Misrepresentation, identity abuse, or fraudulent reviews are prohibited and subject to removal.</p>
-            </>
-          )
-        },
-        {
-          heading: "Platform use and conduct",
-          body: (
-            <>
-              <p>Use MasseurMatch only for lawful massage-related services. Do not engage in harassment, hate speech, trafficking, or requests for illegal activity. We may moderate, remove, or limit content that violates policies or harms user trust.</p>
-              <p>Service availability, pricing, and booking terms are set by therapists. Clients agree to respect boundaries, timing, and cancellation policies communicated before sessions.</p>
-            </>
-          )
-        },
-        {
-          heading: "Payments, cancellations, and disputes",
-          body: (
-            <>
-              <p>Where payments are processed through partners, you agree to their terms. Fees are disclosed before charge. Cancellations, refunds, and rescheduling must follow the provider’s stated policy; abuse of chargebacks may result in account limits.</p>
-              <p>We encourage resolving disputes directly. If escalation is needed, contact support with documentation. We may step in at our discretion to mediate policy violations, not as an insurer or guarantor.</p>
-            </>
-          )
-        },
-        {
-          heading: "Disclaimers and limitation of liability",
-          body: (
-            <>
-              <p>MasseurMatch provides a directory and tools “as is.” We do not guarantee outcomes, availability, or suitability of services. To the extent permitted by law, our liability is limited to the amount you paid for the service giving rise to the claim or a reasonable cap where no payment was made.</p>
-              <p>Some jurisdictions do not allow certain limitations; rights that cannot be waived remain unaffected.</p>
-            </>
-          )
-        }
-      ]}
-    />
+    <div className="min-h-screen bg-[#0a0a0f]">
+      <header className="border-b border-white/5">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+            MasseurMatch
+          </Link>
+        </nav>
+      </header>
+
+      <main className="mx-auto max-w-3xl px-6 py-16">
+        <h1 className="text-4xl font-bold text-white mb-4">Terms of Service</h1>
+        <p className="text-slate-400 mb-8">Last updated: January 1, 2025</p>
+
+        <div className="prose prose-invert prose-slate max-w-none space-y-8">
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">1. Acceptance of Terms</h2>
+            <p className="text-slate-300 leading-relaxed">
+              By accessing or using MasseurMatch, you agree to be bound by these Terms of Service.
+              If you do not agree to these terms, please do not use our platform.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">2. Description of Service</h2>
+            <p className="text-slate-300 leading-relaxed">
+              MasseurMatch provides a platform connecting clients with licensed massage therapists.
+              We are a marketplace and do not directly provide massage services. All services are
+              provided by independent contractors.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">3. User Accounts</h2>
+            <p className="text-slate-300 leading-relaxed">
+              You must provide accurate information when creating an account. You are responsible for
+              maintaining the security of your account and all activities under your account.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">4. Therapist Requirements</h2>
+            <p className="text-slate-300 leading-relaxed">
+              All therapists must hold valid licenses and certifications as required by their jurisdiction.
+              Therapists must maintain appropriate insurance and comply with all applicable laws.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">5. Prohibited Conduct</h2>
+            <ul className="list-disc list-inside text-slate-300 space-y-2">
+              <li>Providing false or misleading information</li>
+              <li>Harassment or discrimination of any kind</li>
+              <li>Offering or soliciting illegal services</li>
+              <li>Violating intellectual property rights</li>
+              <li>Attempting to circumvent our platform for payments</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">6. Payments and Fees</h2>
+            <p className="text-slate-300 leading-relaxed">
+              All payments are processed through our secure payment system. We charge a platform fee
+              on each transaction. Refund policies are determined by individual therapists.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">7. Limitation of Liability</h2>
+            <p className="text-slate-300 leading-relaxed">
+              MasseurMatch is not liable for any damages arising from your use of the platform or
+              services provided by therapists. We provide the platform &quot;as is&quot; without warranties.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">8. Contact</h2>
+            <p className="text-slate-300 leading-relaxed">
+              For questions about these terms, contact us at legal@masseurmatch.com
+            </p>
+          </section>
+        </div>
+      </main>
+    </div>
   );
 }

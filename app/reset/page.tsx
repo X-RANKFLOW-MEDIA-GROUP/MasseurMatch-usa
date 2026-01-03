@@ -1,268 +1,146 @@
-﻿"use client";
+"use client";
 
-import { FormEvent, useEffect, useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { Lock, ArrowLeft, CheckCircle } from "lucide-react";
 import { supabase } from "@/src/lib/supabase";
 
-function ResetPasswordForm() {
+function ResetContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-
   const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [status, setStatus] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [sessionReady, setSessionReady] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
-  // Tenta consumir o código do e-mail (recovery) e criar sessão temporária
-  useEffect(() => {
-    let cancelled = false;
-    const code = searchParams?.get("code");
-
-    async function prepareSession() {
-      try {
-        setLoading(true);
-        setError(null);
-
-        if (code) {
-          const { error: exchErr } = await supabase.auth.exchangeCodeForSession(
-            code
-          );
-          if (exchErr) throw exchErr;
-          if (!cancelled) setSessionReady(true);
-          return;
-        }
-
-        if (typeof window !== "undefined" && window.location.hash.includes("access_token")) {
-          const params = new URLSearchParams(window.location.hash.slice(1));
-          const access_token = params.get("access_token");
-          const refresh_token = params.get("refresh_token");
-          if (access_token && refresh_token) {
-            const { error: urlErr } = await supabase.auth.setSession({
-              access_token,
-              refresh_token,
-            });
-            if (urlErr) throw urlErr;
-            if (!cancelled) setSessionReady(true);
-            return;
-          }
-        }
-
-        setError("Código de recuperação não encontrado. Abra o link enviado no e-mail.");
-      } catch (err: any) {
-        if (!cancelled) {
-          setError(err?.message || "Não foi possível validar o link de recuperação.");
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    prepareSession();
-    return () => {
-      cancelled = true;
-    };
-  }, [searchParams]);
-
-  const handleSubmit = async (e: FormEvent) => {
+  const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus(null);
-    setError(null);
+    setError("");
 
-    if (!sessionReady) {
-      setError("Valide o link de recuperação antes de redefinir a senha.");
-      return;
-    }
-    if (password.length < 6) {
-      setError("A nova senha deve ter pelo menos 6 caracteres.");
-      return;
-    }
-    if (password !== password2) {
-      setError("As senhas não coincidem.");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
       return;
     }
 
-    try {
-      setLoading(true);
-      const { error: updErr } = await supabase.auth.updateUser({
-        password,
-      });
-      if (updErr) throw updErr;
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
-      setStatus("Senha atualizada com sucesso. Você já pode fazer login.");
-      setTimeout(() => router.replace("/login"), 1200);
-    } catch (err: any) {
-      setError(err?.message || "Não foi possível atualizar a senha.");
-    } finally {
-      setLoading(false);
+    setLoading(true);
+
+    const { error: updateError } = await supabase.auth.updateUser({
+      password,
+    });
+
+    setLoading(false);
+
+    if (updateError) {
+      setError(updateError.message);
+    } else {
+      setSuccess(true);
     }
   };
 
-  return (
-    <main
-      style={{
-        minHeight: "100vh",
-        padding: "2rem 1.25rem",
-        background:
-          "radial-gradient(circle at top, #020617 0, #020014 45%, #000 100%)",
-        color: "#f9fafb",
-        fontFamily:
-          'system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif',
-      }}
-    >
-      <section
-        style={{
-          maxWidth: "900px",
-          margin: "0 auto",
-          background:
-            "radial-gradient(circle at top left, #1e1b4b, #020617 80%)",
-          padding: "1.75rem 1.5rem",
-          borderRadius: "1rem",
-          border: "1px solid rgba(139,92,246,0.6)",
-          boxShadow: "0 22px 45px rgba(0,0,0,0.6)",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "2rem",
-            fontWeight: 800,
-            marginBottom: "0.75rem",
-            letterSpacing: "0.03em",
-          }}
+  if (success) {
+    return (
+      <div className="text-center">
+        <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
+          <CheckCircle className="h-8 w-8 text-green-400" />
+        </div>
+        <h1 className="text-2xl font-bold text-white mb-4">Password Reset!</h1>
+        <p className="text-slate-400 mb-6">Your password has been successfully updated.</p>
+        <Link
+          href="/login"
+          className="inline-block rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
         >
-          Redefinir senha
-        </h1>
-        <p
-          style={{
-            maxWidth: "560px",
-            fontSize: "1rem",
-            opacity: 0.85,
-            marginBottom: "1.5rem",
-            lineHeight: 1.6,
-          }}
-        >
-          Escolha uma nova senha para continuar usando sua conta.
-        </p>
+          Sign In
+        </Link>
+      </div>
+    );
+  }
 
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.75rem",
-            maxWidth: "420px",
-          }}
-        >
-          <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <span style={{ fontWeight: 600 }}>Nova senha</span>
+  return (
+    <>
+      <Link
+        href="/login"
+        className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors mb-8"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to login
+      </Link>
+
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
+        <div className="text-center mb-8">
+          <div className="w-12 h-12 rounded-full bg-violet-600/20 flex items-center justify-center mx-auto mb-4">
+            <Lock className="h-6 w-6 text-violet-400" />
+          </div>
+          <h1 className="text-2xl font-bold text-white mb-2">Reset Password</h1>
+          <p className="text-slate-400">Enter your new password below</p>
+        </div>
+
+        <form onSubmit={handleReset} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              New Password
+            </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="mínimo 6 caracteres"
+              placeholder="••••••••"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
               required
-              minLength={6}
-              style={{
-                padding: "0.75rem 1rem",
-                borderRadius: "0.75rem",
-                border: "1px solid rgba(148,163,184,0.5)",
-                background: "rgba(15,23,42,0.7)",
-                color: "#fff",
-              }}
-              disabled={loading}
+              minLength={8}
             />
-          </label>
+          </div>
 
-          <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <span style={{ fontWeight: 600 }}>Confirmar nova senha</span>
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Confirm Password
+            </label>
             <input
               type="password"
-              value={password2}
-              onChange={(e) => setPassword2(e.target.value)}
-              placeholder="repita a senha"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
               required
-              minLength={6}
-              style={{
-                padding: "0.75rem 1rem",
-                borderRadius: "0.75rem",
-                border: "1px solid rgba(148,163,184,0.5)",
-                background: "rgba(15,23,42,0.7)",
-                color: "#fff",
-              }}
-              disabled={loading}
             />
-          </label>
+          </div>
+
+          {error && (
+            <p className="text-sm text-red-400">{error}</p>
+          )}
 
           <button
             type="submit"
             disabled={loading}
-            style={{
-              padding: "0.8rem 1.1rem",
-              borderRadius: "0.75rem",
-              border: "1px solid rgba(99,102,241,0.5)",
-              background:
-                "linear-gradient(135deg, rgba(99,102,241,0.9), rgba(139,92,246,0.9))",
-              color: "#0b1220",
-              fontWeight: 700,
-              cursor: loading ? "not-allowed" : "pointer",
-            }}
+            className="w-full rounded-xl bg-violet-600 py-3 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
           >
-            {loading ? "Atualizando..." : "Salvar nova senha"}
+            {loading ? "Resetting..." : "Reset Password"}
           </button>
-
-          {status && (
-            <p
-              role="status"
-              style={{
-                background: "rgba(139,92,246,0.16)",
-                border: "1px solid rgba(139,92,246,0.5)",
-                color: "#e9d5ff",
-                padding: "0.75rem",
-                borderRadius: "0.75rem",
-              }}
-            >
-              {status}
-            </p>
-          )}
-          {error && (
-            <p
-              role="alert"
-              style={{
-                background: "rgba(248,113,113,0.1)",
-                border: "1px solid rgba(248,113,113,0.5)",
-                color: "#fecdd3",
-                padding: "0.75rem",
-                borderRadius: "0.75rem",
-              }}
-            >
-              {error}
-            </p>
-          )}
         </form>
-      </section>
-    </main>
-  );
-}
-
-export default function ResetPasswordPage() {
-  return (
-    <Suspense fallback={
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "radial-gradient(circle at top, #020617 0, #020014 45%, #000 100%)",
-        color: "#f9fafb"
-      }}>
-        <p>Loading...</p>
       </div>
-    }>
-      <ResetPasswordForm />
-    </Suspense>
+    </>
   );
 }
 
-
-
+export default function ResetPage() {
+  return (
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 bg-[#0a0a0f]">
+      <div className="w-full max-w-md">
+        <Suspense
+          fallback={
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-500 mx-auto" />
+            </div>
+          }
+        >
+          <ResetContent />
+        </Suspense>
+      </div>
+    </div>
+  );
+}

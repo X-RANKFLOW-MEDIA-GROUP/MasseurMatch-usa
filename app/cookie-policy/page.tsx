@@ -1,76 +1,85 @@
-import { LegalPage } from "@/app/legal/LegalPage";
+import { Metadata } from "next";
+import Link from "next/link";
 
-export async function generateMetadata() {
-  const url = "https://www.masseurmatch.com/cookie-policy";
-
-  return {
-    title: "Cookie Policy | MasseurMatch",
-    description:
-      "How MasseurMatch uses cookies, analytics, tracking tools, and how users can manage preferences.",
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title: "Cookie Policy | MasseurMatch",
-      description:
-        "How MasseurMatch uses cookies, analytics, tracking tools, and how users can manage preferences.",
-      url,
-      siteName: "MasseurMatch",
-      type: "article",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Cookie Policy | MasseurMatch",
-      description:
-        "How MasseurMatch uses cookies, analytics, tracking tools, and how users can manage preferences.",
-    },
-  };
-}
+export const metadata: Metadata = {
+  title: "Cookie Policy | MasseurMatch",
+  description: "Learn about how MasseurMatch uses cookies and similar technologies.",
+};
 
 export default function CookiePolicyPage() {
   return (
-    <LegalPage
-      title="Cookie Policy"
-      description="How MasseurMatch uses cookies, analytics, tracking tools, and how users can manage preferences."
-      slug="/cookie-policy"
-      sections={[
-        {
-          heading: "What cookies we use",
-          body: (
-            <>
-              <p>We use essential cookies for authentication and security, preference cookies to remember settings, and analytics cookies to understand feature performance. Marketing cookies are limited and optional.</p>
-              <p>Third-party providers may place cookies when delivering analytics, payments, fraud prevention, or embedded content. Their use is governed by their policies in addition to ours.</p>
-            </>
-          )
-        },
-        {
-          heading: "Why we use them",
-          body: (
-            <>
-              <p>Cookies keep you signed in, help route traffic efficiently, detect abuse, and measure site reliability. Preference cookies store language or region selections to reduce friction.</p>
-              <p>Analytics help us improve search relevance, page performance, and safety tooling. We avoid collecting more data than needed for these purposes.</p>
-            </>
-          )
-        },
-        {
-          heading: "How you can control cookies",
-          body: (
-            <>
-              <p>You can adjust browser settings to block or delete cookies, though essential cookies are required for core functionality. Where available, in-product controls let you opt out of non-essential categories.</p>
-              <p>Blocking certain cookies may affect login persistence, personalization, or loading speed. You can revisit preferences at any time.</p>
-            </>
-          )
-        },
-        {
-          heading: "Data retention and updates",
-          body: (
-            <>
-              <p>Retention varies by cookie type and purpose. Security logs are kept as needed to enforce our policies and comply with legal obligations. We review vendors regularly to ensure alignment with our standards.</p>
-              <p>We will update this policy when we add or change vendors or controls. Material changes will be noted in-product where feasible.</p>
-            </>
-          )
-        }
-      ]}
-    />
+    <div className="min-h-screen bg-[#0a0a0f]">
+      <header className="border-b border-white/5">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+            MasseurMatch
+          </Link>
+        </nav>
+      </header>
+
+      <main className="mx-auto max-w-3xl px-6 py-16">
+        <h1 className="text-4xl font-bold text-white mb-4">Cookie Policy</h1>
+        <p className="text-slate-400 mb-8">Last updated: January 1, 2025</p>
+
+        <div className="space-y-8">
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">What Are Cookies?</h2>
+            <p className="text-slate-300 leading-relaxed">
+              Cookies are small text files stored on your device when you visit a website.
+              They help us remember your preferences and improve your experience.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">Types of Cookies We Use</h2>
+
+            <div className="space-y-4">
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <h3 className="font-semibold text-white mb-2">Essential Cookies</h3>
+                <p className="text-slate-400 text-sm">
+                  Required for the website to function. Cannot be disabled.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <h3 className="font-semibold text-white mb-2">Analytics Cookies</h3>
+                <p className="text-slate-400 text-sm">
+                  Help us understand how visitors interact with our site.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <h3 className="font-semibold text-white mb-2">Preference Cookies</h3>
+                <p className="text-slate-400 text-sm">
+                  Remember your settings and preferences.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <h3 className="font-semibold text-white mb-2">Marketing Cookies</h3>
+                <p className="text-slate-400 text-sm">
+                  Used to deliver relevant advertisements.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">Managing Cookies</h2>
+            <p className="text-slate-300 leading-relaxed">
+              You can control cookies through your browser settings. Note that disabling
+              certain cookies may affect the functionality of our website.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4">Contact</h2>
+            <p className="text-slate-300 leading-relaxed">
+              Questions? Email us at privacy@masseurmatch.com
+            </p>
+          </section>
+        </div>
+      </main>
+    </div>
   );
 }
