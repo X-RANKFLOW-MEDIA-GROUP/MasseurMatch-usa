@@ -9,5 +9,11 @@
       "source": "/waitlist/:path*",
       "destination": "https://waitlist-mm-website.vercel.app/:path*"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/renewal-reminders",
+      "schedule": "0 9 * * *"
+    }
   ]
 }
