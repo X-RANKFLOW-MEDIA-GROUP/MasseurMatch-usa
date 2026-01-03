@@ -10,6 +10,8 @@ export type TherapistCard = {
   profile_photo?: string;
   services?: string[];
   rate_60?: string;
+  identity_verified?: boolean;
+  available_now?: boolean;
 };
 
 export type Therapist = TherapistCard & {

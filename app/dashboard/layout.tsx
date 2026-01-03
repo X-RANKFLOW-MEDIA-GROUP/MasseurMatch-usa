@@ -21,11 +21,15 @@ export default async function DashboardLayout({
 
   const navItems = [
     { href: "/dashboard", label: "Overview", icon: "📊" },
-    { href: "/dashboard/ads", label: "My Ads", icon: "📢" },
-    { href: "/dashboard/favorites", label: "Favorites", icon: "❤️" },
+    { href: "/dashboard/profile", label: "Edit Profile", icon: "👤" },
+    { href: "/dashboard/gallery", label: "Photo Gallery", icon: "🖼️" },
+    { href: "/dashboard/availability", label: "Availability", icon: "📅" },
+    { href: "/dashboard/cities", label: "Travel Cities", icon: "✈️" },
+    { href: "/dashboard/analytics", label: "Analytics", icon: "📈" },
+    { href: "/dashboard/reviews", label: "Reviews", icon: "⭐" },
+    { href: "/dashboard/notifications", label: "Notifications", icon: "🔔" },
     { href: "/dashboard/billing", label: "Billing", icon: "💳" },
     { href: "/dashboard/settings", label: "Settings", icon: "⚙️" },
-    { href: "/dashboard/support", label: "Support", icon: "🎧" },
   ];
 
   return (

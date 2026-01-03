@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { User, MapPin, Phone, Mail, Globe, Instagram, MessageCircle, Save, Camera, Loader2 } from "lucide-react";
+import { User, MapPin, Phone, Mail, Globe, Instagram, MessageCircle, Save, Camera, Loader2, Home, Car } from "lucide-react";
 import { supabase } from "@/src/lib/supabase";
 
 const serviceOptions = [
@@ -49,6 +49,9 @@ export default function ProfilePage() {
     languages: "",
     degrees: "",
     profile_photo: "",
+    incall_available: true,
+    outcall_available: false,
+    outcall_radius: "",
   });
 
   useEffect(() => {
@@ -90,6 +93,9 @@ export default function ProfilePage() {
         languages: data.languages?.join(", ") || "",
         degrees: data.degrees || "",
         profile_photo: data.profile_photo || "",
+        incall_available: data.incall_available !== false,
+        outcall_available: data.outcall_available || false,
+        outcall_radius: data.outcall_radius?.toString() || "",
       });
     }
     setLoading(false);
@@ -164,6 +170,9 @@ export default function ProfilePage() {
           years_experience: profile.years_experience ? parseInt(profile.years_experience) : null,
           languages: profile.languages.split(",").map((l) => l.trim()).filter(Boolean),
           degrees: profile.degrees,
+          incall_available: profile.incall_available,
+          outcall_available: profile.outcall_available,
+          outcall_radius: profile.outcall_radius ? parseInt(profile.outcall_radius) : null,
         }),
       });
 
@@ -344,6 +353,106 @@ export default function ProfilePage() {
                 placeholder="West Hollywood"
               />
             </div>
+          </div>
+        </motion.div>
+
+        {/* Service Location */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+          className="rounded-2xl border border-white/10 bg-white/5 p-6"
+        >
+          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-violet-400" />
+            Service Location
+          </h2>
+          <p className="text-sm text-slate-400 mb-4">
+            Where do you offer your massage services?
+          </p>
+          <div className="space-y-4">
+            {/* Incall Option */}
+            <div
+              onClick={() => setProfile({ ...profile, incall_available: !profile.incall_available })}
+              className={`cursor-pointer p-4 rounded-xl border transition-all ${
+                profile.incall_available
+                  ? "bg-violet-600/20 border-violet-500/50"
+                  : "bg-white/5 border-white/10 hover:border-white/20"
+              }`}
+            >
+              <div className="flex items-start gap-4">
+                <div className={`p-3 rounded-xl ${profile.incall_available ? "bg-violet-600" : "bg-white/10"}`}>
+                  <Home className={`h-5 w-5 ${profile.incall_available ? "text-white" : "text-slate-400"}`} />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-medium text-white">Incall</h3>
+                    <div className={`w-11 h-6 rounded-full transition-colors ${
+                      profile.incall_available ? "bg-violet-600" : "bg-white/10"
+                    }`}>
+                      <div className={`w-5 h-5 rounded-full bg-white mt-0.5 transition-transform ${
+                        profile.incall_available ? "translate-x-5.5 ml-0.5" : "translate-x-0.5"
+                      }`} />
+                    </div>
+                  </div>
+                  <p className="text-sm text-slate-400 mt-1">
+                    Clients can visit your studio or location for services
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Outcall Option */}
+            <div
+              onClick={() => setProfile({ ...profile, outcall_available: !profile.outcall_available })}
+              className={`cursor-pointer p-4 rounded-xl border transition-all ${
+                profile.outcall_available
+                  ? "bg-violet-600/20 border-violet-500/50"
+                  : "bg-white/5 border-white/10 hover:border-white/20"
+              }`}
+            >
+              <div className="flex items-start gap-4">
+                <div className={`p-3 rounded-xl ${profile.outcall_available ? "bg-violet-600" : "bg-white/10"}`}>
+                  <Car className={`h-5 w-5 ${profile.outcall_available ? "text-white" : "text-slate-400"}`} />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-medium text-white">Outcall</h3>
+                    <div className={`w-11 h-6 rounded-full transition-colors ${
+                      profile.outcall_available ? "bg-violet-600" : "bg-white/10"
+                    }`}>
+                      <div className={`w-5 h-5 rounded-full bg-white mt-0.5 transition-transform ${
+                        profile.outcall_available ? "translate-x-5.5 ml-0.5" : "translate-x-0.5"
+                      }`} />
+                    </div>
+                  </div>
+                  <p className="text-sm text-slate-400 mt-1">
+                    You travel to the client&apos;s home, hotel, or office
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Outcall Radius (shown only when outcall is enabled) */}
+            {profile.outcall_available && (
+              <div className="pl-16">
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Travel Radius (miles)
+                </label>
+                <input
+                  type="number"
+                  value={profile.outcall_radius}
+                  onChange={(e) => setProfile({ ...profile, outcall_radius: e.target.value })}
+                  className="w-full md:w-48 rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  placeholder="25"
+                  min="1"
+                  max="100"
+                />
+                <p className="text-xs text-slate-500 mt-1">
+                  How far are you willing to travel for outcall services?
+                </p>
+              </div>
+            )}
           </div>
         </motion.div>
 

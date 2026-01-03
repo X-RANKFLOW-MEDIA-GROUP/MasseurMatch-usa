@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { MapPin, Plus, X, Search, Loader2, AlertCircle, Check, Home, Plane } from "lucide-react";
+import { MapPin, Plus, X, Search, Loader2, AlertCircle, Check, Home, Plane, Calendar, Edit2 } from "lucide-react";
 import { supabase } from "@/src/lib/supabase";
 import { PLANS, SubscriptionPlan, getVisitorCitiesLimit } from "@/src/lib/subscription-limits";
 import Link from "next/link";
@@ -29,6 +29,10 @@ const allCities = [
   { city: "New Orleans", state: "LA" },
   { city: "Philadelphia", state: "PA" },
   { city: "Washington", state: "DC" },
+  { city: "Palm Springs", state: "CA" },
+  { city: "Fort Lauderdale", state: "FL" },
+  { city: "San Juan", state: "PR" },
+  { city: "Honolulu", state: "HI" },
 ];
 
 type CityEntry = {
@@ -36,6 +40,8 @@ type CityEntry = {
   state: string;
   is_primary: boolean;
   added_at?: string;
+  start_date?: string;
+  end_date?: string;
 };
 
 export default function CitiesPage() {
@@ -47,6 +53,8 @@ export default function CitiesPage() {
   const [visitorCities, setVisitorCities] = useState<CityEntry[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddCity, setShowAddCity] = useState(false);
+  const [editingCity, setEditingCity] = useState<CityEntry | null>(null);
+  const [travelDates, setTravelDates] = useState({ start: "", end: "" });
 
   useEffect(() => {
     fetchCities();
@@ -110,6 +118,8 @@ export default function CitiesPage() {
       state,
       is_primary: false,
       added_at: new Date().toISOString(),
+      start_date: travelDates.start || undefined,
+      end_date: travelDates.end || undefined,
     };
 
     setSaving(true);
@@ -135,6 +145,40 @@ export default function CitiesPage() {
       setVisitorCities(updatedCities);
       setShowAddCity(false);
       setSearchQuery("");
+      setTravelDates({ start: "", end: "" });
+    }
+  };
+
+  const handleUpdateTravelDates = async () => {
+    if (!editingCity) return;
+
+    setSaving(true);
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const updatedCities = visitorCities.map((c) =>
+      c.city === editingCity.city && c.state === editingCity.state
+        ? { ...c, start_date: travelDates.start || undefined, end_date: travelDates.end || undefined }
+        : c
+    );
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        visitor_cities: updatedCities,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("user_id", user.id);
+
+    setSaving(false);
+
+    if (error) {
+      alert("Failed to update dates");
+    } else {
+      setVisitorCities(updatedCities);
+      setEditingCity(null);
+      setTravelDates({ start: "", end: "" });
     }
   };
 
@@ -165,6 +209,40 @@ export default function CitiesPage() {
     }
   };
 
+  const getTravelStatus = (city: CityEntry) => {
+    if (!city.start_date && !city.end_date) return null;
+
+    const now = new Date();
+    const start = city.start_date ? new Date(city.start_date) : null;
+    const end = city.end_date ? new Date(city.end_date) : null;
+
+    if (start && end) {
+      if (now >= start && now <= end) {
+        return { status: "visiting", label: "Currently Visiting", color: "text-green-400 bg-green-500/20" };
+      } else if (now < start) {
+        const days = Math.ceil((start.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        return { status: "upcoming", label: `Visiting in ${days} days`, color: "text-blue-400 bg-blue-500/20" };
+      } else {
+        return { status: "past", label: "Visit ended", color: "text-slate-400 bg-slate-500/20" };
+      }
+    } else if (start && now >= start) {
+      return { status: "visiting", label: "Currently Visiting", color: "text-green-400 bg-green-500/20" };
+    } else if (start) {
+      const days = Math.ceil((start.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      return { status: "upcoming", label: `Visiting in ${days} days`, color: "text-blue-400 bg-blue-500/20" };
+    }
+
+    return null;
+  };
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   const filteredCities = allCities.filter(
     (c) =>
       c.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -181,8 +259,8 @@ export default function CitiesPage() {
 
   return (
     <div className="max-w-3xl">
-      <h1 className="text-3xl font-bold text-white mb-2">Cities</h1>
-      <p className="text-slate-400 mb-8">Manage where you appear in search results</p>
+      <h1 className="text-3xl font-bold text-white mb-2">Cities & Travel</h1>
+      <p className="text-slate-400 mb-8">Manage where you appear in search results and announce your travels</p>
 
       {/* Primary City */}
       <motion.div
@@ -232,21 +310,25 @@ export default function CitiesPage() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <Plane className="h-5 w-5 text-violet-400" />
-            Visitor Cities
+            Travel Schedule
           </h2>
           <div className="text-sm text-slate-400">
             {visitorCitiesLimit === -1 ? (
-              "Unlimited"
+              "Unlimited cities"
             ) : (
               `${visitorCities.length} / ${visitorCitiesLimit} cities`
             )}
           </div>
         </div>
 
+        <p className="text-sm text-slate-400 mb-4">
+          Add cities you're visiting and your travel dates. Clients in those cities will see you're coming!
+        </p>
+
         {visitorCitiesLimit === 0 ? (
           <div className="text-center py-8">
             <AlertCircle className="h-10 w-10 text-amber-400 mx-auto mb-3" />
-            <p className="text-white font-medium mb-2">Visitor cities not available</p>
+            <p className="text-white font-medium mb-2">Travel schedule not available</p>
             <p className="text-slate-400 text-sm mb-4">
               Upgrade to Standard or higher to appear in other cities when traveling.
             </p>
@@ -263,33 +345,72 @@ export default function CitiesPage() {
             {visitorCities.length === 0 ? (
               <div className="text-center py-6 border-2 border-dashed border-white/10 rounded-xl mb-4">
                 <Plane className="h-8 w-8 text-slate-500 mx-auto mb-2" />
-                <p className="text-slate-400 text-sm">No visitor cities added yet</p>
+                <p className="text-slate-400 text-sm">No travel schedule set</p>
+                <p className="text-slate-500 text-xs mt-1">Add cities you plan to visit</p>
               </div>
             ) : (
-              <div className="space-y-2 mb-4">
-                {visitorCities.map((city) => (
-                  <div
-                    key={`${city.city}-${city.state}`}
-                    className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10"
-                  >
-                    <div className="flex items-center gap-3">
-                      <MapPin className="h-5 w-5 text-slate-400" />
-                      <div>
-                        <p className="font-medium text-white">{city.city}, {city.state}</p>
-                        {city.added_at && (
-                          <p className="text-xs text-slate-500">Added {new Date(city.added_at).toLocaleDateString()}</p>
-                        )}
+              <div className="space-y-3 mb-4">
+                {visitorCities.map((city) => {
+                  const travelStatus = getTravelStatus(city);
+
+                  return (
+                    <div
+                      key={`${city.city}-${city.state}`}
+                      className="p-4 rounded-xl bg-white/5 border border-white/10"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start gap-3">
+                          <MapPin className="h-5 w-5 text-slate-400 mt-0.5" />
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium text-white">{city.city}, {city.state}</p>
+                              {travelStatus && (
+                                <span className={`px-2 py-0.5 rounded-full text-xs ${travelStatus.color}`}>
+                                  {travelStatus.label}
+                                </span>
+                              )}
+                            </div>
+                            {(city.start_date || city.end_date) ? (
+                              <div className="flex items-center gap-2 mt-1 text-sm text-slate-400">
+                                <Calendar className="h-3.5 w-3.5" />
+                                {city.start_date && city.end_date ? (
+                                  <span>{formatDate(city.start_date)} - {formatDate(city.end_date)}</span>
+                                ) : city.start_date ? (
+                                  <span>Starting {formatDate(city.start_date)}</span>
+                                ) : (
+                                  <span>Until {formatDate(city.end_date!)}</span>
+                                )}
+                              </div>
+                            ) : (
+                              <p className="text-xs text-slate-500 mt-1">No travel dates set</p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => {
+                              setEditingCity(city);
+                              setTravelDates({
+                                start: city.start_date || "",
+                                end: city.end_date || "",
+                              });
+                            }}
+                            className="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleRemoveVisitorCity(city.city, city.state)}
+                            disabled={saving}
+                            className="p-2 rounded-lg hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-colors"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <button
-                      onClick={() => handleRemoveVisitorCity(city.city, city.state)}
-                      disabled={saving}
-                      className="p-2 rounded-lg hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
@@ -299,7 +420,7 @@ export default function CitiesPage() {
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-white/10 text-slate-400 hover:border-violet-500/50 hover:text-white transition-colors"
               >
                 <Plus className="h-4 w-4" />
-                Add Visitor City
+                Add Travel Destination
               </button>
             )}
           </>
@@ -315,11 +436,12 @@ export default function CitiesPage() {
             className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0a0a0f] p-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Add Visitor City</h3>
+              <h3 className="text-lg font-semibold text-white">Add Travel Destination</h3>
               <button
                 onClick={() => {
                   setShowAddCity(false);
                   setSearchQuery("");
+                  setTravelDates({ start: "", end: "" });
                 }}
                 className="p-2 rounded-lg hover:bg-white/10 text-slate-400"
               >
@@ -339,7 +461,33 @@ export default function CitiesPage() {
               />
             </div>
 
-            <div className="max-h-64 overflow-y-auto space-y-1">
+            {/* Travel Dates */}
+            <div className="mb-4 p-4 rounded-xl bg-white/5 border border-white/10">
+              <p className="text-sm text-slate-400 mb-3">Travel Dates (optional)</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">Start Date</label>
+                  <input
+                    type="date"
+                    value={travelDates.start}
+                    onChange={(e) => setTravelDates({ ...travelDates, start: e.target.value })}
+                    className="w-full rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-sm focus:border-violet-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">End Date</label>
+                  <input
+                    type="date"
+                    value={travelDates.end}
+                    onChange={(e) => setTravelDates({ ...travelDates, end: e.target.value })}
+                    min={travelDates.start}
+                    className="w-full rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-sm focus:border-violet-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="max-h-48 overflow-y-auto space-y-1">
               {filteredCities.map((city) => {
                 const isAdded = visitorCities.some((c) => c.city === city.city && c.state === city.state);
                 const isPrimary = primaryCity?.city === city.city && primaryCity?.state === city.state;
@@ -368,6 +516,75 @@ export default function CitiesPage() {
                   </button>
                 );
               })}
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Edit Dates Modal */}
+      {editingCity && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full max-w-sm rounded-2xl border border-white/10 bg-[#0a0a0f] p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">Edit Travel Dates</h3>
+              <button
+                onClick={() => {
+                  setEditingCity(null);
+                  setTravelDates({ start: "", end: "" });
+                }}
+                className="p-2 rounded-lg hover:bg-white/10 text-slate-400"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 mb-4">
+              <MapPin className="h-5 w-5 text-violet-400" />
+              <span className="text-white font-medium">{editingCity.city}, {editingCity.state}</span>
+            </div>
+
+            <div className="space-y-3 mb-6">
+              <div>
+                <label className="text-sm text-slate-400 block mb-1">Start Date</label>
+                <input
+                  type="date"
+                  value={travelDates.start}
+                  onChange={(e) => setTravelDates({ ...travelDates, start: e.target.value })}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-violet-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-slate-400 block mb-1">End Date</label>
+                <input
+                  type="date"
+                  value={travelDates.end}
+                  onChange={(e) => setTravelDates({ ...travelDates, end: e.target.value })}
+                  min={travelDates.start}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-violet-500 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setTravelDates({ start: "", end: "" });
+                }}
+                className="flex-1 py-3 rounded-xl border border-white/10 text-slate-400 hover:bg-white/5 transition-colors"
+              >
+                Clear Dates
+              </button>
+              <button
+                onClick={handleUpdateTravelDates}
+                disabled={saving}
+                className="flex-1 py-3 rounded-xl bg-violet-600 text-white hover:bg-violet-500 transition-colors disabled:opacity-50"
+              >
+                {saving ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Save"}
+              </button>
             </div>
           </motion.div>
         </div>
