@@ -31,8 +31,8 @@ export default function TrustPage() {
             {[
               {
                 icon: UserCheck,
-                title: "Verified Profiles",
-                desc: "All therapists undergo identity and license verification",
+                title: "Identity Verified",
+                desc: "Therapists can verify their identity through our secure verification process",
               },
               {
                 icon: Lock,
@@ -41,8 +41,8 @@ export default function TrustPage() {
               },
               {
                 icon: Eye,
-                title: "24/7 Monitoring",
-                desc: "Our team monitors the platform around the clock",
+                title: "Content Moderation",
+                desc: "All photos and profiles are reviewed for appropriateness",
               },
               {
                 icon: AlertTriangle,
@@ -60,14 +60,13 @@ export default function TrustPage() {
 
           {/* Verification Process */}
           <section>
-            <h2 className="text-xl font-semibold text-white mb-4">Our Verification Process</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">Our Review Process</h2>
             <div className="space-y-4">
               {[
-                "License verification with state boards",
-                "Background checks through certified agencies",
-                "Identity verification with government ID",
-                "Insurance documentation review",
-                "Ongoing monitoring and periodic re-verification",
+                "Identity verification with government ID (optional)",
+                "Profile content review by our team",
+                "Photo moderation for appropriateness",
+                "Ongoing community reporting and review",
               ].map((step, i) => (
                 <div key={step} className="flex items-center gap-4">
                   <div className="w-8 h-8 rounded-full bg-violet-600 flex items-center justify-center text-white font-semibold">
@@ -77,6 +76,10 @@ export default function TrustPage() {
                 </div>
               ))}
             </div>
+            <p className="text-sm text-slate-500 mt-4">
+              Note: MasseurMatch does not verify professional licenses, certifications, or conduct background checks.
+              Clients should independently verify any credentials important to them.
+            </p>
           </section>
 
           {/* Safety Tips */}
