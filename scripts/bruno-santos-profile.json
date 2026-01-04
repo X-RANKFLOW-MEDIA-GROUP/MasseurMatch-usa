@@ -1,0 +1,77 @@
+{
+  "profile": {
+    "display_name": "Bruno Santos",
+    "full_name": "Bruno Santos",
+    "phone": "762-334-5300",
+    "email": "bruno.santos@masseurmatch.com",
+    "city": "Dallas",
+    "state": "TX",
+    "country": "USA",
+    "zip_code": "75201",
+    "slug": "bruno-santos-dallas-tx",
+    "status": "active",
+    "verified": true,
+    "availability_status": "available",
+    "years_experience": 8,
+    "bio": "Professional massage therapist visiting Dallas from Rio de Janeiro, Brazil.\n\nSpecializing in therapeutic and sports massage with 8 years of experience. I bring authentic Brazilian massage techniques combined with traditional therapeutic methods to help you recover from muscle tension, improve flexibility, and achieve deep relaxation.\n\nCurrently offering sessions in the Dallas area from January 4-7, 2026. Perfect for visitors and locals seeking a professional, high-quality massage experience.\n\nAll sessions are fully customized to your specific needs and preferences. Whether you need sports recovery, pain relief, or stress reduction, I'm here to help you feel your best.",
+    "tagline": "Brazilian Therapeutic & Sports Massage Specialist",
+    "techniques": [
+      "Deep Tissue",
+      "Swedish Massage",
+      "Sports Massage",
+      "Therapeutic Massage",
+      "Myofascial Release",
+      "Trigger Point Therapy",
+      "Brazilian Massage"
+    ],
+    "specialties": [
+      "Sports Recovery",
+      "Pain Relief",
+      "Muscle Tension",
+      "Flexibility Enhancement",
+      "Stress Reduction"
+    ],
+    "service_type": ["Mobile/Outcall"],
+    "accepts_couples": true,
+    "rate_60min": 120,
+    "rate_90min": 170,
+    "rate_120min": 220,
+    "accepts_tips": true,
+    "payment_methods": ["Cash", "Venmo", "Zelle", "Credit Card"],
+    "certifications": [
+      "Licensed Massage Therapist (Brazil)",
+      "Sports Massage Certification",
+      "Deep Tissue Specialist"
+    ],
+    "education": "Rio de Janeiro School of Therapeutic Massage (2016)",
+    "hours_of_operation": {
+      "monday": { "open": "09:00", "close": "21:00" },
+      "tuesday": { "open": "09:00", "close": "21:00" },
+      "wednesday": { "open": "09:00", "close": "21:00" },
+      "thursday": { "open": "09:00", "close": "21:00" },
+      "friday": { "open": "09:00", "close": "21:00" },
+      "saturday": { "open": "10:00", "close": "20:00" },
+      "sunday": { "open": "10:00", "close": "18:00" }
+    },
+    "preferred_contact": "phone",
+    "whatsapp_number": "762-334-5300",
+    "languages": ["English", "Portuguese"],
+    "gender": "male",
+    "accepts_walk_ins": false,
+    "parking_available": "Street parking available",
+    "meta_description": "Professional massage therapist from Rio de Janeiro visiting Dallas, TX. Specializing in therapeutic, sports, and deep tissue massage. Available Jan 4-7, 2026."
+  },
+  "visitor_city": {
+    "city": "Dallas",
+    "state": "TX",
+    "start_date": "2026-01-04",
+    "end_date": "2026-01-07",
+    "is_active": true
+  },
+  "metadata": {
+    "created_by": "claude",
+    "created_date": "2026-01-04",
+    "purpose": "Visiting therapist profile - Rio de Janeiro to Dallas",
+    "notes": "Created for Bruno Santos visiting Dallas Jan 4-7, 2026"
+  }
+}
