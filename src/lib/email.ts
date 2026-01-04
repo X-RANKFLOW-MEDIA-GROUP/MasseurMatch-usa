@@ -264,6 +264,17 @@ async function sendWithSendGrid(options: EmailOptions & { from: string }): Promi
     return { success: true, messageId: "no-api-key" };
   }
 
+  const extractEmailFromSender = (from: string) => {
+    const start = from.indexOf("<");
+    const end = from.indexOf(">", start + 1);
+
+    if (start !== -1 && end !== -1) {
+      return from.slice(start + 1, end);
+    }
+
+    return from;
+  };
+
   const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
     method: "POST",
     headers: {
@@ -272,7 +283,7 @@ async function sendWithSendGrid(options: EmailOptions & { from: string }): Promi
     },
     body: JSON.stringify({
       personalizations: [{ to: [{ email: options.to }] }],
-      from: { email: options.from.match(/<(.+)>/)?.[1] || options.from },
+      from: { email: extractEmailFromSender(options.from) },
       subject: options.subject,
       content: [
         { type: "text/plain", value: options.text || "" },

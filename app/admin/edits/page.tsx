@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Check, X, Eye, ArrowLeft, Clock } from "lucide-react";
-import { supabase } from "@/src/lib/supabase";
 
 type PendingEdit = {
   id: string;
@@ -21,6 +20,30 @@ export default function AdminEditsPage() {
   const [edits, setEdits] = useState<PendingEdit[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("pending");
+
+  const getStatusConfig = (status: PendingEdit["status"]) => {
+    if (status === "approved") {
+      return {
+        icon: Check,
+        label: "Approved",
+        className: "bg-green-500/20 text-green-400",
+      };
+    }
+
+    if (status === "rejected") {
+      return {
+        icon: X,
+        label: "Rejected",
+        className: "bg-red-500/20 text-red-400",
+      };
+    }
+
+    return {
+      icon: Clock,
+      label: "Pending",
+      className: "bg-yellow-500/20 text-yellow-400",
+    };
+  };
 
   useEffect(() => {
     async function fetchEdits() {
@@ -129,72 +152,75 @@ export default function AdminEditsPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredEdits.map((edit) => (
-              <div
-                key={edit.id}
-                className="rounded-2xl border border-white/10 bg-white/5 p-6"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="font-semibold text-white">{edit.display_name}</h3>
-                    <p className="text-sm text-slate-400">{edit.user_email}</p>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-500">
-                    <Clock className="h-4 w-4" />
-                    {new Date(edit.submitted_at).toLocaleString()}
-                  </div>
-                </div>
+            {filteredEdits.map((edit) => {
+              const statusConfig = getStatusConfig(edit.status);
+              const StatusIcon = statusConfig.icon;
 
-                <div className="rounded-xl bg-white/5 p-4 mb-4">
-                  <p className="text-xs text-slate-500 mb-2">Field: <span className="text-white">{edit.field}</span></p>
-                  <div className="grid md:grid-cols-2 gap-4">
+              return (
+                <div
+                  key={edit.id}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-6"
+                >
+                  <div className="flex items-start justify-between mb-4">
                     <div>
-                      <p className="text-xs text-slate-500 mb-1">Current Value</p>
-                      <p className="text-slate-300 bg-red-500/10 p-2 rounded">{edit.old_value}</p>
+                      <h3 className="font-semibold text-white">{edit.display_name}</h3>
+                      <p className="text-sm text-slate-400">{edit.user_email}</p>
                     </div>
-                    <div>
-                      <p className="text-xs text-slate-500 mb-1">New Value</p>
-                      <p className="text-slate-300 bg-green-500/10 p-2 rounded">{edit.new_value}</p>
+                    <div className="flex items-center gap-2 text-sm text-slate-500">
+                      <Clock className="h-4 w-4" />
+                      {new Date(edit.submitted_at).toLocaleString()}
                     </div>
                   </div>
-                </div>
 
-                {edit.status === "pending" ? (
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => handleAction(edit.id, "approve")}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500 transition-colors"
-                    >
-                      <Check className="h-4 w-4" />
-                      Approve
-                    </button>
-                    <button
-                      onClick={() => handleAction(edit.id, "reject")}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                      Reject
-                    </button>
-                    <Link
-                      href={`/therapist/${edit.user_id}`}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-slate-400 hover:text-white transition-colors ml-auto"
-                    >
-                      <Eye className="h-4 w-4" />
-                      View Profile
-                    </Link>
+                  <div className="rounded-xl bg-white/5 p-4 mb-4">
+                    <p className="text-xs text-slate-500 mb-2">Field: <span className="text-white">{edit.field}</span></p>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs text-slate-500 mb-1">Current Value</p>
+                        <p className="text-slate-300 bg-red-500/10 p-2 rounded">{edit.old_value}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 mb-1">New Value</p>
+                        <p className="text-slate-300 bg-green-500/10 p-2 rounded">{edit.new_value}</p>
+                      </div>
+                    </div>
                   </div>
-                ) : (
-                  <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
-                    edit.status === "approved"
-                      ? "bg-green-500/20 text-green-400"
-                      : "bg-red-500/20 text-red-400"
-                  }`}>
-                    {edit.status === "approved" ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
-                    {edit.status.charAt(0).toUpperCase() + edit.status.slice(1)}
-                  </div>
-                )}
-              </div>
-            ))}
+
+                  {edit.status === "pending" ? (
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => handleAction(edit.id, "approve")}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500 transition-colors"
+                      >
+                        <Check className="h-4 w-4" />
+                        Approve
+                      </button>
+                      <button
+                        onClick={() => handleAction(edit.id, "reject")}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                        Reject
+                      </button>
+                      <Link
+                        href={`/therapist/${edit.user_id}`}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-slate-400 hover:text-white transition-colors ml-auto"
+                      >
+                        <Eye className="h-4 w-4" />
+                        View Profile
+                      </Link>
+                    </div>
+                  ) : (
+                    <div
+                      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm ${statusConfig.className}`}
+                    >
+                      <StatusIcon className="h-4 w-4" />
+                      {statusConfig.label}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </main>

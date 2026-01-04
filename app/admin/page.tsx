@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createServerSupabaseClient } from "@/src/lib/supabase-server";
-import { Users, FileText, AlertTriangle, DollarSign, TrendingUp, Clock } from "lucide-react";
+import { Users, FileText, AlertTriangle, DollarSign, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | MasseurMatch",

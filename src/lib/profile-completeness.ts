@@ -1,11 +1,14 @@
 // Profile completeness calculation
 // Each field has a weight based on importance
 
+const CATEGORIES = ["basic", "media", "services", "contact", "details"] as const;
+type Category = (typeof CATEGORIES)[number];
+
 export type ProfileField = {
   key: string;
   label: string;
   weight: number;
-  category: "basic" | "media" | "services" | "contact" | "details";
+  category: Category;
 };
 
 export const PROFILE_FIELDS: ProfileField[] = [
@@ -60,7 +63,7 @@ export type CompletenessResult = {
   percentage: number;
   completedFields: string[];
   missingFields: ProfileField[];
-  byCategory: Record<string, { completed: number; total: number; percentage: number }>;
+  byCategory: Record<Category, { completed: number; total: number; percentage: number }>;
   isComplete: boolean;
   eligibleForBoost: boolean;
 };
@@ -69,32 +72,36 @@ export function calculateProfileCompleteness(profile: ProfileData): Completeness
   let completedWeight = 0;
   const completedFields: string[] = [];
   const missingFields: ProfileField[] = [];
-  const byCategory: Record<string, { completed: number; total: number; percentage: number }> = {
-    basic: { completed: 0, total: 0, percentage: 0 },
-    media: { completed: 0, total: 0, percentage: 0 },
-    services: { completed: 0, total: 0, percentage: 0 },
-    contact: { completed: 0, total: 0, percentage: 0 },
-    details: { completed: 0, total: 0, percentage: 0 },
-  };
+  const byCategory: Record<Category, { completed: number; total: number; percentage: number }> =
+    CATEGORIES.reduce((acc, category) => {
+      acc[category] = { completed: 0, total: 0, percentage: 0 };
+      return acc;
+    }, {} as Record<Category, { completed: number; total: number; percentage: number }>);
 
   for (const field of PROFILE_FIELDS) {
-    byCategory[field.category].total += field.weight;
+    const categoryKey = field.category;
+    // Field categories are predefined in CATEGORIES
+    // eslint-disable-next-line security/detect-object-injection
+    byCategory[categoryKey].total += field.weight;
 
     const isComplete = isFieldComplete(profile, field.key);
 
     if (isComplete) {
       completedWeight += field.weight;
       completedFields.push(field.key);
-      byCategory[field.category].completed += field.weight;
+      // eslint-disable-next-line security/detect-object-injection
+      byCategory[categoryKey].completed += field.weight;
     } else {
       missingFields.push(field);
     }
   }
 
   // Calculate category percentages
-  for (const cat of Object.keys(byCategory)) {
-    const { completed, total } = byCategory[cat];
-    byCategory[cat].percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+  for (const category of CATEGORIES) {
+    // eslint-disable-next-line security/detect-object-injection
+    const categoryProgress = byCategory[category];
+    const { completed, total } = categoryProgress;
+    categoryProgress.percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
   }
 
   const percentage = Math.round((completedWeight / TOTAL_WEIGHT) * 100);

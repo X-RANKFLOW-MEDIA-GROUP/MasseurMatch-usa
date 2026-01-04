@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { Shield, Clock, MapPin, Search, Filter, X, Star, CheckCircle, Zap } from "lucide-react";
+import { Shield, MapPin, Search, Filter, X, Star, CheckCircle, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TherapistCard } from "@/src/types/therapist";
 
@@ -270,12 +271,15 @@ function TherapistCardComponent({ therapist }: { therapist: TherapistCard }) {
       )}
 
       {/* Image */}
-      <div className="aspect-[4/3] bg-gradient-to-br from-white/20 to-neutral-100/20 flex items-center justify-center">
+      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-white/20 to-neutral-100/20 flex items-center justify-center">
         {therapist.profile_photo ? (
-          <img
+          <Image
             src={therapist.profile_photo}
             alt={therapist.display_name}
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover"
+            priority={false}
           />
         ) : (
           <span className="text-6xl opacity-50">👤</span>

@@ -12,9 +12,14 @@ async function seedBrunoSantos() {
   try {
     // 1. Create auth user
     const email = 'bruno.santos@masseurmatch.com';
-    const password = 'TempPassword123!'; // User should change this
+    const password = process.env.SEED_BRUNO_SANTOS_PASSWORD;
+
+    if (!password) {
+      throw new Error('Missing SEED_BRUNO_SANTOS_PASSWORD in environment');
+    }
 
     console.log('Creating auth user...');
+    let userId;
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email,
       password,
@@ -31,12 +36,12 @@ async function seedBrunoSantos() {
         const { data: users } = await supabase.auth.admin.listUsers();
         const existingUser = users.users.find(u => u.email === email);
         if (!existingUser) throw new Error('Could not find existing user');
-        var userId = existingUser.id;
+        userId = existingUser.id;
       } else {
         throw authError;
       }
     } else {
-      var userId = authData.user.id;
+      userId = authData.user.id;
     }
 
     console.log('✓ Auth user created/found:', userId);
@@ -204,7 +209,7 @@ I combine technical expertise with intuitive bodywork, ensuring each stroke serv
     };
 
     console.log('Creating profile...');
-    const { data: profile, error: profileError } = await supabase
+    const { error: profileError } = await supabase
       .from('profiles')
       .upsert(profileData, { onConflict: 'user_id' })
       .select()
@@ -240,7 +245,7 @@ I combine technical expertise with intuitive bodywork, ensuring each stroke serv
     };
 
     console.log('Creating therapist entry...');
-    const { data: therapist, error: therapistError } = await supabase
+    const { error: therapistError } = await supabase
       .from('therapists')
       .upsert(therapistData, { onConflict: 'user_id' })
       .select()
@@ -276,7 +281,7 @@ I combine technical expertise with intuitive bodywork, ensuring each stroke serv
     console.log('   • Name: Bruno Santos');
     console.log('   • Slug: bruno-santos-dallas');
     console.log('   • Email:', email);
-    console.log('   • Password: TempPassword123! (change after first login)');
+    console.log('   • Password: [hidden - provided via SEED_BRUNO_SANTOS_PASSWORD]');
     console.log('   • Phone: 762-334-5300');
     console.log('   • Location: Dallas, TX (visiting Jan 4-7, 2026)');
     console.log('   • Profile URL: https://masseurmatch.com/therapist/bruno-santos-dallas\n');

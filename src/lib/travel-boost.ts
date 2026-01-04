@@ -1,6 +1,8 @@
 // Travel Auto-Boost System
 // Automatically promotes therapists when they're traveling to a city
 
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 export type TravelCity = {
   city: string;
   state: string;
@@ -84,7 +86,7 @@ CREATE INDEX idx_boosts_active ON profile_boosts(is_active, end_date);
 
 // Auto-create boost when travel dates are added
 export async function createTravelBoost(
-  supabase: any,
+  supabase: SupabaseClient,
   userId: string,
   city: TravelCity
 ): Promise<void> {
@@ -115,7 +117,7 @@ export async function createTravelBoost(
 
 // Create completion reward boost
 export async function createCompletionBoost(
-  supabase: any,
+  supabase: SupabaseClient,
   userId: string,
   days: number
 ): Promise<void> {
@@ -135,7 +137,7 @@ export async function createCompletionBoost(
 
 // Get boosted therapists for a city
 export async function getBoostedTherapistsForCity(
-  supabase: any,
+  supabase: SupabaseClient,
   city: string,
   state: string,
   limit: number = 10
@@ -158,7 +160,7 @@ export async function getBoostedTherapistsForCity(
 
 // Send notification to clients who favorited this therapist
 export async function notifyFavoritesOfTravel(
-  supabase: any,
+  supabase: SupabaseClient,
   userId: string,
   city: TravelCity
 ): Promise<number> {
