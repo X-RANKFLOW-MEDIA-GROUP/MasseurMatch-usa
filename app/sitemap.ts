@@ -30,6 +30,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "thai",
     "prenatal",
     "couples",
+    "gay-massage",
+    "gay-massage-therapist",
+    "gay-massage-for-men",
+    "lgbt-gay-massage",
+    "male-gay-massage",
   ];
 
   const cities = getAllCities();

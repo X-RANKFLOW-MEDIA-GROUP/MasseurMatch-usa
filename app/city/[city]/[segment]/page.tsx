@@ -5,7 +5,13 @@ import { createServerSupabaseClient } from "@/src/lib/supabase-server";
 import { getAllCities, getCityBySlug } from "@/src/data/cities";
 import type { TherapistCard } from "@/src/types/therapist";
 
-const SEGMENTS = {
+type SegmentConfig = {
+  name: string;
+  description: string;
+  serviceTags?: string[];
+};
+
+const SEGMENTS: Record<string, SegmentConfig> = {
   "deep-tissue": { name: "Deep Tissue", description: "Intensive therapy for chronic pain and tension" },
   "swedish": { name: "Swedish Massage", description: "Relaxing full-body massage" },
   "sports": { name: "Sports Massage", description: "For athletes and active individuals" },
@@ -13,6 +19,31 @@ const SEGMENTS = {
   "thai": { name: "Thai Massage", description: "Traditional stretching and pressure therapy" },
   "prenatal": { name: "Prenatal", description: "Safe massage for expecting mothers" },
   "couples": { name: "Couples Massage", description: "Side-by-side massage experience" },
+  "gay-massage": {
+    name: "Gay Massage",
+    description: "Find affirming gay massage therapists for LGBTQ+ clients seeking a comfortable experience",
+    serviceTags: ["Gay Massage", "LGBT Massage"],
+  },
+  "gay-massage-therapist": {
+    name: "Gay Massage Therapist",
+    description: "Book trusted gay massage therapists who specialize in tailored, inclusive bodywork",
+    serviceTags: ["Gay Massage", "LGBT Massage"],
+  },
+  "gay-massage-for-men": {
+    name: "Gay Massage for Men",
+    description: "Relax with gay massage for men, focusing on male-to-male therapeutic touch and wellness",
+    serviceTags: ["Gay Massage", "LGBT Massage"],
+  },
+  "lgbt-gay-massage": {
+    name: "LGBTQ+ Gay Massage",
+    description: "Explore LGBTQ+ friendly gay massage options with welcoming, understanding therapists",
+    serviceTags: ["Gay Massage", "LGBT Massage"],
+  },
+  "male-gay-massage": {
+    name: "Male Gay Massage",
+    description: "Connect with male gay massage specialists who prioritize comfort, privacy, and relaxation",
+    serviceTags: ["Gay Massage", "LGBT Massage"],
+  },
 };
 
 type Props = {
@@ -63,7 +94,7 @@ export default async function CitySegmentPage({ params }: Props) {
     .from("profiles")
     .select("user_id, slug, display_name, headline, city, state, rating, profile_photo, services")
     .eq("city", cityData.name)
-    .contains("services", [segmentData.name])
+    .contains("services", segmentData.serviceTags ?? [segmentData.name])
     .limit(20);
 
   return (
