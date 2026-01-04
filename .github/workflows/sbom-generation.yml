@@ -1,0 +1,81 @@
+name: SBOM Generation - Software Bill of Materials
+
+on:
+  push:
+    branches:
+      - main
+      - claude/**
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  generate-sbom:
+    name: Generate SBOM (CycloneDX & SPDX)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Generate CycloneDX SBOM (npm)
+        uses: CycloneDX/gh-node-module-generatebom@v1
+        with:
+          path: ./
+          output: ./sbom-cyclonedx.json
+
+      - name: Install Syft
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Generate SPDX SBOM with Syft
+        run: |
+          syft dir:. -o spdx-json=sbom-spdx.json
+
+      - name: Generate SBOM summary
+        run: |
+          echo "# SBOM Generation Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## CycloneDX SBOM" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
+          head -n 20 sbom-cyclonedx.json >> $GITHUB_STEP_SUMMARY
+          echo "..." >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Statistics" >> $GITHUB_STEP_SUMMARY
+          echo "- Total dependencies: $(jq '.components | length' sbom-cyclonedx.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- Generation timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit SHA: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload CycloneDX SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cyclonedx
+          path: sbom-cyclonedx.json
+          retention-days: 90
+
+      - name: Upload SPDX SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-spdx
+          path: sbom-spdx.json
+          retention-days: 90
+
+      - name: Create SBOM attestation
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/attest-sbom@v3
+        with:
+          subject-path: 'sbom-cyclonedx.json'
+          sbom-path: 'sbom-cyclonedx.json'

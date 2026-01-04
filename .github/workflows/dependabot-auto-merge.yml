@@ -1,0 +1,80 @@
+name: Dependabot Auto-Merge
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  dependabot:
+    name: Dependabot Auto-Merge (Patches & Security)
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run tests
+        id: tests
+        run: npm run test:ci
+        continue-on-error: true
+
+      - name: Run lint
+        id: lint
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Auto-approve for patch and minor security updates
+        if: |
+          (steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+           steps.metadata.outputs.update-type == 'version-update:semver-minor') &&
+          steps.tests.outcome == 'success' &&
+          steps.lint.outcome == 'success'
+        run: |
+          gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Auto-merge for patch security updates
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' &&
+          steps.tests.outcome == 'success' &&
+          steps.lint.outcome == 'success'
+        run: |
+          gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Comment on PR if tests failed
+        if: |
+          steps.tests.outcome == 'failure' || steps.lint.outcome == 'failure'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '⚠️ **Auto-merge blocked**: Tests or linting failed. Manual review required.'
+            })
