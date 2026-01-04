@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Explore Therapists",
-  description: "Find professional massage therapists near you. Browse verified profiles, read reviews, and book appointments.",
+  description: "Find professional massage therapists near you. Browse verified profiles, read reviews, and contact directly.",
 };
 
 export default async function ExplorePage() {

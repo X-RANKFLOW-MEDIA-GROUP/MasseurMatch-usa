@@ -104,7 +104,7 @@ export async function generateMetadata({
   }
 
   const title = `${therapist.display_name} - ${therapist.headline || "Massage Therapist"} in ${therapist.city}, ${therapist.state}`;
-  const description = therapist.about?.slice(0, 160) || `Book ${therapist.display_name} in ${therapist.city}`;
+  const description = therapist.about?.slice(0, 160) || `Contact ${therapist.display_name} - Professional massage therapist in ${therapist.city}`;
 
   return {
     title,

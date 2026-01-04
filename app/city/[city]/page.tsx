@@ -20,7 +20,7 @@ export async function generateMetadata({
 
   return {
     title: `Massage Therapists in ${city.name}, ${city.state}`,
-    description: `Find professional massage therapists in ${city.name}, ${city.state}. Browse verified profiles, read reviews, and book appointments.`,
+    description: `Find professional massage therapists in ${city.name}, ${city.state}. Browse verified profiles, read reviews, and contact directly.`,
   };
 }
 
@@ -85,7 +85,7 @@ export default async function CityPage({
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl">
             Find licensed, professional massage therapists in {city.name}.
-            Browse profiles, read reviews, and book your next appointment.
+            Browse profiles, read reviews, and contact them directly.
           </p>
         </div>
 

@@ -36,8 +36,8 @@ export default function TrustPage() {
               },
               {
                 icon: Lock,
-                title: "Secure Payments",
-                desc: "All transactions are encrypted and processed securely",
+                title: "Secure Platform",
+                desc: "Your data and privacy are protected with encryption",
               },
               {
                 icon: Eye,
@@ -87,11 +87,11 @@ export default function TrustPage() {
             <h2 className="text-xl font-semibold text-white mb-4">Safety Tips</h2>
             <ul className="space-y-3">
               {[
-                "Always book through the MasseurMatch platform",
+                "Contact therapists directly using provided information",
                 "Meet in professional settings only",
                 "Trust your instincts - if something feels wrong, leave",
                 "Report any inappropriate behavior immediately",
-                "Keep a record of your bookings and communications",
+                "Keep a record of your contacts and communications",
               ].map((tip) => (
                 <li key={tip} className="flex items-start gap-3 text-slate-300">
                   <CheckCircle className="h-5 w-5 text-green-400 shrink-0 mt-0.5" />
