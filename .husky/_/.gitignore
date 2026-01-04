@@ -1,0 +1,19 @@
+# Keep Husky hook shims tracked so commits don't fail when hooksPath is set
+*
+!.gitignore
+!applypatch-msg
+!commit-msg
+!h
+!husky.sh
+!post-applypatch
+!post-checkout
+!post-commit
+!post-merge
+!post-rewrite
+!pre-applypatch
+!pre-auto-gc
+!pre-commit
+!pre-merge-commit
+!pre-push
+!pre-rebase
+!prepare-commit-msg
