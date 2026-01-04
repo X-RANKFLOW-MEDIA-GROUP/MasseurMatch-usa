@@ -1,0 +1,42 @@
+export type TherapistCard = {
+  user_id: string;
+  slug: string;
+  display_name: string;
+  headline: string;
+  city: string;
+  state: string;
+  rating: number;
+  override_reviews_count?: number;
+  profile_photo?: string;
+  services?: string[];
+  rate_60?: string;
+  identity_verified?: boolean;
+  available_now?: boolean;
+};
+
+export type Therapist = TherapistCard & {
+  full_name: string;
+  about: string;
+  philosophy?: string;
+  neighborhood?: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+  instagram?: string;
+  whatsapp?: string;
+  gallery?: string[];
+  massage_techniques?: string[];
+  studio_amenities?: string[];
+  rate_90?: string;
+  rate_outcall?: string;
+  payment_methods?: string[];
+  years_experience?: number;
+  languages?: string[];
+  degrees?: string;
+  affiliations?: string[];
+  is_available?: boolean;
+  incall_available?: boolean;
+  outcall_available?: boolean;
+  status?: string;
+  plan?: string;
+};
