@@ -80,7 +80,7 @@ export default function AboutPage() {
             {[
               { value: "10K+", label: "Therapists" },
               { value: "50+", label: "Cities" },
-              { value: "100K+", label: "Bookings" },
+              { value: "100K+", label: "Connections" },
             ].map((stat) => (
               <div key={stat.label}>
                 <div className="text-3xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">

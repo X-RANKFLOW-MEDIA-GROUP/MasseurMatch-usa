@@ -11,8 +11,8 @@ import { SITE_URL } from "@/src/lib/site";
 const benefits = [
   "Reach thousands of potential clients",
   "Professional profile with SEO optimization",
-  "Secure messaging and booking system",
-  "Manage your schedule easily",
+  "Display your contact info and availability",
+  "Manage your schedule and hours",
   "Get paid directly - no middleman fees",
 ];
 

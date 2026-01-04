@@ -93,7 +93,7 @@ export default function MessagesPage() {
       {
         id: "m1",
         sender_id: "u1",
-        content: "Hi there! I saw your profile and I'm interested in booking a session.",
+        content: "Hi there! I saw your profile and would like to schedule a session. How can I reach you?",
         created_at: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
         read: true,
       },
