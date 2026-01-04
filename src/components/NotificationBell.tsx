@@ -57,7 +57,7 @@ const getPriorityColor = (priority: string) => {
     case "high":
       return "bg-amber-500";
     default:
-      return "bg-violet-500";
+      return "bg-neutral-200";
   }
 };
 
@@ -179,7 +179,7 @@ export default function NotificationBell() {
               <div className="max-h-[320px] overflow-y-auto">
                 {loading ? (
                   <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-violet-500" />
+                    <Loader2 className="h-6 w-6 animate-spin text-neutral-200" />
                   </div>
                 ) : notifications.length === 0 ? (
                   <div className="py-8 text-center">
@@ -193,7 +193,7 @@ export default function NotificationBell() {
                         key={notification.id}
                         onClick={() => handleNotificationClick(notification)}
                         className={`px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors ${
-                          !notification.read ? "bg-violet-500/5" : ""
+                          !notification.read ? "bg-neutral-200/5" : ""
                         }`}
                       >
                         <div className="flex items-start gap-3">
@@ -203,7 +203,7 @@ export default function NotificationBell() {
                                 ? "bg-red-500/20 text-red-400"
                                 : notification.priority === "high"
                                 ? "bg-amber-500/20 text-amber-400"
-                                : "bg-white/10 text-violet-400"
+                                : "bg-white/10 text-white"
                             }`}
                           >
                             {getNotificationIcon(notification.type)}
@@ -228,7 +228,7 @@ export default function NotificationBell() {
                             </p>
                           </div>
                           {!notification.read && (
-                            <div className="w-2 h-2 rounded-full bg-violet-500 flex-shrink-0 mt-2" />
+                            <div className="w-2 h-2 rounded-full bg-neutral-200 flex-shrink-0 mt-2" />
                           )}
                         </div>
                       </div>
@@ -244,7 +244,7 @@ export default function NotificationBell() {
                     setIsOpen(false);
                     router.push("/dashboard/notifications");
                   }}
-                  className="w-full px-4 py-3 text-sm text-violet-400 hover:text-violet-300 hover:bg-white/5 flex items-center justify-center gap-1 transition-colors"
+                  className="w-full px-4 py-3 text-sm text-white hover:text-neutral-300 hover:bg-white/5 flex items-center justify-center gap-1 transition-colors"
                 >
                   View all notifications
                   <ChevronRight className="h-4 w-4" />

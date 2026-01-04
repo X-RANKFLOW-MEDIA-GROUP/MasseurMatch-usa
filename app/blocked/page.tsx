@@ -36,7 +36,7 @@ export default function BlockedPage() {
 
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-8">
           <h2 className="font-semibold text-white mb-4 flex items-center justify-center gap-2">
-            <Mail className="h-5 w-5 text-violet-400" />
+            <Mail className="h-5 w-5 text-white" />
             Appeal Process
           </h2>
           <p className="text-sm text-slate-400 mb-4">
@@ -44,7 +44,7 @@ export default function BlockedPage() {
           </p>
           <a
             href="mailto:appeals@masseurmatch.com"
-            className="text-violet-400 hover:text-violet-300 transition-colors"
+            className="text-white hover:text-neutral-300 transition-colors"
           >
             appeals@masseurmatch.com
           </a>

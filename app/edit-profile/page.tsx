@@ -94,7 +94,7 @@ export default function EditProfilePage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0a0a0f]">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-white" />
       </div>
     );
   }
@@ -113,7 +113,7 @@ export default function EditProfilePage() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 font-medium text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 font-medium text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
           >
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             {saving ? "Saving..." : "Save"}
@@ -128,10 +128,10 @@ export default function EditProfilePage() {
           {/* Photo */}
           <div className="flex items-center gap-6">
             <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-600/30 to-indigo-600/30 flex items-center justify-center">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-white/30 to-neutral-100/30 flex items-center justify-center">
                 <span className="text-4xl">👤</span>
               </div>
-              <button className="absolute bottom-0 right-0 p-2 rounded-full bg-violet-600 text-white hover:bg-violet-500 transition-colors">
+              <button className="absolute bottom-0 right-0 p-2 rounded-full bg-white text-white hover:bg-neutral-200 transition-colors">
                 <Camera className="h-4 w-4" />
               </button>
             </div>
@@ -154,7 +154,7 @@ export default function EditProfilePage() {
                   value={profile.display_name}
                   onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
                   placeholder="John Smith"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 />
               </div>
 
@@ -167,7 +167,7 @@ export default function EditProfilePage() {
                   value={profile.headline}
                   onChange={(e) => setProfile({ ...profile, headline: e.target.value })}
                   placeholder="Licensed Massage Therapist"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 />
               </div>
 
@@ -180,7 +180,7 @@ export default function EditProfilePage() {
                   onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                   placeholder="Tell clients about yourself..."
                   rows={4}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none resize-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none resize-none"
                 />
               </div>
             </div>
@@ -199,7 +199,7 @@ export default function EditProfilePage() {
                   value={profile.city}
                   onChange={(e) => setProfile({ ...profile, city: e.target.value })}
                   placeholder="Los Angeles"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 />
               </div>
               <div>
@@ -211,7 +211,7 @@ export default function EditProfilePage() {
                   value={profile.state}
                   onChange={(e) => setProfile({ ...profile, state: e.target.value })}
                   placeholder="CA"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 />
               </div>
             </div>
@@ -230,7 +230,7 @@ export default function EditProfilePage() {
                   value={profile.rate_60}
                   onChange={(e) => setProfile({ ...profile, rate_60: e.target.value })}
                   placeholder="$80"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 />
               </div>
               <div>
@@ -242,7 +242,7 @@ export default function EditProfilePage() {
                   value={profile.rate_90}
                   onChange={(e) => setProfile({ ...profile, rate_90: e.target.value })}
                   placeholder="$120"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 />
               </div>
             </div>
@@ -258,7 +258,7 @@ export default function EditProfilePage() {
                   onClick={() => handleServiceToggle(service)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     profile.services.includes(service)
-                      ? "bg-violet-600 text-white"
+                      ? "bg-white text-white"
                       : "bg-white/5 text-slate-400 hover:text-white border border-white/10"
                   }`}
                 >

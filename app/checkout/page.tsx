@@ -92,7 +92,7 @@ function CheckoutContent() {
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
           <h2 className="text-xl font-semibold text-white mb-6">Order Summary</h2>
 
-          <div className="rounded-xl bg-gradient-to-br from-violet-600/20 to-indigo-600/20 p-4 mb-6">
+          <div className="rounded-xl bg-gradient-to-br from-white/20 to-neutral-100/20 p-4 mb-6">
             <h3 className="font-semibold text-white mb-1">{selectedPlan.name} Plan</h3>
             <p className="text-3xl font-bold text-white">
               ${selectedPlan.price}
@@ -128,24 +128,24 @@ function CheckoutContent() {
         {/* Payment Section */}
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
           <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-            <CreditCard className="h-5 w-5 text-violet-400" />
+            <CreditCard className="h-5 w-5 text-white" />
             Secure Checkout
           </h2>
 
           <div className="space-y-6">
-            <div className="rounded-xl bg-violet-600/10 border border-violet-500/20 p-4">
+            <div className="rounded-xl bg-white/10 border border-neutral-300/20 p-4">
               <h3 className="font-medium text-white mb-2">What happens next?</h3>
               <ul className="text-sm text-slate-300 space-y-2">
                 <li className="flex items-start gap-2">
-                  <span className="text-violet-400">1.</span>
+                  <span className="text-white">1.</span>
                   You&apos;ll be redirected to our secure payment page
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-violet-400">2.</span>
+                  <span className="text-white">2.</span>
                   Enter your payment details safely with Stripe
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-violet-400">3.</span>
+                  <span className="text-white">3.</span>
                   Your subscription activates immediately
                 </li>
               </ul>
@@ -160,7 +160,7 @@ function CheckoutContent() {
             <button
               onClick={handleCheckout}
               disabled={loading}
-              className="w-full rounded-xl bg-violet-600 py-4 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+              className="w-full rounded-xl bg-white py-4 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -188,11 +188,11 @@ function CheckoutContent() {
 
             <p className="text-xs text-slate-500 text-center">
               By subscribing, you agree to our{" "}
-              <Link href="/terms" className="text-violet-400 hover:underline">
+              <Link href="/terms" className="text-white hover:underline">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="/privacy-policy" className="text-violet-400 hover:underline">
+              <Link href="/privacy-policy" className="text-white hover:underline">
                 Privacy Policy
               </Link>
               .
@@ -210,7 +210,7 @@ export default function CheckoutPage() {
       <Suspense
         fallback={
           <div className="flex items-center justify-center min-h-[60vh]">
-            <Loader2 className="h-12 w-12 animate-spin text-violet-500" />
+            <Loader2 className="h-12 w-12 animate-spin text-neutral-200" />
           </div>
         }
       >

@@ -252,7 +252,7 @@ export default function CitiesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -269,19 +269,19 @@ export default function CitiesPage() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
       >
         <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Home className="h-5 w-5 text-violet-400" />
+          <Home className="h-5 w-5 text-white" />
           Primary City
         </h2>
         {primaryCity ? (
-          <div className="flex items-center justify-between p-4 rounded-xl bg-violet-600/20 border border-violet-500/30">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-white/20 border border-neutral-300/30">
             <div className="flex items-center gap-3">
-              <MapPin className="h-5 w-5 text-violet-400" />
+              <MapPin className="h-5 w-5 text-white" />
               <div>
                 <p className="font-medium text-white">{primaryCity.city}, {primaryCity.state}</p>
                 <p className="text-sm text-slate-400">Your main location</p>
               </div>
             </div>
-            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-violet-500/20 text-violet-300 text-xs">
+            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-neutral-200/20 text-neutral-300 text-xs">
               <Check className="h-3 w-3" />
               Primary
             </div>
@@ -292,7 +292,7 @@ export default function CitiesPage() {
             <p className="text-slate-400 mb-3">No primary city set</p>
             <Link
               href="/dashboard/profile"
-              className="text-violet-400 hover:text-violet-300 text-sm font-medium"
+              className="text-white hover:text-neutral-300 text-sm font-medium"
             >
               Set your primary city in Profile →
             </Link>
@@ -309,7 +309,7 @@ export default function CitiesPage() {
       >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Plane className="h-5 w-5 text-violet-400" />
+            <Plane className="h-5 w-5 text-white" />
             Travel Schedule
           </h2>
           <div className="text-sm text-slate-400">
@@ -334,7 +334,7 @@ export default function CitiesPage() {
             </p>
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-500 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-white hover:bg-neutral-200 transition-colors"
             >
               <Plus className="h-4 w-4" />
               Upgrade Plan
@@ -417,7 +417,7 @@ export default function CitiesPage() {
             {canAddMore && (
               <button
                 onClick={() => setShowAddCity(true)}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-white/10 text-slate-400 hover:border-violet-500/50 hover:text-white transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-white/10 text-slate-400 hover:border-neutral-300/50 hover:text-white transition-colors"
               >
                 <Plus className="h-4 w-4" />
                 Add Travel Destination
@@ -456,7 +456,7 @@ export default function CitiesPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search cities..."
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 autoFocus
               />
             </div>
@@ -471,7 +471,7 @@ export default function CitiesPage() {
                     type="date"
                     value={travelDates.start}
                     onChange={(e) => setTravelDates({ ...travelDates, start: e.target.value })}
-                    className="w-full rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-sm focus:border-violet-500 focus:outline-none"
+                    className="w-full rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-sm focus:border-neutral-300 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -481,7 +481,7 @@ export default function CitiesPage() {
                     value={travelDates.end}
                     onChange={(e) => setTravelDates({ ...travelDates, end: e.target.value })}
                     min={travelDates.start}
-                    className="w-full rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-sm focus:border-violet-500 focus:outline-none"
+                    className="w-full rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-sm focus:border-neutral-300 focus:outline-none"
                   />
                 </div>
               </div>
@@ -508,7 +508,7 @@ export default function CitiesPage() {
                       <span className="text-white">{city.city}, {city.state}</span>
                     </div>
                     {isPrimary && (
-                      <span className="text-xs text-violet-400">Primary</span>
+                      <span className="text-xs text-white">Primary</span>
                     )}
                     {isAdded && (
                       <Check className="h-4 w-4 text-green-400" />
@@ -543,7 +543,7 @@ export default function CitiesPage() {
             </div>
 
             <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 mb-4">
-              <MapPin className="h-5 w-5 text-violet-400" />
+              <MapPin className="h-5 w-5 text-white" />
               <span className="text-white font-medium">{editingCity.city}, {editingCity.state}</span>
             </div>
 
@@ -554,7 +554,7 @@ export default function CitiesPage() {
                   type="date"
                   value={travelDates.start}
                   onChange={(e) => setTravelDates({ ...travelDates, start: e.target.value })}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-neutral-300 focus:outline-none"
                 />
               </div>
               <div>
@@ -564,7 +564,7 @@ export default function CitiesPage() {
                   value={travelDates.end}
                   onChange={(e) => setTravelDates({ ...travelDates, end: e.target.value })}
                   min={travelDates.start}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-neutral-300 focus:outline-none"
                 />
               </div>
             </div>
@@ -581,7 +581,7 @@ export default function CitiesPage() {
               <button
                 onClick={handleUpdateTravelDates}
                 disabled={saving}
-                className="flex-1 py-3 rounded-xl bg-violet-600 text-white hover:bg-violet-500 transition-colors disabled:opacity-50"
+                className="flex-1 py-3 rounded-xl bg-white text-white hover:bg-neutral-200 transition-colors disabled:opacity-50"
               >
                 {saving ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Save"}
               </button>
@@ -611,7 +611,7 @@ export default function CitiesPage() {
           {plan !== "elite" && (
             <Link
               href="/pricing"
-              className="text-sm text-violet-400 hover:text-violet-300"
+              className="text-sm text-white hover:text-neutral-300"
             >
               Upgrade →
             </Link>

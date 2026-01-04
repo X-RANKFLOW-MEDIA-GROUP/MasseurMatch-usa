@@ -100,7 +100,7 @@ export default function NewAdPage() {
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="e.g., Professional Massage Therapy in LA"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 required
               />
             </div>
@@ -114,7 +114,7 @@ export default function NewAdPage() {
                 value={formData.headline}
                 onChange={(e) => setFormData({ ...formData, headline: e.target.value })}
                 placeholder="Licensed Massage Therapist with 10+ years experience"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 required
               />
             </div>
@@ -128,7 +128,7 @@ export default function NewAdPage() {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Describe your services, experience, and what makes you unique..."
                 rows={5}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none resize-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none resize-none"
                 required
               />
             </div>
@@ -146,7 +146,7 @@ export default function NewAdPage() {
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                 placeholder="Los Angeles"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 required
               />
             </div>
@@ -157,7 +157,7 @@ export default function NewAdPage() {
                 value={formData.state}
                 onChange={(e) => setFormData({ ...formData, state: e.target.value })}
                 placeholder="CA"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 required
               />
             </div>
@@ -175,7 +175,7 @@ export default function NewAdPage() {
                 value={formData.rate_60}
                 onChange={(e) => setFormData({ ...formData, rate_60: e.target.value })}
                 placeholder="$80"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
             <div>
@@ -185,7 +185,7 @@ export default function NewAdPage() {
                 value={formData.rate_90}
                 onChange={(e) => setFormData({ ...formData, rate_90: e.target.value })}
                 placeholder="$120"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
           </div>
@@ -202,7 +202,7 @@ export default function NewAdPage() {
                 onClick={() => handleServiceToggle(service)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   formData.services.includes(service)
-                    ? "bg-violet-600 text-white"
+                    ? "bg-white text-white"
                     : "bg-white/5 text-slate-400 hover:text-white border border-white/10"
                 }`}
               >
@@ -215,7 +215,7 @@ export default function NewAdPage() {
         {/* Photos */}
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
           <h2 className="text-lg font-semibold text-white mb-4">Photos</h2>
-          <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-violet-500/50 transition-colors cursor-pointer">
+          <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-neutral-300/50 transition-colors cursor-pointer">
             <Upload className="h-10 w-10 text-slate-400 mx-auto mb-3" />
             <p className="text-slate-400">Click to upload photos</p>
             <p className="text-sm text-slate-500 mt-1">PNG, JPG up to 5MB each</p>
@@ -227,7 +227,7 @@ export default function NewAdPage() {
           <button
             type="submit"
             disabled={saving}
-            className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-violet-600 py-4 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-white py-4 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
           >
             {saving ? "Creating..." : (
               <>

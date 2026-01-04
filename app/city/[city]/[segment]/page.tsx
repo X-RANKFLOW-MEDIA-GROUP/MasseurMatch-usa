@@ -70,7 +70,7 @@ export default async function CitySegmentPage({ params }: Props) {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch
           </Link>
         </nav>
@@ -100,7 +100,7 @@ export default async function CitySegmentPage({ params }: Props) {
               href={`/city/${city}/${key}`}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 key === segment
-                  ? "bg-violet-600 text-white"
+                  ? "bg-white text-white"
                   : "bg-white/5 text-slate-400 hover:text-white border border-white/10"
               }`}
             >
@@ -119,7 +119,7 @@ export default async function CitySegmentPage({ params }: Props) {
             </p>
             <Link
               href={`/city/${city}`}
-              className="inline-block rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+              className="inline-block rounded-xl bg-white px-6 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
             >
               View All Therapists
             </Link>
@@ -132,7 +132,7 @@ export default async function CitySegmentPage({ params }: Props) {
                 href={`/therapist/${t.slug}`}
                 className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden hover:bg-white/10 transition-colors"
               >
-                <div className="h-48 bg-gradient-to-br from-violet-600/20 to-indigo-600/20 flex items-center justify-center">
+                <div className="h-48 bg-gradient-to-br from-white/20 to-neutral-100/20 flex items-center justify-center">
                   <span className="text-5xl">💆</span>
                 </div>
                 <div className="p-6">

@@ -23,12 +23,12 @@ export default async function TherapistListPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch
           </Link>
           <Link
             href="/join"
-            className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-500 transition-colors"
+            className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-white hover:bg-neutral-200 transition-colors"
           >
             Join as Therapist
           </Link>
@@ -48,7 +48,7 @@ export default async function TherapistListPage() {
             <input
               type="text"
               placeholder="Search by name, city, or service..."
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
             />
           </div>
           <button className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-white hover:bg-white/10 transition-colors">
@@ -64,7 +64,7 @@ export default async function TherapistListPage() {
               key={filter}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 filter === "All"
-                  ? "bg-violet-600 text-white"
+                  ? "bg-white text-white"
                   : "bg-white/5 text-slate-400 hover:text-white border border-white/10"
               }`}
             >
@@ -90,7 +90,7 @@ export default async function TherapistListPage() {
                   href={`/therapist/${t.slug}`}
                   className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden hover:bg-white/10 transition-colors group"
                 >
-                  <div className="h-48 bg-gradient-to-br from-violet-600/20 to-indigo-600/20 flex items-center justify-center relative overflow-hidden">
+                  <div className="h-48 bg-gradient-to-br from-white/20 to-neutral-100/20 flex items-center justify-center relative overflow-hidden">
                     <span className="text-5xl group-hover:scale-110 transition-transform">💆</span>
                     {t.rate_60 && (
                       <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-sm text-white">
@@ -99,7 +99,7 @@ export default async function TherapistListPage() {
                     )}
                   </div>
                   <div className="p-5">
-                    <h3 className="font-semibold text-white mb-1 group-hover:text-violet-400 transition-colors">
+                    <h3 className="font-semibold text-white mb-1 group-hover:text-white transition-colors">
                       {t.display_name}
                     </h3>
                     <p className="text-sm text-slate-400 line-clamp-1 mb-3">{t.headline}</p>
@@ -109,7 +109,7 @@ export default async function TherapistListPage() {
                         {t.services.slice(0, 2).map((service: string) => (
                           <span
                             key={service}
-                            className="px-2 py-0.5 rounded-full text-xs bg-violet-600/20 text-violet-400"
+                            className="px-2 py-0.5 rounded-full text-xs bg-white/20 text-white"
                           >
                             {service}
                           </span>

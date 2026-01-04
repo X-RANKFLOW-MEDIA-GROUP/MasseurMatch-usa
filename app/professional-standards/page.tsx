@@ -12,7 +12,7 @@ export default function ProfessionalStandardsPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch
           </Link>
         </nav>
@@ -59,7 +59,7 @@ export default function ProfessionalStandardsPage() {
           {/* Code of Conduct */}
           <section>
             <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-violet-400" />
+              <BookOpen className="h-5 w-5 text-white" />
               Code of Conduct
             </h2>
             <ul className="space-y-3">
@@ -105,14 +105,14 @@ export default function ProfessionalStandardsPage() {
           </section>
 
           {/* Join CTA */}
-          <section className="rounded-2xl border border-white/10 bg-gradient-to-br from-violet-600/20 to-indigo-600/20 p-8 text-center">
+          <section className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/20 to-neutral-100/20 p-8 text-center">
             <h2 className="text-2xl font-bold text-white mb-4">Join Our Network</h2>
             <p className="text-slate-300 mb-6">
               If you meet our professional standards, we&apos;d love to have you on MasseurMatch.
             </p>
             <Link
               href="/join"
-              className="inline-block rounded-xl bg-violet-600 px-8 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+              className="inline-block rounded-xl bg-white px-8 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
             >
               Apply Now
             </Link>

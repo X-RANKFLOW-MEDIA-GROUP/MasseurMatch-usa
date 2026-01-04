@@ -64,7 +64,7 @@ export default function AdsPage() {
         </div>
         <Link
           href="/dashboard/ads/new"
-          className="flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+          className="flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
         >
           <Plus className="h-5 w-5" />
           Create Ad
@@ -88,7 +88,7 @@ export default function AdsPage() {
           <p className="text-slate-400 mb-6">Create your first ad to start getting clients</p>
           <Link
             href="/dashboard/ads/new"
-            className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
           >
             <Plus className="h-5 w-5" />
             Create Your First Ad

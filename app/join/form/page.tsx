@@ -90,7 +90,7 @@ export default function JoinFormPage() {
                 value={formData.display_name}
                 onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
                 placeholder="John Smith"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 required
               />
             </div>
@@ -101,7 +101,7 @@ export default function JoinFormPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="john@example.com"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 required
               />
             </div>
@@ -112,7 +112,7 @@ export default function JoinFormPage() {
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="+1 (555) 123-4567"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -123,7 +123,7 @@ export default function JoinFormPage() {
                   value={formData.city}
                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                   placeholder="Los Angeles"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 />
               </div>
               <div>
@@ -133,7 +133,7 @@ export default function JoinFormPage() {
                   value={formData.state}
                   onChange={(e) => setFormData({ ...formData, state: e.target.value })}
                   placeholder="CA"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 />
               </div>
             </div>
@@ -150,7 +150,7 @@ export default function JoinFormPage() {
                 value={formData.license_number}
                 onChange={(e) => setFormData({ ...formData, license_number: e.target.value })}
                 placeholder="MT-12345"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
             <div>
@@ -160,7 +160,7 @@ export default function JoinFormPage() {
                 value={formData.license_state}
                 onChange={(e) => setFormData({ ...formData, license_state: e.target.value })}
                 placeholder="California"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
             <div>
@@ -170,7 +170,7 @@ export default function JoinFormPage() {
                 value={formData.experience_years}
                 onChange={(e) => setFormData({ ...formData, experience_years: e.target.value })}
                 placeholder="5"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
             <label className="flex items-center gap-3 cursor-pointer">
@@ -178,7 +178,7 @@ export default function JoinFormPage() {
                 type="checkbox"
                 checked={formData.insurance}
                 onChange={(e) => setFormData({ ...formData, insurance: e.target.checked })}
-                className="w-5 h-5 rounded border-white/20 bg-white/5 text-violet-600 focus:ring-violet-500"
+                className="w-5 h-5 rounded border-white/20 bg-white/5 text-white focus:ring-white/10"
               />
               <span className="text-slate-300">I have professional liability insurance</span>
             </label>
@@ -195,7 +195,7 @@ export default function JoinFormPage() {
                 value={formData.headline}
                 onChange={(e) => setFormData({ ...formData, headline: e.target.value })}
                 placeholder="Licensed Massage Therapist specializing in..."
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
             <div>
@@ -205,7 +205,7 @@ export default function JoinFormPage() {
                 onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                 placeholder="Tell potential clients about yourself..."
                 rows={4}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none resize-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none resize-none"
               />
             </div>
             <div>
@@ -218,7 +218,7 @@ export default function JoinFormPage() {
                     onClick={() => handleServiceToggle(service)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                       formData.services.includes(service)
-                        ? "bg-violet-600 text-white"
+                        ? "bg-white text-white"
                         : "bg-white/5 text-slate-400 hover:text-white border border-white/10"
                     }`}
                   >
@@ -235,7 +235,7 @@ export default function JoinFormPage() {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-3">Profile Photo</label>
-              <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-violet-500/50 transition-colors cursor-pointer">
+              <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-neutral-300/50 transition-colors cursor-pointer">
                 <Upload className="h-10 w-10 text-slate-400 mx-auto mb-3" />
                 <p className="text-slate-400">Click to upload or drag and drop</p>
                 <p className="text-sm text-slate-500 mt-1">PNG, JPG up to 5MB</p>
@@ -243,7 +243,7 @@ export default function JoinFormPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-3">Gallery Photos (Optional)</label>
-              <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-violet-500/50 transition-colors cursor-pointer">
+              <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-neutral-300/50 transition-colors cursor-pointer">
                 <Upload className="h-10 w-10 text-slate-400 mx-auto mb-3" />
                 <p className="text-slate-400">Add photos of your workspace</p>
                 <p className="text-sm text-slate-500 mt-1">Up to 10 photos</p>
@@ -277,7 +277,7 @@ export default function JoinFormPage() {
                   step > s.id
                     ? "bg-green-500 text-white"
                     : step === s.id
-                    ? "bg-violet-600 text-white"
+                    ? "bg-white text-white"
                     : "bg-white/10 text-slate-400"
                 }`}
               >
@@ -313,7 +313,7 @@ export default function JoinFormPage() {
             {step < steps.length ? (
               <button
                 onClick={() => setStep((s) => s + 1)}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-violet-600 text-white hover:bg-violet-500 transition-colors"
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-white hover:bg-neutral-200 transition-colors"
               >
                 Next
                 <ArrowRight className="h-4 w-4" />
@@ -322,7 +322,7 @@ export default function JoinFormPage() {
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
               >
                 {loading ? "Submitting..." : "Submit Application"}
               </button>

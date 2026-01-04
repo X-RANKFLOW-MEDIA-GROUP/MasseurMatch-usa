@@ -53,7 +53,7 @@ export default function BlogPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch
           </Link>
         </nav>
@@ -71,11 +71,11 @@ export default function BlogPage() {
           className="block rounded-2xl border border-white/10 bg-white/5 overflow-hidden mb-12 hover:bg-white/10 transition-colors"
         >
           <div className="md:flex">
-            <div className="md:w-1/2 h-64 md:h-auto bg-gradient-to-br from-violet-600/30 to-indigo-600/30 flex items-center justify-center">
+            <div className="md:w-1/2 h-64 md:h-auto bg-gradient-to-br from-white/30 to-neutral-100/30 flex items-center justify-center">
               <span className="text-6xl">📖</span>
             </div>
             <div className="md:w-1/2 p-8">
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-violet-600/20 text-violet-400 mb-4">
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white mb-4">
                 {posts[0].category}
               </span>
               <h2 className="text-2xl font-bold text-white mb-4">{posts[0].title}</h2>
@@ -102,18 +102,18 @@ export default function BlogPage() {
               href={`/blog/${post.slug}`}
               className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden hover:bg-white/10 transition-colors"
             >
-              <div className="h-40 bg-gradient-to-br from-violet-600/20 to-indigo-600/20 flex items-center justify-center">
+              <div className="h-40 bg-gradient-to-br from-white/20 to-neutral-100/20 flex items-center justify-center">
                 <span className="text-4xl">📝</span>
               </div>
               <div className="p-6">
-                <span className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-violet-600/20 text-violet-400 mb-3">
+                <span className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-white/20 text-white mb-3">
                   {post.category}
                 </span>
                 <h3 className="font-semibold text-white mb-2 line-clamp-2">{post.title}</h3>
                 <p className="text-sm text-slate-400 mb-4 line-clamp-2">{post.excerpt}</p>
                 <div className="flex items-center justify-between text-xs text-slate-500">
                   <span>{new Date(post.date).toLocaleDateString()}</span>
-                  <span className="flex items-center gap-1 text-violet-400">
+                  <span className="flex items-center gap-1 text-white">
                     Read more <ArrowRight className="h-3 w-3" />
                   </span>
                 </div>
