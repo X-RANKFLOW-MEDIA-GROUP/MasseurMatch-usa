@@ -56,12 +56,13 @@ const glowVariants = {
   animate: {
     opacity: [0.3, 0.6, 0.3],
     scale: [0.8, 1.2, 0.8],
-    transition: {
-      duration: 4,
-      repeat: Infinity,
-      ease: "easeInOut",
-    }
   },
+};
+
+const glowTransition = {
+  duration: 4,
+  repeat: Infinity,
+  ease: "easeInOut" as const,
 };
 
 export default function HomePage() {
@@ -85,13 +86,14 @@ export default function HomePage() {
           variants={glowVariants}
           initial="initial"
           animate="animate"
+          transition={glowTransition}
           className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-white/5 rounded-full blur-[120px]"
         />
         <motion.div
           variants={glowVariants}
           initial="initial"
           animate="animate"
-          style={{ animationDelay: "2s" }}
+          transition={glowTransition}
           className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-white/5 rounded-full blur-[120px]"
         />
 
