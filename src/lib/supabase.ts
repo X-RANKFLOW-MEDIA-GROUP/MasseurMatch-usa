@@ -1,14 +1,13 @@
-// src/lib/supabase.ts
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
-if (!supabaseUrl) {
-  throw new Error("NEXT_PUBLIC_SUPABASE_URL is required");
-}
-if (!supabaseAnonKey) {
-  throw new Error("NEXT_PUBLIC_SUPABASE_ANON_KEY is required");
-}
+// Create a dummy client for build time, real client at runtime
+export const supabase: SupabaseClient =
+  supabaseUrl && supabaseAnonKey
+    ? createClient(supabaseUrl, supabaseAnonKey)
+    : (null as unknown as SupabaseClient);
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Helper to check if Supabase is configured
+export const isSupabaseConfigured = () => !!supabaseUrl && !!supabaseAnonKey;

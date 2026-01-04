@@ -1,3 +1,0 @@
-module.exports=[88244,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(19993);a.n(d("[project]/masseurmatch-nextjs/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},60194,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(19993);a.n(d("[project]/masseurmatch-nextjs/node_modules/next/dist/client/components/builtin/global-error.js"))},34897,a=>{"use strict";a.i(88244);var b=a.i(60194);a.n(b)}];
-
-//# sourceMappingURL=d51c8_next_dist_client_components_builtin_global-error_a081f9a3.js.map

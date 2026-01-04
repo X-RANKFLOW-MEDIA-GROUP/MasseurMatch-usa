@@ -1,92 +1,136 @@
-"use client";
+import { createServerSupabaseClient } from "@/src/lib/supabase-server";
+import Link from "next/link";
 
-import "@/dashboard-vite/src/index.css";
-import "@/dashboard-vite/src/styles/globals.css";
-import { Dashboard } from "@/dashboard-vite/src/components/Dashboard";
-import { Toaster } from "@/dashboard-vite/src/components/ui/sonner";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { supabase } from "@/src/lib/supabase";
+export default async function DashboardPage() {
+  const supabase = await createServerSupabaseClient();
+  const { data: { session } } = await supabase.auth.getSession();
 
-export default function DashboardPage() {
-  const router = useRouter();
-  const [profile, setProfile] = useState<any | null>(null);
-  const [loadingProfile, setLoadingProfile] = useState(true);
-  const [profileError, setProfileError] = useState<string | null>(null);
+  // Get therapist profile if exists
+  const { data: profile } = await supabase
+    .from("therapists")
+    .select("*")
+    .eq("user_id", session?.user.id)
+    .single();
 
-  const handleLogout = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-
-      // Clear any local storage
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("massur:last-email");
-      }
-
-      // Redirect to login
-      router.replace("/login");
-    } catch (err: any) {
-      console.error("Logout error:", err);
-      // Even if there's an error, redirect to login
-      router.replace("/login");
-    }
-  };
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadProfile() {
-      try {
-        setLoadingProfile(true);
-        setProfileError(null);
-
-        const { data: sessionData, error: sessionErr } =
-          await supabase.auth.getSession();
-        if (sessionErr) throw sessionErr;
-
-        const userId = sessionData.session?.user?.id;
-        if (!userId) {
-          router.replace("/login?redirectTo=/dashboard");
-          return;
-        }
-
-        const { data, error } = await supabase
-          .from("therapists")
-          .select(
-            "display_name, full_name, location, plan, plan_name, status, profile_photo, services, languages"
-          )
-          .eq("user_id", userId)
-          .maybeSingle();
-
-        if (error) throw error;
-        if (!cancelled) setProfile(data);
-      } catch (err: any) {
-        if (!cancelled)
-          setProfileError(err?.message || "Não foi possível carregar o perfil.");
-      } finally {
-        if (!cancelled) setLoadingProfile(false);
-      }
-    }
-
-    loadProfile();
-    return () => {
-      cancelled = true;
-    };
-  }, [router]);
+  const hasProfile = !!profile;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05050A] text-slate-200">
-      <main className="flex-1 relative">
-        <Dashboard
-          onViewProfile={() => router.push("/therapist")}
-          onLogout={handleLogout}
-          profile={profile}
-          loadingProfile={loadingProfile}
-          profileError={profileError}
-        />
-      </main>
-      <Toaster position="top-center" />
+    <div className="max-w-4xl">
+      <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
+      <p className="text-slate-400 mb-8">
+        Welcome back, {session?.user.email}
+      </p>
+
+      {!hasProfile ? (
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8 mb-8">
+          <h2 className="text-xl font-semibold text-white mb-2">
+            Complete Your Profile
+          </h2>
+          <p className="text-slate-400 mb-6">
+            Create your therapist profile to start receiving clients.
+          </p>
+          <Link
+            href="/dashboard/profile"
+            className="inline-flex rounded-xl bg-white px-6 py-3 font-medium text-white hover:bg-neutral-200 transition-colors"
+          >
+            Create Profile
+          </Link>
+        </div>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Profile Card */}
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="h-16 w-16 rounded-full bg-white/20 flex items-center justify-center text-2xl">
+                👤
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">
+                  {profile.display_name || profile.full_name}
+                </h3>
+                <p className="text-sm text-slate-400">
+                  {profile.city}, {profile.state}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 mb-4">
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  profile.status === "active"
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-yellow-500/20 text-yellow-400"
+                }`}
+              >
+                {profile.status || "pending"}
+              </span>
+              <span className="text-sm text-slate-400">
+                ⭐ {profile.rating || "0"} rating
+              </span>
+            </div>
+            <Link
+              href="/dashboard/profile"
+              className="text-sm text-white hover:text-neutral-300"
+            >
+              Edit Profile →
+            </Link>
+          </div>
+
+          {/* Stats Card */}
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            <h3 className="text-lg font-semibold text-white mb-4">Stats</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-2xl font-bold text-white">0</p>
+                <p className="text-sm text-slate-400">Profile Views</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">0</p>
+                <p className="text-sm text-slate-400">Inquiries</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">0</p>
+                <p className="text-sm text-slate-400">Reviews</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{profile.plan || "Free"}</p>
+                <p className="text-sm text-slate-400">Plan</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 md:col-span-2">
+            <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={`/therapist/${profile.slug}`}
+                target="_blank"
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+              >
+                👁️ View Public Profile
+              </Link>
+              <Link
+                href="/dashboard/availability"
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+              >
+                📅 Set Availability
+              </Link>
+              <Link
+                href="/dashboard/gallery"
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+              >
+                📸 Upload Photos
+              </Link>
+              <Link
+                href="/dashboard/billing"
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+              >
+                💳 Upgrade Plan
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
