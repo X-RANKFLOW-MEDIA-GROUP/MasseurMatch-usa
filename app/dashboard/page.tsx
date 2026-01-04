@@ -31,7 +31,7 @@ export default async function DashboardPage() {
           </p>
           <Link
             href="/dashboard/profile"
-            className="inline-flex rounded-xl bg-violet-600 px-6 py-3 font-medium text-white hover:bg-violet-500 transition-colors"
+            className="inline-flex rounded-xl bg-white px-6 py-3 font-medium text-white hover:bg-neutral-200 transition-colors"
           >
             Create Profile
           </Link>
@@ -41,7 +41,7 @@ export default async function DashboardPage() {
           {/* Profile Card */}
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
             <div className="flex items-center gap-4 mb-4">
-              <div className="h-16 w-16 rounded-full bg-violet-600/20 flex items-center justify-center text-2xl">
+              <div className="h-16 w-16 rounded-full bg-white/20 flex items-center justify-center text-2xl">
                 👤
               </div>
               <div>
@@ -69,7 +69,7 @@ export default async function DashboardPage() {
             </div>
             <Link
               href="/dashboard/profile"
-              className="text-sm text-violet-400 hover:text-violet-300"
+              className="text-sm text-white hover:text-neutral-300"
             >
               Edit Profile →
             </Link>

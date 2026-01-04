@@ -198,7 +198,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -216,7 +216,7 @@ export default function ProfilePage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Camera className="h-5 w-5 text-violet-400" />
+            <Camera className="h-5 w-5 text-white" />
             Profile Photo
           </h2>
           <div className="flex items-center gap-6">
@@ -239,7 +239,7 @@ export default function ProfilePage() {
               )}
             </div>
             <div>
-              <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-500 transition-colors">
+              <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-white hover:bg-neutral-200 transition-colors">
                 <Camera className="h-4 w-4" />
                 {profile.profile_photo ? "Change Photo" : "Upload Photo"}
                 <input
@@ -263,7 +263,7 @@ export default function ProfilePage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <User className="h-5 w-5 text-violet-400" />
+            <User className="h-5 w-5 text-white" />
             Basic Information
           </h2>
           <div className="space-y-4">
@@ -273,7 +273,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.display_name}
                 onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 placeholder="Your professional name"
                 required
               />
@@ -284,7 +284,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.headline}
                 onChange={(e) => setProfile({ ...profile, headline: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 placeholder="Licensed Massage Therapist with 10+ years experience"
               />
             </div>
@@ -294,7 +294,7 @@ export default function ProfilePage() {
                 value={profile.about}
                 onChange={(e) => setProfile({ ...profile, about: e.target.value })}
                 rows={4}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none resize-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none resize-none"
                 placeholder="Tell clients about yourself and your approach..."
               />
             </div>
@@ -304,7 +304,7 @@ export default function ProfilePage() {
                 value={profile.philosophy}
                 onChange={(e) => setProfile({ ...profile, philosophy: e.target.value })}
                 rows={3}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none resize-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none resize-none"
                 placeholder="Your massage philosophy or approach..."
               />
             </div>
@@ -319,7 +319,7 @@ export default function ProfilePage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-violet-400" />
+            <MapPin className="h-5 w-5 text-white" />
             Location
           </h2>
           <div className="grid md:grid-cols-3 gap-4">
@@ -329,7 +329,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.city}
                 onChange={(e) => setProfile({ ...profile, city: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 placeholder="Los Angeles"
               />
             </div>
@@ -339,7 +339,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.state}
                 onChange={(e) => setProfile({ ...profile, state: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 placeholder="CA"
               />
             </div>
@@ -349,7 +349,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.neighborhood}
                 onChange={(e) => setProfile({ ...profile, neighborhood: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 placeholder="West Hollywood"
               />
             </div>
@@ -364,7 +364,7 @@ export default function ProfilePage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-violet-400" />
+            <MapPin className="h-5 w-5 text-white" />
             Service Location
           </h2>
           <p className="text-sm text-slate-400 mb-4">
@@ -376,19 +376,19 @@ export default function ProfilePage() {
               onClick={() => setProfile({ ...profile, incall_available: !profile.incall_available })}
               className={`cursor-pointer p-4 rounded-xl border transition-all ${
                 profile.incall_available
-                  ? "bg-violet-600/20 border-violet-500/50"
+                  ? "bg-white/20 border-neutral-300/50"
                   : "bg-white/5 border-white/10 hover:border-white/20"
               }`}
             >
               <div className="flex items-start gap-4">
-                <div className={`p-3 rounded-xl ${profile.incall_available ? "bg-violet-600" : "bg-white/10"}`}>
+                <div className={`p-3 rounded-xl ${profile.incall_available ? "bg-white" : "bg-white/10"}`}>
                   <Home className={`h-5 w-5 ${profile.incall_available ? "text-white" : "text-slate-400"}`} />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <h3 className="font-medium text-white">Incall</h3>
                     <div className={`w-11 h-6 rounded-full transition-colors ${
-                      profile.incall_available ? "bg-violet-600" : "bg-white/10"
+                      profile.incall_available ? "bg-white" : "bg-white/10"
                     }`}>
                       <div className={`w-5 h-5 rounded-full bg-white mt-0.5 transition-transform ${
                         profile.incall_available ? "translate-x-5.5 ml-0.5" : "translate-x-0.5"
@@ -407,19 +407,19 @@ export default function ProfilePage() {
               onClick={() => setProfile({ ...profile, outcall_available: !profile.outcall_available })}
               className={`cursor-pointer p-4 rounded-xl border transition-all ${
                 profile.outcall_available
-                  ? "bg-violet-600/20 border-violet-500/50"
+                  ? "bg-white/20 border-neutral-300/50"
                   : "bg-white/5 border-white/10 hover:border-white/20"
               }`}
             >
               <div className="flex items-start gap-4">
-                <div className={`p-3 rounded-xl ${profile.outcall_available ? "bg-violet-600" : "bg-white/10"}`}>
+                <div className={`p-3 rounded-xl ${profile.outcall_available ? "bg-white" : "bg-white/10"}`}>
                   <Car className={`h-5 w-5 ${profile.outcall_available ? "text-white" : "text-slate-400"}`} />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <h3 className="font-medium text-white">Outcall</h3>
                     <div className={`w-11 h-6 rounded-full transition-colors ${
-                      profile.outcall_available ? "bg-violet-600" : "bg-white/10"
+                      profile.outcall_available ? "bg-white" : "bg-white/10"
                     }`}>
                       <div className={`w-5 h-5 rounded-full bg-white mt-0.5 transition-transform ${
                         profile.outcall_available ? "translate-x-5.5 ml-0.5" : "translate-x-0.5"
@@ -443,7 +443,7 @@ export default function ProfilePage() {
                   type="number"
                   value={profile.outcall_radius}
                   onChange={(e) => setProfile({ ...profile, outcall_radius: e.target.value })}
-                  className="w-full md:w-48 rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full md:w-48 rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                   placeholder="25"
                   min="1"
                   max="100"
@@ -464,7 +464,7 @@ export default function ProfilePage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Phone className="h-5 w-5 text-violet-400" />
+            <Phone className="h-5 w-5 text-white" />
             Contact Information
           </h2>
           <div className="grid md:grid-cols-2 gap-4">
@@ -474,7 +474,7 @@ export default function ProfilePage() {
                 type="tel"
                 value={profile.phone}
                 onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 placeholder="+1 (555) 123-4567"
               />
             </div>
@@ -495,7 +495,7 @@ export default function ProfilePage() {
                   type="url"
                   value={profile.website}
                   onChange={(e) => setProfile({ ...profile, website: e.target.value })}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                   placeholder="https://yoursite.com"
                 />
               </div>
@@ -508,7 +508,7 @@ export default function ProfilePage() {
                   type="text"
                   value={profile.instagram}
                   onChange={(e) => setProfile({ ...profile, instagram: e.target.value })}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                   placeholder="@yourusername"
                 />
               </div>
@@ -521,7 +521,7 @@ export default function ProfilePage() {
                   type="tel"
                   value={profile.whatsapp}
                   onChange={(e) => setProfile({ ...profile, whatsapp: e.target.value })}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                   placeholder="+1 (555) 123-4567"
                 />
               </div>
@@ -545,7 +545,7 @@ export default function ProfilePage() {
                 onClick={() => handleServiceToggle(service)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   profile.services.includes(service)
-                    ? "bg-violet-600 text-white"
+                    ? "bg-white text-white"
                     : "bg-white/5 text-slate-400 hover:text-white border border-white/10"
                 }`}
               >
@@ -570,7 +570,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.rate_60}
                 onChange={(e) => setProfile({ ...profile, rate_60: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 placeholder="$100"
               />
             </div>
@@ -580,7 +580,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.rate_90}
                 onChange={(e) => setProfile({ ...profile, rate_90: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 placeholder="$140"
               />
             </div>
@@ -590,7 +590,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.rate_outcall}
                 onChange={(e) => setProfile({ ...profile, rate_outcall: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 placeholder="$150"
               />
             </div>
@@ -613,7 +613,7 @@ export default function ProfilePage() {
                   type="number"
                   value={profile.years_experience}
                   onChange={(e) => setProfile({ ...profile, years_experience: e.target.value })}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                   placeholder="10"
                   min="0"
                 />
@@ -624,7 +624,7 @@ export default function ProfilePage() {
                   type="text"
                   value={profile.languages}
                   onChange={(e) => setProfile({ ...profile, languages: e.target.value })}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                   placeholder="English, Spanish"
                 />
               </div>
@@ -635,7 +635,7 @@ export default function ProfilePage() {
                 value={profile.degrees}
                 onChange={(e) => setProfile({ ...profile, degrees: e.target.value })}
                 rows={3}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none resize-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none resize-none"
                 placeholder="LMT, NCTMB Certified, Bachelor's in Kinesiology..."
               />
             </div>
@@ -651,7 +651,7 @@ export default function ProfilePage() {
           <button
             type="submit"
             disabled={saving}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-violet-600 py-4 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-white py-4 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
           >
             {saving ? (
               <>

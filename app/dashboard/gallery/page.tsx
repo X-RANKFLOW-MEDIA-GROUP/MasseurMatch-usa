@@ -126,7 +126,7 @@ export default function GalleryPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -144,7 +144,7 @@ export default function GalleryPage() {
           </p>
           <div className="w-32 h-2 bg-white/10 rounded-full mt-1 overflow-hidden">
             <div
-              className="h-full bg-violet-500 rounded-full transition-all"
+              className="h-full bg-neutral-200 rounded-full transition-all"
               style={{ width: `${Math.min(100, (used / limit) * 100)}%` }}
             />
           </div>
@@ -159,10 +159,10 @@ export default function GalleryPage() {
       >
         {remaining > 0 ? (
           <label className="block cursor-pointer">
-            <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-violet-500/50 transition-colors">
+            <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-neutral-300/50 transition-colors">
               {uploading ? (
                 <div className="flex flex-col items-center">
-                  <Loader2 className="h-10 w-10 text-violet-400 animate-spin mb-3" />
+                  <Loader2 className="h-10 w-10 text-white animate-spin mb-3" />
                   <p className="text-slate-400">Uploading & moderating...</p>
                 </div>
               ) : (
@@ -190,7 +190,7 @@ export default function GalleryPage() {
             </p>
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-500 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-white hover:bg-neutral-200 transition-colors"
             >
               <Plus className="h-4 w-4" />
               Upgrade Plan
@@ -248,7 +248,7 @@ export default function GalleryPage() {
                 </button>
               </div>
               {index === 0 && (
-                <div className="absolute top-2 left-2 px-2 py-1 rounded-full bg-violet-600 text-white text-xs font-medium">
+                <div className="absolute top-2 left-2 px-2 py-1 rounded-full bg-white text-white text-xs font-medium">
                   Main
                 </div>
               )}
@@ -276,7 +276,7 @@ export default function GalleryPage() {
           {plan !== "elite" && (
             <Link
               href="/pricing"
-              className="text-sm text-violet-400 hover:text-violet-300"
+              className="text-sm text-white hover:text-neutral-300"
             >
               Upgrade for more →
             </Link>

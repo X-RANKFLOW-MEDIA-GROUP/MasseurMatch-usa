@@ -214,7 +214,7 @@ export default async function TherapistPage({
         {/* Header */}
         <header className="border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl sticky top-0 z-50">
           <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-            <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+            <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
               {SITE_NAME}
             </Link>
             <div className="flex items-center gap-4">
@@ -263,7 +263,7 @@ export default async function TherapistPage({
                   className="w-48 h-48 rounded-3xl object-cover"
                 />
               ) : (
-                <div className="w-48 h-48 rounded-3xl bg-violet-600/20 flex items-center justify-center text-6xl">
+                <div className="w-48 h-48 rounded-3xl bg-white/20 flex items-center justify-center text-6xl">
                   👤
                 </div>
               )}
@@ -287,7 +287,7 @@ export default async function TherapistPage({
                   </span>
                 )}
               </div>
-              <p className="text-xl text-violet-400 mb-4">{therapist.headline}</p>
+              <p className="text-xl text-white mb-4">{therapist.headline}</p>
 
               <div className="flex flex-wrap gap-4 mb-6">
                 <span className="flex items-center gap-2 text-slate-300">
@@ -317,12 +317,12 @@ export default async function TherapistPage({
                   </span>
                 )}
                 {therapist.incall_available && (
-                  <span className="px-3 py-1 rounded-full bg-violet-500/20 text-violet-300 text-sm">
+                  <span className="px-3 py-1 rounded-full bg-neutral-200/20 text-neutral-300 text-sm">
                     In-call
                   </span>
                 )}
                 {therapist.outcall_available && (
-                  <span className="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-sm">
+                  <span className="px-3 py-1 rounded-full bg-white/10 text-neutral-300 text-sm">
                     Out-call
                   </span>
                 )}
@@ -332,7 +332,7 @@ export default async function TherapistPage({
               {therapist.phone && (
                 <a
                   href={`tel:${therapist.phone}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 font-medium text-white hover:bg-violet-500 transition-colors"
+                  className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-medium text-white hover:bg-neutral-200 transition-colors"
                 >
                   <Phone className="h-5 w-5" />
                   Contact Now
@@ -368,7 +368,7 @@ export default async function TherapistPage({
                     {therapist.services.map((service) => (
                       <span
                         key={service}
-                        className="px-3 py-1 rounded-full bg-violet-600/20 text-violet-300 text-sm"
+                        className="px-3 py-1 rounded-full bg-white/20 text-neutral-300 text-sm"
                       >
                         {service}
                       </span>
@@ -385,7 +385,7 @@ export default async function TherapistPage({
                     {therapist.massage_techniques.map((technique) => (
                       <span
                         key={technique}
-                        className="px-3 py-1 rounded-full bg-indigo-600/20 text-indigo-300 text-sm"
+                        className="px-3 py-1 rounded-full bg-neutral-800/20 text-neutral-300 text-sm"
                       >
                         {technique}
                       </span>
@@ -524,25 +524,25 @@ export default async function TherapistPage({
                 <h2 className="text-xl font-semibold text-white mb-4">Contact</h2>
                 <div className="space-y-3">
                   {therapist.phone && (
-                    <a href={`tel:${therapist.phone}`} className="flex items-center gap-3 text-slate-300 hover:text-violet-400 transition-colors">
+                    <a href={`tel:${therapist.phone}`} className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors">
                       <Phone className="h-4 w-4" />
                       {therapist.phone}
                     </a>
                   )}
                   {therapist.email && (
-                    <a href={`mailto:${therapist.email}`} className="flex items-center gap-3 text-slate-300 hover:text-violet-400 transition-colors">
+                    <a href={`mailto:${therapist.email}`} className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors">
                       <Mail className="h-4 w-4" />
                       {therapist.email}
                     </a>
                   )}
                   {therapist.website && (
-                    <a href={therapist.website} target="_blank" rel="noopener" className="flex items-center gap-3 text-slate-300 hover:text-violet-400 transition-colors">
+                    <a href={therapist.website} target="_blank" rel="noopener" className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors">
                       <Globe className="h-4 w-4" />
                       Website
                     </a>
                   )}
                   {therapist.instagram && (
-                    <a href={`https://instagram.com/${therapist.instagram.replace("@", "")}`} target="_blank" rel="noopener" className="flex items-center gap-3 text-slate-300 hover:text-violet-400 transition-colors">
+                    <a href={`https://instagram.com/${therapist.instagram.replace("@", "")}`} target="_blank" rel="noopener" className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors">
                       <Instagram className="h-4 w-4" />
                       {therapist.instagram}
                     </a>

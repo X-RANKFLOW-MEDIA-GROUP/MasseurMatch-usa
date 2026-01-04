@@ -57,7 +57,7 @@ export default function LegalPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch
           </Link>
         </nav>
@@ -74,8 +74,8 @@ export default function LegalPage() {
               href={page.href}
               className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 hover:bg-white/10 transition-colors"
             >
-              <div className="p-3 rounded-xl bg-violet-600/20">
-                <page.icon className="h-6 w-6 text-violet-400" />
+              <div className="p-3 rounded-xl bg-white/20">
+                <page.icon className="h-6 w-6 text-white" />
               </div>
               <div>
                 <h2 className="font-semibold text-white">{page.title}</h2>

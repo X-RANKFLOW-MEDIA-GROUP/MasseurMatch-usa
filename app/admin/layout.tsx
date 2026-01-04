@@ -62,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -77,7 +77,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-64 border-r border-white/10 bg-white/5 flex flex-col">
         <div className="p-6 border-b border-white/10">
           <Link href="/admin" className="flex items-center gap-2">
-            <Shield className="h-8 w-8 text-violet-500" />
+            <Shield className="h-8 w-8 text-neutral-200" />
             <span className="text-xl font-bold text-white">Admin</span>
           </Link>
         </div>
@@ -91,7 +91,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                   isActive
-                    ? "bg-violet-600 text-white"
+                    ? "bg-white text-white"
                     : "text-slate-400 hover:bg-white/5 hover:text-white"
                 }`}
               >

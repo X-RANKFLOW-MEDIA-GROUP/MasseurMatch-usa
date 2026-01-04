@@ -34,7 +34,7 @@ export default function CheckoutErrorPage() {
         <div className="space-y-3">
           <Link
             href="/checkout"
-            className="flex items-center justify-center gap-2 w-full rounded-xl bg-violet-600 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+            className="flex items-center justify-center gap-2 w-full rounded-xl bg-white py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
           >
             <RefreshCw className="h-4 w-4" />
             Try Again

@@ -84,7 +84,7 @@ export default function PricingPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch
           </Link>
           <div className="flex items-center gap-4">
@@ -93,7 +93,7 @@ export default function PricingPage() {
             </Link>
             <Link
               href="/join"
-              className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-500 transition-colors"
+              className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-white hover:bg-neutral-200 transition-colors"
             >
               Get Started
             </Link>
@@ -106,7 +106,7 @@ export default function PricingPage() {
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Choose Your{" "}
-            <span className="bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
               Plan
             </span>
           </h1>
@@ -122,14 +122,14 @@ export default function PricingPage() {
               key={plan.id}
               className={`relative rounded-3xl p-6 flex flex-col ${
                 plan.popular
-                  ? "border-2 border-violet-500 bg-gradient-to-br from-violet-600/20 to-indigo-600/20"
+                  ? "border-2 border-neutral-300 bg-gradient-to-br from-white/20 to-neutral-100/20"
                   : plan.elite
                   ? "border-2 border-amber-500/50 bg-gradient-to-br from-amber-600/10 to-orange-600/10"
                   : "border border-white/10 bg-white/5"
               }`}
             >
               {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-violet-600 text-white text-xs font-medium">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white text-white text-xs font-medium">
                   MOST POPULAR
                 </div>
               )}
@@ -141,7 +141,7 @@ export default function PricingPage() {
 
               <div className="mb-4">
                 <plan.icon className={`h-8 w-8 mb-3 ${
-                  plan.popular ? "text-violet-400" : plan.elite ? "text-amber-400" : "text-slate-400"
+                  plan.popular ? "text-white" : plan.elite ? "text-amber-400" : "text-slate-400"
                 }`} />
                 <h2 className="text-xl font-bold text-white mb-1">{plan.name}</h2>
                 <p className="text-sm text-slate-400">{plan.description}</p>
@@ -156,7 +156,7 @@ export default function PricingPage() {
                 {plan.features.map((feature) => (
                   <li key={feature.text} className="flex items-start gap-2 text-sm text-slate-300">
                     <feature.icon className={`h-4 w-4 shrink-0 mt-0.5 ${
-                      plan.popular ? "text-violet-400" : plan.elite ? "text-amber-400" : "text-green-400"
+                      plan.popular ? "text-white" : plan.elite ? "text-amber-400" : "text-green-400"
                     }`} />
                     {feature.text}
                   </li>
@@ -167,7 +167,7 @@ export default function PricingPage() {
                 href={plan.href}
                 className={`block w-full text-center rounded-xl py-3 font-semibold transition-colors ${
                   plan.popular
-                    ? "bg-violet-600 text-white hover:bg-violet-500"
+                    ? "bg-white text-white hover:bg-neutral-200"
                     : plan.elite
                     ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-400 hover:to-orange-400"
                     : "border border-white/20 text-white hover:bg-white/10"
@@ -189,7 +189,7 @@ export default function PricingPage() {
                   <th className="py-4 px-4 text-slate-400 font-medium">Feature</th>
                   <th className="py-4 px-4 text-center text-white">Free</th>
                   <th className="py-4 px-4 text-center text-white">Standard</th>
-                  <th className="py-4 px-4 text-center text-violet-400">Pro</th>
+                  <th className="py-4 px-4 text-center text-white">Pro</th>
                   <th className="py-4 px-4 text-center text-amber-400">Elite</th>
                 </tr>
               </thead>
@@ -268,14 +268,14 @@ export default function PricingPage() {
         </div>
 
         {/* CTA */}
-        <div className="mt-16 text-center rounded-3xl border border-white/10 bg-gradient-to-br from-violet-600/20 to-indigo-600/20 p-12">
+        <div className="mt-16 text-center rounded-3xl border border-white/10 bg-gradient-to-br from-white/20 to-neutral-100/20 p-12">
           <h2 className="text-3xl font-bold text-white mb-4">Ready to grow your practice?</h2>
           <p className="text-slate-300 mb-8 max-w-xl mx-auto">
             Join thousands of massage therapists who are growing their business with MasseurMatch.
           </p>
           <Link
             href="/join"
-            className="inline-block rounded-xl bg-violet-600 px-8 py-4 font-semibold text-white hover:bg-violet-500 transition-colors"
+            className="inline-block rounded-xl bg-white px-8 py-4 font-semibold text-white hover:bg-neutral-200 transition-colors"
           >
             Start Your Free Trial
           </Link>

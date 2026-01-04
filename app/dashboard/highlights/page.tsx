@@ -145,7 +145,7 @@ export default function HighlightsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -224,7 +224,7 @@ export default function HighlightsPage() {
               </p>
               <Link
                 href="/pricing"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-500 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-white hover:bg-neutral-200 transition-colors"
               >
                 Upgrade Plan
               </Link>
@@ -250,7 +250,7 @@ export default function HighlightsPage() {
                 <select
                   value={selectedCity}
                   onChange={(e) => setSelectedCity(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-neutral-300 focus:outline-none"
                 >
                   {userCities.map((city) => (
                     <option key={city} value={city} className="bg-slate-900">
@@ -287,7 +287,7 @@ export default function HighlightsPage() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
       >
         <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Star className="h-5 w-5 text-violet-400" />
+          <Star className="h-5 w-5 text-white" />
           How Highlights Work
         </h2>
         <div className="space-y-3">
@@ -298,7 +298,7 @@ export default function HighlightsPage() {
             { icon: Zap, text: "Stack with Available Now for maximum visibility" },
           ].map((item, i) => (
             <div key={i} className="flex items-center gap-3 text-slate-300">
-              <item.icon className="h-4 w-4 text-violet-400" />
+              <item.icon className="h-4 w-4 text-white" />
               {item.text}
             </div>
           ))}

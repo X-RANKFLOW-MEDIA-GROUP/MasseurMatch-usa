@@ -80,7 +80,7 @@ export default function FavoritesPage() {
           <p className="text-slate-400 mb-6">Browse therapists and save your favorites</p>
           <Link
             href="/explore"
-            className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
           >
             Explore Therapists
           </Link>
@@ -112,7 +112,7 @@ export default function FavoritesPage() {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-violet-600/30 to-indigo-600/30 flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-white/30 to-neutral-100/30 flex items-center justify-center">
                       <span className="text-4xl">💆</span>
                     </div>
                   )}

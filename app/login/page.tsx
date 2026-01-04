@@ -78,7 +78,7 @@ function LoginContent() {
       {/* Card */}
       <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent mb-2">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent mb-2">
             Welcome Back
           </h1>
           <p className="text-slate-400">Sign in to your account</p>
@@ -126,7 +126,7 @@ function LoginContent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-white/10/20 transition-all"
                 required
               />
             </div>
@@ -135,7 +135,7 @@ function LoginContent() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-xl bg-violet-600 py-3 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full rounded-xl bg-white py-3 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isLoading ? "Sending..." : "Send Magic Link"}
           </button>
@@ -159,7 +159,7 @@ function LoginContent() {
           Don&apos;t have an account?{" "}
           <Link
             href="/join"
-            className="text-violet-400 hover:text-violet-300 font-medium transition-colors"
+            className="text-white hover:text-neutral-300 font-medium transition-colors"
           >
             Join as Therapist
           </Link>
@@ -174,8 +174,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center px-6 py-12">
       {/* Background */}
       <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/50 via-[#0a0a0f] to-indigo-950/30" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-neutral-950 to-black" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
       </div>
 
       <Suspense

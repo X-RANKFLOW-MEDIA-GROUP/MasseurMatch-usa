@@ -80,7 +80,7 @@ const getPriorityIconColor = (priority: string) => {
     case "high":
       return "text-amber-400";
     default:
-      return "text-violet-400";
+      return "text-white";
   }
 };
 
@@ -213,7 +213,7 @@ export default function NotificationsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -249,7 +249,7 @@ export default function NotificationsPage() {
           onClick={() => setFilter("all")}
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
             filter === "all"
-              ? "bg-violet-600 text-white"
+              ? "bg-white text-white"
               : "bg-white/5 text-slate-400 hover:bg-white/10"
           }`}
         >
@@ -259,7 +259,7 @@ export default function NotificationsPage() {
           onClick={() => setFilter("unread")}
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
             filter === "unread"
-              ? "bg-violet-600 text-white"
+              ? "bg-white text-white"
               : "bg-white/5 text-slate-400 hover:bg-white/10"
           }`}
         >
@@ -296,7 +296,7 @@ export default function NotificationsPage() {
                 transition={{ delay: index * 0.05 }}
                 className={`rounded-2xl border p-4 transition-colors ${getPriorityStyles(
                   notification.priority
-                )} ${!notification.read ? "border-l-4 border-l-violet-500" : ""}`}
+                )} ${!notification.read ? "border-l-4 border-l-white" : ""}`}
               >
                 <div className="flex items-start gap-4">
                   <div
@@ -331,7 +331,7 @@ export default function NotificationsPage() {
                       {notification.message}
                     </p>
                     {notification.action_url && (
-                      <div className="flex items-center gap-1 mt-2 text-sm text-violet-400">
+                      <div className="flex items-center gap-1 mt-2 text-sm text-white">
                         <span>View details</span>
                         <ChevronRight className="h-4 w-4" />
                       </div>

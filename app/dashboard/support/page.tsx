@@ -69,10 +69,10 @@ export default function SupportPage() {
             transition={{ delay: index * 0.1 }}
             className="p-6 rounded-2xl border border-white/10 bg-white/5 text-left hover:bg-white/10 transition-colors"
           >
-            <item.icon className="h-8 w-8 text-violet-400 mb-3" />
+            <item.icon className="h-8 w-8 text-white mb-3" />
             <h3 className="font-semibold text-white">{item.label}</h3>
             <p className="text-sm text-slate-400 mb-2">{item.desc}</p>
-            <span className="text-sm text-violet-400">{item.action} →</span>
+            <span className="text-sm text-white">{item.action} →</span>
           </motion.button>
         ))}
       </div>
@@ -85,7 +85,7 @@ export default function SupportPage() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-8"
       >
         <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <FileText className="h-5 w-5 text-violet-400" />
+          <FileText className="h-5 w-5 text-white" />
           Frequently Asked Questions
         </h3>
         <div className="space-y-3">
@@ -124,7 +124,7 @@ export default function SupportPage() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6"
       >
         <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Send className="h-5 w-5 text-violet-400" />
+          <Send className="h-5 w-5 text-white" />
           Send us a message
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -135,7 +135,7 @@ export default function SupportPage() {
               value={formData.subject}
               onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
               placeholder="What can we help you with?"
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               required
             />
           </div>
@@ -146,14 +146,14 @@ export default function SupportPage() {
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
               placeholder="Describe your issue or question..."
               rows={5}
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none resize-none"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none resize-none"
               required
             />
           </div>
           <button
             type="submit"
             disabled={sending}
-            className="w-full rounded-xl bg-violet-600 py-3 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+            className="w-full rounded-xl bg-white py-3 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
           >
             {sending ? "Sending..." : sent ? "Message Sent!" : "Send Message"}
           </button>

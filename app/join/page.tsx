@@ -77,12 +77,12 @@ export default function JoinPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Benefits */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-violet-600 to-indigo-700 p-12 flex-col justify-center">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-white to-neutral-800 p-12 flex-col justify-center">
         <div className="max-w-md">
           <h1 className="text-4xl font-bold text-white mb-6">
             Grow your massage therapy practice
           </h1>
-          <p className="text-violet-100 text-lg mb-8">
+          <p className="text-neutral-200 text-lg mb-8">
             Join MasseurMatch and connect with clients looking for professional massage therapists like you.
           </p>
           <ul className="space-y-4">
@@ -97,7 +97,7 @@ export default function JoinPage() {
           </ul>
 
           <div className="mt-12 pt-8 border-t border-white/20">
-            <p className="text-violet-100 mb-4">Already have clients?</p>
+            <p className="text-neutral-200 mb-4">Already have clients?</p>
             <Link
               href="/pricing"
               className="inline-flex items-center gap-2 text-white font-medium hover:underline"
@@ -168,7 +168,7 @@ export default function JoinPage() {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="John Smith"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                   required
                 />
               </div>
@@ -184,7 +184,7 @@ export default function JoinPage() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                   required
                 />
               </div>
@@ -200,7 +200,7 @@ export default function JoinPage() {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="+1 (555) 123-4567"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                   required
                 />
               </div>
@@ -216,7 +216,7 @@ export default function JoinPage() {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Min. 8 characters"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                   required
                   minLength={8}
                 />
@@ -229,14 +229,14 @@ export default function JoinPage() {
 
             <p className="text-xs text-slate-500">
               By signing up, you agree to our{" "}
-              <Link href="/terms" className="text-violet-400 hover:underline">Terms</Link> and{" "}
-              <Link href="/privacy-policy" className="text-violet-400 hover:underline">Privacy Policy</Link>
+              <Link href="/terms" className="text-white hover:underline">Terms</Link> and{" "}
+              <Link href="/privacy-policy" className="text-white hover:underline">Privacy Policy</Link>
             </p>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full rounded-xl bg-violet-600 py-3 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+              className="w-full rounded-xl bg-white py-3 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
             >
               {isLoading ? "Creating Account..." : "Create Account"}
             </button>
@@ -244,7 +244,7 @@ export default function JoinPage() {
 
           <p className="mt-8 text-center text-slate-400">
             Already have an account?{" "}
-            <Link href="/login" className="text-violet-400 hover:text-violet-300 font-medium">
+            <Link href="/login" className="text-white hover:text-neutral-300 font-medium">
               Sign in
             </Link>
           </p>

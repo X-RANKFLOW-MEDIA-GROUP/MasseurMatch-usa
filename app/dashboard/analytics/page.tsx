@@ -99,7 +99,7 @@ export default function AnalyticsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -120,7 +120,7 @@ export default function AnalyticsPage() {
               onClick={() => setPeriod(days)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 period === days
-                  ? "bg-violet-600 text-white"
+                  ? "bg-white text-white"
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -139,8 +139,8 @@ export default function AnalyticsPage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 rounded-xl bg-violet-600/20">
-              <Eye className="h-5 w-5 text-violet-400" />
+            <div className="p-3 rounded-xl bg-white/20">
+              <Eye className="h-5 w-5 text-white" />
             </div>
             <span className="text-sm font-medium text-slate-400">Profile Views</span>
           </div>
@@ -171,8 +171,8 @@ export default function AnalyticsPage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 rounded-xl bg-indigo-600/20">
-              <Users className="h-5 w-5 text-indigo-400" />
+            <div className="p-3 rounded-xl bg-neutral-800/20">
+              <Users className="h-5 w-5 text-white" />
             </div>
             <span className="text-sm font-medium text-slate-400">Unique Viewers</span>
           </div>
@@ -210,7 +210,7 @@ export default function AnalyticsPage() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-8"
       >
         <div className="flex items-center gap-3 mb-6">
-          <BarChart3 className="h-5 w-5 text-violet-400" />
+          <BarChart3 className="h-5 w-5 text-white" />
           <h2 className="text-lg font-semibold text-white">Views Over Time</h2>
         </div>
 
@@ -219,7 +219,7 @@ export default function AnalyticsPage() {
             {chartData.map((item, index) => (
               <div key={item.date} className="flex-1 flex flex-col items-center gap-2">
                 <div
-                  className="w-full bg-violet-600 rounded-t-sm transition-all hover:bg-violet-500"
+                  className="w-full bg-white rounded-t-sm transition-all hover:bg-neutral-200"
                   style={{
                     height: `${(item.views / maxViews) * 100}%`,
                     minHeight: item.views > 0 ? "4px" : "0",
@@ -250,7 +250,7 @@ export default function AnalyticsPage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
           <div className="flex items-center gap-3 mb-6">
-            <Monitor className="h-5 w-5 text-violet-400" />
+            <Monitor className="h-5 w-5 text-white" />
             <h2 className="text-lg font-semibold text-white">Device Breakdown</h2>
           </div>
 
@@ -270,7 +270,7 @@ export default function AnalyticsPage() {
                   </div>
                   <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-violet-600 rounded-full transition-all"
+                      className="h-full bg-white rounded-full transition-all"
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
@@ -288,7 +288,7 @@ export default function AnalyticsPage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
           <div className="flex items-center gap-3 mb-6">
-            <Globe className="h-5 w-5 text-violet-400" />
+            <Globe className="h-5 w-5 text-white" />
             <h2 className="text-lg font-semibold text-white">Top Referrers</h2>
           </div>
 
@@ -321,10 +321,10 @@ export default function AnalyticsPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="mt-8 p-4 rounded-xl bg-violet-600/10 border border-violet-500/20"
+        className="mt-8 p-4 rounded-xl bg-white/10 border border-neutral-300/20"
       >
         <div className="flex items-start gap-3">
-          <Calendar className="h-5 w-5 text-violet-400 flex-shrink-0 mt-0.5" />
+          <Calendar className="h-5 w-5 text-white flex-shrink-0 mt-0.5" />
           <div>
             <h3 className="font-medium text-white mb-1">About Analytics</h3>
             <p className="text-sm text-slate-400">

@@ -100,7 +100,7 @@ export default function EditSectionPage({ params }: Props) {
     return (
       <div className="max-w-3xl text-center py-16">
         <p className="text-white">Section not found</p>
-        <Link href={`/dashboard/ads/${adId}/edit`} className="text-violet-400 hover:underline mt-4 inline-block">
+        <Link href={`/dashboard/ads/${adId}/edit`} className="text-white hover:underline mt-4 inline-block">
           Back to Edit
         </Link>
       </div>
@@ -128,7 +128,7 @@ export default function EditSectionPage({ params }: Props) {
             href={`/dashboard/ads/${adId}/edit/${key}`}
             className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
               key === section
-                ? "bg-violet-600 text-white"
+                ? "bg-white text-white"
                 : "bg-white/5 text-slate-400 hover:text-white"
             }`}
           >
@@ -146,7 +146,7 @@ export default function EditSectionPage({ params }: Props) {
                 type="text"
                 value={(formData.title as string) || ""}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-neutral-300 focus:outline-none"
               />
             </div>
             <div>
@@ -155,7 +155,7 @@ export default function EditSectionPage({ params }: Props) {
                 type="text"
                 value={(formData.headline as string) || ""}
                 onChange={(e) => setFormData({ ...formData, headline: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-neutral-300 focus:outline-none"
               />
             </div>
             <div>
@@ -164,7 +164,7 @@ export default function EditSectionPage({ params }: Props) {
                 value={(formData.description as string) || ""}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows={6}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-violet-500 focus:outline-none resize-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-neutral-300 focus:outline-none resize-none"
               />
             </div>
           </div>
@@ -178,7 +178,7 @@ export default function EditSectionPage({ params }: Props) {
                 <span className="text-4xl">📷</span>
               </div>
             </div>
-            <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-violet-500/50 transition-colors cursor-pointer">
+            <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-neutral-300/50 transition-colors cursor-pointer">
               <Upload className="h-10 w-10 text-slate-400 mx-auto mb-3" />
               <p className="text-slate-400">Click to upload more photos</p>
               <p className="text-sm text-slate-500 mt-1">PNG, JPG up to 5MB each</p>
@@ -197,7 +197,7 @@ export default function EditSectionPage({ params }: Props) {
                   onClick={() => handleServiceToggle(service)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     ((formData.services as string[]) || []).includes(service)
-                      ? "bg-violet-600 text-white"
+                      ? "bg-white text-white"
                       : "bg-white/5 text-slate-400 hover:text-white border border-white/10"
                   }`}
                 >
@@ -217,7 +217,7 @@ export default function EditSectionPage({ params }: Props) {
                 value={(formData.rate_60 as string) || ""}
                 onChange={(e) => setFormData({ ...formData, rate_60: e.target.value })}
                 placeholder="$80"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
             <div>
@@ -227,7 +227,7 @@ export default function EditSectionPage({ params }: Props) {
                 value={(formData.rate_90 as string) || ""}
                 onChange={(e) => setFormData({ ...formData, rate_90: e.target.value })}
                 placeholder="$120"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
             <div>
@@ -237,7 +237,7 @@ export default function EditSectionPage({ params }: Props) {
                 value={(formData.rate_outcall as string) || ""}
                 onChange={(e) => setFormData({ ...formData, rate_outcall: e.target.value })}
                 placeholder="$150"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
           </div>
@@ -246,7 +246,7 @@ export default function EditSectionPage({ params }: Props) {
         <button
           type="submit"
           disabled={saving}
-          className="w-full flex items-center justify-center gap-2 rounded-xl bg-violet-600 py-4 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-white py-4 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
         >
           {saving ? "Saving..." : (
             <>

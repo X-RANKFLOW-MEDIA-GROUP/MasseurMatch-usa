@@ -83,7 +83,7 @@ export default function AdminEditsPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5 bg-[#0a0a0f]">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch Admin
           </Link>
         </nav>
@@ -107,7 +107,7 @@ export default function AdminEditsPage() {
                 onClick={() => setFilter(f)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   filter === f
-                    ? "bg-violet-600 text-white"
+                    ? "bg-white text-white"
                     : "bg-white/5 text-slate-400 hover:text-white"
                 }`}
               >
@@ -146,7 +146,7 @@ export default function AdminEditsPage() {
                 </div>
 
                 <div className="rounded-xl bg-white/5 p-4 mb-4">
-                  <p className="text-xs text-slate-500 mb-2">Field: <span className="text-violet-400">{edit.field}</span></p>
+                  <p className="text-xs text-slate-500 mb-2">Field: <span className="text-white">{edit.field}</span></p>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs text-slate-500 mb-1">Current Value</p>

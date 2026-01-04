@@ -94,7 +94,7 @@ export default function ExploreFilters({ therapists, cities }: ExploreFiltersPro
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by name, city, or specialty..."
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
             />
           </div>
 
@@ -131,7 +131,7 @@ export default function ExploreFilters({ therapists, cities }: ExploreFiltersPro
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-2 px-4 py-3 rounded-xl border transition-all ${
                 showFilters || activeFilterCount > 0
-                  ? "bg-violet-500/20 border-violet-500/50 text-violet-400"
+                  ? "bg-neutral-200/20 border-neutral-300/50 text-white"
                   : "bg-white/5 border-white/10 text-slate-300 hover:border-white/20"
               }`}
             >
@@ -174,7 +174,7 @@ export default function ExploreFilters({ therapists, cities }: ExploreFiltersPro
                   <select
                     value={selectedCity}
                     onChange={(e) => setSelectedCity(e.target.value)}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-violet-500 focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-neutral-300 focus:outline-none"
                   >
                     <option value="">All Cities</option>
                     {cities.map((city) => (
@@ -193,7 +193,7 @@ export default function ExploreFilters({ therapists, cities }: ExploreFiltersPro
                   <select
                     value={selectedService}
                     onChange={(e) => setSelectedService(e.target.value)}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-violet-500 focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white focus:border-neutral-300 focus:outline-none"
                   >
                     <option value="">All Services</option>
                     {allServices.map((service) => (
@@ -234,7 +234,7 @@ export default function ExploreFilters({ therapists, cities }: ExploreFiltersPro
           </p>
           <button
             onClick={clearFilters}
-            className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 font-medium text-white hover:bg-violet-500 transition-colors"
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-medium text-white hover:bg-neutral-200 transition-colors"
           >
             <X className="h-4 w-4" />
             Clear All Filters
@@ -249,7 +249,7 @@ function TherapistCardComponent({ therapist }: { therapist: TherapistCard }) {
   return (
     <Link
       href={`/therapist/${therapist.slug}`}
-      className="group relative rounded-3xl border border-white/10 bg-white/5 overflow-hidden hover:border-violet-500/50 transition-all duration-300"
+      className="group relative rounded-3xl border border-white/10 bg-white/5 overflow-hidden hover:border-neutral-300/50 transition-all duration-300"
     >
       {/* Available Now Badge - Prominent Position */}
       {therapist.available_now && (
@@ -270,7 +270,7 @@ function TherapistCardComponent({ therapist }: { therapist: TherapistCard }) {
       )}
 
       {/* Image */}
-      <div className="aspect-[4/3] bg-gradient-to-br from-violet-600/20 to-indigo-600/20 flex items-center justify-center">
+      <div className="aspect-[4/3] bg-gradient-to-br from-white/20 to-neutral-100/20 flex items-center justify-center">
         {therapist.profile_photo ? (
           <img
             src={therapist.profile_photo}
@@ -285,7 +285,7 @@ function TherapistCardComponent({ therapist }: { therapist: TherapistCard }) {
       {/* Content */}
       <div className="p-6">
         <div className="flex items-start justify-between mb-2">
-          <h3 className="text-xl font-semibold text-white group-hover:text-violet-400 transition-colors">
+          <h3 className="text-xl font-semibold text-white group-hover:text-white transition-colors">
             {therapist.display_name}
           </h3>
         </div>
@@ -318,7 +318,7 @@ function TherapistCardComponent({ therapist }: { therapist: TherapistCard }) {
             {therapist.services.slice(0, 3).map((service: string) => (
               <span
                 key={service}
-                className="rounded-full bg-violet-600/20 px-2 py-0.5 text-xs font-medium text-violet-300"
+                className="rounded-full bg-white/20 px-2 py-0.5 text-xs font-medium text-neutral-300"
               >
                 {service}
               </span>

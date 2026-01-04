@@ -53,7 +53,7 @@ function ResetContent() {
         <p className="text-slate-400 mb-6">Your password has been successfully updated.</p>
         <Link
           href="/login"
-          className="inline-block rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+          className="inline-block rounded-xl bg-white px-6 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
         >
           Sign In
         </Link>
@@ -73,8 +73,8 @@ function ResetContent() {
 
       <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-full bg-violet-600/20 flex items-center justify-center mx-auto mb-4">
-            <Lock className="h-6 w-6 text-violet-400" />
+          <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
+            <Lock className="h-6 w-6 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white mb-2">Reset Password</h1>
           <p className="text-slate-400">Enter your new password below</p>
@@ -90,7 +90,7 @@ function ResetContent() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               required
               minLength={8}
             />
@@ -105,7 +105,7 @@ function ResetContent() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               required
             />
           </div>
@@ -117,7 +117,7 @@ function ResetContent() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-violet-600 py-3 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+            className="w-full rounded-xl bg-white py-3 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
           >
             {loading ? "Resetting..." : "Reset Password"}
           </button>
@@ -134,7 +134,7 @@ export default function ResetPage() {
         <Suspense
           fallback={
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-500 mx-auto" />
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neutral-300 mx-auto" />
             </div>
           }
         >

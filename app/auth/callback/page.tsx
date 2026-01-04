@@ -32,7 +32,7 @@ function AuthCallbackContent() {
 
   return (
     <div className="text-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-500 mx-auto mb-4" />
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neutral-300 mx-auto mb-4" />
       <p className="text-white text-lg">Signing you in...</p>
     </div>
   );
@@ -44,7 +44,7 @@ export default function AuthCallbackPage() {
       <Suspense
         fallback={
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-500 mx-auto mb-4" />
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neutral-300 mx-auto mb-4" />
             <p className="text-white text-lg">Loading...</p>
           </div>
         }
