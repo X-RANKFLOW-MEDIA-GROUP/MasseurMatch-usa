@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/src/lib/supabase";
@@ -28,11 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    checkAdmin();
-  }, []);
-
-  const checkAdmin = async () => {
+  const checkAdmin = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       router.push("/login?redirect=/admin");
@@ -52,7 +48,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     setIsAdmin(true);
     setLoading(false);
-  };
+  }, [router]);
+
+  useEffect(() => {
+    void checkAdmin();
+  }, [checkAdmin]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

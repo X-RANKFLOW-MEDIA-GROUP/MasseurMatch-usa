@@ -57,4 +57,7 @@ export const cityMap: Record<string, CityInfo> = {
 };
 
 export const getAllCities = () => Object.values(cityMap);
-export const getCityBySlug = (slug: string) => cityMap[slug];
+export const getCityBySlug = (slug: string) =>
+  // City map keys are controlled internally
+  // eslint-disable-next-line security/detect-object-injection
+  Object.prototype.hasOwnProperty.call(cityMap, slug) ? cityMap[slug] : undefined;

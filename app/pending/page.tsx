@@ -25,8 +25,8 @@ export default function PendingPage() {
           <h2 className="font-semibold text-white mb-4">What happens next?</h2>
           <div className="space-y-4 text-left">
             {[
-              { icon: CheckCircle, text: "We verify your credentials and license" },
-              { icon: CheckCircle, text: "Our team reviews your profile" },
+              { icon: CheckCircle, text: "We verify your identity" },
+              { icon: CheckCircle, text: "Our team reviews your profile content" },
               { icon: Mail, text: "You'll receive an email once approved" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3 text-slate-300">
