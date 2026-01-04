@@ -23,29 +23,29 @@ export default function ProfessionalStandardsPage() {
         <p className="text-slate-400 mb-8">Our commitment to quality and professionalism</p>
 
         <div className="space-y-8">
-          {/* Requirements */}
+          {/* Expectations */}
           <section>
             <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-              <Award className="h-5 w-5 text-white" />
-              Therapist Requirements
+              <Award className="h-5 w-5 text-violet-400" />
+              What We Expect From Therapists
             </h2>
             <div className="space-y-4">
               {[
                 {
-                  title: "Valid License",
-                  desc: "All therapists must hold a current massage therapy license for their state.",
+                  title: "Professional Conduct",
+                  desc: "We expect all therapists to conduct themselves professionally and ethically.",
                 },
                 {
-                  title: "Insurance",
-                  desc: "Professional liability insurance is required to protect both therapists and clients.",
+                  title: "Accurate Information",
+                  desc: "Therapists must provide accurate information about their services and qualifications.",
                 },
                 {
-                  title: "Background Check",
-                  desc: "We conduct background checks on all therapists for your safety.",
+                  title: "Identity Verification",
+                  desc: "Therapists can verify their identity through our optional verification process.",
                 },
                 {
-                  title: "Continuing Education",
-                  desc: "Therapists are encouraged to maintain ongoing professional development.",
+                  title: "Quality Service",
+                  desc: "We expect therapists to provide high-quality service to all clients.",
                 },
               ].map((item) => (
                 <div key={item.title} className="rounded-xl border border-white/10 bg-white/5 p-4">
@@ -80,22 +80,28 @@ export default function ProfessionalStandardsPage() {
             </ul>
           </section>
 
-          {/* Verification */}
+          {/* Our Review Process */}
           <section>
             <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-              <Shield className="h-5 w-5 text-white" />
-              Verification Process
+              <Shield className="h-5 w-5 text-violet-400" />
+              Our Review Process
             </h2>
             <p className="text-slate-300 leading-relaxed mb-4">
-              Our verification process includes:
+              When you join MasseurMatch, our process includes:
             </p>
             <ol className="list-decimal list-inside text-slate-300 space-y-2">
-              <li>License verification with state licensing boards</li>
-              <li>Identity verification</li>
-              <li>Insurance documentation review</li>
-              <li>Background check through certified agencies</li>
-              <li>Profile review by our team</li>
+              <li>Profile content review by our team</li>
+              <li>Photo moderation for appropriateness</li>
+              <li>Optional identity verification with government ID</li>
+              <li>Ongoing community reporting and review</li>
             </ol>
+            <div className="mt-4 p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+              <p className="text-sm text-yellow-200">
+                <strong>Important:</strong> MasseurMatch does not verify professional licenses, certifications,
+                insurance, or conduct background checks. Clients should independently verify any credentials
+                important to them before booking.
+              </p>
+            </div>
           </section>
 
           {/* Join CTA */}
