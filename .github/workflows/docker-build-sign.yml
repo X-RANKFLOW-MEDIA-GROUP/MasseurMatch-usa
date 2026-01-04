@@ -77,6 +77,13 @@ jobs:
           output: 'trivy-image-results.sarif'
           severity: 'CRITICAL,HIGH'
 
+      - name: Ensure Trivy SARIF exists
+        if: always()
+        run: |
+          if [ ! -f trivy-image-results.sarif ]; then
+            echo "{}" > trivy-image-results.sarif
+          fi
+
       - name: Upload Trivy results to GitHub Security
         uses: github/codeql-action/upload-sarif@v4
         if: always()
@@ -90,6 +97,13 @@ jobs:
           format: 'json'
           output: 'trivy-image-report.json'
           severity: 'CRITICAL,HIGH,MEDIUM'
+
+      - name: Ensure Trivy JSON report exists
+        if: always()
+        run: |
+          if [ ! -f trivy-image-report.json ]; then
+            echo "{}" > trivy-image-report.json
+          fi
 
       - name: Check Trivy results
         run: |
