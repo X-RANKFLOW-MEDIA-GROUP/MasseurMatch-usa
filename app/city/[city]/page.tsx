@@ -1,355 +1,175 @@
-﻿import { supabaseServer } from "@/src/lib/supabaseServer";
-import { baseSEO } from "@/app/lib/seo";
-import { cityMap } from "@/app/data/cities";
-import { neighbors } from "@/app/data/cityNeighbors";
-import CityLandingPage from "@/src/components/CityLandingPage";
-import { getExpansionCity } from "@/app/data/expansionCities";
+import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import { createServerSupabaseClient } from "@/src/lib/supabase-server";
+import { getCityBySlug, getAllCities } from "@/src/data/cities";
+import { SITE_NAME } from "@/src/lib/site";
+import { TherapistCard } from "@/src/types/therapist";
+import Link from "next/link";
 
-type CityPageProps = { params: { city: string } };
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ city: string }>;
+}): Promise<Metadata> {
+  const { city: citySlug } = await params;
+  const city = getCityBySlug(citySlug);
 
-// ========================
-// METADATA DINÂMICA
-// ========================
-export async function generateMetadata({ params }: CityPageProps) {
-  const key = params.city.toLowerCase();
-  const info = cityMap[key];
-  const expansionCity = getExpansionCity(key);
-
-  if (!info && expansionCity) {
-    const { name, state } = expansionCity;
-
-    return baseSEO({
-      title: `Gay Massage ${name} ${state} | Male Massage Therapists | MasseurMatch`,
-      description: `Find LGBT-friendly massage therapists in ${name}, ${state}. Professional male bodywork, gay massage, and inclusive wellness services. Join our expanding network.`,
-      keywords: [
-        `gay massage ${name}`,
-        `male massage ${name}`,
-        `LGBT massage ${state}`,
-        `m4m massage ${name}`,
-        `gay spa ${name}`,
-        `male bodywork ${name}`,
-        `inclusive massage ${name}`
-      ],
-      url: `https://www.masseurmatch.com/city/${params.city}`
-    });
+  if (!city) {
+    return { title: "City Not Found" };
   }
 
-  if (!info) {
-    return baseSEO({
-      title: "City not found",
-      description: "This location does not exist on MasseurMatch",
-      keywords: ["gay massage", "male massage"],
-      url: `https://www.masseurmatch.com/city/${params.city}`
-    });
-  }
-
-  return baseSEO({
-    title: `Gay massage in ${info.label}, ${info.state} | MasseurMatch`,
-    description: `Find verified gay and male massage therapists in ${info.label}. Explore LGBT friendly professionals offering deep tissue, relaxation and therapeutic services.`,
-    keywords: [
-      "gay massage",
-      "male massage",
-      `${info.label} gay massage`,
-      `${info.label} massage`,
-      `${info.state} massage`,
-      "lgbt massage"
-    ],
-    url: `https://www.masseurmatch.com/city/${params.city}`
-  });
+  return {
+    title: `Massage Therapists in ${city.name}, ${city.state}`,
+    description: `Find professional massage therapists in ${city.name}, ${city.state}. Browse verified profiles, read reviews, and book appointments.`,
+  };
 }
 
-// ========================
-// CITY PAGE FINAL
-// ========================
-export default async function CityPage({ params }: CityPageProps) {
-  const key = params.city.toLowerCase();
-  const info = cityMap[key];
-  const expansionCity = getExpansionCity(key);
+export async function generateStaticParams() {
+  return getAllCities().map((city) => ({
+    city: city.slug,
+  }));
+}
 
-  if (!info && expansionCity) {
-    return <CityLandingPage city={expansionCity} slug={params.city} />;
+export default async function CityPage({
+  params,
+}: {
+  params: Promise<{ city: string }>;
+}) {
+  const { city: citySlug } = await params;
+  const city = getCityBySlug(citySlug);
+
+  if (!city) {
+    notFound();
   }
 
-  if (!info) {
-    return (
-      <main>
-        <h1>City not found</h1>
-      </main>
-    );
-  }
+  const supabase = await createServerSupabaseClient();
 
-  let total = 0;
-  let fetchError = false;
-
-  try {
-    const { data, error } = await supabaseServer
-      .from("therapist_seeds")
-      .select("segment_public, segment_technique, segment_problem")
-      .eq("city", info.label);
-
-    if (error) {
-      throw error;
-    }
-
-    total = data?.length ?? 0;
-  } catch (error) {
-    fetchError = true;
-    console.error("Failed to load therapist seeds for city page", error);
-  }
-
-  // SCHEMA SERVICE
-  const ldJsonService = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "name": `Gay massage and male massage in ${info.label}`,
-    "provider": { "@type": "Organization", "name": "MasseurMatch" },
-    "areaServed": {
-      "@type": "City",
-      "name": info.label,
-      "addressRegion": info.state
-    }
-  };
-
-  // SCHEMA LOCALBUSINESS (SEO boost)
-  const ldJsonLocalBusiness = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": `Gay Massage in ${info.label}`,
-    "description": `Find LGBT-friendly massage therapists in ${info.label}, ${info.state}`,
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": info.label,
-      "addressRegion": info.state,
-      "addressCountry": "US"
-    },
-    "url": `https://www.masseurmatch.com/city/${params.city}`,
-    "priceRange": "$$",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.7",
-      "reviewCount": total > 0 ? total : 50
-    }
-  };
-
-  // SCHEMA BREADCRUMB
-  const ldJsonBreadcrumb = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://www.masseurmatch.com"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": info.label,
-        "item": `https://www.masseurmatch.com/city/${params.city}`
-      }
-    ]
-  };
-
-  // SCHEMA FAQ
-  const ldJsonFAQ = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": info.faqs.map(faq => ({
-      "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": faq.answer
-      }
-    }))
-  };
+  const { data: therapists } = await supabase
+    .from("therapists")
+    .select("user_id, slug, display_name, headline, city, state, rating, profile_photo, services, rate_60")
+    .eq("status", "active")
+    .ilike("city", `%${city.name}%`)
+    .order("rating", { ascending: false })
+    .limit(20);
 
   return (
-    <main className="space-y-10">
-      {/* SCHEMA SERVICE */}
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJsonService) }}
-      />
+    <div className="min-h-screen bg-[#0a0a0f]">
+      {/* Header */}
+      <header className="border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl sticky top-0 z-50">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
+            {SITE_NAME}
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/explore" className="text-sm text-slate-300 hover:text-white">
+              Explore
+            </Link>
+            <Link href="/login" className="text-sm text-slate-300 hover:text-white">
+              Login
+            </Link>
+          </div>
+        </nav>
+      </header>
 
-      {/* SCHEMA LOCALBUSINESS */}
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJsonLocalBusiness) }}
-      />
-
-      {/* SCHEMA BREADCRUMB */}
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJsonBreadcrumb) }}
-      />
-
-      {/* SCHEMA FAQ */}
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJsonFAQ) }}
-      />
-
-      {/* BREADCRUMBS HTML (SEO + UX) */}
-      <nav aria-label="Breadcrumb" className="text-sm">
-        <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex gap-2">
-          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <a itemProp="item" href="/" className="text-violet-600 hover:underline">
-              <span itemProp="name">Home</span>
-            </a>
-            <meta itemProp="position" content="1" />
-            <span className="mx-2">/</span>
-          </li>
-          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <span itemProp="name" className="text-gray-600">{info.label}</span>
-            <meta itemProp="position" content="2" />
-          </li>
-        </ol>
-      </nav>
-
-      <h1 className="text-3xl font-bold">
-        Gay massage in {info.label}, {info.state}
-      </h1>
-
-      <p className="text-lg text-gray-700">
-        Find verified LGBT-friendly male massage therapists. {total}+ professionals available.
-      </p>
-
-      {fetchError && (
-        <p className="rounded-md bg-violet-50 p-4 text-sm text-violet-800">
-          We are having trouble loading live therapist data right now. You can still explore city insights below while we work on restoring the connection.
-        </p>
-      )}
-
-      <p>
-        MasseurMatch highlights inclusive massage therapists in {info.label} so visitors and locals can book safely. This directory blends public profiles with {total} vetted seed profiles to keep pages useful, human, and aligned with real demand in the metro area.
-      </p>
-
-      <p>
-        {info.description}
-      </p>
-
-      <p>
-        {info.lgbtContext}
-      </p>
-
-      <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Neighborhoods locals mention</h2>
-        <p>
-          Bookings in {info.label} tend to cluster where travel, nightlife, and hotels overlap. The areas below show where visitors usually stay and where locals prefer to host calm, respectful sessions.
-        </p>
-        <ul className="list-disc space-y-2 pl-6">
-          {info.neighborhoods.map((n) => (
-            <li key={n.name}>
-              <strong>{n.name}:</strong> {n.vibe}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Events and local rhythm</h2>
-        <p>
-          Festivals, sports, and nightlife change how people move around {info.label}. Busy weekends push more visitors to in-hotel or mobile sessions so they can skip parking stress.
-        </p>
-        <ul className="list-disc space-y-2 pl-6">
-          {info.events.map((ev) => (
-            <li key={ev.name}>
-              <strong>{ev.name}:</strong> {ev.detail}
-            </li>
-          ))}
-        </ul>
-        <p>{info.weather}</p>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Travel demand, culture, and timing</h2>
-        <p>{info.tourism}</p>
-        <p>{info.culture}</p>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Why hire a massage in {info.label}</h2>
-        <p>
-          Clients here want restorative sessions that match the city&apos;s pace. Whether it is post-flight tension, post-event fatigue, or a quiet hour away from crowds, the reasons below come up most often.
-        </p>
-        <ul className="list-disc space-y-2 pl-6">
-          {info.massageReasons.map((reason) => (
-            <li key={reason}>{reason}</li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">City-specific FAQs</h2>
-        <div className="space-y-3">
-          {info.faqs.map((faq) => (
-            <article key={faq.question} className="space-y-1">
-              <h3 className="font-semibold">{faq.question}</h3>
-              <p>{faq.answer}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* RELATED SEGMENTS (Internal Linking for SEO) */}
-      <section className="space-y-3 border-t pt-6">
-        <h2 className="text-2xl font-semibold">Popular Services in {info.label}</h2>
-        <p>Explore specialized massage services tailored for the LGBT community in {info.label}:</p>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          <a href={`/city/${params.city}/gay-massage`} className="text-violet-600 hover:underline">
-            Gay Massage in {info.label}
-          </a>
-          <a href={`/city/${params.city}/male-massage`} className="text-violet-600 hover:underline">
-            Male Massage in {info.label}
-          </a>
-          <a href={`/city/${params.city}/m4m-massage`} className="text-violet-600 hover:underline">
-            M4M Massage in {info.label}
-          </a>
-          <a href={`/city/${params.city}/lgbt-massage`} className="text-violet-600 hover:underline">
-            LGBT Massage in {info.label}
-          </a>
-          <a href={`/city/${params.city}/deep-tissue`} className="text-violet-600 hover:underline">
-            Deep Tissue Massage
-          </a>
-          <a href={`/city/${params.city}/sports-massage`} className="text-violet-600 hover:underline">
-            Sports Massage
-          </a>
-          <a href={`/city/${params.city}/relaxation`} className="text-violet-600 hover:underline">
-            Relaxation Massage
-          </a>
-          <a href={`/city/${params.city}/hotel-massage`} className="text-violet-600 hover:underline">
-            Hotel Massage
-          </a>
-          <a href={`/city/${params.city}/mobile-massage`} className="text-violet-600 hover:underline">
-            Mobile Massage
-          </a>
-        </div>
-      </section>
-
-      {/* NEARBY CITIES */}
-      {neighbors[key] && (
-        <section className="space-y-3 border-t pt-6">
-          <h2 className="text-2xl font-semibold">Explore Gay Massage in Nearby Cities</h2>
-          <p>
-            Travelers often price-compare or split trips between nearby hubs. Explore the cities below to see alternate airport options, hotel areas, and therapists willing to cover both markets.
+      <main className="mx-auto max-w-6xl px-6 py-12">
+        {/* Hero */}
+        <div className="mb-12">
+          <Link href="/explore" className="text-sm text-white hover:text-neutral-300 mb-4 inline-block">
+            ← All Cities
+          </Link>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Massage Therapists in{" "}
+            <span className="bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
+              {city.name}, {city.state}
+            </span>
+          </h1>
+          <p className="text-lg text-slate-400 max-w-2xl">
+            Find licensed, professional massage therapists in {city.name}.
+            Browse profiles, read reviews, and book your next appointment.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {neighbors[key].map(n => (
-              <a key={n} href={`/city/${n}`} className="text-violet-600 hover:underline">
-                {cityMap[n]?.label || n} Gay Massage
-              </a>
+        </div>
+
+        {/* Results */}
+        {therapists && therapists.length > 0 ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {(therapists as TherapistCard[]).map((therapist) => (
+              <Link
+                key={therapist.user_id}
+                href={`/therapist/${therapist.slug}`}
+                className="group rounded-3xl border border-white/10 bg-white/5 overflow-hidden hover:border-neutral-300/50 transition-all"
+              >
+                {/* Image */}
+                <div className="aspect-[4/3] bg-gradient-to-br from-white/20 to-neutral-100/20 flex items-center justify-center">
+                  {therapist.profile_photo ? (
+                    <img
+                      src={therapist.profile_photo}
+                      alt={therapist.display_name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-6xl opacity-50">👤</span>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <h2 className="text-xl font-semibold text-white group-hover:text-white transition-colors mb-2">
+                    {therapist.display_name}
+                  </h2>
+                  <p className="text-slate-400 text-sm mb-3 line-clamp-2">
+                    {therapist.headline}
+                  </p>
+
+                  <div className="flex items-center gap-3 mb-4">
+                    {therapist.rating > 0 && (
+                      <span className="text-sm text-slate-300">
+                        ⭐ {therapist.rating}
+                      </span>
+                    )}
+                    <span className="text-sm text-slate-500">
+                      📍 {therapist.city}
+                    </span>
+                  </div>
+
+                  {therapist.services && therapist.services.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {therapist.services.slice(0, 3).map((service: string) => (
+                        <span
+                          key={service}
+                          className="px-2 py-0.5 rounded-full bg-white/20 text-neutral-300 text-xs"
+                        >
+                          {service}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {therapist.rate_60 && (
+                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                      <span className="text-slate-500 text-sm">Starting at</span>
+                      <span className="text-white font-semibold">${therapist.rate_60}/hr</span>
+                    </div>
+                  )}
+                </div>
+              </Link>
             ))}
           </div>
-        </section>
-      )}
-
-    </main>
+        ) : (
+          <div className="text-center py-20">
+            <p className="text-4xl mb-4">🔍</p>
+            <h2 className="text-xl font-semibold text-white mb-2">No therapists found</h2>
+            <p className="text-slate-400 mb-6">
+              We don&apos;t have any therapists in {city.name} yet.
+            </p>
+            <Link
+              href="/join"
+              className="inline-flex rounded-xl bg-white px-6 py-3 font-medium text-white hover:bg-neutral-200 transition-colors"
+            >
+              Be the first to join
+            </Link>
+          </div>
+        )}
+      </main>
+    </div>
   );
 }
-

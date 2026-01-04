@@ -1,7 +1,0 @@
-[00:00:02.842] Server  LOG     ✓ Ready in 2.1s
-[00:00:07.982] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:01.225] Server  LOG     ✓ Compiled in 50ms
-[00:08:47.504] Server  LOG     ✓ Compiled in 289ms
-[00:10:47.943] Server  LOG     ✓ Compiled in 126ms
-[00:11:24.861] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:20:53.438] Server  WARN    Error: Route "/dashboard/ads" used `cookies().get`. `cookies()` returns a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis

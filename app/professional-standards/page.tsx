@@ -1,76 +1,118 @@
-import { LegalPage } from "@/app/legal/LegalPage";
+import { Metadata } from "next";
+import Link from "next/link";
+import { Award, CheckCircle, Shield, BookOpen } from "lucide-react";
 
-export async function generateMetadata() {
-  const url = "https://www.masseurmatch.com/professional-standards";
-
-  return {
-    title: "Professional Standards | MasseurMatch",
-    description:
-      "Professional expectations for therapists on MasseurMatch including quality, ethics, conduct, verification, and safety standards.",
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title: "Professional Standards | MasseurMatch",
-      description:
-        "Professional expectations for therapists on MasseurMatch including quality, ethics, conduct, verification, and safety standards.",
-      url,
-      siteName: "MasseurMatch",
-      type: "article",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Professional Standards | MasseurMatch",
-      description:
-        "Professional expectations for therapists on MasseurMatch including quality, ethics, conduct, verification, and safety standards.",
-    },
-  };
-}
+export const metadata: Metadata = {
+  title: "Professional Standards | MasseurMatch",
+  description: "Learn about the professional standards and requirements for massage therapists on MasseurMatch.",
+};
 
 export default function ProfessionalStandardsPage() {
   return (
-    <LegalPage
-      title="Professional Standards"
-      description="Professional expectations for therapists on MasseurMatch including quality, ethics, conduct, verification, and safety standards."
-      slug="/professional-standards"
-      sections={[
-        {
-          heading: "Licensing and qualifications",
-          body: (
-            <>
-              <p>Therapists are responsible for holding all required licenses, permits, and insurance for their jurisdiction. Misrepresentation of credentials is grounds for removal.</p>
-              <p>Provide clear descriptions of modalities offered, experience, and any scope limitations. Do not perform services you are not trained or licensed to deliver.</p>
-            </>
-          )
-        },
-        {
-          heading: "Safety, hygiene, and environment",
-          body: (
-            <>
-              <p>Maintain clean linens, sanitized equipment, and safe workspaces. Communicate draping practices and respect client comfort and privacy at all times.</p>
-              <p>Mobile sessions must follow the same standards for cleanliness and professionalism as studio sessions.</p>
-            </>
-          )
-        },
-        {
-          heading: "Ethics and boundaries",
-          body: (
-            <>
-              <p>Follow consent-first care, including ongoing check-ins about pressure and comfort. Sexual services, coercion, or harassment are prohibited.</p>
-              <p>Keep communication transparent, professional, and free of misleading claims. Respect cancellation policies and timing commitments.</p>
-            </>
-          )
-        },
-        {
-          heading: "Quality assurance and feedback",
-          body: (
-            <>
-              <p>Respond to client feedback constructively. Repeat patterns of poor conduct, no-shows, or unsafe behavior can lead to moderation, suspension, or removal.</p>
-              <p>We may request proof of credentials or training for verification and periodic reviews to maintain platform quality.</p>
-            </>
-          )
-        }
-      ]}
-    />
+    <div className="min-h-screen bg-[#0a0a0f]">
+      <header className="border-b border-white/5">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
+            MasseurMatch
+          </Link>
+        </nav>
+      </header>
+
+      <main className="mx-auto max-w-3xl px-6 py-16">
+        <h1 className="text-4xl font-bold text-white mb-4">Professional Standards</h1>
+        <p className="text-slate-400 mb-8">Our commitment to quality and professionalism</p>
+
+        <div className="space-y-8">
+          {/* Requirements */}
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+              <Award className="h-5 w-5 text-white" />
+              Therapist Requirements
+            </h2>
+            <div className="space-y-4">
+              {[
+                {
+                  title: "Valid License",
+                  desc: "All therapists must hold a current massage therapy license for their state.",
+                },
+                {
+                  title: "Insurance",
+                  desc: "Professional liability insurance is required to protect both therapists and clients.",
+                },
+                {
+                  title: "Background Check",
+                  desc: "We conduct background checks on all therapists for your safety.",
+                },
+                {
+                  title: "Continuing Education",
+                  desc: "Therapists are encouraged to maintain ongoing professional development.",
+                },
+              ].map((item) => (
+                <div key={item.title} className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <h3 className="font-semibold text-white mb-1">{item.title}</h3>
+                  <p className="text-sm text-slate-400">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Code of Conduct */}
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-white" />
+              Code of Conduct
+            </h2>
+            <ul className="space-y-3">
+              {[
+                "Maintain professional boundaries at all times",
+                "Respect client privacy and confidentiality",
+                "Obtain informed consent before each session",
+                "Provide services within scope of training",
+                "Maintain a clean and safe environment",
+                "Communicate clearly about services and pricing",
+                "Honor booking commitments",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3 text-slate-300">
+                  <CheckCircle className="h-5 w-5 text-green-400 shrink-0 mt-0.5" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Verification */}
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+              <Shield className="h-5 w-5 text-white" />
+              Verification Process
+            </h2>
+            <p className="text-slate-300 leading-relaxed mb-4">
+              Our verification process includes:
+            </p>
+            <ol className="list-decimal list-inside text-slate-300 space-y-2">
+              <li>License verification with state licensing boards</li>
+              <li>Identity verification</li>
+              <li>Insurance documentation review</li>
+              <li>Background check through certified agencies</li>
+              <li>Profile review by our team</li>
+            </ol>
+          </section>
+
+          {/* Join CTA */}
+          <section className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/20 to-neutral-100/20 p-8 text-center">
+            <h2 className="text-2xl font-bold text-white mb-4">Join Our Network</h2>
+            <p className="text-slate-300 mb-6">
+              If you meet our professional standards, we&apos;d love to have you on MasseurMatch.
+            </p>
+            <Link
+              href="/join"
+              className="inline-block rounded-xl bg-white px-8 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
+            >
+              Apply Now
+            </Link>
+          </section>
+        </div>
+      </main>
+    </div>
   );
 }
