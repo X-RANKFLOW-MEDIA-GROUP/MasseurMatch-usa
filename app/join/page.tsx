@@ -77,18 +77,21 @@ export default function JoinPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Benefits */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-white to-neutral-800 p-12 flex-col justify-center">
-        <div className="max-w-md">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-neutral-950 to-black p-12 flex-col justify-center relative overflow-hidden">
+        {/* Grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+
+        <div className="max-w-md relative z-10">
           <h1 className="text-4xl font-bold text-white mb-6">
             Grow your massage therapy practice
           </h1>
-          <p className="text-neutral-200 text-lg mb-8">
+          <p className="text-neutral-300 text-lg mb-8">
             Join MasseurMatch and connect with clients looking for professional massage therapists like you.
           </p>
           <ul className="space-y-4">
             {benefits.map((benefit) => (
               <li key={benefit} className="flex items-center gap-3 text-white">
-                <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
                   <Check className="h-4 w-4" />
                 </div>
                 {benefit}
@@ -96,11 +99,11 @@ export default function JoinPage() {
             ))}
           </ul>
 
-          <div className="mt-12 pt-8 border-t border-white/20">
-            <p className="text-neutral-200 mb-4">Already have clients?</p>
+          <div className="mt-12 pt-8 border-t border-white/10">
+            <p className="text-neutral-400 mb-4">Already have clients?</p>
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-2 text-white font-medium hover:underline"
+              className="inline-flex items-center gap-2 text-white font-medium hover:text-neutral-300 transition-colors"
             >
               View our pricing plans
               <ArrowRight className="h-4 w-4" />
@@ -110,7 +113,7 @@ export default function JoinPage() {
       </div>
 
       {/* Right Side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 bg-[#0a0a0f]">
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 bg-black">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -236,7 +239,7 @@ export default function JoinPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full rounded-xl bg-white py-3 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
+              className="w-full rounded-xl bg-white py-3 font-semibold text-black hover:bg-neutral-200 disabled:opacity-50 transition-colors"
             >
               {isLoading ? "Creating Account..." : "Create Account"}
             </button>

@@ -1,128 +1,231 @@
-import { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Shield, Lock, Eye, UserCheck, AlertTriangle, CheckCircle } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Trust & Safety | MasseurMatch",
-  description: "Learn about MasseurMatch's commitment to trust, safety, and security.",
-};
+const features = [
+  {
+    icon: UserCheck,
+    title: "Verified Profiles",
+    desc: "All therapists undergo identity and license verification",
+  },
+  {
+    icon: Lock,
+    title: "Secure Platform",
+    desc: "Your data and privacy are protected with encryption",
+  },
+  {
+    icon: Eye,
+    title: "24/7 Monitoring",
+    desc: "Our team monitors the platform around the clock",
+  },
+  {
+    icon: AlertTriangle,
+    title: "Easy Reporting",
+    desc: "Report concerns easily through our app or website",
+  },
+];
+
+const verificationSteps = [
+  "License verification with state boards",
+  "Background checks through certified agencies",
+  "Identity verification with government ID",
+  "Insurance documentation review",
+  "Ongoing monitoring and periodic re-verification",
+];
+
+const safetyTips = [
+  "Contact therapists directly using provided information",
+  "Meet in professional settings only",
+  "Trust your instincts - if something feels wrong, leave",
+  "Report any inappropriate behavior immediately",
+  "Keep a record of your contacts and communications",
+];
 
 export default function TrustPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
-      <header className="border-b border-white/5">
+    <div className="min-h-screen bg-black">
+      {/* Background Effects */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-neutral-950 to-black" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_80%)]" />
+      </div>
+
+      <header className="border-b border-white/5 glass sticky top-0 z-50">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold text-white hover:text-neutral-200 transition-colors">
             MasseurMatch
           </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/explore" className="text-sm text-neutral-400 hover:text-white transition-colors">
+              Explore
+            </Link>
+            <Link href="/join" className="rounded-xl bg-white px-4 py-2 text-sm font-medium text-black hover:bg-neutral-200 transition-colors">
+              Get Started
+            </Link>
+          </div>
         </nav>
       </header>
 
-      <main className="mx-auto max-w-3xl px-6 py-16">
-        <div className="text-center mb-12">
-          <Shield className="h-16 w-16 text-white mx-auto mb-4" />
-          <h1 className="text-4xl font-bold text-white mb-4">Trust & Safety</h1>
-          <p className="text-xl text-slate-400">Your safety is our top priority</p>
-        </div>
+      <main className="mx-auto max-w-4xl px-6 py-16">
+        {/* Hero */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <Shield className="h-16 w-16 text-white mx-auto mb-6" />
+          <h1 className="text-5xl font-bold text-white mb-4">Trust & Safety</h1>
+          <p className="text-xl text-neutral-400">Your safety is our top priority</p>
+        </motion.div>
 
-        <div className="space-y-8">
+        <div className="space-y-12">
           {/* Safety Features */}
-          <section className="grid md:grid-cols-2 gap-4">
-            {[
-              {
-                icon: UserCheck,
-                title: "Verified Profiles",
-                desc: "All therapists undergo identity and license verification",
-              },
-              {
-                icon: Lock,
-                title: "Secure Platform",
-                desc: "Your data and privacy are protected with encryption",
-              },
-              {
-                icon: Eye,
-                title: "24/7 Monitoring",
-                desc: "Our team monitors the platform around the clock",
-              },
-              {
-                icon: AlertTriangle,
-                title: "Easy Reporting",
-                desc: "Report concerns easily through our app or website",
-              },
-            ].map((feature) => (
-              <div key={feature.title} className="rounded-xl border border-white/10 bg-white/5 p-6">
-                <feature.icon className="h-8 w-8 text-white mb-3" />
-                <h3 className="font-semibold text-white mb-2">{feature.title}</h3>
-                <p className="text-slate-400 text-sm">{feature.desc}</p>
-              </div>
-            ))}
-          </section>
-
-          {/* Verification Process */}
-          <section>
-            <h2 className="text-xl font-semibold text-white mb-4">Our Verification Process</h2>
-            <div className="space-y-4">
-              {[
-                "License verification with state boards",
-                "Background checks through certified agencies",
-                "Identity verification with government ID",
-                "Insurance documentation review",
-                "Ongoing monitoring and periodic re-verification",
-              ].map((step, i) => (
-                <div key={step} className="flex items-center gap-4">
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-white font-semibold">
-                    {i + 1}
-                  </div>
-                  <span className="text-slate-300">{step}</span>
-                </div>
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="grid md:grid-cols-2 gap-6">
+              {features.map((feature, index) => (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-6 hover:bg-white/10 transition-colors"
+                >
+                  <feature.icon className="h-10 w-10 text-white mb-4" />
+                  <h3 className="font-semibold text-white mb-2 text-lg">{feature.title}</h3>
+                  <p className="text-neutral-400">{feature.desc}</p>
+                </motion.div>
               ))}
             </div>
-          </section>
+          </motion.section>
+
+          {/* Verification Process */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="rounded-2xl border border-white/10 bg-white/5 p-8"
+          >
+            <h2 className="text-2xl font-bold text-white mb-6">Our Verification Process</h2>
+            <div className="space-y-4">
+              {verificationSteps.map((step, i) => (
+                <motion.div
+                  key={step}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="flex items-center gap-4"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-black font-bold flex-shrink-0">
+                    {i + 1}
+                  </div>
+                  <span className="text-neutral-300">{step}</span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
 
           {/* Safety Tips */}
-          <section>
-            <h2 className="text-xl font-semibold text-white mb-4">Safety Tips</h2>
-            <ul className="space-y-3">
-              {[
-                "Contact therapists directly using provided information",
-                "Meet in professional settings only",
-                "Trust your instincts - if something feels wrong, leave",
-                "Report any inappropriate behavior immediately",
-                "Keep a record of your contacts and communications",
-              ].map((tip) => (
-                <li key={tip} className="flex items-start gap-3 text-slate-300">
-                  <CheckCircle className="h-5 w-5 text-green-400 shrink-0 mt-0.5" />
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="rounded-2xl border border-white/10 bg-white/5 p-8"
+          >
+            <h2 className="text-2xl font-bold text-white mb-6">Safety Tips</h2>
+            <ul className="space-y-4">
+              {safetyTips.map((tip, index) => (
+                <motion.li
+                  key={tip}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-start gap-3 text-neutral-300"
+                >
+                  <CheckCircle className="h-5 w-5 text-white shrink-0 mt-0.5" />
                   {tip}
-                </li>
+                </motion.li>
               ))}
             </ul>
-          </section>
+          </motion.section>
 
-          {/* Report */}
-          <section className="rounded-2xl border border-red-500/30 bg-red-500/5 p-6">
-            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-red-400" />
+          {/* Report Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-8"
+          >
+            <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+              <AlertTriangle className="h-6 w-6" />
               Report a Concern
             </h2>
-            <p className="text-slate-300 mb-4">
+            <p className="text-neutral-300 mb-6 leading-relaxed">
               If you experience harassment, fraud, or any safety concern, please report it immediately.
               Our trust & safety team reviews all reports within 24 hours.
             </p>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/dashboard/support"
-                className="rounded-xl bg-red-600 px-6 py-3 font-semibold text-white hover:bg-red-500 transition-colors"
+                className="rounded-xl bg-white px-6 py-3 font-semibold text-black hover:bg-neutral-200 transition-colors text-center"
               >
                 Report Now
               </Link>
               <a
                 href="tel:911"
-                className="rounded-xl border border-white/20 px-6 py-3 font-semibold text-white hover:bg-white/10 transition-colors"
+                className="rounded-xl border border-white/30 px-6 py-3 font-semibold text-white hover:bg-white/10 transition-colors text-center"
               >
                 Emergency: Call 911
               </a>
             </div>
-          </section>
+          </motion.section>
+
+          {/* Additional Resources */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="rounded-2xl border border-white/10 bg-white/5 p-8"
+          >
+            <h2 className="text-2xl font-bold text-white mb-6">Additional Resources</h2>
+            <div className="space-y-4">
+              <Link
+                href="/community-guidelines"
+                className="block p-4 rounded-xl border border-white/10 hover:bg-white/5 transition-colors"
+              >
+                <h3 className="font-semibold text-white mb-1">Community Guidelines</h3>
+                <p className="text-sm text-neutral-400">Learn about our community standards and expectations</p>
+              </Link>
+              <Link
+                href="/professional-standards"
+                className="block p-4 rounded-xl border border-white/10 hover:bg-white/5 transition-colors"
+              >
+                <h3 className="font-semibold text-white mb-1">Professional Standards</h3>
+                <p className="text-sm text-neutral-400">What we expect from massage therapists on our platform</p>
+              </Link>
+              <Link
+                href="/privacy-policy"
+                className="block p-4 rounded-xl border border-white/10 hover:bg-white/5 transition-colors"
+              >
+                <h3 className="font-semibold text-white mb-1">Privacy Policy</h3>
+                <p className="text-sm text-neutral-400">How we protect and handle your personal information</p>
+              </Link>
+            </div>
+          </motion.section>
         </div>
       </main>
     </div>
