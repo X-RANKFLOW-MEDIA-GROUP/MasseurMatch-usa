@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -15,7 +15,6 @@ import {
   ChevronRight,
   Loader2,
 } from "lucide-react";
-import { supabase } from "@/src/lib/supabase";
 
 type Notification = {
   id: string;
@@ -50,15 +49,11 @@ const getNotificationIcon = (type: string) => {
   }
 };
 
-const getPriorityColor = (priority: string) => {
-  switch (priority) {
-    case "urgent":
-      return "bg-red-500";
-    case "high":
-      return "bg-amber-500";
-    default:
-      return "bg-neutral-200";
-  }
+const PRIORITY_STYLES: Record<Notification["priority"], string> = {
+  urgent: "bg-red-500/20 text-red-400",
+  high: "bg-amber-500/20 text-amber-400",
+  normal: "bg-white/10 text-white",
+  low: "bg-white/10 text-white",
 };
 
 export default function NotificationBell() {
@@ -68,28 +63,41 @@ export default function NotificationBell() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const fetchNotifications = useCallback(async () => {
-    try {
-      const res = await fetch("/api/notifications?unread=true&limit=5");
-      const data = await res.json();
-
-      if (data.notifications) {
-        setNotifications(data.notifications);
-        setUnreadCount(data.unreadCount || 0);
-      }
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    }
-    setLoading(false);
-  }, []);
-
   useEffect(() => {
-    fetchNotifications();
+    let isMounted = true;
+
+    const fetchNotifications = async () => {
+      try {
+        const res = await fetch("/api/notifications?unread=true&limit=5");
+        const data = await res.json();
+
+        if (isMounted && data.notifications) {
+          setNotifications(data.notifications);
+          setUnreadCount(data.unreadCount || 0);
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.error("Error fetching notifications:", error);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void fetchNotifications();
 
     // Refresh every 60 seconds
-    const interval = setInterval(fetchNotifications, 60000);
-    return () => clearInterval(interval);
-  }, [fetchNotifications]);
+    const interval = setInterval(() => {
+      void fetchNotifications();
+    }, 60000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   const markAsRead = async (notificationId: string) => {
     try {
@@ -177,16 +185,20 @@ export default function NotificationBell() {
 
               {/* Notifications list */}
               <div className="max-h-[320px] overflow-y-auto">
-                {loading ? (
+                {loading && (
                   <div className="flex items-center justify-center py-8">
                     <Loader2 className="h-6 w-6 animate-spin text-neutral-200" />
                   </div>
-                ) : notifications.length === 0 ? (
+                )}
+
+                {!loading && notifications.length === 0 && (
                   <div className="py-8 text-center">
                     <Bell className="h-8 w-8 text-slate-600 mx-auto mb-2" />
                     <p className="text-sm text-slate-500">No new notifications</p>
                   </div>
-                ) : (
+                )}
+
+                {!loading && notifications.length > 0 && (
                   <div className="divide-y divide-white/5">
                     {notifications.map((notification) => (
                       <div
@@ -197,15 +209,7 @@ export default function NotificationBell() {
                         }`}
                       >
                         <div className="flex items-start gap-3">
-                          <div
-                            className={`p-2 rounded-lg ${
-                              notification.priority === "urgent"
-                                ? "bg-red-500/20 text-red-400"
-                                : notification.priority === "high"
-                                ? "bg-amber-500/20 text-amber-400"
-                                : "bg-white/10 text-white"
-                            }`}
-                          >
+                          <div className={`p-2 rounded-lg ${PRIORITY_STYLES[notification.priority]}`}>
                             {getNotificationIcon(notification.type)}
                           </div>
                           <div className="flex-1 min-w-0">

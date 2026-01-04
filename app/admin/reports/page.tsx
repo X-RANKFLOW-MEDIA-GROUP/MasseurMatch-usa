@@ -1,22 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Flag,
-  Search,
-  AlertTriangle,
   Check,
   X,
   Eye,
-  User,
   Loader2,
   ChevronLeft,
   ChevronRight,
-  Shield,
   Ban,
-  MessageSquare,
 } from "lucide-react";
 import { supabase } from "@/src/lib/supabase";
 import Link from "next/link";
@@ -44,17 +39,29 @@ export default function AdminReportsPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const itemsPerPage = 20;
 
-  useEffect(() => {
-    checkAdmin();
-  }, []);
+  const fetchReports = useCallback(async () => {
+    let query = supabase
+      .from("reports")
+      .select("*", { count: "exact" })
+      .order("created_at", { ascending: false });
 
-  useEffect(() => {
-    if (!loading) {
-      fetchReports();
+    if (filterStatus !== "all") {
+      query = query.eq("status", filterStatus);
     }
-  }, [currentPage, filterStatus]);
 
-  const checkAdmin = async () => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage - 1;
+    query = query.range(start, end);
+
+    const { data, count } = await query;
+
+    if (data) {
+      setReports(data);
+      setTotalPages(Math.max(1, Math.ceil((count || 0) / itemsPerPage)));
+    }
+  }, [currentPage, filterStatus, itemsPerPage]);
+
+  const checkAdmin = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       router.push("/login?redirect=/admin/reports");
@@ -73,30 +80,17 @@ export default function AdminReportsPage() {
     }
 
     setLoading(false);
-    fetchReports();
-  };
+  }, [router]);
 
-  const fetchReports = async () => {
-    let query = supabase
-      .from("reports")
-      .select("*", { count: "exact" })
-      .order("created_at", { ascending: false });
+  useEffect(() => {
+    void checkAdmin();
+  }, [checkAdmin]);
 
-    if (filterStatus !== "all") {
-      query = query.eq("status", filterStatus);
+  useEffect(() => {
+    if (!loading) {
+      void fetchReports();
     }
-
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage - 1;
-    query = query.range(start, end);
-
-    const { data, count, error } = await query;
-
-    if (data) {
-      setReports(data);
-      setTotalPages(Math.ceil((count || 0) / itemsPerPage));
-    }
-  };
+  }, [loading, currentPage, filterStatus, fetchReports]);
 
   const handleResolveReport = async (reportId: string, action: "resolved" | "dismissed") => {
     setActionLoading(true);

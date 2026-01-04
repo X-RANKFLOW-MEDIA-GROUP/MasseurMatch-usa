@@ -83,11 +83,33 @@ export const PHOTO_LIMITS: Record<SubscriptionPlan, number> = {
   elite: 8,
 };
 
+function getPlanConfig(plan: SubscriptionPlan) {
+  switch (plan) {
+    case "free":
+      return PLANS.free;
+    case "standard":
+      return PLANS.standard;
+    case "pro":
+      return PLANS.pro;
+    case "elite":
+      return PLANS.elite;
+    default:
+      throw new Error(`Unknown subscription plan: ${plan}`);
+  }
+}
+
 export function canUploadPhoto(
   plan: SubscriptionPlan,
   currentCount: number
 ): { allowed: boolean; limit: number; remaining: number } {
-  const limit = PHOTO_LIMITS[plan];
+  const limit =
+    plan === "free"
+      ? PHOTO_LIMITS.free
+      : plan === "standard"
+        ? PHOTO_LIMITS.standard
+        : plan === "pro"
+          ? PHOTO_LIMITS.pro
+          : PHOTO_LIMITS.elite;
 
   return {
     allowed: currentCount < limit,
@@ -113,7 +135,7 @@ export function canUseAvailableNow(
   plan: SubscriptionPlan,
   usedToday: number
 ): { allowed: boolean; limit: number; remaining: number } {
-  const limit = PLANS[plan].available_now_daily;
+  const { available_now_daily: limit } = getPlanConfig(plan);
 
   if (limit === -1) {
     return { allowed: true, limit: -1, remaining: -1 };
@@ -127,5 +149,5 @@ export function canUseAvailableNow(
 }
 
 export function getVisitorCitiesLimit(plan: SubscriptionPlan): number {
-  return PLANS[plan].visitor_cities;
+  return getPlanConfig(plan).visitor_cities;
 }

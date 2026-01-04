@@ -6,9 +6,15 @@ require("dotenv").config({ path: ".env.local" });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const testUserPassword = process.env.SEED_TEST_USER_PASSWORD;
 
 if (!supabaseUrl || !supabaseServiceKey) {
   console.error("Missing Supabase credentials in .env.local");
+  process.exit(1);
+}
+
+if (!testUserPassword) {
+  console.error("Missing SEED_TEST_USER_PASSWORD in environment");
   process.exit(1);
 }
 
@@ -21,7 +27,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 
 const TEST_USER = {
   email: "test@masseurmatch.com",
-  password: "TestUser123!",
+  password: testUserPassword,
   display_name: "Test Therapist",
   headline: "Licensed Massage Therapist - 5 Years Experience",
   about: "This is a test account for development purposes. I specialize in deep tissue and Swedish massage techniques.",

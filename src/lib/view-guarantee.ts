@@ -2,6 +2,8 @@
 // Guarantees are based on unique profile views (deduplicated)
 // If not met, user gets 50% off next month
 
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 export type PlanGuarantee = {
   plan: string;
   guaranteedViews: number;
@@ -143,7 +145,7 @@ CREATE INDEX idx_guarantee_period ON guarantee_periods(period_end);
 
 // Function to update view count for guarantee tracking
 export async function updateGuaranteeViews(
-  supabase: any,
+  supabase: SupabaseClient,
   userId: string
 ): Promise<void> {
   const now = new Date();

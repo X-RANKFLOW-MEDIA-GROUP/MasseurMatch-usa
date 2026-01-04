@@ -40,12 +40,11 @@ const CITY_PRICING: Record<string, { low: number; mid: number; high: number }> =
   default: { low: 70, mid: 120, high: 170 },
 };
 
-export function generateOptimizationTips(profile: ProfileData): OptimizationTip[] {
-  const tips: OptimizationTip[] = [];
+const priorityOrder = { high: 0, medium: 1, low: 2 };
 
-  // Headline analysis
+function evaluateHeadline(profile: ProfileData): OptimizationTip[] {
   if (!profile.headline) {
-    tips.push({
+    return [{
       id: "headline-missing",
       category: "headline",
       priority: "high",
@@ -53,9 +52,11 @@ export function generateOptimizationTips(profile: ProfileData): OptimizationTip[
       description: "Profiles with headlines get 3x more views",
       action: "Write a compelling 5-10 word headline",
       impact: "+200% visibility",
-    });
-  } else if (profile.headline.length < 20) {
-    tips.push({
+    }];
+  }
+
+  if (profile.headline.length < 20) {
+    return [{
       id: "headline-short",
       category: "headline",
       priority: "medium",
@@ -63,9 +64,11 @@ export function generateOptimizationTips(profile: ProfileData): OptimizationTip[
       description: "Your headline is too brief. Add more detail about your specialty.",
       action: "Mention your specialty, experience, or unique approach",
       impact: "+50% click rate",
-    });
-  } else if (!profile.headline.match(/\d+|years?|certified|licensed|specialist/i)) {
-    tips.push({
+    }];
+  }
+
+  if (!profile.headline.match(/\d+|years?|certified|licensed|specialist/i)) {
+    return [{
       id: "headline-credentials",
       category: "headline",
       priority: "low",
@@ -73,12 +76,15 @@ export function generateOptimizationTips(profile: ProfileData): OptimizationTip[
       description: "Including experience or certifications builds trust",
       action: 'Try: "Certified Deep Tissue Specialist - 10 Years Experience"',
       impact: "+30% inquiries",
-    });
+    }];
   }
 
-  // About/Bio analysis
+  return [];
+}
+
+function evaluateAbout(profile: ProfileData): OptimizationTip[] {
   if (!profile.about) {
-    tips.push({
+    return [{
       id: "about-missing",
       category: "about",
       priority: "high",
@@ -86,9 +92,11 @@ export function generateOptimizationTips(profile: ProfileData): OptimizationTip[
       description: "Clients want to know about you before booking",
       action: "Write 100-200 words about your background and approach",
       impact: "+150% booking rate",
-    });
-  } else if (profile.about.length < 100) {
-    tips.push({
+    }];
+  }
+
+  if (profile.about.length < 100) {
+    return [{
       id: "about-short",
       category: "about",
       priority: "medium",
@@ -96,10 +104,15 @@ export function generateOptimizationTips(profile: ProfileData): OptimizationTip[
       description: "Longer, detailed bios build more trust",
       action: "Add information about your training, philosophy, and what clients can expect",
       impact: "+40% trust score",
-    });
+    }];
   }
 
-  // Photo analysis
+  return [];
+}
+
+function evaluateMedia(profile: ProfileData): OptimizationTip[] {
+  const tips: OptimizationTip[] = [];
+
   if (!profile.profile_photo) {
     tips.push({
       id: "photo-missing",
@@ -136,7 +149,12 @@ export function generateOptimizationTips(profile: ProfileData): OptimizationTip[
     });
   }
 
-  // Pricing analysis
+  return tips;
+}
+
+function evaluatePricing(profile: ProfileData): OptimizationTip[] {
+  const tips: OptimizationTip[] = [];
+
   if (profile.rate_60 && profile.city) {
     const rate = parseInt(profile.rate_60.replace(/\D/g, ""));
     const cityPricing = CITY_PRICING[profile.city] || CITY_PRICING.default;
@@ -176,9 +194,12 @@ export function generateOptimizationTips(profile: ProfileData): OptimizationTip[
     });
   }
 
-  // Services analysis
+  return tips;
+}
+
+function evaluateServices(profile: ProfileData): OptimizationTip[] {
   if (!profile.services || profile.services.length === 0) {
-    tips.push({
+    return [{
       id: "services-missing",
       category: "services",
       priority: "high",
@@ -186,9 +207,11 @@ export function generateOptimizationTips(profile: ProfileData): OptimizationTip[
       description: "Clients filter by service type",
       action: "Add at least 3 massage types you offer",
       impact: "+120% search visibility",
-    });
-  } else if (profile.services.length < 3) {
-    tips.push({
+    }];
+  }
+
+  if (profile.services.length < 3) {
+    return [{
       id: "services-few",
       category: "services",
       priority: "low",
@@ -196,12 +219,15 @@ export function generateOptimizationTips(profile: ProfileData): OptimizationTip[
       description: "More services = more search visibility",
       action: "List all massage techniques you're trained in",
       impact: "+30% discoverability",
-    });
+    }];
   }
 
-  // Availability analysis
+  return [];
+}
+
+function evaluateAvailability(profile: ProfileData): OptimizationTip[] {
   if (profile.incall_available === false && profile.outcall_available === false) {
-    tips.push({
+    return [{
       id: "availability-none",
       category: "availability",
       priority: "high",
@@ -209,11 +235,11 @@ export function generateOptimizationTips(profile: ProfileData): OptimizationTip[
       description: "Clients need to know where you can see them",
       action: "Enable incall, outcall, or both",
       impact: "+100% bookable",
-    });
+    }];
   }
 
   if (profile.incall_available && !profile.outcall_available) {
-    tips.push({
+    return [{
       id: "availability-incall-only",
       category: "availability",
       priority: "low",
@@ -221,11 +247,22 @@ export function generateOptimizationTips(profile: ProfileData): OptimizationTip[
       description: "Outcall services attract hotel and home clients",
       action: "Enable outcall to expand your client base",
       impact: "+40% potential clients",
-    });
+    }];
   }
 
-  // Sort by priority
-  const priorityOrder = { high: 0, medium: 1, low: 2 };
+  return [];
+}
+
+export function generateOptimizationTips(profile: ProfileData): OptimizationTip[] {
+  const tips: OptimizationTip[] = [
+    ...evaluateHeadline(profile),
+    ...evaluateAbout(profile),
+    ...evaluateMedia(profile),
+    ...evaluatePricing(profile),
+    ...evaluateServices(profile),
+    ...evaluateAvailability(profile),
+  ];
+
   tips.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
 
   return tips;
