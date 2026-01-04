@@ -125,14 +125,14 @@ export default function BillingPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-white/10 bg-gradient-to-br from-violet-600/20 to-indigo-600/20 p-6 mb-8"
+            className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/20 to-neutral-100/20 p-6 mb-8"
           >
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <p className="text-sm text-slate-400">Current Plan</p>
                   {currentPlan === "premium" && (
-                    <span className="px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-xs font-medium flex items-center gap-1">
+                    <span className="px-2 py-0.5 rounded-full bg-neutral-200/20 text-neutral-300 text-xs font-medium flex items-center gap-1">
                       <Sparkles className="h-3 w-3" />
                       Premium
                     </span>
@@ -165,7 +165,7 @@ export default function BillingPage() {
                 {currentPlan === "free" ? (
                   <Link
                     href="/pricing"
-                    className="rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white hover:bg-violet-500 transition-colors text-center"
+                    className="rounded-xl bg-white px-6 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors text-center"
                   >
                     Upgrade Now
                   </Link>
@@ -192,7 +192,7 @@ export default function BillingPage() {
                 {currentPlan !== "premium" && currentPlan !== "free" && (
                   <Link
                     href="/checkout?plan=premium"
-                    className="flex items-center justify-center gap-2 rounded-xl border border-violet-500/50 px-6 py-3 font-medium text-violet-400 hover:bg-violet-500/10 transition-colors"
+                    className="flex items-center justify-center gap-2 rounded-xl border border-neutral-300/50 px-6 py-3 font-medium text-white hover:bg-neutral-200/10 transition-colors"
                   >
                     <Sparkles className="h-4 w-4" />
                     Upgrade to Premium
@@ -208,11 +208,11 @@ export default function BillingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="rounded-2xl border border-violet-500/30 bg-violet-500/5 p-6 mb-8"
+              className="rounded-2xl border border-neutral-300/30 bg-neutral-200/5 p-6 mb-8"
             >
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-xl bg-violet-500/20">
-                  <BadgeCheck className="h-6 w-6 text-violet-400" />
+                <div className="p-3 rounded-xl bg-neutral-200/20">
+                  <BadgeCheck className="h-6 w-6 text-white" />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-white mb-1">Get Verified</h3>
@@ -221,7 +221,7 @@ export default function BillingPage() {
                   </p>
                   <Link
                     href="/checkout?plan=premium"
-                    className="text-violet-400 hover:text-violet-300 text-sm font-medium"
+                    className="text-white hover:text-neutral-300 text-sm font-medium"
                   >
                     Learn more →
                   </Link>
@@ -244,7 +244,7 @@ export default function BillingPage() {
                 <p className="text-slate-400 mb-4">No payment method on file</p>
                 <Link
                   href="/pricing"
-                  className="text-violet-400 hover:text-violet-300 font-medium"
+                  className="text-white hover:text-neutral-300 font-medium"
                 >
                   Add payment method by upgrading
                 </Link>
@@ -253,7 +253,7 @@ export default function BillingPage() {
               <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
                 <div className="flex items-center gap-4">
                   <div className="p-3 rounded-lg bg-white/10">
-                    <CreditCard className="h-6 w-6 text-violet-400" />
+                    <CreditCard className="h-6 w-6 text-white" />
                   </div>
                   <div>
                     <p className="font-medium text-white">Managed by Stripe</p>
@@ -263,7 +263,7 @@ export default function BillingPage() {
                 <button
                   onClick={openBillingPortal}
                   disabled={portalLoading}
-                  className="text-sm text-violet-400 hover:text-violet-300 transition-colors disabled:opacity-50"
+                  className="text-sm text-white hover:text-neutral-300 transition-colors disabled:opacity-50"
                 >
                   {portalLoading ? "Loading..." : "Update"}
                 </button>
@@ -286,7 +286,7 @@ export default function BillingPage() {
                 {currentPlan !== "free" && (
                   <button
                     onClick={openBillingPortal}
-                    className="text-violet-400 hover:text-violet-300 font-medium mt-2"
+                    className="text-white hover:text-neutral-300 font-medium mt-2"
                   >
                     View invoices in billing portal
                   </button>

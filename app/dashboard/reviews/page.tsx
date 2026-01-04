@@ -99,7 +99,7 @@ export default function ReviewsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -132,7 +132,7 @@ export default function ReviewsPage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
           <div className="flex items-center gap-3 mb-2">
-            <MessageSquare className="h-6 w-6 text-violet-400" />
+            <MessageSquare className="h-6 w-6 text-white" />
             <span className="text-4xl font-bold text-white">{stats.totalReviews}</span>
           </div>
           <p className="text-slate-400">Total Reviews</p>
@@ -167,7 +167,7 @@ export default function ReviewsPage() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-8"
       >
         <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-violet-400" />
+          <TrendingUp className="h-5 w-5 text-white" />
           Rating Distribution
         </h2>
         <div className="space-y-3">
@@ -224,8 +224,8 @@ export default function ReviewsPage() {
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center">
-                      <User className="h-5 w-5 text-violet-400" />
+                    <div className="w-10 h-10 rounded-full bg-neutral-200/20 flex items-center justify-center">
+                      <User className="h-5 w-5 text-white" />
                     </div>
                     <div>
                       <p className="font-medium text-white">
@@ -258,10 +258,10 @@ export default function ReviewsPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="mt-8 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20"
+        className="mt-8 p-4 rounded-xl bg-neutral-200/10 border border-neutral-300/20"
       >
         <div className="flex items-start gap-3">
-          <AlertCircle className="h-5 w-5 text-violet-400 flex-shrink-0 mt-0.5" />
+          <AlertCircle className="h-5 w-5 text-white flex-shrink-0 mt-0.5" />
           <div>
             <p className="text-white font-medium">Tips for more reviews</p>
             <ul className="text-sm text-slate-400 mt-2 space-y-1">

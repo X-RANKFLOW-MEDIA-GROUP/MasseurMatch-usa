@@ -39,7 +39,7 @@ export default async function DashboardLayout({
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link
             href="/"
-            className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent"
+            className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent"
           >
             MasseurMatch
           </Link>

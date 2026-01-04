@@ -57,7 +57,7 @@ export default async function CityPage({
       {/* Header */}
       <header className="border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl sticky top-0 z-50">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             {SITE_NAME}
           </Link>
           <div className="flex items-center gap-4">
@@ -74,12 +74,12 @@ export default async function CityPage({
       <main className="mx-auto max-w-6xl px-6 py-12">
         {/* Hero */}
         <div className="mb-12">
-          <Link href="/explore" className="text-sm text-violet-400 hover:text-violet-300 mb-4 inline-block">
+          <Link href="/explore" className="text-sm text-white hover:text-neutral-300 mb-4 inline-block">
             ← All Cities
           </Link>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Massage Therapists in{" "}
-            <span className="bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
               {city.name}, {city.state}
             </span>
           </h1>
@@ -96,10 +96,10 @@ export default async function CityPage({
               <Link
                 key={therapist.user_id}
                 href={`/therapist/${therapist.slug}`}
-                className="group rounded-3xl border border-white/10 bg-white/5 overflow-hidden hover:border-violet-500/50 transition-all"
+                className="group rounded-3xl border border-white/10 bg-white/5 overflow-hidden hover:border-neutral-300/50 transition-all"
               >
                 {/* Image */}
-                <div className="aspect-[4/3] bg-gradient-to-br from-violet-600/20 to-indigo-600/20 flex items-center justify-center">
+                <div className="aspect-[4/3] bg-gradient-to-br from-white/20 to-neutral-100/20 flex items-center justify-center">
                   {therapist.profile_photo ? (
                     <img
                       src={therapist.profile_photo}
@@ -113,7 +113,7 @@ export default async function CityPage({
 
                 {/* Content */}
                 <div className="p-6">
-                  <h2 className="text-xl font-semibold text-white group-hover:text-violet-400 transition-colors mb-2">
+                  <h2 className="text-xl font-semibold text-white group-hover:text-white transition-colors mb-2">
                     {therapist.display_name}
                   </h2>
                   <p className="text-slate-400 text-sm mb-3 line-clamp-2">
@@ -136,7 +136,7 @@ export default async function CityPage({
                       {therapist.services.slice(0, 3).map((service: string) => (
                         <span
                           key={service}
-                          className="px-2 py-0.5 rounded-full bg-violet-600/20 text-violet-300 text-xs"
+                          className="px-2 py-0.5 rounded-full bg-white/20 text-neutral-300 text-xs"
                         >
                           {service}
                         </span>
@@ -163,7 +163,7 @@ export default async function CityPage({
             </p>
             <Link
               href="/join"
-              className="inline-flex rounded-xl bg-violet-600 px-6 py-3 font-medium text-white hover:bg-violet-500 transition-colors"
+              className="inline-flex rounded-xl bg-white px-6 py-3 font-medium text-white hover:bg-neutral-200 transition-colors"
             >
               Be the first to join
             </Link>

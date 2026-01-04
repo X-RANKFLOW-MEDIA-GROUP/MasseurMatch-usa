@@ -12,7 +12,7 @@ export default function CommunityGuidelinesPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch
           </Link>
         </nav>
@@ -31,7 +31,7 @@ export default function CommunityGuidelinesPage() {
               { icon: Users, title: "Community", desc: "Support each other" },
             ].map((item) => (
               <div key={item.title} className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-                <item.icon className="h-8 w-8 text-violet-400 mx-auto mb-2" />
+                <item.icon className="h-8 w-8 text-white mx-auto mb-2" />
                 <h3 className="font-semibold text-white">{item.title}</h3>
                 <p className="text-sm text-slate-400">{item.desc}</p>
               </div>
@@ -101,14 +101,14 @@ export default function CommunityGuidelinesPage() {
           </section>
 
           {/* Reporting */}
-          <section className="rounded-2xl border border-white/10 bg-violet-600/10 p-6">
+          <section className="rounded-2xl border border-white/10 bg-white/10 p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Report a Concern</h2>
             <p className="text-slate-300 mb-4">
               If you experience or witness a violation, please report it immediately.
             </p>
             <Link
               href="/dashboard/support"
-              className="inline-block rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+              className="inline-block rounded-xl bg-white px-6 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
             >
               Contact Support
             </Link>

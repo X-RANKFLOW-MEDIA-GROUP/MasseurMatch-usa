@@ -168,7 +168,7 @@ export default function AdminUsersPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -177,7 +177,7 @@ export default function AdminUsersPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5 bg-[#0a0a0f]">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/admin" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/admin" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch Admin
           </Link>
           <Link href="/admin" className="text-sm text-slate-400 hover:text-white transition-colors">
@@ -208,13 +208,13 @@ export default function AdminUsersPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by name or email..."
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-2 pl-10 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-2 pl-10 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
             <select
               value={filterPlan}
               onChange={(e) => setFilterPlan(e.target.value)}
-              className="rounded-xl border border-white/10 bg-white/5 py-2 px-4 text-white focus:border-violet-500 focus:outline-none"
+              className="rounded-xl border border-white/10 bg-white/5 py-2 px-4 text-white focus:border-neutral-300 focus:outline-none"
             >
               <option value="all" className="bg-slate-900">All Plans</option>
               <option value="free" className="bg-slate-900">Free</option>
@@ -225,7 +225,7 @@ export default function AdminUsersPage() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="rounded-xl border border-white/10 bg-white/5 py-2 px-4 text-white focus:border-violet-500 focus:outline-none"
+              className="rounded-xl border border-white/10 bg-white/5 py-2 px-4 text-white focus:border-neutral-300 focus:outline-none"
             >
               <option value="all" className="bg-slate-900">All Status</option>
               <option value="verified" className="bg-slate-900">Verified</option>
@@ -266,8 +266,8 @@ export default function AdminUsersPage() {
                     <tr key={user.id} className="border-b border-white/5 hover:bg-white/5">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center">
-                            <Users className="h-5 w-5 text-violet-400" />
+                          <div className="w-10 h-10 rounded-full bg-neutral-200/20 flex items-center justify-center">
+                            <Users className="h-5 w-5 text-white" />
                           </div>
                           <div>
                             <p className="font-medium text-white">{user.display_name || "No name"}</p>
@@ -281,7 +281,7 @@ export default function AdminUsersPage() {
                       <td className="px-6 py-4">
                         <span className={`px-2 py-1 rounded-full text-xs ${
                           user.subscription_plan === "elite" ? "bg-amber-500/20 text-amber-400" :
-                          user.subscription_plan === "pro" ? "bg-violet-500/20 text-violet-400" :
+                          user.subscription_plan === "pro" ? "bg-neutral-200/20 text-white" :
                           user.subscription_plan === "standard" ? "bg-blue-500/20 text-blue-400" :
                           "bg-slate-500/20 text-slate-400"
                         }`}>
@@ -373,8 +373,8 @@ export default function AdminUsersPage() {
 
             <div className="mb-6">
               <div className="flex items-center gap-3 p-4 rounded-xl bg-white/5">
-                <div className="w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
-                  <Users className="h-6 w-6 text-violet-400" />
+                <div className="w-12 h-12 rounded-full bg-neutral-200/20 flex items-center justify-center">
+                  <Users className="h-6 w-6 text-white" />
                 </div>
                 <div>
                   <p className="font-medium text-white">{selectedUser.display_name || "No name"}</p>

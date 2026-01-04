@@ -43,7 +43,7 @@ export default async function AdminPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5 bg-[#0a0a0f]">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch Admin
           </Link>
           <div className="flex items-center gap-4">
@@ -65,7 +65,7 @@ export default async function AdminPage() {
           {stats.map((stat) => (
             <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <div className="flex items-center justify-between mb-4">
-                <stat.icon className="h-8 w-8 text-violet-400" />
+                <stat.icon className="h-8 w-8 text-white" />
                 <span className={`text-sm font-medium ${stat.change.startsWith("+") ? "text-green-400" : "text-red-400"}`}>
                   {stat.change}
                 </span>
@@ -94,7 +94,7 @@ export default async function AdminPage() {
                 >
                   <span className="text-white">{action.label}</span>
                   {action.count !== null && (
-                    <span className="px-2 py-1 rounded-full text-xs bg-violet-600 text-white">
+                    <span className="px-2 py-1 rounded-full text-xs bg-white text-white">
                       {action.count}
                     </span>
                   )}

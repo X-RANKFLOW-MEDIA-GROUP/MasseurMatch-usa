@@ -190,7 +190,7 @@ export default function MessagesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -213,7 +213,7 @@ export default function MessagesPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search conversations..."
-                className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-10 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none text-sm"
+                className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-10 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none text-sm"
               />
             </div>
           </div>
@@ -241,12 +241,12 @@ export default function MessagesPage() {
                         className="w-10 h-10 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center">
-                        <User className="h-5 w-5 text-violet-400" />
+                      <div className="w-10 h-10 rounded-full bg-neutral-200/20 flex items-center justify-center">
+                        <User className="h-5 w-5 text-white" />
                       </div>
                     )}
                     {conv.unread_count > 0 && (
-                      <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-violet-600 text-white text-xs flex items-center justify-center">
+                      <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-white text-white text-xs flex items-center justify-center">
                         {conv.unread_count}
                       </span>
                     )}
@@ -281,8 +281,8 @@ export default function MessagesPage() {
                     className="w-10 h-10 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center">
-                    <User className="h-5 w-5 text-violet-400" />
+                  <div className="w-10 h-10 rounded-full bg-neutral-200/20 flex items-center justify-center">
+                    <User className="h-5 w-5 text-white" />
                   </div>
                 )}
                 <div>
@@ -304,13 +304,13 @@ export default function MessagesPage() {
                     <div
                       className={`max-w-[70%] rounded-2xl px-4 py-2 ${
                         msg.sender_id === userId
-                          ? "bg-violet-600 text-white"
+                          ? "bg-white text-white"
                           : "bg-white/10 text-slate-200"
                       }`}
                     >
                       <p>{msg.content}</p>
                       <div className={`flex items-center justify-end gap-1 mt-1 ${
-                        msg.sender_id === userId ? "text-violet-200" : "text-slate-500"
+                        msg.sender_id === userId ? "text-neutral-300" : "text-slate-500"
                       }`}>
                         <span className="text-xs">{new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                         {msg.sender_id === userId && (
@@ -331,12 +331,12 @@ export default function MessagesPage() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Type a message..."
-                    className="flex-1 rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                    className="flex-1 rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                   />
                   <button
                     type="submit"
                     disabled={sending || !newMessage.trim()}
-                    className="px-4 rounded-xl bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+                    className="px-4 rounded-xl bg-white text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
                   >
                     {sending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
                   </button>

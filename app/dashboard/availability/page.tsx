@@ -141,7 +141,7 @@ export default function AvailabilityPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -155,12 +155,12 @@ export default function AvailabilityPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl border border-white/10 bg-gradient-to-br from-violet-600/20 to-indigo-600/20 p-6 mb-8"
+        className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/20 to-neutral-100/20 p-6 mb-8"
       >
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4">
             <div className={`p-3 rounded-xl ${isAvailableNow ? "bg-green-500/20" : "bg-white/10"}`}>
-              <Zap className={`h-6 w-6 ${isAvailableNow ? "text-green-400" : "text-violet-400"}`} />
+              <Zap className={`h-6 w-6 ${isAvailableNow ? "text-green-400" : "text-white"}`} />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-white mb-1">Available Now</h2>
@@ -187,7 +187,7 @@ export default function AvailabilityPage() {
             <button
               onClick={handleAvailableNow}
               disabled={activatingNow || !availableNowCheck.allowed}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
             >
               {activatingNow ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -200,7 +200,7 @@ export default function AvailabilityPage() {
         </div>
 
         {plan === "elite" && planInfo.auto_available && (
-          <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-2 text-sm text-violet-300">
+          <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-2 text-sm text-neutral-300">
             <Check className="h-4 w-4" />
             Auto-refresh every 2 hours (Elite perk)
           </div>
@@ -215,7 +215,7 @@ export default function AvailabilityPage() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
       >
         <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <MapPin className="h-5 w-5 text-violet-400" />
+          <MapPin className="h-5 w-5 text-white" />
           Service Location
         </h2>
         <div className="flex gap-4">
@@ -223,7 +223,7 @@ export default function AvailabilityPage() {
             <button
               type="button"
               onClick={() => setIncall(!incall)}
-              className={`relative w-12 h-6 rounded-full transition-colors ${incall ? "bg-violet-600" : "bg-white/20"}`}
+              className={`relative w-12 h-6 rounded-full transition-colors ${incall ? "bg-white" : "bg-white/20"}`}
             >
               <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${incall ? "translate-x-6" : ""}`} />
             </button>
@@ -233,7 +233,7 @@ export default function AvailabilityPage() {
             <button
               type="button"
               onClick={() => setOutcall(!outcall)}
-              className={`relative w-12 h-6 rounded-full transition-colors ${outcall ? "bg-violet-600" : "bg-white/20"}`}
+              className={`relative w-12 h-6 rounded-full transition-colors ${outcall ? "bg-white" : "bg-white/20"}`}
             >
               <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${outcall ? "translate-x-6" : ""}`} />
             </button>
@@ -250,7 +250,7 @@ export default function AvailabilityPage() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
       >
         <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-violet-400" />
+          <Calendar className="h-5 w-5 text-white" />
           Weekly Schedule
         </h2>
         <div className="space-y-4">
@@ -263,7 +263,7 @@ export default function AvailabilityPage() {
                     ...schedule,
                     [day]: { ...schedule[day], enabled: !schedule[day].enabled }
                   })}
-                  className={`relative w-10 h-5 rounded-full transition-colors ${schedule[day].enabled ? "bg-violet-600" : "bg-white/20"}`}
+                  className={`relative w-10 h-5 rounded-full transition-colors ${schedule[day].enabled ? "bg-white" : "bg-white/20"}`}
                 >
                   <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${schedule[day].enabled ? "translate-x-5" : ""}`} />
                 </button>
@@ -277,7 +277,7 @@ export default function AvailabilityPage() {
                       ...schedule,
                       [day]: { ...schedule[day], start: e.target.value }
                     })}
-                    className="rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-sm focus:border-violet-500 focus:outline-none"
+                    className="rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-sm focus:border-neutral-300 focus:outline-none"
                   >
                     {timeSlots.map((time) => (
                       <option key={time} value={time} className="bg-slate-900">{time}</option>
@@ -290,7 +290,7 @@ export default function AvailabilityPage() {
                       ...schedule,
                       [day]: { ...schedule[day], end: e.target.value }
                     })}
-                    className="rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-sm focus:border-violet-500 focus:outline-none"
+                    className="rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-sm focus:border-neutral-300 focus:outline-none"
                   >
                     {timeSlots.map((time) => (
                       <option key={time} value={time} className="bg-slate-900">{time}</option>
@@ -312,7 +312,7 @@ export default function AvailabilityPage() {
         <button
           onClick={handleSaveSchedule}
           disabled={saving}
-          className="w-full flex items-center justify-center gap-2 rounded-xl bg-violet-600 py-4 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-white py-4 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
         >
           {saving ? (
             <>
@@ -334,16 +334,16 @@ export default function AvailabilityPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mt-6 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20"
+          className="mt-6 p-4 rounded-xl bg-neutral-200/10 border border-neutral-300/20"
         >
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-violet-400 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="h-5 w-5 text-white flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-white font-medium">Upgrade for more availability features</p>
               <p className="text-sm text-slate-400 mt-1">
                 Pro and Elite plans include unlimited &quot;Available Now&quot; activations and auto-refresh.
               </p>
-              <Link href="/pricing" className="text-violet-400 hover:text-violet-300 text-sm font-medium mt-2 inline-block">
+              <Link href="/pricing" className="text-white hover:text-neutral-300 text-sm font-medium mt-2 inline-block">
                 View plans →
               </Link>
             </div>

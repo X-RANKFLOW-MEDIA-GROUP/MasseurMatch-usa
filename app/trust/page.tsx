@@ -12,7 +12,7 @@ export default function TrustPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch
           </Link>
         </nav>
@@ -20,7 +20,7 @@ export default function TrustPage() {
 
       <main className="mx-auto max-w-3xl px-6 py-16">
         <div className="text-center mb-12">
-          <Shield className="h-16 w-16 text-violet-400 mx-auto mb-4" />
+          <Shield className="h-16 w-16 text-white mx-auto mb-4" />
           <h1 className="text-4xl font-bold text-white mb-4">Trust & Safety</h1>
           <p className="text-xl text-slate-400">Your safety is our top priority</p>
         </div>
@@ -51,7 +51,7 @@ export default function TrustPage() {
               },
             ].map((feature) => (
               <div key={feature.title} className="rounded-xl border border-white/10 bg-white/5 p-6">
-                <feature.icon className="h-8 w-8 text-violet-400 mb-3" />
+                <feature.icon className="h-8 w-8 text-white mb-3" />
                 <h3 className="font-semibold text-white mb-2">{feature.title}</h3>
                 <p className="text-slate-400 text-sm">{feature.desc}</p>
               </div>
@@ -70,7 +70,7 @@ export default function TrustPage() {
                 "Ongoing monitoring and periodic re-verification",
               ].map((step, i) => (
                 <div key={step} className="flex items-center gap-4">
-                  <div className="w-8 h-8 rounded-full bg-violet-600 flex items-center justify-center text-white font-semibold">
+                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-white font-semibold">
                     {i + 1}
                   </div>
                   <span className="text-slate-300">{step}</span>

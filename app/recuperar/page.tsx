@@ -46,7 +46,7 @@ export default function RecuperarPage() {
           </p>
           <Link
             href="/login"
-            className="inline-block rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+            className="inline-block rounded-xl bg-white px-6 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
           >
             Back to Login
           </Link>
@@ -68,8 +68,8 @@ export default function RecuperarPage() {
 
         <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
           <div className="text-center mb-8">
-            <div className="w-12 h-12 rounded-full bg-violet-600/20 flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-6 w-6 text-violet-400" />
+            <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
+              <Mail className="h-6 w-6 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-white mb-2">Forgot Password?</h1>
             <p className="text-slate-400">No worries, we&apos;ll send you reset instructions.</p>
@@ -85,7 +85,7 @@ export default function RecuperarPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
                 required
               />
             </div>
@@ -97,7 +97,7 @@ export default function RecuperarPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-violet-600 py-3 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+              className="w-full rounded-xl bg-white py-3 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
             >
               {loading ? "Sending..." : "Send Reset Link"}
             </button>

@@ -80,7 +80,7 @@ export default function AIPage() {
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white to-neutral-100 flex items-center justify-center">
                 <Bot className="h-4 w-4 text-white" />
               </div>
               <div>
@@ -107,8 +107,8 @@ export default function AIPage() {
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
                   message.role === "user"
-                    ? "bg-violet-600"
-                    : "bg-gradient-to-br from-violet-600 to-indigo-600"
+                    ? "bg-white"
+                    : "bg-gradient-to-br from-white to-neutral-100"
                 }`}
               >
                 {message.role === "user" ? (
@@ -120,7 +120,7 @@ export default function AIPage() {
               <div
                 className={`max-w-[80%] rounded-2xl px-4 py-3 ${
                   message.role === "user"
-                    ? "bg-violet-600 text-white"
+                    ? "bg-white text-white"
                     : "bg-white/5 border border-white/10 text-slate-300"
                 }`}
               >
@@ -131,7 +131,7 @@ export default function AIPage() {
 
           {loading && (
             <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white to-neutral-100 flex items-center justify-center">
                 <Bot className="h-4 w-4 text-white" />
               </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3">
@@ -158,7 +158,7 @@ export default function AIPage() {
                 <button
                   key={q}
                   onClick={() => handleSuggestion(q)}
-                  className="text-sm px-3 py-1.5 rounded-full border border-white/10 text-slate-400 hover:text-white hover:border-violet-500 transition-colors"
+                  className="text-sm px-3 py-1.5 rounded-full border border-white/10 text-slate-400 hover:text-white hover:border-neutral-300 transition-colors"
                 >
                   {q}
                 </button>
@@ -176,12 +176,12 @@ export default function AIPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask KnottyBot anything about massage..."
-            className="flex-1 rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+            className="flex-1 rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
           />
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="rounded-xl bg-violet-600 px-4 py-3 text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+            className="rounded-xl bg-white px-4 py-3 text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
           >
             <Send className="h-5 w-5" />
           </button>

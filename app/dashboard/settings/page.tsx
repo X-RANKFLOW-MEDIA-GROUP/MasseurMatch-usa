@@ -71,7 +71,7 @@ function VerificationSection() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
       >
         <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+          <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
         </div>
       </motion.div>
     );
@@ -84,7 +84,7 @@ function VerificationSection() {
       className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
     >
       <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-        <BadgeCheck className="h-5 w-5 text-violet-400" />
+        <BadgeCheck className="h-5 w-5 text-white" />
         Identity Verification
       </h3>
 
@@ -118,7 +118,7 @@ function VerificationSection() {
           <button
             onClick={startVerification}
             disabled={starting}
-            className="flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 font-medium text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-medium text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
           >
             {starting ? (
               <>
@@ -141,22 +141,22 @@ function VerificationSection() {
           </p>
           <ul className="text-sm text-slate-400 space-y-2">
             <li className="flex items-center gap-2">
-              <BadgeCheck className="h-4 w-4 text-violet-400" />
+              <BadgeCheck className="h-4 w-4 text-white" />
               Verified badge on your profile
             </li>
             <li className="flex items-center gap-2">
-              <Shield className="h-4 w-4 text-violet-400" />
+              <Shield className="h-4 w-4 text-white" />
               Increased trust and visibility
             </li>
             <li className="flex items-center gap-2">
-              <Eye className="h-4 w-4 text-violet-400" />
+              <Eye className="h-4 w-4 text-white" />
               Priority in search results
             </li>
           </ul>
           <button
             onClick={startVerification}
             disabled={starting}
-            className="flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 font-medium text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-medium text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
           >
             {starting ? (
               <>
@@ -270,7 +270,7 @@ function SettingsContent() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
       >
         <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Mail className="h-5 w-5 text-violet-400" />
+          <Mail className="h-5 w-5 text-white" />
           Account
         </h3>
         <div className="space-y-4">
@@ -280,7 +280,7 @@ function SettingsContent() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               disabled
             />
             <p className="text-xs text-slate-500 mt-1">Contact support to change your email</p>
@@ -294,7 +294,7 @@ function SettingsContent() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+1 (555) 123-4567"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
           </div>
@@ -309,7 +309,7 @@ function SettingsContent() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
       >
         <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Bell className="h-5 w-5 text-violet-400" />
+          <Bell className="h-5 w-5 text-white" />
           Notifications
         </h3>
         <div className="space-y-4">
@@ -325,7 +325,7 @@ function SettingsContent() {
               <button
                 onClick={() => setNotifications({ ...notifications, [item.key]: !notifications[item.key as keyof typeof notifications] })}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  notifications[item.key as keyof typeof notifications] ? "bg-violet-600" : "bg-white/20"
+                  notifications[item.key as keyof typeof notifications] ? "bg-white" : "bg-white/20"
                 }`}
               >
                 <span
@@ -347,7 +347,7 @@ function SettingsContent() {
         className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
       >
         <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Eye className="h-5 w-5 text-violet-400" />
+          <Eye className="h-5 w-5 text-white" />
           Privacy
         </h3>
         <div className="space-y-4">
@@ -361,7 +361,7 @@ function SettingsContent() {
               <button
                 onClick={() => setPrivacy({ ...privacy, [item.key]: !privacy[item.key as keyof typeof privacy] })}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  privacy[item.key as keyof typeof privacy] ? "bg-violet-600" : "bg-white/20"
+                  privacy[item.key as keyof typeof privacy] ? "bg-white" : "bg-white/20"
                 }`}
               >
                 <span
@@ -385,7 +385,7 @@ function SettingsContent() {
         <button
           onClick={saveSettings}
           disabled={saving}
-          className="rounded-xl bg-violet-600 px-8 py-3 font-semibold text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+          className="rounded-xl bg-white px-8 py-3 font-semibold text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
         >
           {saving ? "Saving..." : "Save Changes"}
         </button>

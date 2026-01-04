@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0f;
+  --background: #000000;
+  --background-elevated: #0a0a0a;
+  --background-card: #121212;
+  --background-hover: #1a1a1a;
   --foreground: #ffffff;
+  --foreground-muted: #a3a3a3;
+  --foreground-subtle: #737373;
+  --border: #262626;
+  --border-subtle: #171717;
+  --border-focus: #404040;
 }
 
 @theme inline {
@@ -16,6 +24,8 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Smooth scrolling */
@@ -23,26 +33,55 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Monochrome */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a2e;
+  background: var(--background-elevated);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4c1d95;
+  background: #404040;
   border-radius: 4px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6d28d9;
+  background: #525252;
 }
 
-/* Selection */
+/* Selection - Clean white on black */
 ::selection {
-  background: rgba(139, 92, 246, 0.3);
+  background: rgba(255, 255, 255, 0.2);
   color: white;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for interactive elements */
+button, a, input, textarea, select {
+  transition: all 0.2s ease;
+}
+
+/* Glass morphism utility */
+.glass {
+  background: rgba(18, 18, 18, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Glow effect */
+.glow {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.glow-hover:hover {
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
 }

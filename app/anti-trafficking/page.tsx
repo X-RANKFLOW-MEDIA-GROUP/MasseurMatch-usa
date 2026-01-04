@@ -12,7 +12,7 @@ export default function AntiTraffickingPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch
           </Link>
         </nav>
@@ -20,7 +20,7 @@ export default function AntiTraffickingPage() {
 
       <main className="mx-auto max-w-3xl px-6 py-16">
         <div className="text-center mb-12">
-          <Shield className="h-16 w-16 text-violet-400 mx-auto mb-4" />
+          <Shield className="h-16 w-16 text-white mx-auto mb-4" />
           <h1 className="text-4xl font-bold text-white mb-4">Anti-Trafficking Policy</h1>
           <p className="text-xl text-slate-400">Our commitment to preventing exploitation</p>
         </div>
@@ -67,7 +67,7 @@ export default function AntiTraffickingPage() {
               ].map((item) => (
                 <div key={item.title} className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <div className="flex items-start gap-4">
-                    <item.icon className="h-6 w-6 text-violet-400 shrink-0 mt-1" />
+                    <item.icon className="h-6 w-6 text-white shrink-0 mt-1" />
                     <div>
                       <h3 className="font-semibold text-white mb-1">{item.title}</h3>
                       <p className="text-sm text-slate-400">{item.desc}</p>
@@ -98,29 +98,29 @@ export default function AntiTraffickingPage() {
             <div className="space-y-4">
               <div className="rounded-xl border border-white/10 bg-white/5 p-6">
                 <h3 className="font-semibold text-white mb-2 flex items-center gap-2">
-                  <Phone className="h-5 w-5 text-violet-400" />
+                  <Phone className="h-5 w-5 text-white" />
                   National Human Trafficking Hotline
                 </h3>
-                <p className="text-2xl font-bold text-violet-400 mb-2">1-888-373-7888</p>
+                <p className="text-2xl font-bold text-white mb-2">1-888-373-7888</p>
                 <p className="text-sm text-slate-400">Available 24/7, confidential</p>
               </div>
 
               <div className="rounded-xl border border-white/10 bg-white/5 p-6">
                 <h3 className="font-semibold text-white mb-2">Text Line</h3>
-                <p className="text-lg font-bold text-violet-400 mb-2">Text &quot;HELP&quot; to 233733</p>
+                <p className="text-lg font-bold text-white mb-2">Text &quot;HELP&quot; to 233733</p>
               </div>
             </div>
           </section>
 
           {/* Report */}
-          <section className="rounded-2xl border border-violet-500/30 bg-violet-500/10 p-6 text-center">
+          <section className="rounded-2xl border border-neutral-300/30 bg-neutral-200/10 p-6 text-center">
             <h2 className="text-xl font-semibold text-white mb-4">Report Suspicious Activity</h2>
             <p className="text-slate-300 mb-4">
               If you suspect trafficking or exploitation on our platform, report it immediately.
             </p>
             <Link
               href="/dashboard/support"
-              className="inline-block rounded-xl bg-violet-600 px-8 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+              className="inline-block rounded-xl bg-white px-8 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
             >
               Report Now
             </Link>

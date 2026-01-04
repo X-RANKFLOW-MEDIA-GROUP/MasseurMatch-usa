@@ -54,23 +54,24 @@ export default async function ExplorePage() {
   const cities = getAllCities();
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
+    <div className="min-h-screen bg-black">
       {/* Background */}
       <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/30 via-[#0a0a0f] to-indigo-950/20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-neutral-950 to-black" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_90%)]" />
       </div>
 
       {/* Header */}
-      <header className="border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl sticky top-0 z-50">
+      <header className="border-b border-white/10 glass sticky top-0 z-50">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-2xl font-bold text-white hover:opacity-80 transition-opacity">
             {SITE_NAME}
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm text-slate-300 hover:text-white transition-colors">
+            <Link href="/login" className="text-sm text-neutral-400 hover:text-white transition-colors">
               Login
             </Link>
-            <Link href="/join" className="rounded-full bg-violet-600 px-5 py-2 text-sm font-medium text-white hover:bg-violet-500 transition-colors">
+            <Link href="/join" className="rounded-full bg-white px-5 py-2 text-sm font-medium text-black hover:bg-neutral-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
               Join
             </Link>
           </div>
@@ -79,27 +80,28 @@ export default async function ExplorePage() {
 
       <main className="mx-auto max-w-7xl px-6 py-12">
         {/* Title */}
-        <div className="mb-12">
-          <Link href="/" className="text-sm text-violet-400 hover:text-violet-300 mb-4 inline-block">
-            ← Back to home
+        <div className="mb-12 animate-fade-up">
+          <Link href="/" className="text-sm text-neutral-400 hover:text-white mb-4 inline-flex items-center gap-2 group transition-colors">
+            <span className="transition-transform group-hover:-translate-x-1">←</span>
+            Back to home
           </Link>
-          <h1 className="text-4xl font-bold text-white mb-4">
+          <h1 className="text-5xl font-bold text-white mb-4 tracking-tight">
             Find Your Therapist
           </h1>
-          <p className="text-slate-400 max-w-2xl">
+          <p className="text-neutral-400 text-lg max-w-2xl">
             Browse our directory of professional massage therapists. Filter by verified status, availability, and more.
           </p>
         </div>
 
         {/* City Quick Links */}
-        <div className="mb-8">
-          <h2 className="text-sm font-medium text-slate-400 mb-3">Browse by city</h2>
+        <div className="mb-12 animate-fade-up" style={{ animationDelay: "0.1s" }}>
+          <h2 className="text-sm font-medium text-neutral-500 mb-4 uppercase tracking-wider">Browse by city</h2>
           <div className="flex flex-wrap gap-2">
             {cities.map((city) => (
               <Link
                 key={city.slug}
                 href={`/city/${city.slug}`}
-                className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10 hover:border-violet-500/50 transition-colors"
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10 hover:border-white/20 hover:scale-105 transition-all backdrop-blur-sm"
               >
                 {city.name}
               </Link>
@@ -108,10 +110,12 @@ export default async function ExplorePage() {
         </div>
 
         {/* Filters and Results */}
-        <ExploreFilters
-          therapists={(therapists as TherapistCard[]) || []}
-          cities={cities}
-        />
+        <div className="animate-fade-up" style={{ animationDelay: "0.2s" }}>
+          <ExploreFilters
+            therapists={(therapists as TherapistCard[]) || []}
+            cities={cities}
+          />
+        </div>
       </main>
     </div>
   );

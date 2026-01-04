@@ -128,7 +128,7 @@ export default function AdminSettingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-200" />
       </div>
     );
   }
@@ -137,7 +137,7 @@ export default function AdminSettingsPage() {
     <div className="min-h-screen bg-[#0a0a0f]">
       <header className="border-b border-white/5 bg-[#0a0a0f]">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/admin" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/admin" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch Admin
           </Link>
           <Link href="/admin" className="text-sm text-slate-400 hover:text-white transition-colors">
@@ -155,7 +155,7 @@ export default function AdminSettingsPage() {
           <button
             onClick={handleSaveSettings}
             disabled={saving}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-white hover:bg-neutral-200 disabled:opacity-50 transition-colors"
           >
             {saving ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -187,7 +187,7 @@ export default function AdminSettingsPage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
         >
           <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-            <Settings className="h-5 w-5 text-violet-400" />
+            <Settings className="h-5 w-5 text-white" />
             General Settings
           </h2>
 
@@ -217,7 +217,7 @@ export default function AdminSettingsPage() {
               <button
                 onClick={() => handleToggle("registration_enabled")}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  settings.registration_enabled ? "bg-violet-600" : "bg-white/20"
+                  settings.registration_enabled ? "bg-white" : "bg-white/20"
                 }`}
               >
                 <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${
@@ -236,7 +236,7 @@ export default function AdminSettingsPage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
         >
           <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-            <Shield className="h-5 w-5 text-violet-400" />
+            <Shield className="h-5 w-5 text-white" />
             Verification Settings
           </h2>
 
@@ -249,7 +249,7 @@ export default function AdminSettingsPage() {
               <button
                 onClick={() => handleToggle("require_email_verification")}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  settings.require_email_verification ? "bg-violet-600" : "bg-white/20"
+                  settings.require_email_verification ? "bg-white" : "bg-white/20"
                 }`}
               >
                 <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${
@@ -266,7 +266,7 @@ export default function AdminSettingsPage() {
               <button
                 onClick={() => handleToggle("require_identity_verification")}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  settings.require_identity_verification ? "bg-violet-600" : "bg-white/20"
+                  settings.require_identity_verification ? "bg-white" : "bg-white/20"
                 }`}
               >
                 <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${
@@ -285,7 +285,7 @@ export default function AdminSettingsPage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
         >
           <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-            <Image className="h-5 w-5 text-violet-400" />
+            <Image className="h-5 w-5 text-white" />
             Content Moderation
           </h2>
 
@@ -298,7 +298,7 @@ export default function AdminSettingsPage() {
               <button
                 onClick={() => handleToggle("photo_moderation_enabled")}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  settings.photo_moderation_enabled ? "bg-violet-600" : "bg-white/20"
+                  settings.photo_moderation_enabled ? "bg-white" : "bg-white/20"
                 }`}
               >
                 <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${
@@ -315,7 +315,7 @@ export default function AdminSettingsPage() {
               <button
                 onClick={() => handleToggle("text_moderation_enabled")}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  settings.text_moderation_enabled ? "bg-violet-600" : "bg-white/20"
+                  settings.text_moderation_enabled ? "bg-white" : "bg-white/20"
                 }`}
               >
                 <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${
@@ -334,7 +334,7 @@ export default function AdminSettingsPage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6"
         >
           <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-            <Users className="h-5 w-5 text-violet-400" />
+            <Users className="h-5 w-5 text-white" />
             Photo Limits by Plan
           </h2>
 
@@ -353,7 +353,7 @@ export default function AdminSettingsPage() {
                   onChange={(e) => handleChange(item.key as keyof PlatformSettings, parseInt(e.target.value))}
                   min="1"
                   max="20"
-                  className="w-full rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-center focus:border-violet-500 focus:outline-none"
+                  className="w-full rounded-lg border border-white/10 bg-white/5 py-2 px-3 text-white text-center focus:border-neutral-300 focus:outline-none"
                 />
               </div>
             ))}
@@ -368,7 +368,7 @@ export default function AdminSettingsPage() {
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
           <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-            <Mail className="h-5 w-5 text-violet-400" />
+            <Mail className="h-5 w-5 text-white" />
             Email Settings
           </h2>
 
@@ -381,7 +381,7 @@ export default function AdminSettingsPage() {
                 type="email"
                 value={settings.support_email}
                 onChange={(e) => handleChange("support_email", e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
 
@@ -393,7 +393,7 @@ export default function AdminSettingsPage() {
                 type="email"
                 value={settings.notification_email}
                 onChange={(e) => handleChange("notification_email", e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder:text-slate-500 focus:border-neutral-300 focus:outline-none"
               />
             </div>
           </div>

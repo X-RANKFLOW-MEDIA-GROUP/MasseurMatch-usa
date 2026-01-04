@@ -30,7 +30,7 @@ export default function PendingPage() {
               { icon: Mail, text: "You'll receive an email once approved" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3 text-slate-300">
-                <item.icon className="h-5 w-5 text-violet-400" />
+                <item.icon className="h-5 w-5 text-white" />
                 {item.text}
               </div>
             ))}
@@ -50,7 +50,7 @@ export default function PendingPage() {
           </Link>
           <Link
             href="/dashboard/support"
-            className="block w-full rounded-xl bg-violet-600 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+            className="block w-full rounded-xl bg-white py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
           >
             Contact Support
           </Link>

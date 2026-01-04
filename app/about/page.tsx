@@ -13,7 +13,7 @@ export default function AboutPage() {
       {/* Header */}
       <header className="border-b border-white/5">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
             MasseurMatch
           </Link>
         </nav>
@@ -23,7 +23,7 @@ export default function AboutPage() {
         {/* Hero */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            About <span className="bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">MasseurMatch</span>
+            About <span className="bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">MasseurMatch</span>
           </h1>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto">
             We&apos;re on a mission to connect people with the best massage therapists in their area, making wellness accessible to everyone.
@@ -66,7 +66,7 @@ export default function AboutPage() {
               },
             ].map((value) => (
               <div key={value.title} className="rounded-2xl border border-white/10 bg-white/5 p-6">
-                <value.icon className="h-8 w-8 text-violet-400 mb-4" />
+                <value.icon className="h-8 w-8 text-white mb-4" />
                 <h3 className="text-lg font-semibold text-white mb-2">{value.title}</h3>
                 <p className="text-slate-400">{value.description}</p>
               </div>
@@ -83,7 +83,7 @@ export default function AboutPage() {
               { value: "100K+", label: "Bookings" },
             ].map((stat) => (
               <div key={stat.label}>
-                <div className="text-3xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+                <div className="text-3xl font-bold bg-gradient-to-r from-neutral-200 to-white bg-clip-text text-transparent">
                   {stat.value}
                 </div>
                 <div className="text-slate-400">{stat.label}</div>
@@ -93,13 +93,13 @@ export default function AboutPage() {
         </section>
 
         {/* CTA */}
-        <section className="text-center rounded-2xl border border-white/10 bg-gradient-to-br from-violet-600/20 to-indigo-600/20 p-12">
+        <section className="text-center rounded-2xl border border-white/10 bg-gradient-to-br from-white/20 to-neutral-100/20 p-12">
           <h2 className="text-2xl font-bold text-white mb-4">Join Our Community</h2>
           <p className="text-slate-300 mb-6">Whether you&apos;re a therapist or looking for one, we&apos;d love to have you.</p>
           <div className="flex justify-center gap-4">
             <Link
               href="/join"
-              className="rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white hover:bg-violet-500 transition-colors"
+              className="rounded-xl bg-white px-6 py-3 font-semibold text-white hover:bg-neutral-200 transition-colors"
             >
               Join as Therapist
             </Link>
