@@ -11,6 +11,9 @@
   --border: #262626;
   --border-subtle: #171717;
   --border-focus: #404040;
+  --accent: #1d4ed8;
+  --accent-strong: #1e40af;
+  --accent-soft: #93c5fd;
 }
 
 @theme inline {
@@ -54,8 +57,8 @@ html {
 
 /* Selection - Clean white on black */
 ::selection {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: rgba(29, 78, 216, 0.4);
+  color: #ffffff;
 }
 
 /* Focus styles */

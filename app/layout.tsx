@@ -3,17 +3,18 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "MasseurMatch - Find Professional Male Massage Therapists",
+    default: "MasseurMatch - Gay Therapist Directory with Ktonny AI",
     template: "%s | MasseurMatch",
   },
   description:
-    "Connect with licensed male massage therapists in your area. Professional, inclusive, and therapeutic massage services.",
+    "Discover LGBTQ+ affirming massage and bodywork professionals with Ktonny AI. Browse verified gay therapists, compare specialties, and book with confidence.",
   keywords: [
-    "massage therapist",
-    "male massage",
-    "therapeutic massage",
-    "LGBTQ friendly",
-    "professional massage",
+    "gay therapist directory",
+    "LGBTQ affirming massage",
+    "male massage therapist",
+    "LGBTQ+ wellness",
+    "gay massage therapist",
+    "Ktonny AI",
   ],
 };
 

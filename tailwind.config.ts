@@ -50,9 +50,10 @@ const config: Config = {
           focus: "#404040",
         },
         accent: {
-          DEFAULT: "#ffffff",
-          hover: "#f5f5f5",
-          foreground: "#000000",
+          DEFAULT: "#1d4ed8",
+          hover: "#1e40af",
+          foreground: "#ffffff",
+          soft: "#93c5fd",
         },
       },
       animation: {
