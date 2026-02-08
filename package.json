@@ -68,7 +68,7 @@
     "cmdk": "^1.1.1",
     "embla-carousel-react": "^8.6.0",
     "form-data": "^4.0.5",
-    "framer-motion": "^12.23.26",
+    "framer-motion": "^12.33.0",
     "input-otp": "^1.4.2",
     "jspdf": "^4.0.0",
     "leaflet": "^1.9.4",
