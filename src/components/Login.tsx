@@ -12,11 +12,11 @@ type PlanKey = "free" | "standard" | "pro" | "elite" | "testedecompra";
 export default function Login() {
   const router = useRouter();
 
-  // Agora os params vêm do window.location (somente client-side)
+  // Params now come from window.location (client-side only)
   const [redirectToParam, setRedirectToParam] = useState<string | undefined>();
   const [planKeyParam, setPlanKeyParam] = useState<PlanKey | undefined>();
 
-  // Lê os parâmetros da URL no client
+  // Read URL params on the client
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -43,7 +43,7 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Se já estiver logado, redireciona
+  // If already logged in, redirect
   useEffect(() => {
     let cancelled = false;
 
@@ -62,11 +62,11 @@ export default function Login() {
   }, [router, redirectToParam]);
 
   function validate(): string | null {
-    if (!email.trim()) return "Informe seu e-mail.";
+    if (!email.trim()) return "Enter your email.";
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if (!emailOk) return "E-mail inválido.";
+    if (!emailOk) return "Invalid email.";
     if (!password || password.length < 6)
-      return "A senha deve ter pelo menos 6 caracteres.";
+      return "Password must be at least 6 characters.";
     return null;
   }
 
@@ -85,7 +85,7 @@ export default function Login() {
       });
 
       if (signErr) throw signErr;
-      if (!data.user) throw new Error("Usuário não encontrado.");
+      if (!data.user) throw new Error("User not found.");
 
       const userId = data.user.id;
 
@@ -97,7 +97,7 @@ export default function Login() {
         }
       }
 
-      // Se veio com planKey pago, manda para /join já com o plano na URL
+      // If a paid planKey is provided, send to /join with the plan in the URL
       if (planKeyParam && planKeyParam !== "free") {
         const url = new URL("/join", window.location.origin);
         url.searchParams.set("planKey", planKeyParam);
@@ -105,12 +105,12 @@ export default function Login() {
         return;
       }
 
-      // Redireciona para o perfil com ID
+      // Redirect to the profile by ID
       const redirectTo = redirectToParam || `/therapist/${userId}`;
       router.replace(redirectTo);
     } catch (err: any) {
       console.error(err);
-      setError(err?.message || "Erro inesperado ao entrar.");
+      setError(err?.message || "Unexpected login error.");
     } finally {
       setLoading(false);
     }
@@ -203,7 +203,7 @@ export default function Login() {
                 <span>Remember me</span>
               </label>
 
-              <Link href="/recuperar" className={styles.link}>
+              <Link href="/recover" className={styles.link}>
                 Forgot password?
               </Link>
             </div>
@@ -213,7 +213,7 @@ export default function Login() {
               disabled={loading}
               className={styles["btn-primary"]}
             >
-              <span>{loading ? "Logging in…" : "Log In"}</span>
+              <span>{loading ? "Logging in..." : "Log In"}</span>
               <span className={styles["btn-icon"]}>
                 <ArrowRight size={18} strokeWidth={2} />
               </span>
@@ -237,3 +237,5 @@ export default function Login() {
     </div>
   );
 }
+
+

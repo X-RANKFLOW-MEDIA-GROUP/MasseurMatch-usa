@@ -13,7 +13,7 @@ export default function Header() {
   const drawerRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
 
-  // carrega se é admin
+  // load admin status
   useEffect(() => {
     let mounted = true;
 
@@ -53,7 +53,7 @@ export default function Header() {
     };
   }, []);
 
-  // fecha menu ao redimensionar para desktop
+  // close menu when resizing to desktop
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth >= 1024) setOpen(false);
@@ -62,7 +62,7 @@ export default function Header() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // trava scroll quando drawer está aberto
+  // lock scroll when drawer is open
   useEffect(() => {
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = open ? "hidden" : prevOverflow || "";
@@ -71,7 +71,7 @@ export default function Header() {
     };
   }, [open]);
 
-  // foco básico no primeiro elemento do drawer
+  // basic focus on the first element in the drawer
   useEffect(() => {
     if (!open || !drawerRef.current) return;
     const focusable = drawerRef.current.querySelector<HTMLElement>(
@@ -119,8 +119,14 @@ export default function Header() {
             <Link href="/explore" className={navLinkClass("/explore")}>
               Explore
             </Link>
+            <Link href="/cities" className={navLinkClass("/cities")}>
+              Cities
+            </Link>
             <Link href="/about" className={navLinkClass("/about")}>
               About
+            </Link>
+            <Link href="/blog" className={navLinkClass("/blog")}>
+              Blog
             </Link>
             <Link href="/join" className={navLinkClass("/join")}>
               Join
@@ -247,6 +253,20 @@ export default function Header() {
             onClick={() => setOpen(false)}
           >
             About
+          </Link>
+          <Link
+            href="/cities"
+            className={drawerLinkClass("/cities")}
+            onClick={() => setOpen(false)}
+          >
+            Cities
+          </Link>
+          <Link
+            href="/blog"
+            className={drawerLinkClass("/blog")}
+            onClick={() => setOpen(false)}
+          >
+            Blog
           </Link>
           <Link
             href="/join"

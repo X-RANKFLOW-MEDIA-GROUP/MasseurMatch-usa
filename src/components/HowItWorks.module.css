@@ -1,24 +1,29 @@
-/* ===== SECTION WRAPPER ===== */
 .how-it-works {
-  background: #050513;
-  color: #fff;
+  background: #000000;
+  color: #ffffff;
   padding: 72px 8%;
   text-align: center;
-  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
-    sans-serif;
   position: relative;
   overflow: hidden;
 }
 
-/* leve glow de fundo */
 .how-it-works::before {
   content: "";
   position: absolute;
-  inset: -40%;
-  background:
-    radial-gradient(40% 40% at 10% 0%, rgba(139, 92, 246, 0.18), transparent 60%),
-    radial-gradient(45% 45% at 90% 15%, rgba(56, 189, 248, 0.16), transparent 65%);
-  opacity: 0.6;
+  inset: 0;
+  background: linear-gradient(135deg, #000000, #0a0a0f 60%, #000000 100%);
+  z-index: 0;
+}
+
+.how-it-works::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 75%);
   pointer-events: none;
   z-index: 0;
 }
@@ -30,57 +35,46 @@
   margin: 0 auto;
 }
 
-/* ===== TITLE / SUBTITLE ===== */
 .how-it-works h2 {
   font-size: clamp(1.8rem, 3vw, 2.2rem);
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 6px;
   letter-spacing: 0.02em;
 }
 
 .how-it-works > .hiw-inner > p {
-  color: #b8b8c9;
+  color: #a3a3a3;
   margin: 0 0 40px;
   font-size: 0.98rem;
   max-width: 520px;
   margin-inline: auto;
 }
 
-/* ===== STEPS GRID ===== */
 .steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
 }
 
-/* ===== CARD ===== */
 .step-card {
-  background: radial-gradient(circle at top left, #191732 0%, #111122 50%, #0b0b18 100%);
+  background: var(--glass-bg);
   border-radius: 18px;
   padding: 22px 20px 20px;
-  box-shadow:
-    0 0 18px rgba(124, 58, 237, 0.18),
-    0 18px 45px rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
   text-align: left;
   position: relative;
   overflow: hidden;
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease,
-    background 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
 }
 
 .step-card::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle at top right,
-    rgba(244, 114, 182, 0.17),
-    transparent 60%
-  );
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.08), transparent 60%);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
@@ -88,17 +82,14 @@
 
 .step-card:hover {
   transform: translateY(-6px);
-  box-shadow:
-    0 0 26px rgba(129, 140, 248, 0.48),
-    0 22px 55px rgba(0, 0, 0, 0.95);
-  border-color: rgba(168, 85, 247, 0.65);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.8);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .step-card:hover::after {
   opacity: 1;
 }
 
-/* ===== ICON CIRCLE ===== */
 .icon {
   width: 52px;
   height: 52px;
@@ -107,26 +98,21 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 14px;
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.85);
+  background: var(--glass-bg-soft);
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
 }
 
-/* variações de cor */
-.icon-purple {
-  background: radial-gradient(circle at 30% 30%, #a855f7, #5b21b6);
-  color: #f9f5ff;
-}
-
-.icon-pink {
-  background: radial-gradient(circle at 30% 30%, #ec4899, #9d174d);
-  color: #fdf2f8;
-}
-
+.icon-purple,
+.icon-pink,
 .icon-blue {
-  background: radial-gradient(circle at 30% 30%, #3b82f6, #1d4ed8);
-  color: #eff6ff;
+  background: var(--glass-bg-soft);
+  color: #ffffff;
 }
 
-/* ===== TITULO / TEXTO DO CARD ===== */
 .step-card h3 {
   font-size: 1.02rem;
   margin-bottom: 6px;
@@ -135,11 +121,10 @@
 .step-card p {
   margin: 0;
   font-size: 0.92rem;
-  color: #c3c4d7;
+  color: #a3a3a3;
   line-height: 1.55;
 }
 
-/* ===== RESPONSIVO ===== */
 @media (max-width: 1024px) {
   .how-it-works {
     padding: 64px 7%;
@@ -181,7 +166,6 @@
   }
 }
 
-/* menos animação se o usuário não curtir motion */
 @media (prefers-reduced-motion: reduce) {
   .step-card {
     transition: none;
@@ -191,4 +175,3 @@
     transform: none;
   }
 }
-    

@@ -24,11 +24,11 @@ interface Professional {
 const professionals: Professional[] = [
   {
     id: 1,
-    name: "Dr. Morgan Santos",
-    location: "São Paulo - SP",
-    experience: "8 years of experience",
+    name: "Jordan Miles",
+    location: "New York, NY",
+    experience: "9 years of experience",
     rating: 5,
-    totalReviews: 203,
+    totalReviews: 212,
     tags: ["Deep Tissue", "Therapeutic", "Sports"],
     image: "https://images.unsplash.com/photo-1607746882042-944635dfe10e",
     badge: "Highest Rated",
@@ -37,11 +37,11 @@ const professionals: Professional[] = [
   {
     id: 2,
     name: "Alex Rivera",
-    location: "Rio de Janeiro - RJ",
+    location: "Los Angeles, CA",
     experience: "10 years of experience",
     rating: 5,
     totalReviews: 187,
-    tags: ["Ayurveda", "Relaxing", "Holistic"],
+    tags: ["Ayurveda", "Relaxation", "Holistic"],
     image:
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aG9tZW0lMjBwZXJmaWx8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500",
     badge: "Top Promotion",
@@ -49,9 +49,9 @@ const professionals: Professional[] = [
   },
   {
     id: 3,
-    name: "Jamie Oliveira",
-    location: "Belo Horizonte - MG",
-    experience: "6 years of experience",
+    name: "Casey Brooks",
+    location: "Chicago, IL",
+    experience: "7 years of experience",
     rating: 4.9,
     totalReviews: 145,
     tags: ["Shiatsu", "Reflexology", "Hot Stones"],
@@ -62,12 +62,12 @@ const professionals: Professional[] = [
   },
   {
     id: 4,
-    name: "Casey Taylor",
-    location: "Curitiba - PR",
+    name: "Taylor James",
+    location: "Miami, FL",
     experience: "12 years of experience",
     rating: 4.9,
     totalReviews: 143,
-    tags: ["Thai", "Sports", "Intensive"],
+    tags: ["Thai", "Sports", "Deep Tissue"],
     image:
       "https://plus.unsplash.com/premium_photo-1689977807477-a579eda91fa2?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870",
     badge: "Expert",
@@ -76,8 +76,8 @@ const professionals: Professional[] = [
   {
     id: 5,
     name: "Morgan Blake",
-    location: "Porto Alegre - RS",
-    experience: "7 years of experience",
+    location: "Austin, TX",
+    experience: "8 years of experience",
     rating: 4.8,
     totalReviews: 134,
     tags: ["Swedish", "Aromatic"],
@@ -87,12 +87,12 @@ const professionals: Professional[] = [
   },
   {
     id: 6,
-    name: "Morgan Blake",
-    location: "Salvador - BA",
-    experience: "7 years of experience",
+    name: "Riley Chen",
+    location: "Seattle, WA",
+    experience: "6 years of experience",
     rating: 4.8,
-    totalReviews: 134,
-    tags: ["Swedish", "Aromatic"],
+    totalReviews: 118,
+    tags: ["Sports", "Recovery"],
     image:
       "https://images.unsplash.com/photo-1695927621677-ec96e048dce2?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=435",
     badge: "Popular",
@@ -110,7 +110,7 @@ const badgeClassMap: Record<Professional["badge"], string> = {
 
 const FeaturedProfessionals: React.FC = () => {
   return (
-    <section className={styles.featured}>
+    <section className={`${styles.featured} mm-fade-up mm-fade-up--delay-2`}>
       <div className={styles["featured-inner"]}>
         <h2>Featured Professionals</h2>
         <p>
@@ -121,9 +121,7 @@ const FeaturedProfessionals: React.FC = () => {
         <div className={styles.cards}>
           {professionals.map((p) => {
             const badgeClassKey = badgeClassMap[p.badge];
-            const badgeClassName = `${styles.badge} ${
-              styles[badgeClassKey]
-            }`;
+            const badgeClassName = `${styles.badge} ${styles[badgeClassKey]}`;
 
             return (
               <div key={p.id} className={styles.card}>
@@ -166,7 +164,7 @@ const FeaturedProfessionals: React.FC = () => {
                   </div>
 
                   <button className={styles["btn-view"]}>
-                    View Full Profile →
+                    View Full Profile {"\u2192"}
                   </button>
                 </div>
               </div>

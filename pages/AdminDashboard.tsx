@@ -58,7 +58,7 @@ type ProfileEdit = {
 type TabType = "approvals" | "edits" | "all";
 
 /* =====================
-  Badges auxiliares
+  Helper badges
 ===================== */
 
 function PlanBadge({
@@ -110,7 +110,7 @@ function PaymentStatus({ row }: { row: TherapistRow }) {
       {dateText && (
         <span className="pill-sub">
           {" "}
-          · until <strong>{dateText}</strong>
+          - until <strong>{dateText}</strong>
         </span>
       )}
     </div>
@@ -118,7 +118,7 @@ function PaymentStatus({ row }: { row: TherapistRow }) {
 }
 
 /* =====================
-  Helpers para normalizar payload
+  Helpers to normalize payload
 ===================== */
 
 function normalizeTherapistPayload(
@@ -157,7 +157,7 @@ function normalizeTherapistPayload(
 }
 
 /* =====================
-  Modal de revisão (edições de perfil)
+  Review modal (profile edits)
 ===================== */
 
 function EditReviewModal({
@@ -194,7 +194,7 @@ function EditReviewModal({
             <pre>{oldStr}</pre>
           </div>
           <div className="new-value">
-            <strong>Novo:</strong>
+            <strong>New:</strong>
             <pre>{newStr}</pre>
           </div>
         </div>
@@ -204,10 +204,10 @@ function EditReviewModal({
 
   const handleReject = () => {
     if (!rejectReason.trim()) {
-      alert("Por favor, forneça um motivo para a rejeição");
+      alert("Please provide a reason for rejection.");
       return;
     }
-    if (confirm("Rejeitar estas edições?")) {
+    if (confirm("Reject these edits?")) {
       onReject(edit.id, rejectReason);
     }
   };
@@ -216,12 +216,12 @@ function EditReviewModal({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-large" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Revisar Edições</h2>
+          <h2>Review Edits</h2>
           <p className="modal-subtitle">
-            Terapeuta: {edit.therapist?.full_name || "N/A"}
+            Therapist: {edit.therapist?.full_name || "N/A"}
           </p>
           <button className="modal-close" onClick={onClose}>
-            ✕
+            X
           </button>
         </div>
 
@@ -236,9 +236,9 @@ function EditReviewModal({
 
           {edit.pending_gallery && edit.pending_gallery.length > 0 && (
             <div className="field-comparison">
-              <h4>Galeria de Fotos</h4>
+              <h4>Photo Gallery</h4>
               <div style={{ padding: "1rem" }}>
-                <strong>Novas fotos:</strong>
+                <strong>New photos:</strong>
                 <div className="gallery-comparison">
                   {edit.pending_gallery.map((url: string, i: number) => (
                     <img key={i} src={url} alt={`Gallery ${i + 1}`} />
@@ -249,11 +249,11 @@ function EditReviewModal({
           )}
 
           <div className="reject-section">
-            <label>Motivo da rejeição (se aplicável):</label>
+            <label>Reason for rejection (if applicable):</label>
             <textarea
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
-              placeholder="Descreva o motivo da rejeição..."
+              placeholder="Describe the reason for rejection..."
               rows={4}
             />
           </div>
@@ -261,17 +261,17 @@ function EditReviewModal({
 
         <div className="modal-footer">
           <button className="btn btn-ghost" onClick={onClose}>
-            Fechar
+            Close
           </button>
           <button
             className="btn btn-approve"
             onClick={() =>
-              confirm("Aprovar estas edições?") && onApprove(edit.id)
+              confirm("Approve these edits?") && onApprove(edit.id)
             }
             disabled={processing}
           >
             <CheckCircle size={16} />
-            Aprovar
+            Approve
           </button>
           <button
             className="btn btn-reject"
@@ -279,7 +279,7 @@ function EditReviewModal({
             disabled={processing || !rejectReason.trim()}
           >
             <XCircle size={16} />
-            Rejeitar
+            Reject
           </button>
         </div>
       </div>
@@ -288,7 +288,7 @@ function EditReviewModal({
 }
 
 /* =====================
-  Modal de documentos
+  Documents modal
 ===================== */
 
 function ApprovalDocsModal({
@@ -317,26 +317,26 @@ function ApprovalDocsModal({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-large" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Documentos de Verificação</h2>
+          <h2>Verification Documents</h2>
           <p className="modal-subtitle">
-            {full_name || "Sem nome"} · {email || "sem e-mail"}
+            {full_name || "No name"} | {email || "no email"}
           </p>
           <button className="modal-close" onClick={onClose}>
-            ✕
+            X
           </button>
         </div>
 
         <div className="modal-body">
           <div className="info-row">
-            <span className="label">Local:</span>
-            <span className="value">{location || "—"}</span>
+            <span className="label">Location:</span>
+            <span className="value">{location || "N/A"}</span>
           </div>
 
           <div className="docs-grid">
             {document_url && (
               <div className="doc-card">
-                <h4>Documento (ID)</h4>
-                <img src={document_url} alt="Documento" />
+                <h4>Document (ID)</h4>
+                <img src={document_url} alt="Document" />
                 <a
                   href={document_url}
                   target="_blank"
@@ -344,15 +344,15 @@ function ApprovalDocsModal({
                   className="doc-link"
                 >
                   <ExternalLink size={14} />
-                  Abrir em nova aba
+                  Open in new tab
                 </a>
               </div>
             )}
 
             {selfie_url && (
               <div className="doc-card">
-                <h4>Selfie com Documento</h4>
-                <img src={selfie_url} alt="Selfie com documento" />
+                <h4>Selfie with Document</h4>
+                <img src={selfie_url} alt="Selfie with document" />
                 <a
                   href={selfie_url}
                   target="_blank"
@@ -360,15 +360,15 @@ function ApprovalDocsModal({
                   className="doc-link"
                 >
                   <ExternalLink size={14} />
-                  Abrir em nova aba
+                  Open in new tab
                 </a>
               </div>
             )}
 
             {card_url && (
               <div className="doc-card">
-                <h4>Foto do Cartão</h4>
-                <img src={card_url} alt="Cartão" />
+                <h4>Card Photo</h4>
+                <img src={card_url} alt="Card" />
                 <a
                   href={card_url}
                   target="_blank"
@@ -376,7 +376,7 @@ function ApprovalDocsModal({
                   className="doc-link"
                 >
                   <ExternalLink size={14} />
-                  Abrir em nova aba
+                  Open in new tab
                 </a>
               </div>
             )}
@@ -384,11 +384,11 @@ function ApprovalDocsModal({
 
           {signed_term_url && (
             <div className="field-comparison" style={{ marginTop: "1.5rem" }}>
-              <h4>Termo Assinado (PDF)</h4>
+              <h4>Signed Terms (PDF)</h4>
               <div className="pdf-preview-wrapper">
                 <iframe
                   src={signed_term_url}
-                  title="Termo assinado"
+                  title="Signed terms"
                   className="pdf-iframe"
                 />
               </div>
@@ -400,25 +400,25 @@ function ApprovalDocsModal({
                 style={{ marginTop: 8 }}
               >
                 <FileText size={14} />
-                Abrir PDF em nova aba
+                Open PDF in new tab
               </a>
             </div>
           )}
 
           {!document_url && !selfie_url && !card_url && !signed_term_url && (
             <p className="muted">
-              Nenhum documento foi encontrado para este cadastro.
+              No documents were found for this registration.
             </p>
           )}
         </div>
 
         <div className="modal-footer">
           <button className="btn btn-ghost" onClick={onClose}>
-            Fechar
+            Close
           </button>
           <button className="btn" onClick={openProfile}>
             <ExternalLink size={16} />
-            Ver perfil público
+            View public profile
           </button>
         </div>
       </div>
@@ -448,7 +448,7 @@ export default function AdminDashboard() {
   const [selectedTherapist, setSelectedTherapist] =
     useState<TherapistRow | null>(null);
 
-  /* ---- Gate: apenas admin ---- */
+  /* ---- Gate: admin only ---- */
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -542,7 +542,7 @@ export default function AdminDashboard() {
     setLoading(false);
   }
 
-  /* ---- Buscar edições pendentes ---- */
+  /* ---- Fetch pending edits ---- */
   async function fetchPendingEdits() {
     setLoading(true);
     setError(null);
@@ -641,7 +641,7 @@ export default function AdminDashboard() {
     const status = action === "approve" ? "active" : "rejected";
     const reason =
       action === "reject"
-        ? prompt("Motivo da rejeição (opcional):", "") ?? ""
+        ? prompt("Reason for rejection (optional):", "") ?? ""
         : null;
 
     setBusy(id);
@@ -649,13 +649,13 @@ export default function AdminDashboard() {
       await safeUpdateStatus(id, status, reason);
       setRows((prev) => prev.filter((r) => r.id !== id));
     } catch (e: any) {
-      alert("Erro ao atualizar: " + (e?.message || "tente novamente."));
+      alert("Error updating: " + (e?.message || "please try again."));
     } finally {
       setBusy(null);
     }
   }
 
-  /* ---- Aprovar edição de perfil ---- */
+  /* ---- Approve profile edit ---- */
   async function approveProfileEdit(editId: string) {
     setProcessingEdit(true);
     try {
@@ -703,25 +703,25 @@ export default function AdminDashboard() {
         therapist_id: edit.therapist_id,
         edit_id: editId,
         type: "approved",
-        message: "Suas edições foram aprovadas e publicadas no seu perfil!",
+        message: "Your edits were approved and published on your profile!",
       });
 
       setProfileEdits((prev) => prev.filter((e) => e.id !== editId));
       setSelectedEdit(null);
-      alert("Edições aprovadas com sucesso!");
+      alert("Edits approved successfully!");
     } catch (err: any) {
       console.error("Error approving edit:", err, JSON.stringify(err || {}));
       const msg =
         err?.message ||
         err?.error_description ||
-        "Erro desconhecido ao aprovar edições.";
-      alert("Erro ao aprovar edições: " + msg);
+        "Unknown error approving edits.";
+      alert("Error approving edits: " + msg);
     } finally {
       setProcessingEdit(false);
     }
   }
 
-  /* ---- Rejeitar edição de perfil ---- */
+  /* ---- Reject profile edit ---- */
   async function rejectProfileEdit(editId: string, reason: string) {
     setProcessingEdit(true);
     try {
@@ -744,52 +744,52 @@ export default function AdminDashboard() {
         therapist_id: edit.therapist_id,
         edit_id: editId,
         type: "rejected",
-        message: `Suas edições foram rejeitadas. Motivo: ${reason}`,
+        message: `Your edits were rejected. Reason: ${reason}`,
       });
 
       setProfileEdits((prev) => prev.filter((e) => e.id !== editId));
       setSelectedEdit(null);
-      alert("Edições rejeitadas");
+      alert("Edits rejected.");
     } catch (err: any) {
       console.error("Error rejecting edit:", err, JSON.stringify(err || {}));
       const msg =
         err?.message ||
         err?.error_description ||
-        "Erro desconhecido ao rejeitar edições.";
-      alert("Erro ao rejeitar edições: " + msg);
+        "Unknown error rejecting edits.";
+      alert("Error rejecting edits: " + msg);
     } finally {
       setProcessingEdit(false);
     }
   }
 
-  /* ---- EXCLUSÃO COMPLETA DO TERAPEUTA / USER ---- */
+  /* ---- FULL DELETE OF THERAPIST / USER ---- */
   async function handleDeleteTherapist(row: TherapistRow) {
     if (!row.user_id || !row.id) {
-      alert("Erro: registro sem user_id ou therapistId.");
+      alert("Error: record missing user_id or therapistId.");
       return;
     }
 
-    const confirmMessage = `⚠️ ATENÇÃO: Esta ação é IRREVERSÍVEL!\n\nVocê está prestes a excluir PERMANENTEMENTE:\n\n• Usuário: ${
-      row.full_name || row.email || "sem nome"
-    }\n• Email: ${row.email || "não informado"}\n• ID: ${row.user_id}\n\nSerão removidos:\n- Conta de autenticação\n- Perfil de terapeuta\n- Dados pessoais\n- Histórico de pagamentos\n- Edições pendentes\n- Todas as notificações\n\nTem certeza absoluta?`;
+    const confirmMessage = `WARNING: This action is irreversible.\n\nYou are about to permanently delete:\n\n- User: ${
+      row.full_name || row.email || "unknown"
+    }\n- Email: ${row.email || "not provided"}\n- ID: ${row.user_id}\n\nThis will remove:\n- Authentication account\n- Therapist profile\n- Personal data\n- Payment history\n- Pending edits\n- All notifications\n\nAre you absolutely sure?`;
 
     if (!confirm(confirmMessage)) return;
 
-    // Segunda confirmação
-    if (!confirm("Confirma novamente? Esta ação NÃO pode ser desfeita!"))
+    // Second confirmation
+    if (!confirm("Confirm again? This action cannot be undone!"))
       return;
 
     const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_URL || "").replace(/\/+$/, "");
 
     if (!backendUrl) {
-      console.error("BACKEND_URL não configurado");
+      console.error("BACKEND_URL not configured");
       alert(
-        "❌ Erro de configuração: URL do backend não está definida.\n\nDefina VITE_BACKEND_URL ou NEXT_PUBLIC_BACKEND_URL nas variáveis de ambiente."
+        "Configuration error: backend URL is not set.\n\nSet VITE_BACKEND_URL or NEXT_PUBLIC_BACKEND_URL in environment variables."
       );
       return;
     }
 
-    console.log("🗑️ Iniciando exclusão de usuário:", {
+    console.log("Starting user deletion:", {
       userId: row.user_id,
       therapistId: row.id,
       backendUrl,
@@ -809,7 +809,7 @@ export default function AdminDashboard() {
         }),
       });
 
-      console.log("📡 Resposta do servidor:", {
+      console.log("Server response:", {
         status: res.status,
         ok: res.ok,
         statusText: res.statusText,
@@ -821,40 +821,42 @@ export default function AdminDashboard() {
       if (contentType.includes("application/json")) {
         try {
           payload = await res.json();
-          console.log("📦 Payload recebido:", payload);
+          console.log("Payload received:", payload);
         } catch (e) {
-          console.error("⚠️ Erro ao parsear JSON:", e);
+          console.error("Error parsing JSON:", e);
         }
       } else {
         const text = await res.text().catch(() => "");
-        console.warn("⚠️ Resposta não-JSON recebida:", text.substring(0, 200));
+        console.warn("Non-JSON response received:", text.substring(0, 200));
       }
 
       if (!res.ok) {
         const errorMsg =
           payload?.error ||
-          `Erro HTTP ${res.status}: ${res.statusText}`;
-        console.error("❌ Falha na requisição:", errorMsg);
-        alert(`❌ Erro ao excluir usuário:\n\n${errorMsg}`);
+          `HTTP error ${res.status}: ${res.statusText}`;
+        console.error("Request failed:", errorMsg);
+        alert(`Error deleting user:\n\n${errorMsg}`);
         return;
       }
 
       if (payload && payload.ok === false) {
-        console.error("❌ Backend retornou ok=false:", payload.error);
-        alert(`❌ Erro ao excluir:\n\n${payload.error || "Erro desconhecido"}`);
+        console.error("Backend returned ok=false:", payload.error);
+        alert(`Error deleting:\n\n${payload.error || "Unknown error"}`);
         return;
       }
 
-      // Sucesso - remove da lista local
-      console.log("✅ Usuário excluído com sucesso");
+      // Success - remove from local list
+      console.log("User deleted successfully");
       setAllRows((prev) => prev.filter((u) => u.id !== row.id));
       setRows((prev) => prev.filter((u) => u.id !== row.id));
 
-      alert(`✅ Usuário ${row.full_name || row.email} foi excluído permanentemente do sistema.`);
-    } catch (err: any) {
-      console.error("❌ Erro na requisição de exclusão:", err);
       alert(
-        `❌ Erro ao excluir usuário:\n\n${err.message || "Erro de conexão com o servidor"}`
+        `User ${row.full_name || row.email} was permanently deleted from the system.`
+      );
+    } catch (err: any) {
+      console.error("Delete request error:", err);
+      alert(
+        `Error deleting user:\n\n${err.message || "Server connection error"}`
       );
     } finally {
       setDeleteBusyId(null);
@@ -869,7 +871,7 @@ export default function AdminDashboard() {
       !error &&
       rows.length === 0 &&
       activeTab === "approvals" && (
-        <p className="muted">No pending approvals 🎉</p>
+        <p className="muted">No pending approvals.</p>
       ),
     [loading, error, rows.length, activeTab]
   );
@@ -880,7 +882,7 @@ export default function AdminDashboard() {
       !error &&
       allRows.length === 0 &&
       activeTab === "all" && (
-        <p className="muted">Nenhum profissional cadastrado ainda.</p>
+        <p className="muted">No professionals registered yet.</p>
       ),
     [loading, error, allRows.length, activeTab]
   );
@@ -893,7 +895,7 @@ export default function AdminDashboard() {
       activeTab === "edits" && (
         <div className="empty-state">
           <CheckCircle size={64} style={{ opacity: 0.3, margin: "0 auto" }} />
-          <p className="muted">Nenhuma edição pendente no momento 🎉</p>
+          <p className="muted">No pending edits at the moment.</p>
         </div>
       ),
     [loading, error, profileEdits.length, activeTab]
@@ -903,7 +905,7 @@ export default function AdminDashboard() {
     return (
       <div className="admin-shell">
         <h1 className="title">Admin Panel</h1>
-        <p className="muted">Você não tem permissão para acessar esta página.</p>
+        <p className="muted">You do not have permission to access this page.</p>
       </div>
     );
   }
@@ -917,7 +919,7 @@ export default function AdminDashboard() {
     <div className="admin-shell">
       <h1 className="title">Admin Dashboard</h1>
       <p className="subtitle">
-        Gerencie aprovações, edições, perfis e exclusões.
+        Manage approvals, edits, profiles, and deletions.
       </p>
 
       {/* Tabs */}
@@ -927,7 +929,7 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab("approvals")}
         >
           <User size={18} />
-          Novos Cadastros
+          New Registrations
           {rows.length > 0 && <span className="badge">{rows.length}</span>}
         </button>
         <button
@@ -935,7 +937,7 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab("edits")}
         >
           <Edit size={18} />
-          Edições de Perfil
+          Profile Edits
           {profileEdits.length > 0 && (
             <span className="badge">{profileEdits.length}</span>
           )}
@@ -950,7 +952,7 @@ export default function AdminDashboard() {
         </button>
       </div>
 
-      {/* Botão de atualizar */}
+      {/* Update button */}
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
         <button
           className="btn"
@@ -969,7 +971,7 @@ export default function AdminDashboard() {
 
       {error && <p style={{ color: "tomato" }}>{error}</p>}
 
-      {/* APROVAÇÕES */}
+      {/* APPROVALS */}
       {activeTab === "approvals" && (
         <>
           {loading ? (
@@ -978,8 +980,8 @@ export default function AdminDashboard() {
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>E-mail</th>
-                    <th>Local</th>
+                    <th>Email</th>
+                    <th>Location</th>
                     <th>Plan</th>
                     <th>Payment</th>
                     <th>Created</th>
@@ -1006,8 +1008,8 @@ export default function AdminDashboard() {
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>E-mail</th>
-                    <th>Local</th>
+                    <th>Email</th>
+                    <th>Location</th>
                     <th>Plan</th>
                     <th>Payment</th>
                     <th>Created</th>
@@ -1022,16 +1024,16 @@ export default function AdminDashboard() {
                         ? new Date(
                             r.created_at || (r.updated_at as string)
                           ).toLocaleString()
-                        : "—";
-                    const nome = r.full_name || "—";
-                    const loc = r.location || "—";
+                        : "N/A";
+                    const nome = r.full_name || "N/A";
+                    const loc = r.location || "N/A";
                     const isBusy = busy === r.id;
                     const isDeleting = deleteBusyId === r.id;
 
                     return (
                       <tr key={r.id}>
                         <td className="bold">{nome}</td>
-                        <td className="muted">{r.email || "—"}</td>
+                        <td className="muted">{r.email || "N/A"}</td>
                         <td className="muted">{loc}</td>
                         <td>
                           <PlanBadge plan={r.plan} planName={r.plan_name} />
@@ -1050,7 +1052,7 @@ export default function AdminDashboard() {
                               onClick={() => setSelectedTherapist(r)}
                             >
                               <Eye size={14} />
-                              Ver docs
+                              View docs
                             </button>
                           )}
                         </td>
@@ -1061,7 +1063,7 @@ export default function AdminDashboard() {
                             disabled={isBusy || isDeleting}
                           >
                             <ExternalLink size={14} />
-                            Perfil
+                            Profile
                           </button>
                           <button
                             className="btn btn-approve"
@@ -1084,7 +1086,7 @@ export default function AdminDashboard() {
                             disabled={isDeleting || isBusy}
                           >
                             <Trash2 size={14} />
-                            {isDeleting ? "Excluindo..." : "Excluir"}
+                            {isDeleting ? "Deleting..." : "Delete"}
                           </button>
                         </td>
                       </tr>
@@ -1097,7 +1099,7 @@ export default function AdminDashboard() {
         </>
       )}
 
-      {/* TODOS OS PROFISSIONAIS */}
+      {/* ALL PROFESSIONALS */}
       {activeTab === "all" && (
         <>
           {loading ? (
@@ -1106,8 +1108,8 @@ export default function AdminDashboard() {
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>E-mail</th>
-                    <th>Local</th>
+                    <th>Email</th>
+                    <th>Location</th>
                     <th>Plan</th>
                     <th>Status</th>
                     <th>Payment</th>
@@ -1134,8 +1136,8 @@ export default function AdminDashboard() {
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>E-mail</th>
-                    <th>Local</th>
+                    <th>Email</th>
+                    <th>Location</th>
                     <th>Plan</th>
                     <th>Status</th>
                     <th>Payment</th>
@@ -1150,22 +1152,22 @@ export default function AdminDashboard() {
                         ? new Date(
                             r.created_at || (r.updated_at as string)
                           ).toLocaleString()
-                        : "—";
-                    const nome = r.full_name || "—";
-                    const loc = r.location || "—";
+                        : "N/A";
+                    const nome = r.full_name || "N/A";
+                    const loc = r.location || "N/A";
                     const isDeleting = deleteBusyId === r.id;
 
                     return (
                       <tr key={r.id}>
                         <td className="bold">{nome}</td>
-                        <td className="muted">{r.email || "—"}</td>
+                        <td className="muted">{r.email || "N/A"}</td>
                         <td className="muted">{loc}</td>
                         <td>
                           <PlanBadge plan={r.plan} planName={r.plan_name} />
                         </td>
                         <td>
                           <span className={`status-pill status-${r.status}`}>
-                            {r.status || "—"}
+                            {r.status || "N/A"}
                           </span>
                         </td>
                         <td>
@@ -1179,7 +1181,7 @@ export default function AdminDashboard() {
                             disabled={isDeleting}
                           >
                             <ExternalLink size={14} />
-                            Ver perfil
+                            View profile
                           </button>
                           <button
                             className="btn btn-reject"
@@ -1187,7 +1189,7 @@ export default function AdminDashboard() {
                             disabled={isDeleting}
                           >
                             <Trash2 size={14} />
-                            {isDeleting ? "Excluindo..." : "Excluir"}
+                            {isDeleting ? "Deleting..." : "Delete"}
                           </button>
                         </td>
                       </tr>
@@ -1200,13 +1202,13 @@ export default function AdminDashboard() {
         </>
       )}
 
-      {/* EDIÇÕES DE PERFIL */}
+      {/* PROFILE EDITS */}
       {activeTab === "edits" && (
         <>
           {loading ? (
             <div className="edits-loading">
               <Clock size={32} style={{ opacity: 0.3 }} />
-              <p>Carregando edições...</p>
+              <p>Loading edits...</p>
             </div>
           ) : emptyEditsState ? (
             emptyEditsState
@@ -1218,19 +1220,19 @@ export default function AdminDashboard() {
                     <div className="edit-info">
                       <h3>
                         <User size={18} />
-                        {edit.therapist?.full_name || "Terapeuta"}
+                        {edit.therapist?.full_name || "Therapist"}
                       </h3>
                       <p className="edit-meta">
                         <span>
-                          Enviado:{" "}
-                          {new Date(edit.submitted_at).toLocaleString("pt-BR")}
+                          Submitted:{" "}
+                          {new Date(edit.submitted_at).toLocaleString("en-US")}
                         </span>
                         <span>ID: {edit.therapist_id.slice(0, 8)}...</span>
                       </p>
                     </div>
                     <span className="status-badge pending">
                       <Clock size={14} />
-                      Pendente
+                      Pending
                     </span>
                   </div>
                   <div className="edit-card-actions">
@@ -1239,18 +1241,18 @@ export default function AdminDashboard() {
                       onClick={() => setSelectedEdit(edit)}
                     >
                       <Eye size={16} />
-                      Revisar
+                      Review
                     </button>
                     <button
                       className="btn btn-approve"
                       onClick={() =>
-                        confirm("Aprovar estas edições?") &&
+                        confirm("Approve these edits?") &&
                         approveProfileEdit(edit.id)
                       }
                       disabled={processingEdit}
                     >
                       <CheckCircle size={16} />
-                      Aprovar
+                      Approve
                     </button>
                     <button
                       className="btn btn-reject"
@@ -1258,7 +1260,7 @@ export default function AdminDashboard() {
                       disabled={processingEdit}
                     >
                       <XCircle size={16} />
-                      Rejeitar
+                      Reject
                     </button>
                   </div>
                 </div>
@@ -1268,7 +1270,7 @@ export default function AdminDashboard() {
         </>
       )}
 
-      {/* Modal revisão edições */}
+      {/* Edit review modal */}
       {selectedEdit && (
         <EditReviewModal
           edit={selectedEdit}
@@ -1279,7 +1281,7 @@ export default function AdminDashboard() {
         />
       )}
 
-      {/* Modal documentos */}
+      {/* Documents modal */}
       {selectedTherapist && (
         <ApprovalDocsModal
           therapist={selectedTherapist}
@@ -1289,3 +1291,7 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+
+
+

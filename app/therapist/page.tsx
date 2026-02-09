@@ -22,8 +22,8 @@ export default function TherapistMePage() {
   }, [router]);
 
   return (
-    <main style={{ padding: "2rem", color: "#fff" }}>
-      <p>Carregando seu perfil...</p>
+    <main style={{ padding: "2rem", color: "#fff", background: "#000000" }}>
+      <p>Loading your profile...</p>
     </main>
   );
 }

@@ -10,9 +10,8 @@ import React, {
 import { supabase } from "@/src/lib/supabase";
 
 /**
- * Ajusta esse tipo conforme as colunas reais da tabela `therapists`.
- * Coloquei vários campos opcionais para não quebrar caso a tabela ainda
- * não tenha todas as colunas.
+ * Adjust this type to match the real `therapists` table columns.
+ * Keep fields optional to avoid breaking if some columns are missing.
  */
 export type Therapist = {
   id: string;
@@ -92,7 +91,7 @@ export type Therapist = {
   accepts_first_timers: boolean | null;
   prefers_lgbtq_clients: boolean | null;
 
-  // Qualquer outro campo extra que exista na tabela
+  // Any other extra field that exists in the table
   [key: string]: any;
 };
 
@@ -109,11 +108,11 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
 
   /**
-   * Garante que exista um registro na tabela `therapists`
-   * para o usuário logado. Se não existir, cria.
+   * Ensure there is a `therapists` record for the logged-in user.
+   * If it does not exist, create one.
    */
   async function ensureTherapistForUser(): Promise<Therapist | null> {
-    // 1. Pega a sessão atual
+    // 1. Get the current session
     const {
       data: { session },
       error: sessionError,
@@ -126,11 +125,11 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
     const user = session?.user;
     if (!user) {
-      // Não logado
+      // Not logged in
       return null;
     }
 
-    // 2. Tenta buscar o therapist pelo user_id
+    // 2. Try to fetch the therapist by user_id
     const { data, error } = await supabase
       .from("therapists")
       .select("*")
@@ -142,12 +141,12 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       return null;
     }
 
-    // 3. Se já existir, retorna
+    // 3. If it already exists, return it
     if (data) {
       return data as Therapist;
     }
 
-    // 4. Se NÃO existir, cria um novo registro básico
+    // 4. If it does not exist, create a basic record
     const { data: inserted, error: insertError } = await supabase
       .from("therapists")
       .insert({
@@ -182,10 +181,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    // Carrega no primeiro render
+    // Load on first render
     loadProfile();
 
-    // Escuta mudanças de autenticação
+    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -221,3 +220,4 @@ export function useProfile(): ProfileContextType {
   }
   return ctx;
 }
+

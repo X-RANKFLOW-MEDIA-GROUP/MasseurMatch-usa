@@ -1,9 +1,9 @@
 /* ===============================
    admin.css
-   Painel Admin - MasseurMatch
+   Admin Panel - MasseurMatch
    =============================== */
 
-/* ---------- Layout base ---------- */
+/* ---------- Base layout ---------- */
 
 .admin-shell {
   min-height: 100vh;
@@ -17,7 +17,7 @@
     radial-gradient(circle at top, #26001f 0, #050114 45%, #020006 100%);
 }
 
-/* ---------- Títulos / textos ---------- */
+/* ---------- Titles / text ---------- */
 
 .title {
   font-size: clamp(1.7rem, 2vw + 1rem, 2.1rem);
@@ -46,7 +46,7 @@
   color: #9ca3af;
 }
 
-/* ---------- Tabs de navegação ---------- */
+/* ---------- Navigation tabs ---------- */
 
 .admin-tabs {
   display: flex;
@@ -106,12 +106,12 @@
   font-weight: 600;
 }
 
-/* ---------- Botões ---------- */
+/* ---------- Buttons ---------- */
 
 .btn {
   border-radius: 999px;
   border: 1px solid rgba(248, 113, 113, 0.6);
-  background: rgba(15, 23, 42, 0.92);
+  background: var(--glass-bg, rgba(15, 23, 42, 0.75));
   padding: 0.45rem 1.15rem;
   font-size: 0.9rem;
   color: #f9fafb;
@@ -123,6 +123,9 @@
   white-space: nowrap;
   transition: background 0.16s ease, border-color 0.16s ease,
     transform 0.12s ease, box-shadow 0.15s ease, color 0.16s ease;
+  box-shadow: var(--glass-shadow-soft, 0 12px 30px rgba(0, 0, 0, 0.45));
+  backdrop-filter: blur(var(--glass-blur-soft, 12px)) saturate(var(--glass-sat, 150%));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft, 12px)) saturate(var(--glass-sat, 150%));
 }
 
 .btn:hover {
@@ -144,7 +147,7 @@
   transform: none;
 }
 
-/* Botões de ação específicos */
+/* Specific action buttons */
 
 .btn-approve {
   border-color: rgba(34, 197, 94, 0.8);
@@ -170,7 +173,7 @@
 
 .btn-ghost {
   border-color: rgba(148, 163, 184, 0.4);
-  background: rgba(30, 41, 59, 0.6);
+  background: var(--glass-bg, rgba(30, 41, 59, 0.6));
 }
 
 .btn-ghost:hover {
@@ -178,20 +181,18 @@
   border-color: rgba(148, 163, 184, 0.7);
 }
 
-/* ---------- Tabela ---------- */
+/* ---------- Table ---------- */
 
 .table-wrap {
   margin-top: 0.5rem;
   border-radius: 1rem;
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  background: radial-gradient(
-    circle at top left,
-    rgba(76, 29, 149, 0.95),
-    rgba(15, 23, 42, 0.95)
-  );
+  border: 1px solid var(--glass-border, rgba(148, 163, 184, 0.45));
+  background: var(--glass-bg, rgba(15, 23, 42, 0.78));
   overflow: hidden;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 1);
+  box-shadow: var(--glass-shadow, 0 18px 40px rgba(15, 23, 42, 1));
   overflow-x: auto;
+  backdrop-filter: blur(var(--glass-blur, 20px)) saturate(var(--glass-sat, 150%));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px)) saturate(var(--glass-sat, 150%));
 }
 
 .table {
@@ -247,7 +248,7 @@
   align-items: center;
 }
 
-/* Coluna Actions */
+/* Actions column */
 .col-actions {
   text-align: right;
 }
@@ -256,7 +257,7 @@
   justify-content: flex-end;
 }
 
-/* ---------- Chips de plano ---------- */
+/* ---------- Plan chips ---------- */
 
 .plan {
   display: inline-flex;
@@ -302,7 +303,7 @@
   background: rgba(76, 29, 149, 0.9);
 }
 
-/* ---------- Status de pagamento ---------- */
+/* ---------- Payment status ---------- */
 
 .pill {
   display: inline-flex;
@@ -342,7 +343,7 @@
   color: #e5e7eb;
 }
 
-/* ---------- Grid de edições ---------- */
+/* ---------- Edits grid ---------- */
 
 .edits-grid {
   display: grid;
@@ -352,15 +353,14 @@
 }
 
 .edit-card {
-  background: radial-gradient(
-    circle at top left,
-    rgba(76, 29, 149, 0.4),
-    rgba(15, 23, 42, 0.9)
-  );
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: var(--glass-bg, rgba(15, 23, 42, 0.78));
+  border: 1px solid var(--glass-border, rgba(148, 163, 184, 0.3));
   border-radius: 1rem;
   padding: 1.2rem;
   transition: all 0.2s ease;
+  box-shadow: var(--glass-shadow-soft, 0 12px 30px rgba(0, 0, 0, 0.45));
+  backdrop-filter: blur(var(--glass-blur, 20px)) saturate(var(--glass-sat, 150%));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px)) saturate(var(--glass-sat, 150%));
 }
 
 .edit-card:hover {
@@ -454,7 +454,7 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -464,19 +464,17 @@
 }
 
 .modal-large {
-  background: linear-gradient(
-    135deg,
-    rgba(76, 29, 149, 0.95),
-    rgba(15, 23, 42, 0.98)
-  );
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: var(--glass-bg-strong, rgba(15, 23, 42, 0.88));
+  border: 1px solid var(--glass-border, rgba(148, 163, 184, 0.4));
   border-radius: 1.2rem;
   max-width: 900px;
   width: 100%;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--glass-shadow, 0 24px 60px rgba(0, 0, 0, 0.5));
+  backdrop-filter: blur(var(--glass-blur, 20px)) saturate(var(--glass-sat, 150%));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px)) saturate(var(--glass-sat, 150%));
 }
 
 .modal-header {
@@ -530,9 +528,11 @@
 .field-comparison {
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: var(--glass-bg, rgba(15, 23, 42, 0.6));
+  border: 1px solid var(--glass-border, rgba(148, 163, 184, 0.2));
   border-radius: 0.75rem;
+  backdrop-filter: blur(var(--glass-blur-soft, 12px)) saturate(var(--glass-sat, 150%));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft, 12px)) saturate(var(--glass-sat, 150%));
 }
 
 .field-comparison h4 {
@@ -660,7 +660,7 @@
   }
 }
 
-/* ---------- Responsividade ---------- */
+/* ---------- Responsiveness ---------- */
 
 @media (max-width: 768px) {
   .admin-shell {

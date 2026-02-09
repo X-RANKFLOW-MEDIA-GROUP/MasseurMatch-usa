@@ -1,13 +1,11 @@
-/* ===== Section container (scoped) ===== */
 .assistant-section {
   padding: 5rem 1.5rem 6rem;
-  background: #0f0f1a00;
-  color: #fff;
+  background: transparent;
+  color: #ffffff;
   text-align: center;
   margin-top: -90px;
 }
 
-/* chips line */
 .assistant-header-chips {
   display: flex;
   justify-content: center;
@@ -22,79 +20,77 @@
   font-size: 0.8rem;
   padding: 6px 10px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(139,92,246,.15), rgba(236,72,153,.12));
-  color: #c7b7ff;
-  border: 1px solid rgba(139,92,246,.28);
+  background: var(--glass-bg-soft);
+  color: #ffffff;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
 }
 
-/* title + subtitle */
 .assistant-title {
   font-size: 2rem;
   margin: 0.25rem 0 0.25rem;
-  font-weight: 800;
-  background: linear-gradient(90deg, #cbd5ff, #a78bfa, #93c5fd);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  color: #ffffff;
 }
 
 .assistant-subtitle {
-  color: #a3a3b2;
+  color: #a3a3a3;
   margin: 0 0 2rem;
   font-size: 0.95rem;
 }
 
-/* ===== Chat container with glow border ===== */
-/* Make the outer container provide safe side padding for narrow screens */
 .assistant-chat {
   display: flex;
   justify-content: center;
-  padding: 0 16px;  /* keeps the card off the hard edges on smaller screens */
+  padding: 0 16px;
 }
 
 .assistant-chat-inner {
-  /* Fluid width: fill viewport width up to a max cap */
   box-sizing: border-box;
   width: min(92vw, 820px);
   max-width: 820px;
   margin: 0 auto;
-
   border-radius: 18px;
   padding: 20px 20px 16px;
   position: relative;
-  background:
-    radial-gradient(80% 120% at 70% 120%, rgba(168,85,247,0.18) 0%, rgba(168,85,247,0) 70%),
-    radial-gradient(70% 100% at 10% 0%, rgba(236,72,153,0.12) 0%, rgba(236,72,153,0) 60%),
-    #11111e;
-  border: 1px solid rgba(139,92,246,0.25);
-  box-shadow: 0 12px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.02);
-
-  /* Fixed/Responsive height: messages scroll inside */
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   display: flex;
   flex-direction: column;
   height: clamp(420px, 58vh, 620px);
-  overflow: hidden; /* prevents growing outside */
+  overflow: hidden;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
 }
 
-/* messages area: consumes remaining space and scrolls internally */
 .assistant-messages {
   flex: 1;
-  min-height: 0;           /* required for overflow inside flex */
-  overflow: auto;          /* internal scrolling */
+  min-height: 0;
+  overflow: auto;
   padding: 8px 6px 14px;
   display: flex;
   flex-direction: column;
   gap: 14px;
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch; /* iOS momentum */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* === Hide scrollbar (cross-browser) === */
-.assistant-messages::-webkit-scrollbar { width: 0; height: 0; }
-.assistant-messages::-webkit-scrollbar-thumb { background: transparent; }
-.assistant-messages { scrollbar-width: none; }           /* Firefox */
-.assistant-messages { -ms-overflow-style: none; }        /* IE/Edge legacy */
+.assistant-messages::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
 
-/* bubbles */
+.assistant-messages::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.assistant-messages {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 .assistant-bubble {
   max-width: 70%;
   text-align: left;
@@ -102,26 +98,27 @@
   border-radius: 14px;
   font-size: 0.95rem;
   line-height: 1.45;
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 6px 18px rgba(0,0,0,.28);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-soft);
   word-break: break-word;
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
 }
 
 .assistant-bubble.user {
   margin-left: auto;
-  color: #e6f1ff;
-  background: linear-gradient(180deg, #0d2740, #0e2c4a);
-  border-color: rgba(59,130,246,.35);
+  color: #ffffff;
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
 }
 
 .assistant-bubble.bot {
   margin-right: auto;
-  color: #f1e9ff;
-  background: linear-gradient(180deg, #3a1d4f, #4a1f53);
-  border-color: rgba(139,92,246,.35);
+  color: #e5e5e5;
+  background: var(--glass-bg-soft);
+  border-color: var(--glass-border);
 }
 
-/* input bar (fixed at the bottom of the card) */
 .assistant-inputbar {
   margin-top: 8px;
   display: grid;
@@ -135,25 +132,27 @@
   grid-template-columns: 28px 1fr;
   align-items: center;
   gap: 8px;
-  background: rgba(17,17,34,.92);
-  border: 1px solid rgba(255,255,255,.08);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 10px 12px;
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
 }
 
 .assistant-inputicon {
   width: 18px;
   height: 18px;
-  color: #9ca3af;
+  color: #a3a3a3;
 }
 
 .assistant-inputwrap input {
   background: transparent;
   border: 0;
-  color: #e5e7eb;
+  color: #ffffff;
   outline: none;
   font-size: 0.95rem;
-  min-width: 0; /* avoid overflow inside grids */
+  min-width: 0;
 }
 
 .assistant-send {
@@ -163,81 +162,116 @@
   padding: 10px 14px;
   font-size: 0.9rem;
   font-weight: 600;
-  border: 0;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(168,85,247,.28);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #000000;
+  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.18);
   cursor: pointer;
-  transition: filter .2s ease, transform .2s ease;
-  text-decoration: none; /* ensure no underline */
+  transition: filter 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  border-color: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
 }
 
-.assistant-send:hover { filter: brightness(1.05); }
-.assistant-send:active { transform: translateY(1px); }
+.assistant-send:hover {
+  filter: brightness(0.95);
+}
 
-/* keyboard focus only */
+.assistant-send:active {
+  transform: translateY(1px);
+}
+
 .assistant-chip:focus-visible,
 .assistant-send:focus-visible,
 .assistant-inputwrap:focus-within {
-  outline: 2px solid #8b5cf6;
+  outline: 2px solid rgba(255, 255, 255, 0.4);
   outline-offset: 2px;
   border-radius: 12px;
 }
 
-/* ======= RESPONSIVE (revised) ======= */
-
-/* Large laptops and large tablets */
 @media (max-width: 1200px) {
   .assistant-chat-inner {
     width: min(92vw, 900px);
   }
 }
 
-/* Tablet (768–1024px): fluid width, no negative margins, no fixed width */
 @media (max-width: 1024px) {
   .assistant-chat-inner {
     width: min(94vw, 820px);
     max-width: 820px;
     margin: 0 auto;
   }
-  .assistant-bubble { max-width: 82%; }
+
+  .assistant-bubble {
+    max-width: 82%;
+  }
 }
 
-/* Slightly wider bubbles on mid tablets */
 @media (min-width: 768px) and (max-width: 1024px) {
-  .assistant-bubble { max-width: 84%; }
+  .assistant-bubble {
+    max-width: 84%;
+  }
 }
 
-/* Mobile (<=768px) */
 @media (max-width: 768px) {
-  .assistant-title { font-size: 1.6rem; }
-  .assistant-subtitle { font-size: 0.9rem; }
+  .assistant-title {
+    font-size: 1.6rem;
+  }
+
+  .assistant-subtitle {
+    font-size: 0.9rem;
+  }
+
   .assistant-chat-inner {
     padding: 16px 14px 12px;
-    width: 96vw;            /* nearly full width */
-    max-width: 720px;       /* safety cap */
-    height: 66vh;           /* taller on phones */
+    width: 96vw;
+    max-width: 720px;
+    height: 66vh;
   }
-  .assistant-bubble { max-width: 88%; font-size: 0.94rem; }
+
+  .assistant-bubble {
+    max-width: 88%;
+    font-size: 0.94rem;
+  }
 }
 
-/* Small mobile (<=480px) */
 @media (max-width: 480px) {
-  .assistant-section { padding: 4rem 1rem 5rem; }
-  .assistant-title { font-size: 1.45rem; }
-  .assistant-inputwrap { grid-template-columns: 24px 1fr; padding: 10px 10px; }
-  .assistant-send span { display: none; } /* icon-only label to save space */
+  .assistant-section {
+    padding: 4rem 1rem 5rem;
+  }
+
+  .assistant-title {
+    font-size: 1.45rem;
+  }
+
+  .assistant-inputwrap {
+    grid-template-columns: 24px 1fr;
+    padding: 10px 10px;
+  }
+
+  .assistant-send span {
+    display: none;
+  }
 }
 
-/* ===== Safe area bottom (iOS) optional ===== */
 @supports (padding: max(0px)) {
-  .assistant-inputbar { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
+  .assistant-inputbar {
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
 }
 
-/* ===== Respect user motion preferences ===== */
 @media (prefers-reduced-motion: reduce) {
-  .assistant-messages { scroll-behavior: auto; }
-  .assistant-send { transition: none; }
-  .assistant-bubble { transition: none; }
+  .assistant-messages {
+    scroll-behavior: auto;
+  }
+
+  .assistant-send {
+    transition: none;
+  }
+
+  .assistant-bubble {
+    transition: none;
+  }
 }

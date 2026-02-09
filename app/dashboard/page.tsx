@@ -6,11 +6,8 @@ export default function DashboardPage() {
       style={{
         minHeight: "100vh",
         padding: "2rem 1.5rem 4rem",
-        background:
-          "radial-gradient(circle at top, #020617 0, #020014 45%, #000 100%)",
-        color: "#f9fafb",
-        fontFamily:
-          'system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif',
+        background: "#000000",
+        color: "#ffffff",
       }}
     >
       <section
@@ -26,7 +23,7 @@ export default function DashboardPage() {
             marginBottom: "0.75rem",
           }}
         >
-          Dashboard do MasseurMatch
+          MasseurMatch Dashboard
         </h1>
 
         <p
@@ -37,10 +34,9 @@ export default function DashboardPage() {
             opacity: 0.9,
           }}
         >
-          Aqui você poderá acompanhar estatísticas, reservas e performance dos
-          profissionais. Esta é apenas uma versão placeholder para permitir o
-          deploy na Vercel. Depois conectamos tudo com Supabase, filtros e
-          gráficos reais.
+          This dashboard will show booking stats, revenue, and performance
+          insights for therapists. It is a placeholder to support deployment
+          while we finish Supabase integration, filters, and real analytics.
         </p>
 
         <div
@@ -55,10 +51,11 @@ export default function DashboardPage() {
             style={{
               borderRadius: "1rem",
               padding: "1rem 1.1rem",
-              background:
-                "radial-gradient(circle at top left, #4c1d95, #020617)",
-              border: "1px solid rgba(244,114,182,0.5)",
-              boxShadow: "0 14px 32px rgba(15,23,42,1)",
+              background: "var(--glass-bg)",
+              border: "1px solid var(--glass-border)",
+              boxShadow: "var(--glass-shadow-soft)",
+              backdropFilter: "blur(var(--glass-blur-soft)) saturate(var(--glass-sat))",
+              WebkitBackdropFilter: "blur(var(--glass-blur-soft)) saturate(var(--glass-sat))",
             }}
           >
             <h2
@@ -66,7 +63,7 @@ export default function DashboardPage() {
                 fontSize: "0.9rem",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                color: "#f472b6",
+                color: "#a3a3a3",
                 marginBottom: "0.4rem",
               }}
             >
@@ -84,11 +81,11 @@ export default function DashboardPage() {
             <p
               style={{
                 fontSize: "0.85rem",
-                color: "#e5e7eb",
+                color: "#a3a3a3",
                 marginTop: "0.2rem",
               }}
             >
-              Bookings registrados (demo)
+              Demo bookings recorded
             </p>
           </div>
 
@@ -96,10 +93,11 @@ export default function DashboardPage() {
             style={{
               borderRadius: "1rem",
               padding: "1rem 1.1rem",
-              background:
-                "radial-gradient(circle at top left, #0369a1, #020617)",
-              border: "1px solid rgba(59,130,246,0.6)",
-              boxShadow: "0 14px 32px rgba(15,23,42,1)",
+              background: "var(--glass-bg)",
+              border: "1px solid var(--glass-border)",
+              boxShadow: "var(--glass-shadow-soft)",
+              backdropFilter: "blur(var(--glass-blur-soft)) saturate(var(--glass-sat))",
+              WebkitBackdropFilter: "blur(var(--glass-blur-soft)) saturate(var(--glass-sat))",
             }}
           >
             <h2
@@ -107,11 +105,11 @@ export default function DashboardPage() {
                 fontSize: "0.9rem",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                color: "#7dd3fc",
+                color: "#a3a3a3",
                 marginBottom: "0.4rem",
               }}
             >
-              Próximos passos
+              Next Steps
             </h2>
             <ul
               style={{
@@ -121,9 +119,9 @@ export default function DashboardPage() {
                 lineHeight: 1.5,
               }}
             >
-              <li>Conectar com Supabase (reservas, therapists, usuários).</li>
-              <li>Adicionar cards com faturamento e conversões.</li>
-              <li>Criar filtros por cidade e plano.</li>
+              <li>Connect Supabase data (bookings, therapists, users).</li>
+              <li>Add revenue and conversion cards.</li>
+              <li>Create filters by city and plan.</li>
             </ul>
           </div>
         </div>

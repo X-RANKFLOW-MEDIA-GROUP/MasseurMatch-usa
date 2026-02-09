@@ -1,0 +1,35 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0b14"/>
+      <stop offset="100%" stop-color="#15152a"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(240 160) rotate(45) scale(360 280)">
+      <stop stop-color="#8b5cf6" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(980 220) rotate(30) scale(300 240)">
+      <stop stop-color="#3b82f6" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#a855f7" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" rx="48" fill="url(#bg)"/>
+  <rect x="32" y="32" width="1136" height="736" rx="40" fill="#0f1020"/>
+  <circle cx="260" cy="180" r="240" fill="url(#glow1)"/>
+  <circle cx="980" cy="240" r="210" fill="url(#glow2)"/>
+  <path d="M160 520 C 260 420, 420 420, 520 520 S 780 620, 940 520" stroke="url(#line)" stroke-width="6"/>
+  <path d="M220 600 C 320 520, 480 520, 580 600 S 820 680, 980 600" stroke="#ec4899" stroke-opacity="0.35" stroke-width="4"/>
+  <rect x="140" y="260" width="920" height="300" rx="28" fill="#111125" stroke="#2a2a48" stroke-width="2"/>
+  <rect x="200" y="320" width="420" height="28" rx="14" fill="#1b1b32"/>
+  <rect x="200" y="368" width="520" height="20" rx="10" fill="#1b1b32"/>
+  <rect x="200" y="410" width="460" height="20" rx="10" fill="#1b1b32"/>
+  <rect x="200" y="452" width="360" height="20" rx="10" fill="#1b1b32"/>
+  <rect x="700" y="320" width="260" height="160" rx="20" fill="#18182c" stroke="#2a2a48" stroke-width="2"/>
+  <circle cx="830" cy="400" r="42" fill="#242447"/>
+  <path d="M780 460 L880 460" stroke="#8b5cf6" stroke-width="6" stroke-linecap="round"/>
+</svg>

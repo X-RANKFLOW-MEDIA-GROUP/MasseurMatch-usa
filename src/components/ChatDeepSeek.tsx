@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Sparkles, Send, Wand2 } from "lucide-react";
@@ -10,7 +10,7 @@ type Message = {
   text: string;
 };
 
-// Mensagem inicial do assistente
+// Initial assistant message
 const initialMessages: Message[] = [
   {
     id: "m2",
@@ -19,7 +19,7 @@ const initialMessages: Message[] = [
   },
 ];
 
-// URL do backend da IA (configurada via .env)
+// AI backend URL (configured via .env)
 const IA_BACKEND_URL =
   process.env.NEXT_PUBLIC_IA_BACKEND_URL || "http://localhost:4000";
 
@@ -29,7 +29,7 @@ export default function ChatDeepSeek() {
   const [loading, setLoading] = useState(false);
   const listRef = useRef<HTMLDivElement | null>(null);
 
-  // Auto-scroll pro final sempre que uma nova mensagem é adicionada
+  // Auto-scroll to the bottom whenever a new message is added
   useEffect(() => {
     if (!listRef.current) return;
     listRef.current.scrollTo({
@@ -55,7 +55,7 @@ export default function ChatDeepSeek() {
     setLoading(true);
 
     try {
-      // Formato que o backend espera
+      // Format expected by the backend
       const payloadMessages = newMessages.map((m) => ({
         role: m.role,
         content: m.text,
@@ -155,9 +155,9 @@ export default function ChatDeepSeek() {
             <div className={styles["assistant-inputwrap"]}>
               <Wand2 className={styles["assistant-inputicon"]} aria-hidden />
               <input
-                aria-label="Type your message"
+                aria-label="Type your message..."
                 placeholder={
-                  loading ? "Waiting for Knotty AI..." : "Type your message…"
+                  loading ? "Waiting for Knotty AI..." : "Type your message..."
                 }
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -178,3 +178,4 @@ export default function ChatDeepSeek() {
     </section>
   );
 }
+

@@ -6,23 +6,21 @@ export default function JoinFormPage() {
       style={{
         minHeight: "100vh",
         padding: "2rem 1.25rem",
-        background:
-          "radial-gradient(circle at top, #020617 0, #020014 45%, #000 100%)",
-        color: "#f9fafb",
-        fontFamily:
-          'system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif',
+        background: "#000000",
+        color: "#ffffff",
       }}
     >
       <section
         style={{
           maxWidth: "900px",
           margin: "0 auto",
-          background:
-            "radial-gradient(circle at top left, #1e1b4b, #020617 80%)",
+          background: "var(--glass-bg)",
           padding: "1.75rem 1.5rem",
-          borderRadius: "1rem",
-          border: "1px solid rgba(244, 114, 182, 0.45)",
-          boxShadow: "0 22px 45px rgba(0,0,0,0.6)",
+          borderRadius: "1.25rem",
+          border: "1px solid var(--glass-border)",
+          boxShadow: "var(--glass-shadow)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-sat))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-sat))",
         }}
       >
         <h1
@@ -45,23 +43,24 @@ export default function JoinFormPage() {
             lineHeight: 1.6,
           }}
         >
-          Esta é uma página placeholder apenas para permitir o deploy na Vercel.
-          Depois conectaremos ela ao componente completo de cadastro (JoinForm),
-          Supabase e fluxo de onboarding.
+          This is a placeholder page to keep the Vercel deployment running. We
+          will connect it to the full JoinForm component, Supabase, and onboarding
+          flow soon.
         </p>
 
         <div
           style={{
             marginTop: "1.5rem",
             padding: "1.2rem",
-            background: "rgba(15,23,42,0.9)",
+            background: "var(--glass-bg)",
             borderRadius: "0.8rem",
-            border: "1px solid rgba(148,163,184,0.4)",
+            border: "1px solid var(--glass-border)",
+            backdropFilter: "blur(var(--glass-blur-soft)) saturate(var(--glass-sat))",
+            WebkitBackdropFilter: "blur(var(--glass-blur-soft)) saturate(var(--glass-sat))",
           }}
         >
           <p style={{ opacity: 0.8, margin: 0 }}>
-            🚀 Em breve: Formulário profissional com múltiplas seções e upload
-            de fotos.
+            Coming soon: a professional multi-step form with photo uploads.
           </p>
         </div>
       </section>

@@ -6,7 +6,7 @@ import styles from "./Hero.module.css";
 
 export default function Hero() {
   return (
-    <section className={styles.hero} id="inicio">
+    <section className={`${styles.hero} mm-fade-up`} id="inicio">
       <div className={styles["hero-glow"]} aria-hidden />
 
       <div className={`${styles["hero-container"]} container`}>
@@ -41,7 +41,7 @@ export default function Hero() {
         </div>
 
         <p className={styles["hero-quote"]}>
-          “Wellness meets technology.”
+          "Wellness meets technology."
         </p>
       </div>
     </section>

@@ -1,14 +1,15 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
-import { Check, AlertCircle, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { Check, AlertCircle, Loader2, ArrowRight } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import "./Join.css";
 
 type PlanKey = "free" | "standard" | "pro" | "elite";
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
-/* ===== Idiomas principais ===== */
+/* ===== Primary languages ===== */
 const LANGUAGE_OPTIONS = [
   "English",
   "Spanish",
@@ -17,6 +18,14 @@ const LANGUAGE_OPTIONS = [
   "German",
   "Italian",
   "Japanese",
+] as const;
+
+const ASIDE_BULLETS = [
+  "Reach thousands of potential clients",
+  "Professional profile with SEO optimization",
+  "Secure messaging and booking system",
+  "Manage your schedule easily",
+  "Get paid directly - no middleman fees",
 ] as const;
 
 /* ===== Copy (English only) ===== */
@@ -51,8 +60,8 @@ const TXT = {
 
   plansHeader: "More Visibility. More Trust. More Clients.",
   plansSub:
-    "Plans built for massage therapists and wellness professionals — whether you're just starting or already at the top.",
-  monthlyNote: "Monthly plans only • cancel anytime",
+    "Plans built for massage therapists and wellness professionals - whether you're just starting or already at the top.",
+  monthlyNote: "Monthly plans only - cancel anytime",
   founderNote: "First 100 members get Founder badge + 50% lifetime discount.",
   plans: {
     free: {
@@ -64,7 +73,7 @@ const TXT = {
         "7-day free trial",
         "Up to 3 photos (1 slide)",
         "1 main city",
-        '"Available Now" up to 3×/day',
+        '"Available Now" up to 3x/day',
         "Basic Explore ranking",
       ],
     },
@@ -76,7 +85,7 @@ const TXT = {
       features: [
         "Up to 5 photos (2 slides)",
         "1 visiting city",
-        '"Available Now" up to 6×/day',
+        '"Available Now" up to 6x/day',
         "Verified Badge + standard support",
       ],
     },
@@ -84,7 +93,7 @@ const TXT = {
       name: "Pro",
       price: 89,
       tag: "Claim Spotlight",
-      pitch: "Best value — most popular choice.",
+      pitch: "Best value - most popular choice.",
       features: [
         "Up to 6 photos (2 slides)",
         "Up to 3 visiting cities",
@@ -116,7 +125,10 @@ const TXT = {
       displayName: "Display name",
       email: "Email",
       phone: "WhatsApp / Phone",
-      location: "ZIP / Postal Code",
+      city: "City",
+      state: "State",
+      zipCode: "ZIP / Postal Code",
+      locationSearch: "Search location",
       languages: "Languages spoken",
       servicesLegend: "Services offered",
       agree: "I accept the Terms and Privacy Policy.",
@@ -128,7 +140,10 @@ const TXT = {
       displayName: "Public display name",
       email: "you@example.com",
       phone: "(000) 000-0000",
-      location: "ZIP / Postal Code",
+      city: "City",
+      state: "State (e.g., CA)",
+      zipCode: "ZIP / Postal Code",
+      locationSearch: "Search by city, ZIP, or address",
       languages: "Select your main languages",
       password: "Create a password",
       password2: "Repeat the password",
@@ -197,11 +212,95 @@ const STRIPE_BACKEND =
   process.env.NEXT_PUBLIC_STRIPE_API ||
   "https://backend-massuer-stripe.onrender.com";
 
+const GEO_BACKEND_URL =
+  process.env.NEXT_PUBLIC_GEO_BACKEND_URL ||
+  process.env.NEXT_PUBLIC_IA_BACKEND_URL ||
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  "http://localhost:4000";
+
 const POLICY_VERSION = "2025-11-11";
 
 /* ===== Utils ===== */
 function priceLabel(price: number) {
   return `$${price.toFixed(2)}`;
+}
+
+function normalizeStateCode(value: string, country?: string | null) {
+  const raw = (value || "").trim();
+  if (!raw) return "";
+  if (raw.length === 2) return raw.toUpperCase();
+
+  const isUs =
+    !country ||
+    ["US", "USA", "United States", "United States of America"].includes(
+      country
+    );
+  if (!isUs) return raw;
+
+  const STATES: Record<string, string> = {
+    Alabama: "AL",
+    Alaska: "AK",
+    Arizona: "AZ",
+    Arkansas: "AR",
+    California: "CA",
+    Colorado: "CO",
+    Connecticut: "CT",
+    Delaware: "DE",
+    Florida: "FL",
+    Georgia: "GA",
+    Hawaii: "HI",
+    Idaho: "ID",
+    Illinois: "IL",
+    Indiana: "IN",
+    Iowa: "IA",
+    Kansas: "KS",
+    Kentucky: "KY",
+    Louisiana: "LA",
+    Maine: "ME",
+    Maryland: "MD",
+    Massachusetts: "MA",
+    Michigan: "MI",
+    Minnesota: "MN",
+    Mississippi: "MS",
+    Missouri: "MO",
+    Montana: "MT",
+    Nebraska: "NE",
+    Nevada: "NV",
+    "New Hampshire": "NH",
+    "New Jersey": "NJ",
+    "New Mexico": "NM",
+    "New York": "NY",
+    "North Carolina": "NC",
+    "North Dakota": "ND",
+    Ohio: "OH",
+    Oklahoma: "OK",
+    Oregon: "OR",
+    Pennsylvania: "PA",
+    "Rhode Island": "RI",
+    "South Carolina": "SC",
+    "South Dakota": "SD",
+    Tennessee: "TN",
+    Texas: "TX",
+    Utah: "UT",
+    Vermont: "VT",
+    Virginia: "VA",
+    Washington: "WA",
+    "West Virginia": "WV",
+    Wisconsin: "WI",
+    Wyoming: "WY",
+    "District of Columbia": "DC",
+  };
+
+  return STATES[raw] || raw;
+}
+
+function formatLocation(city: string, state: string) {
+  const c = city.trim();
+  const s = state.trim();
+  if (!c && !s) return "";
+  if (!s) return c;
+  if (!c) return s;
+  return `${c}, ${s}`;
 }
 
 /* ===== Auth + Profile ===== */
@@ -211,7 +310,9 @@ async function ensureAuthAndUpsertProfile(opts: {
   fullName: string;
   displayName: string;
   phone: string;
-  location: string;
+  city: string;
+  state: string;
+  zipCode: string;
   languages: string[];
   services: string[];
   agree: boolean;
@@ -225,7 +326,9 @@ async function ensureAuthAndUpsertProfile(opts: {
     fullName,
     displayName,
     phone,
-    location,
+    city,
+    state,
+    zipCode,
     languages,
     services,
     agree,
@@ -273,7 +376,10 @@ async function ensureAuthAndUpsertProfile(opts: {
     display_name: displayName.trim(),
     email: email.trim(),
     phone: phone.trim(),
-    location: location.trim(),
+    city: city.trim(),
+    state: normalizeStateCode(state, "US"),
+    zip_code: zipCode.trim(),
+    location: formatLocation(city, normalizeStateCode(state, "US")),
     languages,
     services,
     agree_terms: agree,
@@ -313,7 +419,7 @@ function PlanSelection({
   };
 
   return (
-    <section className="container mt-32">
+    <section id="plans" className="container mt-32">
       <div className="center mb-24">
         <h2>{TXT.plansHeader}</h2>
         <p className="muted">{TXT.plansSub}</p>
@@ -385,7 +491,9 @@ function RegistrationForm({
     displayName: "",
     email: "",
     phone: "",
-    location: "",
+    city: "",
+    state: "",
+    zipCode: "",
     languages: [] as string[],
     services: [] as string[],
     agree: false,
@@ -393,6 +501,129 @@ function RegistrationForm({
     password2: "",
   });
   const [error, setError] = useState("");
+  const [locSearch, setLocSearch] = useState("");
+  const [locLoading, setLocLoading] = useState(false);
+  const [geoConsent, setGeoConsent] = useState(false);
+  const [searchConsent, setSearchConsent] = useState(false);
+
+  const applyLocation = (payload: {
+    city?: string;
+    state?: string;
+    zip?: string;
+  }) => {
+    setForm((prev) => ({
+      ...prev,
+      city: payload.city || prev.city,
+      state: payload.state || prev.state,
+      zipCode: payload.zip || prev.zipCode,
+    }));
+  };
+
+  const handleGeoLocate = async () => {
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    if (!geoConsent) {
+      const ok = window.confirm(
+        "Allow us to use your device location to fill city, state, and ZIP?"
+      );
+      if (!ok) return;
+      setGeoConsent(true);
+    }
+
+    setLocLoading(true);
+    setError("");
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const url = `${GEO_BACKEND_URL}/reverse-geocode?lat=${encodeURIComponent(
+            latitude
+          )}&lng=${encodeURIComponent(longitude)}`;
+          const resp = await fetch(url);
+          if (!resp.ok) throw new Error("Location lookup failed.");
+          const data = await resp.json();
+          const parsed = {
+            city: String(data?.city || "").trim(),
+            state: normalizeStateCode(
+              String(data?.state || data?.stateCode || ""),
+              data?.country
+            ),
+            zip: String(data?.zip || "").trim(),
+          };
+          if (!parsed.city && !parsed.state && !parsed.zip) {
+            throw new Error("Could not resolve your location.");
+          }
+          applyLocation(parsed);
+        } catch (err: any) {
+          setError(
+            err?.message ||
+              "Failed to get your location. Please enter it manually."
+          );
+        } finally {
+          setLocLoading(false);
+        }
+      },
+      (geoErr) => {
+        setLocLoading(false);
+        if (geoErr?.code === geoErr.PERMISSION_DENIED) {
+          setError("Location permission denied.");
+        } else {
+          setError("Unable to read your location.");
+        }
+      },
+      { enableHighAccuracy: false, timeout: 12000, maximumAge: 30000 }
+    );
+  };
+
+  const handleSearchLocation = async () => {
+    if (!locSearch.trim()) {
+      setError("Type a city, ZIP, or address to search.");
+      return;
+    }
+
+    if (!searchConsent) {
+      const ok = window.confirm(
+        "Allow us to use a location search provider to look up city, state, and ZIP?"
+      );
+      if (!ok) return;
+      setSearchConsent(true);
+    }
+
+    setLocLoading(true);
+    setError("");
+
+    try {
+      const url = `${GEO_BACKEND_URL}/geocode?query=${encodeURIComponent(
+        locSearch.trim()
+      )}`;
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error("Location search failed.");
+      const data = await resp.json();
+      const parsed = {
+        city: String(data?.city || "").trim(),
+        state: normalizeStateCode(
+          String(data?.state || data?.stateCode || ""),
+          data?.country
+        ),
+        zip: String(data?.zip || "").trim(),
+      };
+      if (!parsed.city && !parsed.state && !parsed.zip) {
+        throw new Error("No results found for that search.");
+      }
+      applyLocation(parsed);
+    } catch (err: any) {
+      setError(
+        err?.message ||
+          "Search failed. Please refine your search or enter manually."
+      );
+    } finally {
+      setLocLoading(false);
+    }
+  };
 
   const toggleLanguage = (lang: string) => {
     setForm((prev) => ({
@@ -408,7 +639,8 @@ function RegistrationForm({
       !form.fullName ||
       !form.email ||
       !form.phone ||
-      !form.location ||
+      !form.city ||
+      !form.state ||
       !form.agree
     ) {
       setError(L.toastErr);
@@ -496,13 +728,61 @@ function RegistrationForm({
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
           className="mb-12"
         />
+
+        <div className="mb-12" style={{ display: "grid", gap: 12 }}>
+          <label className="small muted">{L.labels.locationSearch}</label>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <input
+              type="text"
+              placeholder={L.placeholders.locationSearch}
+              value={locSearch}
+              onChange={(e) => setLocSearch(e.target.value)}
+              style={{ flex: "1 1 220px" }}
+            />
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={handleSearchLocation}
+              disabled={locLoading}
+            >
+              {locLoading ? "Searching..." : "Search"}
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={handleGeoLocate}
+              disabled={locLoading}
+            >
+              {locLoading ? "Locating..." : "Use my location"}
+            </button>
+          </div>
+          <p className="small muted">
+            We will only use your location to fill city/state and ZIP.
+          </p>
+        </div>
+
+        <div className="mb-12" style={{ display: "flex", gap: 12 }}>
+          <input
+            type="text"
+            placeholder={L.placeholders.city}
+            value={form.city}
+            onChange={(e) => setForm({ ...form, city: e.target.value })}
+            style={{ flex: 2 }}
+          />
+          <input
+            type="text"
+            placeholder={L.placeholders.state}
+            value={form.state}
+            onChange={(e) => setForm({ ...form, state: e.target.value })}
+            style={{ flex: 1 }}
+          />
+        </div>
+
         <input
           type="text"
-          placeholder={L.placeholders.location}
-          value={form.location}
-          onChange={(e) =>
-            setForm({ ...form, location: e.target.value })
-          }
+          placeholder={L.placeholders.zipCode}
+          value={form.zipCode}
+          onChange={(e) => setForm({ ...form, zipCode: e.target.value })}
           className="mb-12"
         />
 
@@ -710,14 +990,16 @@ function PaymentStep({
       const priceMonthly = PLANS[plan].priceMonthly;
       const planName = TXT.plans[plan].name;
 
-      // 1) Cria ou loga usuário + upsert therapist
+      // 1) Create or sign in user + upsert therapist
       const { userId } = await ensureAuthAndUpsertProfile({
         email: formData.email,
         password: formData.password,
         fullName: formData.fullName,
         displayName: formData.displayName,
         phone: formData.phone,
-        location: formData.location,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.zipCode,
         languages: formData.languages || [],
         services: formData.services || [],
         agree: formData.agree,
@@ -730,9 +1012,9 @@ function PaymentStep({
         throw new Error("Could not get user ID for this account.");
       }
 
-      // 2) Iniciar fluxo na API:
-      //   FREE  → Stripe Identity → redireciona direto pro perfil (/therapist/:id)
-      //   PAID  → Stripe Identity → backend /after-identity → Checkout → success → perfil
+      // 2) Start API flow:
+      //   FREE  -> Stripe Identity -> redirect to profile (/therapist/:id)
+      //   PAID  -> Stripe Identity -> backend /after-identity -> Checkout -> success -> profile
       const endpoint = isFree
         ? `${STRIPE_BACKEND}/start-identity-flow`
         : `${STRIPE_BACKEND}/start-payment-flow`;
@@ -784,8 +1066,8 @@ function PaymentStep({
             timestamp: new Date().toISOString(),
           })
         );
-        // Free: abre Stripe Identity → volta direto pro perfil
-        // Paid: abre Stripe Identity → backend /after-identity → Checkout → success → perfil
+        // Free: open Stripe Identity -> return to profile
+        // Paid: open Stripe Identity -> backend /after-identity -> Checkout -> success -> profile
         window.location.href = data.url;
       }
     } catch (err: any) {
@@ -876,8 +1158,8 @@ function ActivationStatus() {
   const L = TXT.flow;
   return (
     <section className="section-narrow center">
-      <div style={{ fontSize: 64 }} className="mb-16">
-        ⏳
+      <div className="mb-16">
+        <Loader2 size={64} className="animate-spin" />
       </div>
       <h2 className="mb-8">{L.activationTitle}</h2>
       <p className="muted mb-24">{L.activationSubtitle}</p>
@@ -886,7 +1168,13 @@ function ActivationStatus() {
         <ul>
           {L.activationSteps.map((s: string, i: number) => (
             <li key={i}>
-              <span style={{ fontSize: 20 }}>{i < 3 ? "✅" : "⏳"}</span>
+              <span style={{ display: "inline-flex", alignItems: "center" }}>
+                {i < 3 ? (
+                  <Check size={18} />
+                ) : (
+                  <Loader2 size={18} className="animate-spin" />
+                )}
+              </span>
               <span>{s}</span>
             </li>
           ))}
@@ -894,7 +1182,7 @@ function ActivationStatus() {
       </div>
 
       <div className="alert alert-warn mt-16">
-        You'll receive an email once your account is approved (24–48h).
+        You'll receive an email once your account is approved (24-48 hours).
       </div>
     </section>
   );
@@ -911,123 +1199,160 @@ export default function JoinPage() {
   const L = TXT;
 
   return (
-    <main>
-      {/* Progress Indicator */}
-      <div className="progress">
-        {[1, 2, 3, 4, 5].map((s) => (
-          <div key={s} className={`bar ${step >= s ? "is-on" : ""}`} />
-        ))}
-      </div>
-
-      {/* Hero (only step 1) */}
-      {step === 1 && (
-        <section className="join-hero">
-          <div className="container center">
-            <span className="pill">{L.heroBadge}</span>
-            <h1 className="mt-12">{L.heroTitleLine1}</h1>
-            <p
-              className="mt-12"
-              style={{ fontSize: 18, maxWidth: 720, margin: "0 auto" }}
-            >
-              {L.heroTitleLine2}
-            </p>
-            <div
-              className="mt-24"
-              style={{
-                display: "flex",
-                gap: 16,
-                justifyContent: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              {L.heroStats.map((stat, i) => (
-                <div
-                  key={i}
-                  style={{ display: "flex", alignItems: "center", gap: 6 }}
-                >
-                  <Check size={18} />
-                  <span style={{ fontSize: 14, fontWeight: 700 }}>
-                    {stat}
-                  </span>
-                </div>
-              ))}
-            </div>
+    <div className="join-shell">
+      <aside className="join-aside">
+        <div className="join-aside__inner">
+          <h1>Grow your massage therapy practice</h1>
+          <p>
+            Join MasseurMatch and connect with clients looking for professional
+            massage therapists like you.
+          </p>
+          <ul className="join-aside__list">
+            {ASIDE_BULLETS.map((item) => (
+              <li key={item}>
+                <span className="join-aside__icon">
+                  <Check size={16} />
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="join-aside__cta">
+            <p>Already have clients?</p>
+            <Link href="#plans" className="join-aside__link">
+              View membership options
+              <ArrowRight size={16} />
+            </Link>
           </div>
-        </section>
-      )}
+        </div>
+      </aside>
 
-      {/* Why (only step 1) */}
-      {step === 1 && (
-        <section className="container mt-32">
-          <h2 className="center">{L.whyTitle}</h2>
-          <p className="muted center mb-24">{L.whySubtitle}</p>
-          <div className="grid">
-            {L.whyBullets.map((b, i) => (
-              <div key={i} className="card">
-                <div className="card-title">{b.title}</div>
-                <p className="muted">{b.desc}</p>
-              </div>
+      <div className="join-main">
+        <main>
+          <div className="join-topbar">
+            <Link href="/" className="join-back">
+              {"\u2190"} Back to home
+            </Link>
+          </div>
+      {/* Progress Indicator */}
+          <div className="progress">
+            {[1, 2, 3, 4, 5].map((s) => (
+              <div key={s} className={`bar ${step >= s ? "is-on" : ""}`} />
             ))}
           </div>
-        </section>
-      )}
+
+      {/* Hero (only step 1) */}
+          {step === 1 && (
+            <section className="join-hero">
+              <div className="container center">
+                <span className="pill">{L.heroBadge}</span>
+                <h1 className="mt-12">{L.heroTitleLine1}</h1>
+                <p
+                  className="mt-12"
+                  style={{ fontSize: 18, maxWidth: 720, margin: "0 auto" }}
+                >
+                  {L.heroTitleLine2}
+                </p>
+                <div
+                  className="mt-24"
+                  style={{
+                    display: "flex",
+                    gap: 16,
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {L.heroStats.map((stat, i) => (
+                    <div
+                      key={i}
+                      style={{ display: "flex", alignItems: "center", gap: 6 }}
+                    >
+                      <Check size={18} />
+                      <span style={{ fontSize: 14, fontWeight: 700 }}>
+                        {stat}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+      {/* Why (only step 1) */}
+          {step === 1 && (
+            <section className="container mt-32 join-why">
+              <h2 className="center">{L.whyTitle}</h2>
+              <p className="muted center mb-24">{L.whySubtitle}</p>
+              <div className="grid">
+                {L.whyBullets.map((b, i) => (
+                  <div key={i} className="card">
+                    <div className="card-title">{b.title}</div>
+                    <p className="muted">{b.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
       {/* Steps */}
-      {step === 1 && (
-        <PlanSelection
-          onSelectPlan={(p) => {
-            setSelectedPlan(p);
-            setStep(2);
-          }}
-        />
-      )}
+          {step === 1 && (
+            <PlanSelection
+              onSelectPlan={(p) => {
+                setSelectedPlan(p);
+                setStep(2);
+              }}
+            />
+          )}
 
-      {step === 2 && (
-        <RegistrationForm
-          planName={TXT.plans[selectedPlan].name}
-          onBack={() => setStep(1)}
-          onContinue={(data: any) => {
-            setFormData(data);
-            setStep(3);
-          }}
-        />
-      )}
+          {step === 2 && (
+            <RegistrationForm
+              planName={TXT.plans[selectedPlan].name}
+              onBack={() => setStep(1)}
+              onContinue={(data: any) => {
+                setFormData(data);
+                setStep(3);
+              }}
+            />
+          )}
 
-      {step === 3 && (
-        <LegalTerms
-          onBack={() => setStep(2)}
-          onContinue={(data: any) => {
-            setLegalData(data);
-            setStep(4);
-          }}
-        />
-      )}
+          {step === 3 && (
+            <LegalTerms
+              onBack={() => setStep(2)}
+              onContinue={(data: any) => {
+                setLegalData(data);
+                setStep(4);
+              }}
+            />
+          )}
 
-      {step === 4 && (
-        <ComplianceChecklist
-          onBack={() => setStep(3)}
-          onContinue={(data: any) => {
-            setComplianceData(data);
-            setStep(5);
-          }}
-        />
-      )}
+          {step === 4 && (
+            <ComplianceChecklist
+              onBack={() => setStep(3)}
+              onContinue={(data: any) => {
+                setComplianceData(data);
+                setStep(5);
+              }}
+            />
+          )}
 
-      {step === 5 && (
-        <PaymentStep
-          plan={selectedPlan}
-          formData={formData}
-          onBack={() => setStep(4)}
-          onSuccess={() => setStep(6)}
-        />
-      )}
+          {step === 5 && (
+            <PaymentStep
+              plan={selectedPlan}
+              formData={formData}
+              onBack={() => setStep(4)}
+              onSuccess={() => setStep(6)}
+            />
+          )}
 
-      {step === 6 && <ActivationStatus />}
+          {step === 6 && <ActivationStatus />}
 
       {/* Footer */}
-      <footer className="footer">
-        <p>© 2025 ProDirectory. All rights reserved.</p>
-      </footer>
-    </main>
+          <footer className="footer">
+            <p>(c) 2025 MasseurMatch. All rights reserved.</p>
+          </footer>
+        </main>
+      </div>
+    </div>
   );
 }
+

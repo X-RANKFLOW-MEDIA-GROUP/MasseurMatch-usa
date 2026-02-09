@@ -8,7 +8,7 @@ type StepColor = "purple" | "pink" | "blue";
 
 interface Step {
   id: number;
-  icon: ReactNode; // ✅ em vez de JSX.Element
+  icon: ReactNode; // Use ReactNode instead of JSX.Element
   title: string;
   description: string;
   color: StepColor;
@@ -43,7 +43,7 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className={styles["how-it-works"]}>
+    <section className={`${styles["how-it-works"]} mm-fade-up mm-fade-up--delay-2`}>
       <div className={styles["hiw-inner"]}>
         <h2>How It Works</h2>
         <p>Simple, fast and inclusive</p>

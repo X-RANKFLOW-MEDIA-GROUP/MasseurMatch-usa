@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
@@ -36,12 +36,12 @@ export default function About() {
         <h1 className={styles.about__title}>About Our Platform</h1>
 
         <p className={styles.about__tagline}>
-          Join <strong>MasseurMatch</strong> — Empowering Independent Professionals
+          Join <strong>MasseurMatch</strong> - Empowering Independent Professionals
         </p>
 
         <p className={styles.about__intro}>
           Welcome to a transparent, inclusive directory built for trusted wellness connections.
-          This is your space to be seen, be respected, and connect directly with clients — on your terms.
+          This is your space to be seen, be respected, and connect directly with clients - on your terms.
         </p>
 
         <div className={styles.about__cta}>
@@ -54,7 +54,7 @@ export default function About() {
           </Link>
 
           <Link
-            href="/directory"
+            href="/explore"
             className={`${styles.btn} ${styles["btn--ghost"]}`}
             aria-label="Explore Directory"
           >
@@ -62,7 +62,7 @@ export default function About() {
           </Link>
 
           <Link
-            href="/before-you-list"
+            href="/community-guidelines"
             className={`${styles.btn} ${styles["btn--link"]}`}
             aria-label="Before You List"
           >
@@ -71,7 +71,7 @@ export default function About() {
         </div>
 
         <div className={styles.about__note}>
-          <strong>Platform note:</strong> MasseurMatch is a visibility platform — not an agency. By joining, you confirm
+          <strong>Platform note:</strong> MasseurMatch is a visibility platform - not an agency. By joining, you confirm
           that you are an independent provider responsible for your own services, communications, and compliance with all
           local laws and standards.
         </div>
@@ -155,10 +155,10 @@ export default function About() {
 
           <li className={styles.about__card} data-reveal>
             <div className={styles.about__cardHead}>
-              <h3>Directory Only — No Bookings</h3>
+              <h3>Directory Only - No Bookings</h3>
             </div>
-            <p> mjr
-              MasseurMatch does not process payments, bookings, or messaging. We are not a marketplace or intermediary —
+            <p>
+              MasseurMatch does not process payments, bookings, or messaging. We are not a marketplace or intermediary -
               we&apos;re a visibility tool.
             </p>
           </li>
@@ -204,22 +204,22 @@ export default function About() {
         <ul className={styles.about__links}>
           <li>
             <Link href="/terms" className={styles.about__link}>
-              → Terms of Service
+              {"\u2192"} Terms of Service
             </Link>
           </li>
           <li>
-            <Link href="/privacy" className={styles.about__link}>
-              → Privacy Policy
+            <Link href="/privacy-policy" className={styles.about__link}>
+              {"\u2192"} Privacy Policy
             </Link>
           </li>
           <li>
             <Link href="/community-guidelines" className={styles.about__link}>
-              → Community Guidelines
+              {"\u2192"} Community Guidelines
             </Link>
           </li>
           <li>
-            <Link href="/platform-disclaimer" className={styles.about__link}>
-              → Platform Disclaimer
+            <Link href="/trust-and-safety" className={styles.about__link}>
+              {"\u2192"} Trust & Safety
             </Link>
           </li>
         </ul>
@@ -319,3 +319,4 @@ export default function About() {
     </main>
   );
 }
+

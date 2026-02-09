@@ -6,27 +6,39 @@ export default function CheckoutPage() {
       style={{
         minHeight: "100vh",
         padding: "2rem 1.5rem",
-        background:
-          "radial-gradient(circle at top, #020617 0, #020014 45%, #000 100%)",
-        color: "#f9fafb",
-        fontFamily:
-          'system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif',
+        background: "#000000",
+        color: "#ffffff",
       }}
     >
-      <h1
+      <section
         style={{
-          fontSize: "1.8rem",
-          fontWeight: 700,
-          marginBottom: "0.75rem",
+          maxWidth: "720px",
+          margin: "0 auto",
+          background: "var(--glass-bg)",
+          padding: "1.75rem 1.5rem",
+          borderRadius: "1.25rem",
+          border: "1px solid var(--glass-border)",
+          boxShadow: "var(--glass-shadow)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-sat))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-sat))",
         }}
       >
-        Checkout
-      </h1>
+        <h1
+          style={{
+            fontSize: "1.8rem",
+            fontWeight: 700,
+            marginBottom: "0.75rem",
+          }}
+        >
+          Checkout
+        </h1>
 
-      <p style={{ maxWidth: 520, lineHeight: 1.6, fontSize: "0.95rem" }}>
-        Página de checkout do MasseurMatch. <br />
-        Em breve, aqui ficará a integração completa com o Stripe/backend.
-      </p>
+        <p style={{ maxWidth: 520, lineHeight: 1.6, fontSize: "0.95rem" }}>
+          MasseurMatch checkout placeholder.
+          <br />
+          Full Stripe and backend integration will be added here soon.
+        </p>
+      </section>
     </main>
   );
 }

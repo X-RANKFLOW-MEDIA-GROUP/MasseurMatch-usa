@@ -4,7 +4,7 @@
 import React from "react";
 import EditProfile from "@/src/components/Edit-Profile";
 
-// Importar o CSS da página de edição
+// Import the CSS for the edit profile page
 import "@/src/styles/edit-profile.css";
 
 export default function EditProfilePage() {

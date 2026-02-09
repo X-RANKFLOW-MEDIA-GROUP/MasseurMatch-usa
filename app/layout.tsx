@@ -1,10 +1,12 @@
 // app/layout.tsx
 import type { Metadata } from "next";
 import React from "react";
+import { GeistSans } from "geist/font/sans";
 
 import "./globals.css";
+import "mapbox-gl/dist/mapbox-gl.css";
 
-// Estilos globais do MasseurMatch
+// MasseurMatch global styles
 import "@/src/components/TherapistProfile.css";
 import "@/src/styles/edit-profile.css";
 
@@ -16,18 +18,25 @@ export const metadata: Metadata = {
   description: "Find real massage therapists. Connect with confidence.",
 };
 
+const geistSans = GeistSans;
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      {/* suppressHydrationWarning corrige o erro causado por extensões do navegador */}
-      <body suppressHydrationWarning={true}>
+    <html lang="en" className={geistSans.variable}>
+      {/* suppressHydrationWarning avoids errors caused by browser extensions */}
+      <body
+        suppressHydrationWarning={true}
+        className={`${geistSans.className} glass-theme`}
+      >
         <ProfileProvider>
-          <Header />
-          <main>{children}</main>
+          <div className="glass-root">
+            <Header />
+            <main>{children}</main>
+          </div>
         </ProfileProvider>
       </body>
     </html>

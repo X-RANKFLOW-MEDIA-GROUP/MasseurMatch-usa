@@ -6,23 +6,21 @@ export default function PendingPage() {
       style={{
         minHeight: "100vh",
         padding: "2rem 1.25rem",
-        background:
-          "radial-gradient(circle at top, #020617 0, #020014 45%, #000 100%)",
-        color: "#f9fafb",
-        fontFamily:
-          'system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif',
+        background: "#000000",
+        color: "#ffffff",
       }}
     >
       <section
         style={{
           maxWidth: "900px",
           margin: "0 auto",
-          background:
-            "radial-gradient(circle at top left, #1e1b4b, #020617 80%)",
+          background: "var(--glass-bg)",
           padding: "1.75rem 1.5rem",
-          borderRadius: "1rem",
-          border: "1px solid rgba(244, 114, 182, 0.45)",
-          boxShadow: "0 22px 45px rgba(0,0,0,0.6)",
+          borderRadius: "1.25rem",
+          border: "1px solid var(--glass-border)",
+          boxShadow: "var(--glass-shadow)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-sat))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-sat))",
           textAlign: "center",
         }}
       >
@@ -46,9 +44,9 @@ export default function PendingPage() {
             lineHeight: 1.6,
           }}
         >
-          Seu pagamento está em análise ou pendente de confirmação. Assim que o
-          status for atualizado, você poderá acessar todos os recursos premium
-          do MasseurMatch.
+          Your payment is under review or awaiting confirmation. As soon as the
+          status updates, you will have access to all premium MasseurMatch
+          features.
         </p>
       </section>
     </main>

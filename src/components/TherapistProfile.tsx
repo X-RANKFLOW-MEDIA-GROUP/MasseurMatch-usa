@@ -1,4 +1,4 @@
-// src/components/TherapistProfile.tsx
+﻿// src/components/TherapistProfile.tsx
 "use client";
 
 import { useMemo, useRef, useState, useId, useEffect } from "react";
@@ -6,7 +6,7 @@ import "./TherapistProfile.css";
 import { useRouter, useParams } from "next/navigation";
 import { supabase } from "@/src/lib/supabase";
 
-/** ===== Tipos visuais ===== */
+/** ===== Visual types ===== */
 export type Status = "online" | "away" | "busy" | "offline";
 export type GalleryItem = { id: string; url: string };
 
@@ -34,12 +34,12 @@ export type Review = { id: string; author: string; rating: number; text: string 
 const BUCKET = "profiles";
 const MAX_GALLERY = 5;
 
-/** ===== Helpers de ID seguros ao build ===== */
+/** ===== Build-safe ID helpers ===== */
 const rid = () =>
   (globalThis as any)?.crypto?.randomUUID?.() ??
   Math.random().toString(36).slice(2) + Date.now().toString(36);
 
-/** ===== Modelo UI (apenas mock / preview) ===== */
+/** ===== UI model (mock/preview only) ===== */
 export type Therapist = {
   id: string;
   name: string;
@@ -82,18 +82,18 @@ export type Therapist = {
   languagesSpoken?: string[];
   businessTrips?: string[];
 
-  // campos de gate (somente leitura na UI)
+  // gate fields (read-only in UI)
   statusRaw?: string | null;
   planRaw?: string | null;
   paidUntilRaw?: string | null;
   subStatusRaw?: string | null;
 
-  // indicadores de edições
+  // edit indicators
   hasPendingEdits?: boolean;
   pendingEditsCount?: number;
 };
 
-/** ===== Fallback visual MOCK (só quando não há registro no DB) ===== */
+/** ===== Mock visual fallback (only when no DB record exists) ===== */
 const SAMPLE: Therapist = {
   id: "sample",
   name: "Bruno",
@@ -103,9 +103,9 @@ const SAMPLE: Therapist = {
   locationCityState: "Dallas, TX",
   services: "In-studio & mobile services",
   specialties: "Deep Tissue, Shiatsu, Swedish",
-  promocoes: "25% de Desconto",
+  promocoes: "25% Off",
   startingAt: "$90",
-  visitingFrom: "Rio de Janeiro, BR",
+  visitingFrom: "Chicago, IL",
   address: "Near Main St & Elm Ave",
   zipCode: "75201",
   accessNotes: "Private studio, free parking at the back entrance.",
@@ -115,9 +115,9 @@ const SAMPLE: Therapist = {
     { name: "Session", duration: "120 min", price: "$150" },
   ],
   availability: [
-    { day: "Mon–Fri", hours: "7 a.m. – 11 p.m." },
-    { day: "Sat", hours: "8 a.m. – 10 p.m." },
-    { day: "Sun", hours: "10 a.m. – 8 p.m." },
+    { day: "Mon-Fri", hours: "7 a.m. - 11 p.m." },
+    { day: "Sat", hours: "8 a.m. - 10 p.m." },
+    { day: "Sun", hours: "10 a.m. - 8 p.m." },
   ],
   reviews: [
     {
@@ -128,7 +128,7 @@ const SAMPLE: Therapist = {
     },
     {
       id: "r2",
-      author: "M.R., Rio de Janeiro, BR",
+      author: "M.R., Chicago, IL",
       rating: 5,
       text: "Relaxing and therapeutic. Excellent communication.",
     },
@@ -139,7 +139,7 @@ const SAMPLE: Therapist = {
       text: "Great pressure and technique. I felt new afterwards.",
     },
   ],
-  bio: "I believe every massage should be more than a service – it's an exchange of presence, trust, and energy...",
+  bio: "I believe every massage should be more than a service - it's an exchange of presence, trust, and energy...",
   profilePhoto:
     "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1600&auto=format&fit=crop",
   gallery: [
@@ -193,18 +193,18 @@ const SAMPLE: Therapist = {
     weekly: "See this week's featured offers.",
   },
   degrees: [
-    "Certified Massage Therapist (CMT) - Brazilian Massage Academy (2017)",
-    "Bachelor's Degree in Kinesiology - Federal University of Rio (2015)",
+    "Certified Massage Therapist (CMT) - American Massage Academy (2017)",
+    "Bachelor's Degree in Kinesiology - University of Texas (2015)",
   ],
   affiliations: [
     "Member: National Association of Massage Therapists (NAMT)",
     "Member: American Massage Therapy Association (AMTA)",
   ],
   startDate: "Practicing since: January 2018",
-  languagesSpoken: ["English", "Portuguese", "Spanish"],
+  languagesSpoken: ["English", "Spanish"],
   businessTrips: [
-    "Next Visits to Rio de Janeiro: Dec 5 - Dec 15, 2024 (Bookings open)",
-    "Past Visits — Miami, FL: Jan 20 - Feb 1, 2024",
+    "Next Visits to Chicago, IL: Dec 5 - Dec 15, 2024 (Bookings open)",
+    "Past Visits - Miami, FL: Jan 20 - Feb 1, 2024",
   ],
 };
 
@@ -236,11 +236,12 @@ function coerceGallery(g: unknown): GalleryItem[] {
   return SAMPLE.gallery;
 }
 
-/** ===== Tipo cru do DB (tabela therapists) ===== */
+/** ===== Raw DB type (therapists table) ===== */
 type DbTherapist = {
+  id?: string | null;
   user_id: string;
 
-  // Básico
+  // Basics
   full_name: string | null;
   display_name?: string | null;
   headline: string | null;
@@ -250,7 +251,7 @@ type DbTherapist = {
   email?: string | null;
   phone?: string | null;
 
-  // Localização nova
+  // New location
   city: string | null;
   state: string | null;
   country: string | null;
@@ -262,16 +263,16 @@ type DbTherapist = {
   longitude?: string | null;
   mobile_service_radius: number | null;
 
-  // Localização antiga (fallback)
+  // Legacy location (fallback)
   location?: string | null;
   locationCityState?: string | null;
 
-  // Services / cabeçalhos
+  // Services / headings
   services_headline: string | null;
   specialties_headline: string | null;
   promotions_headline: string | null;
 
-  // Serviços detalhados (arrays)
+  // Detailed services (arrays)
   services?: string[] | string | null;
   massage_techniques: string[] | string | null;
   studio_amenities: string[] | string | null;
@@ -279,22 +280,22 @@ type DbTherapist = {
   additional_services: string[] | string | null;
   products_used: string | null;
 
-  // Preços
+  // Pricing
   rate_60: string | null;
   rate_90: string | null;
   rate_outcall: string | null;
   payment_methods: string[] | string | null;
 
-  // Descontos
+  // Discounts
   regular_discounts: string | null;
   day_of_week_discount: string | null;
   weekly_specials: string | null;
   special_discount_groups: string[] | string | null;
 
-  // Disponibilidade (JSON vindo do Edit-Profile)
+  // Availability (JSON from Edit-Profile)
   availability: any | null;
 
-  // Credenciais
+  // Credentials
   degrees: string | null;
   affiliations: string[] | string | null;
   massage_start_date: string | null;
@@ -315,18 +316,18 @@ type DbTherapist = {
   birthdate: string | null;
   years_experience: number | null;
 
-  // Mídia
+  // Media
   profile_photo: string | null;
   gallery: string[] | { id: string; url: string }[] | null;
 
-  // Outros
+  // Other
   travel_radius: string | null;
   accepts_first_timers: boolean | null;
   prefers_lgbtq_clients: boolean | null;
   accessNotes?: string | null;
   mobileMiles?: number | null;
 
-  // Plano / billing / gate
+  // Plan / billing / gate
   agree_terms?: boolean | null;
   plan?: string | null;
   plan_name?: string | null;
@@ -338,7 +339,7 @@ type DbTherapist = {
   subscription_status?: string | null;
   stripe_current_period_end?: string | null;
 
-  // Fallbacks antigos pra manter compatibilidade
+  // Legacy fallbacks to keep compatibility
   promocoes?: string | null;
   title?: string | null;
   bio?: string | null;
@@ -360,7 +361,7 @@ type DbTherapist = {
   ratingCount?: number | null;
 };
 
-/** ===== NOVO: contador de edições pendentes ===== */
+/** ===== NEW: pending edits counter ===== */
 async function loadPendingEditsCount(therapistId: string) {
   try {
     const { count, error } = await supabase
@@ -379,7 +380,7 @@ async function loadPendingEditsCount(therapistId: string) {
   }
 }
 
-/** ===== Helpers de disponibilidade (JSON -> UI) ===== */
+/** ===== Availability helpers (JSON -> UI) ===== */
 function mapAvailabilityFromJson(av: any): Therapist["availability"] {
   if (!av || typeof av !== "object") return [];
 
@@ -391,16 +392,16 @@ function mapAvailabilityFromJson(av: any): Therapist["availability"] {
     const outcall = info.outcall || {};
 
     const incallStr =
-      incall.start && incall.end ? `${incall.start} – ${incall.end}` : "";
+      incall.start && incall.end ? `${incall.start} - ${incall.end}` : "";
     const outcallStr =
-      outcall.start && outcall.end ? `${outcall.start} – ${outcall.end}` : "";
+      outcall.start && outcall.end ? `${outcall.start} - ${outcall.end}` : "";
 
     if (!incallStr && !outcallStr) continue;
 
     result.push({
       day,
-      incallHours: incallStr || "—",
-      mobileHours: outcallStr || "—",
+      incallHours: incallStr || "-",
+      mobileHours: outcallStr || "-",
     });
   }
 
@@ -430,7 +431,7 @@ function isPaymentOkByTherapists(row?: DbTherapist | null) {
   return false;
 }
 
-/** ===== Consulta payments: status 'paid' (por user_id ou email/texto) ===== */
+/** ===== Payment lookup: status 'paid' (by user_id or email/text) ===== */
 async function hasPaidOnPayments(opts: { uid?: string | null; email?: string | null }) {
   const { uid, email } = opts;
   const now = Date.now();
@@ -474,10 +475,10 @@ async function hasPaidOnPayments(opts: { uid?: string | null; email?: string | n
 
 /** ===== Map DB -> UI ===== */
 function dbToUi(row: DbTherapist | null | undefined): Therapist {
-  // se não tem registro no DB, usa o mock completo
+  // if there is no DB record, use the full mock
   if (!row) return { ...SAMPLE };
 
-  // base começa com tudo vazio (exceto foto/galeria)
+  // base starts empty (except photo/gallery)
   const baseEmpty: Therapist = {
     ...SAMPLE,
     id: "",
@@ -530,20 +531,20 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
     pendingEditsCount: 0,
   };
 
-  // Nome: ÚNICO campo que já vem preenchido por padrão
+  // Name: only field prefilled by default
   const name = row.display_name?.trim() || row.full_name?.trim() || "";
 
-  // Localização
+  // Location
   const locCityState =
     [row.city, row.state].filter(Boolean).join(", ") ||
     row.locationCityState?.trim() ||
     row.location?.trim() ||
     "";
 
-  // Sobre / bio
+  // About / bio
   const bio = row.about?.trim() || row.bio?.trim() || "";
 
-  // Línguas
+  // Languages
   const langsNew = Array.isArray(row.languages)
     ? row.languages.filter(Boolean).map(String)
     : asArray(row.languages);
@@ -560,7 +561,7 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
     row.specialties_headline?.trim() ||
     (servicesArr.length ? servicesArr.join(", ") : "");
 
-  // Técnicas / setup
+  // Techniques / setup
   const techniquesArr = asArray(row.massage_techniques);
   const studioAmenitiesArr = asArray(row.studio_amenities);
   const mobileExtrasArr = asArray(row.mobile_extras);
@@ -576,7 +577,7 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
       .filter(Boolean);
   }
 
-  // Payment methods (array -> objeto)
+  // Payment methods (array -> object)
   const pmArray = asArray(row.payment_methods);
   let payments: Payments;
   if (pmArray.length) {
@@ -602,17 +603,17 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
       };
   }
 
-  // Descontos
+  // Discounts
   const discounts: Discounts = {
     regular: row.regular_discounts || row.discounts?.regular,
     weekday: row.day_of_week_discount || row.discounts?.weekday,
     weekly: row.weekly_specials || row.discounts?.weekly,
   };
 
-  // Disponibilidade
+  // Availability
   const availability = mapAvailabilityFromJson(row.availability);
 
-  // Trips (textarea => lista)
+  // Trips (textarea => list)
   let businessTrips: string[] | undefined;
   if (Array.isArray(row.business_trips)) {
     businessTrips = row.business_trips.filter(Boolean).map(String);
@@ -625,7 +626,7 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
     businessTrips = row.businessTripsArr || [];
   }
 
-  // Rates simples
+  // Simple rates
   const rates: Therapist["rates"] = [];
   if (row.rate_60) {
     rates.push({
@@ -644,13 +645,13 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
     });
   }
 
-  // startingAt = primeiro preço
+  // startingAt = first price
   const startingAt = row.rate_60 || "";
 
-  // Filosofia
+  // Philosophy
   const philosophyArr = row.philosophy ? [row.philosophy] : [];
 
-  // Data início
+  // Start date
   const startDate =
     row.massage_start_date
       ? `Practicing since: ${new Date(row.massage_start_date).toLocaleDateString()}`
@@ -697,7 +698,7 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
 
     philosophy: philosophyArr,
     techniques: techniquesArr,
-    // não existe coluna massageSetup no banco, então usamos só texto do usuário (se quiser mudar no futuro)
+    // massageSetup column does not exist in DB, so we use user text only (change later if needed)
     massageSetup: baseEmpty.massageSetup,
     studioAmenities: studioAmenitiesArr,
     mobileExtras: mobileExtrasArr,
@@ -730,7 +731,7 @@ function dbToUi(row: DbTherapist | null | undefined): Therapist {
   return ui;
 }
 
-/** ===== Componente ===== */
+/** ===== Component ===== */
 export default function TherapistProfile() {
   const router = useRouter();
   const params = useParams();
@@ -763,7 +764,7 @@ export default function TherapistProfile() {
   async function getUid(): Promise<string> {
     const { data: auth } = await supabase.auth.getUser();
     const uid = auth?.user?.id;
-    if (!uid) throw new Error("Faça login para continuar.");
+    if (!uid) throw new Error("Please log in to continue.");
     return uid;
   }
 
@@ -783,7 +784,7 @@ export default function TherapistProfile() {
     return data.publicUrl as string;
   }
 
-  // ===== Carregar perfil (self/público) + descobrir owner/admin + gate =====
+  // ===== Load profile (self/public) + resolve owner/admin + gate =====
   useEffect(() => {
     let mounted = true;
 
@@ -816,9 +817,6 @@ export default function TherapistProfile() {
         const owner = routeId ? uid === routeId : !!uid;
         if (mounted) setIsOwner(owner);
 
-        const therapistId = routeId || uid;
-        if (!therapistId) return;
-
         const q = supabase.from("therapists").select("*").limit(1);
         const { data: rowData, error } = routeId
           ? await q.eq("user_id", routeId)
@@ -829,8 +827,11 @@ export default function TherapistProfile() {
 
         const ui = dbToUi(row);
 
-        // carregar contador de edições pendentes
-        const pendingCount = await loadPendingEditsCount(therapistId);
+        // load pending edits counter (by therapists.id)
+        const therapistRowId = row?.id || null;
+        const pendingCount = therapistRowId
+          ? await loadPendingEditsCount(therapistRowId)
+          : 0;
         ui.hasPendingEdits = pendingCount > 0;
         ui.pendingEditsCount = pendingCount;
 
@@ -881,7 +882,7 @@ export default function TherapistProfile() {
           setShouldPoll(false);
         }
       } catch (e: any) {
-        if (mounted) setErr(e?.message || "Falha ao carregar perfil.");
+        if (mounted) setErr(e?.message || "Failed to load profile.");
         if (mounted) setData(SAMPLE);
       } finally {
         if (mounted) setLoading(false);
@@ -893,7 +894,7 @@ export default function TherapistProfile() {
     };
   }, [routeId, router]);
 
-  // ===== Polling leve para liberar logo após pagamento/webhook =====
+  // ===== Light polling to unlock right after payment/webhook =====
   useEffect(() => {
     if (!shouldPoll) return;
     let canceled = false;
@@ -929,7 +930,10 @@ export default function TherapistProfile() {
 
         if (approved && paid) {
           const ui = dbToUi(row || null);
-          const pendingCount = await loadPendingEditsCount(key);
+          const therapistRowId = row?.id || null;
+          const pendingCount = therapistRowId
+            ? await loadPendingEditsCount(therapistRowId)
+            : 0;
           ui.hasPendingEdits = pendingCount > 0;
           ui.pendingEditsCount = pendingCount;
           setData(ui);
@@ -948,10 +952,10 @@ export default function TherapistProfile() {
     };
   }, [shouldPoll, routeId]);
 
-  /** ===== Persistir profilePhoto e gallery no DB (apenas dono) ===== */
+  /** ===== Persist profilePhoto and gallery in DB (owner only) ===== */
   async function saveProfile(partial: Partial<Therapist>) {
     if (!isOwner) {
-      alert("Somente o dono do perfil pode alterar as fotos.");
+      alert("Only the profile owner can change photos.");
       return;
     }
     const uid = await getUid();
@@ -997,7 +1001,7 @@ export default function TherapistProfile() {
     }
   }
 
-  /** ===== Handlers de imagem (só dono) ===== */
+  /** ===== Image handlers (owner only) ===== */
   function openFileDialog() {
     if (!isOwner) return;
     fileRef.current?.click();
@@ -1029,14 +1033,14 @@ export default function TherapistProfile() {
         gallery: newGallery.map((url) => ({ id: rid(), url })),
       });
     } catch {
-      alert("Falha ao enviar imagens. Tente novamente.");
+      alert("Failed to upload images. Please try again.");
     }
   }
 
   function setAsProfile(url: string) {
     if (!isOwner) return;
     saveProfile({ profilePhoto: url }).catch(() => {
-      alert("Falha ao salvar foto de perfil.");
+      alert("Failed to save profile photo.");
     });
   }
 
@@ -1044,11 +1048,11 @@ export default function TherapistProfile() {
     if (!isOwner) return;
     const remaining = data.gallery.filter((g) => g.id !== id);
     saveProfile({ gallery: remaining }).catch(() => {
-      alert("Falha ao remover imagem.");
+      alert("Failed to remove image.");
     });
   }
 
-  /** ===== Logout (só aparece para dono) ===== */
+  /** ===== Logout (owner only) ===== */
   async function handleLogout() {
     try {
       setSigningOut(true);
@@ -1057,7 +1061,7 @@ export default function TherapistProfile() {
       router.replace("/login");
     } catch (e) {
       console.error(e);
-      alert("Não foi possível sair. Tente novamente.");
+      alert("Could not sign out. Please try again.");
     } finally {
       setSigningOut(false);
     }
@@ -1102,11 +1106,11 @@ export default function TherapistProfile() {
     return data.mobileRadius;
   }, [data.mobileMiles, data.mobileRadius]);
 
-  /** ===== Tela de carregamento/erro ===== */
+  /** ===== Loading/error screen ===== */
   if (loading) {
     return (
       <main className="page">
-        <p style={{ color: "#fff", padding: "1rem" }}>Carregando…</p>
+        <p style={{ color: "#fff", padding: "1rem" }}>Loading...</p>
       </main>
     );
   }
@@ -1119,47 +1123,47 @@ export default function TherapistProfile() {
     );
   }
 
-  /** ===== Gate (usuários comuns precisam aprovação + pagamento; ADMIN bypass) ===== */
+  /** ===== Gate (standard users need approval + payment; ADMIN bypass) ===== */
   const unlocked = isAdmin || (adminApproved && paymentOk);
 
   if (!unlocked) {
     const reasons: string[] = [];
     if (!adminApproved)
-      reasons.push("seu perfil ainda está em análise pelo time (status: pending).");
+      reasons.push("your profile is still under review by the team (status: pending).");
     if (adminApproved && !paymentOk)
-      reasons.push("seu pagamento/assinatura não está ativa no momento.");
+      reasons.push("your payment or subscription is not active right now.");
 
-    const planLabel = (data.planRaw || "—").toString();
+    const planLabel = (data.planRaw || "-").toString();
     const validity = data.paidUntilRaw
-      ? `Válido até: ${new Date(data.paidUntilRaw).toLocaleString()}`
+      ? `Valid until: ${new Date(data.paidUntilRaw).toLocaleString()}`
       : null;
     const subStatus = data.subStatusRaw
-      ? `Status da assinatura: ${data.subStatusRaw}`
+      ? `Subscription status: ${data.subStatusRaw}`
       : null;
 
     return (
       <main className="tp container">
         <section className="tp-block">
-          <h2 className="tp-block__title">Perfil Bloqueado</h2>
+          <h2 className="tp-block__title">Profile Locked</h2>
           <article className="tp-box tp-box--wide">
             <p className="tp-p">
-              O perfil deste profissional ainda não está público porque{" "}
-              {reasons.join(" e ")}
+              This professional profile is not public yet because{" "}
+              {reasons.join(" and ")}
             </p>
 
             <ul className="tp-list" style={{ marginTop: 8 }}>
               <li>
-                <strong>Plano:</strong> {planLabel}
+                <strong>Plan:</strong> {planLabel}
               </li>
               {validity && <li>{validity}</li>}
               {subStatus && <li>{subStatus}</li>}
               {!adminApproved && (
                 <li>
-                  Quando aprovado, o status mudará para <b>active</b>.
+                  When approved, the status will change to <b>active</b>.
                 </li>
               )}
               {adminApproved && !paymentOk && (
-                <li>Ative ou renove sua assinatura para liberar o perfil.</li>
+                <li>Activate or renew your subscription to unlock the profile.</li>
               )}
             </ul>
 
@@ -1168,7 +1172,7 @@ export default function TherapistProfile() {
                 <>
                   {!adminApproved && (
                     <button className="btn" onClick={() => router.push("/pending")}>
-                      Acompanhar aprovação
+                      Track approval
                     </button>
                   )}
                   {!paymentOk && (
@@ -1176,19 +1180,19 @@ export default function TherapistProfile() {
                       className="btn btn--accent"
                       onClick={() => router.push("/join")}
                     >
-                      Ir para planos / pagamento
+                      Go to plans / payment
                     </button>
                   )}
                   <button
                     className="btn btn--ghost"
                     onClick={() => router.push("/edit-profile")}
                   >
-                    Editar informações
+                    Edit details
                   </button>
                 </>
               ) : (
                 <button className="btn" onClick={() => router.push("/explore")}>
-                  Ver outros profissionais
+                  See other professionals
                 </button>
               )}
             </div>
@@ -1198,12 +1202,12 @@ export default function TherapistProfile() {
                 <button
                   className="btn btn--ghost"
                   onClick={() => setShouldPoll(true)}
-                  title="Reverificar status"
+                  title="Recheck status"
                 >
-                  Reverificar agora
+                  Check again
                 </button>
                 {shouldPoll && (
-                  <span className="tp-muted">Verificando atualizações…</span>
+                  <span className="tp-muted">Checking for updates...</span>
                 )}
               </div>
             )}
@@ -1213,12 +1217,12 @@ export default function TherapistProfile() {
     );
   }
 
-  /** ===== Render normal (desbloqueado) ===== */
+  /** ===== Normal render (unlocked) ===== */
   return (
     <main className={`tp container status-${status}`}>
       <div className="tp-grid" aria-hidden />
 
-      {/* Banner de edições pendentes */}
+      {/* Pending edits banner */}
       {isOwner && data.hasPendingEdits && (
         <div
           style={{
@@ -1234,7 +1238,7 @@ export default function TherapistProfile() {
             boxShadow: "0 14px 32px rgba(15, 23, 42, 1)",
           }}
         >
-          <span style={{ fontSize: "24px" }}>⏳</span>
+          <span style={{ fontSize: "16px", fontWeight: 700 }}>Pending</span>
           <div>
             <p
               style={{
@@ -1245,7 +1249,7 @@ export default function TherapistProfile() {
               }}
             >
               {data.pendingEditsCount}{" "}
-              {data.pendingEditsCount === 1 ? "edição pendente" : "edições pendentes"}
+              {data.pendingEditsCount === 1 ? "pending edit" : "pending edits"}
             </p>
             <p
               style={{
@@ -1254,7 +1258,7 @@ export default function TherapistProfile() {
                 color: "rgba(253, 230, 138, 0.7)",
               }}
             >
-              Suas alterações estão aguardando aprovação do admin
+              Your changes are awaiting admin approval
             </p>
           </div>
         </div>
@@ -1302,11 +1306,11 @@ export default function TherapistProfile() {
             >
               {Array.from({ length: Math.floor(overallRating) }).map((_, i) => (
                 <span key={`sf-${i}`} className="star star--full">
-                  ★
+                  *
                 </span>
               ))}
               {overallRating - Math.floor(overallRating) >= 0.5 && (
-                <span className="star star--half">★</span>
+                <span className="star star--half">*</span>
               )}
               {Array.from({
                 length:
@@ -1315,7 +1319,7 @@ export default function TherapistProfile() {
                   (overallRating - Math.floor(overallRating) >= 0.5 ? 1 : 0),
               }).map((_, i) => (
                 <span key={`se-${i}`} className="star star--empty">
-                  ☆
+                  -
                 </span>
               ))}
             </div>
@@ -1357,7 +1361,7 @@ export default function TherapistProfile() {
               <div className="tp-card__title">Services</div>
               <div className="tp-card__value">
                 {data.services || "Describe your services"}{" "}
-                {data.startingAt && <>— Starting at {data.startingAt}</>}
+                {data.startingAt && <>- Starting at {data.startingAt}</>}
               </div>
             </div>
 
@@ -1369,7 +1373,7 @@ export default function TherapistProfile() {
             </div>
 
             <div className="tp-card">
-              <div className="tp-card__title">Promoções</div>
+              <div className="tp-card__title">Promotions</div>
               <div className="tp-card__value">
                 {data.promocoes || "Add promos or leave blank"}
               </div>
@@ -1392,9 +1396,9 @@ export default function TherapistProfile() {
                   className="btn btn--ghost btn--pill"
                   onClick={handleLogout}
                   disabled={signingOut}
-                  title="Sair da conta"
+                  title="Sign out"
                 >
-                  {signingOut ? "Saindo..." : "Logout"}
+                  {signingOut ? "Signing out..." : "Log out"}
                 </button>
               </>
             )}
@@ -1419,7 +1423,7 @@ export default function TherapistProfile() {
               type="button"
               onClick={openFileDialog}
             >
-              <div className="tp-add-plus">＋</div>
+              <div className="tp-add-plus">+</div>
               <div className="tp-add-text">Add photo</div>
               <div className="tp-add-count">
                 {data.gallery.length}/{MAX_GALLERY}
@@ -1452,7 +1456,7 @@ export default function TherapistProfile() {
                       removeFromGallery(g.id);
                     }}
                   >
-                    <span className="tp-ico">🗑</span>
+                    <span className="tp-ico">x</span>
                     <span className="tp-ico-label">Remove</span>
                   </button>
                 </div>
@@ -1493,7 +1497,7 @@ export default function TherapistProfile() {
                 <strong>Languages:</strong> {data.languagesSpoken.join(", ")}
               </p>
             ) : (
-              <p className="tp-muted">—</p>
+              <p className="tp-muted">-</p>
             )}
             {data.affiliations?.length && (
               <>
@@ -1694,7 +1698,7 @@ export default function TherapistProfile() {
               <ul className="tp-list">
                 {(data.availability as AvailabilitySimple[]).map((a, i) => (
                   <li key={i}>
-                    <strong>{a.day}</strong> — {a.hours}
+                    <strong>{a.day}</strong> - {a.hours}
                   </li>
                 ))}
               </ul>
@@ -1773,7 +1777,7 @@ export default function TherapistProfile() {
                 <article key={rv.id} className="tp-box">
                   <div className="tp-list__head">
                     <strong>{rv.author}</strong>
-                    <span className="tp-stars">{"★".repeat(rv.rating)}</span>
+                    <span className="tp-stars">{"*".repeat(rv.rating)}</span>
                   </div>
                   <p className="tp-p">{rv.text}</p>
                 </article>
@@ -1811,3 +1815,10 @@ export default function TherapistProfile() {
     </main>
   );
 }
+
+
+
+
+
+
+

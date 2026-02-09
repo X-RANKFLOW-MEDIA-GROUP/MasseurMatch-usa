@@ -3,12 +3,19 @@ import cors from "cors";
 import dotenv from "dotenv";
 import fetch from "node-fetch";
 import { createClient } from "@supabase/supabase-js";
+import rateLimit from "express-rate-limit";
+import NodeCache from "node-cache";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
+const GEOCODING_PROVIDER =
+  process.env.GEOCODING_PROVIDER || (MAPBOX_TOKEN ? "mapbox" : "nominatim");
+const NOMINATIM_USER_AGENT =
+  process.env.NOMINATIM_USER_AGENT || "MasseurMatch/1.0 (support@masseurmatch.com)";
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -29,9 +36,279 @@ const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 app.use(cors());
 app.use(express.json());
 
+const geoCache = new NodeCache({ stdTTL: 60 * 60 * 6, checkperiod: 600 });
+const geoLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // Simple health check route
 app.get("/", (req, res) => {
   res.json({ status: "ok", message: "IA backend is running 🚀" });
+});
+
+function normalizeStateCode(value = "") {
+  const raw = value.trim();
+  if (!raw) return "";
+  if (raw.length === 2) return raw.toUpperCase();
+
+  const STATES = {
+    Alabama: "AL",
+    Alaska: "AK",
+    Arizona: "AZ",
+    Arkansas: "AR",
+    California: "CA",
+    Colorado: "CO",
+    Connecticut: "CT",
+    Delaware: "DE",
+    Florida: "FL",
+    Georgia: "GA",
+    Hawaii: "HI",
+    Idaho: "ID",
+    Illinois: "IL",
+    Indiana: "IN",
+    Iowa: "IA",
+    Kansas: "KS",
+    Kentucky: "KY",
+    Louisiana: "LA",
+    Maine: "ME",
+    Maryland: "MD",
+    Massachusetts: "MA",
+    Michigan: "MI",
+    Minnesota: "MN",
+    Mississippi: "MS",
+    Missouri: "MO",
+    Montana: "MT",
+    Nebraska: "NE",
+    Nevada: "NV",
+    "New Hampshire": "NH",
+    "New Jersey": "NJ",
+    "New Mexico": "NM",
+    "New York": "NY",
+    "North Carolina": "NC",
+    "North Dakota": "ND",
+    Ohio: "OH",
+    Oklahoma: "OK",
+    Oregon: "OR",
+    Pennsylvania: "PA",
+    "Rhode Island": "RI",
+    "South Carolina": "SC",
+    "South Dakota": "SD",
+    Tennessee: "TN",
+    Texas: "TX",
+    Utah: "UT",
+    Vermont: "VT",
+    Virginia: "VA",
+    Washington: "WA",
+    "West Virginia": "WV",
+    Wisconsin: "WI",
+    Wyoming: "WY",
+    "District of Columbia": "DC",
+  };
+
+  return STATES[raw] || raw;
+}
+
+function toPayload({ city, state, stateCode, zip, country, lat, lng, source }) {
+  return {
+    city: city || "",
+    state: state || "",
+    stateCode: stateCode || normalizeStateCode(state || ""),
+    zip: zip || "",
+    country: country || "",
+    lat: typeof lat === "number" ? lat : null,
+    lng: typeof lng === "number" ? lng : null,
+    source,
+  };
+}
+
+async function geocodeMapbox(query) {
+  if (!MAPBOX_TOKEN) {
+    throw new Error("MAPBOX_TOKEN is missing");
+  }
+
+  const url =
+    "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+    encodeURIComponent(query) +
+    ".json?limit=1&types=place,postcode,address&language=en&access_token=" +
+    encodeURIComponent(MAPBOX_TOKEN);
+
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error("Mapbox geocoding failed");
+  const data = await resp.json();
+  const feature = data?.features?.[0];
+  if (!feature) return null;
+
+  const context = feature.context || [];
+  const place =
+    feature.place_type?.includes("place")
+      ? feature.text
+      : context.find((c) => c.id?.startsWith("place"))?.text;
+  const region = context.find((c) => c.id?.startsWith("region")) || {};
+  const country = context.find((c) => c.id?.startsWith("country")) || {};
+  const postcode = context.find((c) => c.id?.startsWith("postcode")) || {};
+  const [lng, lat] = feature.center || [];
+
+  return toPayload({
+    city: place,
+    state: region.text,
+    stateCode: region.short_code ? region.short_code.replace("us-", "").toUpperCase() : "",
+    zip: postcode.text,
+    country: country.text,
+    lat: typeof lat === "number" ? lat : null,
+    lng: typeof lng === "number" ? lng : null,
+    source: "mapbox",
+  });
+}
+
+async function reverseMapbox(lat, lng) {
+  if (!MAPBOX_TOKEN) {
+    throw new Error("MAPBOX_TOKEN is missing");
+  }
+
+  const url =
+    "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+    `${lng},${lat}.json?limit=1&types=place,postcode,address&language=en&access_token=` +
+    encodeURIComponent(MAPBOX_TOKEN);
+
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error("Mapbox reverse geocoding failed");
+  const data = await resp.json();
+  const feature = data?.features?.[0];
+  if (!feature) return null;
+
+  const context = feature.context || [];
+  const place =
+    feature.place_type?.includes("place")
+      ? feature.text
+      : context.find((c) => c.id?.startsWith("place"))?.text;
+  const region = context.find((c) => c.id?.startsWith("region")) || {};
+  const country = context.find((c) => c.id?.startsWith("country")) || {};
+  const postcode = context.find((c) => c.id?.startsWith("postcode")) || {};
+
+  return toPayload({
+    city: place,
+    state: region.text,
+    stateCode: region.short_code ? region.short_code.replace("us-", "").toUpperCase() : "",
+    zip: postcode.text,
+    country: country.text,
+    lat,
+    lng,
+    source: "mapbox",
+  });
+}
+
+async function geocodeNominatim(query) {
+  const url =
+    "https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&q=" +
+    encodeURIComponent(query);
+  const resp = await fetch(url, {
+    headers: { "User-Agent": NOMINATIM_USER_AGENT },
+  });
+  if (!resp.ok) throw new Error("Nominatim geocoding failed");
+  const data = await resp.json();
+  const row = Array.isArray(data) ? data[0] : null;
+  if (!row) return null;
+  const addr = row.address || {};
+  const city = addr.city || addr.town || addr.village || addr.hamlet || "";
+  const state = addr.state || addr.region || "";
+  const zip = addr.postcode || "";
+  const country = addr.country || "";
+  return toPayload({
+    city,
+    state,
+    stateCode: normalizeStateCode(state),
+    zip,
+    country,
+    lat: Number(row.lat),
+    lng: Number(row.lon),
+    source: "nominatim",
+  });
+}
+
+async function reverseNominatim(lat, lng) {
+  const url =
+    "https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1" +
+    `&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lng)}`;
+  const resp = await fetch(url, {
+    headers: { "User-Agent": NOMINATIM_USER_AGENT },
+  });
+  if (!resp.ok) throw new Error("Nominatim reverse geocoding failed");
+  const data = await resp.json();
+  const addr = data?.address || {};
+  const city = addr.city || addr.town || addr.village || addr.hamlet || "";
+  const state = addr.state || addr.region || "";
+  const zip = addr.postcode || "";
+  const country = addr.country || "";
+  return toPayload({
+    city,
+    state,
+    stateCode: normalizeStateCode(state),
+    zip,
+    country,
+    lat: Number(data?.lat),
+    lng: Number(data?.lon),
+    source: "nominatim",
+  });
+}
+
+app.get("/geocode", geoLimiter, async (req, res) => {
+  try {
+    const query = String(req.query.query || "").trim();
+    if (!query) {
+      return res.status(400).json({ error: "query is required" });
+    }
+
+    const cacheKey = `geocode:${GEOCODING_PROVIDER}:${query.toLowerCase()}`;
+    const cached = geoCache.get(cacheKey);
+    if (cached) return res.json(cached);
+
+    const payload =
+      GEOCODING_PROVIDER === "mapbox"
+        ? await geocodeMapbox(query)
+        : await geocodeNominatim(query);
+
+    if (!payload) {
+      return res.status(404).json({ error: "No results found" });
+    }
+
+    geoCache.set(cacheKey, payload);
+    return res.json(payload);
+  } catch (err) {
+    console.error("❌ Geocode error:", err);
+    return res.status(500).json({ error: "Geocode failed" });
+  }
+});
+
+app.get("/reverse-geocode", geoLimiter, async (req, res) => {
+  try {
+    const lat = Number(req.query.lat);
+    const lng = Number(req.query.lng);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+      return res.status(400).json({ error: "lat and lng are required" });
+    }
+
+    const cacheKey = `reverse:${GEOCODING_PROVIDER}:${lat.toFixed(4)},${lng.toFixed(4)}`;
+    const cached = geoCache.get(cacheKey);
+    if (cached) return res.json(cached);
+
+    const payload =
+      GEOCODING_PROVIDER === "mapbox"
+        ? await reverseMapbox(lat, lng)
+        : await reverseNominatim(lat, lng);
+
+    if (!payload) {
+      return res.status(404).json({ error: "No results found" });
+    }
+
+    geoCache.set(cacheKey, payload);
+    return res.json(payload);
+  } catch (err) {
+    console.error("❌ Reverse geocode error:", err);
+    return res.status(500).json({ error: "Reverse geocode failed" });
+  }
 });
 
 /**
@@ -53,7 +330,7 @@ async function getTherapistsSnapshot() {
         status
       `
       )
-      .eq("status", "approved")
+      .eq("status", "active")
       .limit(30);
 
     if (error) {

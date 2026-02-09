@@ -1,19 +1,19 @@
 // src/lib/approveEdit.ts
-"use server"; // se você usar em server actions / route handlers (opcional)
+"use server"; // Use only in server actions or route handlers (optional)
 
 import { supabase } from "./supabase";
 
 /**
- * Aprova uma edição de perfil:
- * - Lê o registro em profile_edits
- * - Mescla original_data + edited_data
- * - Trata gallery (pending_gallery vs original_gallery)
- * - Atualiza therapists
- * - Marca profile_edits como approved
- * - Cria notificação
+ * Approve a profile edit:
+ * - Read the record from profile_edits
+ * - Merge original_data + edited_data
+ * - Handle gallery (pending_gallery vs original_gallery)
+ * - Update therapists
+ * - Mark profile_edits as approved
+ * - Create notification
  */
 export async function approveEdit(editId: string) {
-  // 1) Buscar a edição
+  // 1) Fetch the edit
   const { data: edit, error } = await supabase
     .from("profile_edits")
     .select("*")
@@ -30,21 +30,21 @@ export async function approveEdit(editId: string) {
   const pendingGallery: string[] | null = edit.pending_gallery;
   const originalGallery: string[] | null = edit.original_gallery;
 
-  // 2) Mesclar original + edited
-  // edited sobrescreve original
+  // 2) Merge original + edited
+  // edited overrides original
   const finalData: Record<string, any> = {
     ...original,
     ...edited,
   };
 
-  // 3) Tratar gallery
+  // 3) Handle gallery
   if (pendingGallery && pendingGallery.length > 0) {
     finalData.gallery = pendingGallery;
   } else if (originalGallery) {
     finalData.gallery = originalGallery;
   }
 
-  // 4) Atualizar therapists
+  // 4) Update therapists
   const { error: updateError } = await supabase
     .from("therapists")
     .update(finalData)
@@ -55,7 +55,7 @@ export async function approveEdit(editId: string) {
     throw new Error(updateError.message);
   }
 
-  // 5) Marcar a edição como aprovada
+  // 5) Mark the edit as approved
   const { error: statusError } = await supabase
     .from("profile_edits")
     .update({
@@ -69,7 +69,7 @@ export async function approveEdit(editId: string) {
     throw new Error(statusError.message);
   }
 
-  // 6) Criar notificação (opcional)
+  // 6) Create notification (optional)
   await supabase.from("edit_notifications").insert({
     therapist_id: edit.therapist_id,
     edit_id: edit.id,
@@ -81,9 +81,9 @@ export async function approveEdit(editId: string) {
 }
 
 /**
- * Rejeita uma edição:
- * - Marca como rejected
- * - (Opcional) Cria notificação
+ * Reject an edit:
+ * - Mark as rejected
+ * - (Optional) Create notification
  */
 export async function rejectEdit(editId: string, reason?: string) {
   const { data: edit, error } = await supabase

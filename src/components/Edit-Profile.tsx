@@ -202,6 +202,77 @@ function generateId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
+function normalizeStateCode(value?: string | null) {
+  const raw = (value || "").trim();
+  if (!raw) return "";
+  if (raw.length === 2) return raw.toUpperCase();
+
+  const STATES: Record<string, string> = {
+    Alabama: "AL",
+    Alaska: "AK",
+    Arizona: "AZ",
+    Arkansas: "AR",
+    California: "CA",
+    Colorado: "CO",
+    Connecticut: "CT",
+    Delaware: "DE",
+    Florida: "FL",
+    Georgia: "GA",
+    Hawaii: "HI",
+    Idaho: "ID",
+    Illinois: "IL",
+    Indiana: "IN",
+    Iowa: "IA",
+    Kansas: "KS",
+    Kentucky: "KY",
+    Louisiana: "LA",
+    Maine: "ME",
+    Maryland: "MD",
+    Massachusetts: "MA",
+    Michigan: "MI",
+    Minnesota: "MN",
+    Mississippi: "MS",
+    Missouri: "MO",
+    Montana: "MT",
+    Nebraska: "NE",
+    Nevada: "NV",
+    "New Hampshire": "NH",
+    "New Jersey": "NJ",
+    "New Mexico": "NM",
+    "New York": "NY",
+    "North Carolina": "NC",
+    "North Dakota": "ND",
+    Ohio: "OH",
+    Oklahoma: "OK",
+    Oregon: "OR",
+    Pennsylvania: "PA",
+    "Rhode Island": "RI",
+    "South Carolina": "SC",
+    "South Dakota": "SD",
+    Tennessee: "TN",
+    Texas: "TX",
+    Utah: "UT",
+    Vermont: "VT",
+    Virginia: "VA",
+    Washington: "WA",
+    "West Virginia": "WV",
+    Wisconsin: "WI",
+    Wyoming: "WY",
+    "District of Columbia": "DC",
+  };
+
+  return STATES[raw] || raw;
+}
+
+function formatLocation(city?: string | null, state?: string | null) {
+  const c = (city || "").trim();
+  const s = normalizeStateCode(state || "");
+  if (!c && !s) return "";
+  if (!s) return c;
+  if (!c) return s;
+  return `${c}, ${s}`;
+}
+
 /* ============================================
    COMPONENTES UI
 ============================================ */
@@ -404,7 +475,7 @@ const ChipGroup = ({
 );
 
 /* ============================================
-   COMPONENTE PRINCIPAL
+   MAIN COMPONENT
 ============================================ */
 export default function EditProfile() {
   const router = useRouter();
@@ -419,7 +490,7 @@ export default function EditProfile() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   /* ============================================
-     NOTIFICAÇÕES
+     NOTIFICATIONS
   ============================================ */
   const addNotification = (
     type: Notification["type"],
@@ -440,7 +511,7 @@ export default function EditProfile() {
   };
 
   /* ============================================
-     CARREGAR DADOS INICIAIS
+     LOAD INITIAL DATA
   ============================================ */
   useEffect(() => {
     if (!therapist) return;
@@ -508,7 +579,7 @@ export default function EditProfile() {
   }, [therapist]);
 
   /* ============================================
-     CARREGAR EDIÇÕES PENDENTES (profile_edits)
+     LOAD PENDING EDITS (profile_edits)
   ============================================ */
   useEffect(() => {
     if (!therapist?.id) return;
@@ -533,7 +604,7 @@ export default function EditProfile() {
   }, [therapist?.id]);
 
   /* ============================================
-     MUDANÇAS NO FORMULÁRIO
+     FORM CHANGES
   ============================================ */
   const hasUnsavedChanges = useMemo(() => {
     if (!therapist) return false;
@@ -724,7 +795,7 @@ export default function EditProfile() {
   };
 
   /* ============================================
-     SALVAR EDIÇÕES (profile_edits)
+     SAVE EDITS (profile_edits)
   ============================================ */
   const handleSave = async () => {
     if (!therapist) return;
@@ -745,6 +816,7 @@ export default function EditProfile() {
         address: form.address,
         zip_code: form.zip_code,
         nearest_intersection: form.nearest_intersection,
+        location: formatLocation(form.city, form.state),
         mobile_service_radius: form.mobile_service_radius,
         services_headline: form.services_headline,
         specialties_headline: form.specialties_headline,
@@ -793,6 +865,9 @@ export default function EditProfile() {
         address: therapist.address,
         zip_code: therapist.zip_code,
         nearest_intersection: therapist.nearest_intersection,
+        location:
+          (therapist as any).location ||
+          formatLocation(therapist.city, therapist.state),
         mobile_service_radius: therapist.mobile_service_radius,
         services_headline: therapist.services_headline,
         specialties_headline: therapist.specialties_headline,
@@ -851,7 +926,7 @@ export default function EditProfile() {
 
       if (error) throw error;
 
-      // notificação de edição pendente
+      // pending edit notification
       await supabase.from("edit_notifications").insert({
         therapist_id: therapist.id,
         edit_id: data.id,
@@ -862,7 +937,7 @@ export default function EditProfile() {
       setStatus("success");
       addNotification(
         "success",
-        "✓ Changes submitted successfully! You will be notified when reviewed.",
+        "Changes submitted successfully! You will be notified when reviewed.",
         false
       );
 
@@ -881,7 +956,7 @@ export default function EditProfile() {
   };
 
   /* ============================================
-     NAVEGAÇÃO
+     NAVIGATION
   ============================================ */
   const handleBack = () => {
     if (hasUnsavedChanges) {
@@ -894,7 +969,7 @@ export default function EditProfile() {
   };
 
   /* ============================================
-     LOADING & ERRO
+     LOADING & ERROR
   ============================================ */
   if (profileLoading && !therapist) {
     return (
@@ -929,7 +1004,7 @@ export default function EditProfile() {
       {/* background grid */}
       <div className="ep-grid" />
 
-      {/* Notificações */}
+      {/* Notifications */}
       <div className="ep-toast-container">
         {notifications.map((notification) => (
           <NotificationToast
@@ -971,7 +1046,7 @@ export default function EditProfile() {
           </p>
         </header>
 
-        {/* Indicador de edições pendentes */}
+        {/* Pending edits indicator */}
         {pendingEdits.length > 0 && (
           <div className="ep-pending-banner">
             <Clock size={20} className="ep-pending-icon" />

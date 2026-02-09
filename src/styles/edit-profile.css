@@ -1,6 +1,6 @@
 /* ===============================
    EditProfile.css
-   (versão com paleta LGBTQIA+)
+   (version with LGBTQIA+ palette)
    =============================== */
 
 /* ============================================
@@ -753,7 +753,7 @@
 }
 
 .ep-checkbox:checked::after {
-  content: "✓";
+  content: "OK";
   color: white;
   font-size: 0.875rem;
   font-weight: bold;
@@ -1048,4 +1048,207 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* ===============================
+   Noir theme overrides
+   =============================== */
+.ep-page {
+  background: #000000;
+  color: #ffffff;
+  font-family: var(--font-geist-sans), "Geist Sans", "Inter", system-ui, sans-serif;
+}
+
+.ep-grid {
+  opacity: 0.25;
+}
+
+.ep-section {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+}
+
+.ep-section::before {
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.15), transparent 60%);
+  opacity: 0.3;
+}
+
+.ep-section:hover {
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--glass-shadow);
+}
+
+.ep-section-icon-wrapper {
+  background: var(--glass-bg-soft);
+  border-color: var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.ep-section-icon {
+  color: #ffffff;
+}
+
+.ep-section-desc,
+.ep-subsection-title,
+.ep-field-label,
+.ep-status-text {
+  color: #a3a3a3;
+}
+
+.ep-field-required {
+  color: #f87171;
+}
+
+.ep-input,
+.ep-textarea {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  color: #ffffff;
+  box-shadow: var(--glass-shadow-soft);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.ep-input:focus,
+.ep-textarea:focus {
+  border-color: var(--glass-border-strong);
+  background: var(--glass-bg);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.ep-input::placeholder,
+.ep-textarea::placeholder {
+  color: #737373;
+}
+
+.ep-chip {
+  background: var(--glass-bg-soft);
+  border-color: var(--glass-border);
+  color: #e5e5e5;
+  text-transform: none;
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.ep-chip:hover:not(.ep-chip-selected) {
+  background: var(--glass-bg);
+  border-color: var(--glass-border-strong);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.ep-chip-selected {
+  background: #ffffff;
+  border-color: transparent;
+  color: #000000;
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.12);
+}
+
+.ep-day-block,
+.ep-preference-item,
+.ep-warning-box,
+.ep-footer-box {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+}
+
+.ep-day-block:hover,
+.ep-preference-item:hover {
+  background: var(--glass-bg);
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--glass-shadow);
+}
+
+.ep-warning-icon {
+  color: #f59e0b;
+}
+
+.ep-warning-text {
+  color: #d4d4d4;
+}
+
+.ep-warning-text strong {
+  color: #ffffff;
+}
+
+.ep-gallery-item,
+.ep-gallery-add {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow-soft);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.ep-gallery-item:hover,
+.ep-gallery-add:hover:not(.ep-gallery-add-disabled) {
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--glass-shadow);
+}
+
+.ep-gallery-remove {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border);
+  color: #ffffff;
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.ep-gallery-add-icon,
+.ep-gallery-add-text,
+.ep-gallery-add-count {
+  color: #a3a3a3;
+}
+
+.ep-checkbox {
+  border-color: var(--glass-border);
+  background: var(--glass-bg-soft);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.ep-checkbox:checked {
+  background: #ffffff;
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.ep-checkbox:checked::after {
+  color: #000000;
+}
+
+.ep-save-btn,
+.ep-btn-primary {
+  background: rgba(255, 255, 255, 0.85);
+  color: #000000;
+  border: 1px solid transparent;
+  box-shadow: 0 10px 28px rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.ep-save-btn:hover:not(:disabled),
+.ep-btn-primary:hover {
+  background: #e5e5e5;
+}
+
+.ep-btn-secondary,
+.ep-back-btn {
+  background: var(--glass-bg);
+  color: #ffffff;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.ep-btn-secondary:hover,
+.ep-back-btn:hover {
+  background: var(--glass-bg);
+  border-color: var(--glass-border-strong);
 }

@@ -1,6 +1,6 @@
 /* ===============================
    TherapistProfile.css
-   (versão com paleta LGBTQIA+)
+   (version with LGBTQIA+ palette)
    =============================== */
 
 /* ---------- Base Layout ---------- */
@@ -69,13 +69,15 @@
 
 .tp-hero--mock {
   margin-top: 35px;
-  background: radial-gradient(circle at top left, #1b0226 0, #060013 55%);
+  background: rgba(10, 10, 18, 0.6);
   border-radius: 1.5rem;
   padding: 1.75rem 1.75rem 1.5rem;
-  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.7);
+  box-shadow: var(--glass-shadow);
   border: 1px solid rgba(244, 114, 182, 0.45);
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
 }
 
 .tp-hero--mock::before {
@@ -234,9 +236,11 @@
 .tp-card {
   border-radius: 0.9rem;
   padding: 0.85rem 0.9rem;
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(76, 29, 149, 0.9));
-  border: 1px solid rgba(244, 114, 182, 0.5);
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.9);
+  background: var(--glass-bg);
+  border: 1px solid rgba(244, 114, 182, 0.45);
+  box-shadow: var(--glass-shadow-soft);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
 }
 
 .tp-card__title {
@@ -271,7 +275,7 @@
 .btn {
   border-radius: 999px;
   border: 1px solid rgba(248, 113, 113, 0.6);
-  background: rgba(15, 23, 42, 0.9);
+  background: var(--glass-bg);
   padding: 0.45rem 1.2rem;
   font-size: 0.9rem;
   color: #f9fafb;
@@ -282,6 +286,9 @@
   gap: 0.45rem;
   white-space: nowrap;
   transition: background 0.16s ease, border-color 0.16s ease, transform 0.12s ease, box-shadow 0.15s ease, color 0.16s ease;
+  box-shadow: var(--glass-shadow-soft);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
 }
 
 .btn:hover {
@@ -311,7 +318,7 @@
 }
 
 .btn--ghost {
-  background: transparent;
+  background: var(--glass-bg-soft);
   border-color: rgba(248, 113, 113, 0.55);
 }
 
@@ -348,7 +355,7 @@
 .tp-add-tile {
   border-radius: 1rem;
   border: 1px dashed rgba(244, 114, 182, 0.8);
-  background: radial-gradient(circle at top, rgba(76, 29, 149, 0.95), rgba(15, 23, 42, 0.95));
+  background: var(--glass-bg);
   color: #f9fafb;
   min-width: 160px;
   height: 120px;
@@ -360,7 +367,9 @@
   gap: 0.2rem;
   cursor: pointer;
   position: relative;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.95);
+  box-shadow: var(--glass-shadow-soft);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
 }
 
 .tp-add-tile:hover {
@@ -424,7 +433,7 @@
 .tp-icon-btn {
   border-radius: 999px;
   border: 1px solid rgba(248, 113, 113, 0.9);
-  background: rgba(15, 23, 42, 0.95);
+  background: var(--glass-bg-soft);
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
@@ -432,6 +441,8 @@
   font-size: 0.78rem;
   cursor: pointer;
   color: #fee2e2;
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
 }
 
 .tp-icon-btn:hover {
@@ -468,10 +479,12 @@
 
 .tp-box {
   border-radius: 1.1rem;
-  background: radial-gradient(circle at top left, rgba(76, 29, 149, 0.95), rgba(15, 23, 42, 0.95));
-  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   padding: 1.2rem 1.25rem;
-  box-shadow: 0 14px 32px rgba(15, 23, 42, 1);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
 }
 
 .tp-box--wide {
@@ -560,10 +573,12 @@
   border-radius: 999px;
   padding: 0.15rem 0.6rem;
   border: 1px solid rgba(244, 114, 182, 0.85);
-  background: radial-gradient(circle at top, #4c1d95, #020617);
+  background: var(--glass-bg-soft);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #fdf2f8;
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
 }
 
 /* ---------- Rates Table ---------- */
@@ -574,6 +589,9 @@
   border: 1px solid rgba(244, 114, 182, 0.65);
   overflow: hidden;
   font-size: 0.9rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
 }
 
 .tp-ptable__head {
@@ -595,12 +613,12 @@
   display: grid;
   grid-template-columns: 1.2fr 0.9fr 0.9fr;
   padding: 0.55rem 0.9rem;
-  background: rgba(15, 23, 42, 0.98);
+  background: var(--glass-bg);
   border-top: 1px solid rgba(31, 41, 55, 0.95);
 }
 
 .tp-ptable__row:nth-child(even) {
-  background: rgba(17, 24, 39, 0.98);
+  background: var(--glass-bg-soft);
 }
 
 .tp-ptable__price {
@@ -668,13 +686,16 @@
   margin-left: auto;
   width: fit-content;
   padding: 0.4rem 0.6rem;
-  background: linear-gradient(90deg, rgba(249, 115, 22, 0.95), rgba(236, 72, 153, 0.98), rgba(129, 140, 248, 0.98));
+  background: rgba(15, 23, 42, 0.65);
   border-radius: 999px;
-  border: 1px solid rgba(236, 72, 153, 0.9);
+  border: 1px solid rgba(236, 72, 153, 0.6);
   display: flex;
   align-items: center;
   gap: 0.45rem;
   z-index: 20;
+  box-shadow: var(--glass-shadow-soft);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
 }
 
 /* Mobile hamburger toggle button */
@@ -743,8 +764,9 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
-  backdrop-filter: blur(12px);
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
   border-top: 2px solid rgba(236, 72, 153, 0.9);
   padding: 1.5rem 1rem 2rem;
   z-index: 25;
@@ -767,7 +789,7 @@
   margin-bottom: 0;
 }
 
-/* ---------- "Perfil Bloqueado" (Gate) ---------- */
+/* ---------- "Profile Locked" (Gate) ---------- */
 
 .tp-block .tp-box.tp-box--wide .tp-list li {
   font-size: 0.9rem;
@@ -896,4 +918,224 @@
   .tp-sticky-menu {
     padding: 1.25rem 0.75rem 1.75rem;
   }
+}
+
+/* ===============================
+   Noir theme overrides
+   =============================== */
+.page {
+  background: #000000;
+  color: #ffffff;
+  font-family: var(--font-geist-sans), "Geist Sans", "Inter", system-ui, sans-serif;
+}
+
+.tp.container {
+  color: #ffffff;
+}
+
+.tp-grid {
+  opacity: 0.25;
+}
+
+.tp-hero--mock {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+}
+
+.tp-hero--mock::before {
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 55%),
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 55%),
+    radial-gradient(circle at bottom, rgba(255, 255, 255, 0.1), transparent 55%);
+  opacity: 0.35;
+}
+
+.tp-avatar--framed {
+  background: #111111;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.8);
+}
+
+.tp-circletxt,
+.tp-circletxt text {
+  color: #a3a3a3;
+  fill: #a3a3a3;
+}
+
+.tp-avatar__clip {
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.08), 0 25px 60px rgba(0, 0, 0, 0.85);
+}
+
+.tp-subtitle {
+  color: #a3a3a3;
+}
+
+.tp-card {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow-soft);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.tp-card__title {
+  color: #a3a3a3;
+}
+
+.btn {
+  border-color: var(--glass-border);
+  background: var(--glass-bg);
+  color: #ffffff;
+  box-shadow: var(--glass-shadow-soft);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.btn:hover {
+  background: var(--glass-bg);
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--glass-shadow);
+}
+
+.btn--accent {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: transparent;
+  color: #000000;
+  box-shadow: 0 10px 28px rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.btn--accent:hover {
+  background: #e5e5e5;
+}
+
+.btn--ghost {
+  background: var(--glass-bg-soft);
+  border-color: var(--glass-border);
+}
+
+.tp-add-tile {
+  border: 1px dashed var(--glass-border);
+  background: var(--glass-bg);
+  box-shadow: var(--glass-shadow-soft);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.tp-add-tile:hover {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+}
+
+.tp-add-count {
+  color: #a3a3a3;
+}
+
+.tp-thumb {
+  background: #0a0a0f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.8);
+}
+
+.tp-thumb.is-active {
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5), 0 16px 40px rgba(0, 0, 0, 0.7);
+}
+
+.tp-icon-btn {
+  border-color: var(--glass-border);
+  background: var(--glass-bg-soft);
+  color: #ffffff;
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.tp-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.tp-block__title {
+  color: #a3a3a3;
+}
+
+.tp-box {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+}
+
+.tp-sub {
+  color: #a3a3a3;
+}
+
+.tp-mapwrap {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.tp-tag {
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-soft);
+  color: #e5e5e5;
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.tp-portfolio__table {
+  border-color: var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-sat));
+}
+
+.tp-ptable__head {
+  background: var(--glass-bg-soft);
+  color: #e5e5e5;
+}
+
+.tp-ptable__row {
+  background: var(--glass-bg);
+  border-top: 1px solid var(--glass-border);
+}
+
+.tp-ptable__row:nth-child(even) {
+  background: var(--glass-bg-soft);
+}
+
+.tp-ptable__price {
+  color: #ffffff;
+}
+
+.tp-ptable__notes {
+  color: #a3a3a3;
+}
+
+.tp-sticky {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-soft);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+}
+
+.tp-sticky-toggle {
+  background: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(255, 255, 255, 0.12);
+}
+
+.tp-hamburger span {
+  background: #000000;
+}
+
+.tp-sticky-menu {
+  background: var(--glass-bg-strong);
+  border-top: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
 }

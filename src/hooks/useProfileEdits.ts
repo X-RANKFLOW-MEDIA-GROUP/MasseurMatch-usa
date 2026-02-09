@@ -39,10 +39,10 @@ export function useProfileEdits(therapistId?: string) {
 
   useEffect(() => {
     if (!therapistId) return;
-    
+
     loadPendingEdits();
     loadNotifications();
-    
+
     // Subscribe to changes
     const editsSubscription = supabase
       .channel('profile-edits-changes')
@@ -84,7 +84,7 @@ export function useProfileEdits(therapistId?: string) {
 
   async function loadPendingEdits() {
     if (!therapistId) return;
-    
+
     try {
       const { data, error } = await supabase
         .from('profile_edits')
@@ -103,7 +103,7 @@ export function useProfileEdits(therapistId?: string) {
 
   async function loadNotifications() {
     if (!therapistId) return;
-    
+
     try {
       const { data, error } = await supabase
         .from('edit_notifications')
@@ -151,7 +151,7 @@ export function useProfileEdits(therapistId?: string) {
       therapist_id: therapistId,
       edit_id: data.id,
       type: 'pending',
-      message: 'Suas edições foram enviadas para aprovação.'
+      message: 'Your edits were submitted for approval.'
     });
 
     return data;
@@ -237,11 +237,11 @@ export function useAdminEdits() {
 
     // Apply changes to therapist profile
     const updateData: any = { ...edit.edited_data };
-    
+
     if (edit.pending_profile_photo) {
       updateData.profile_photo = edit.pending_profile_photo;
     }
-    
+
     if (edit.pending_gallery) {
       updateData.gallery = edit.pending_gallery;
     }
@@ -249,7 +249,7 @@ export function useAdminEdits() {
     const { error: updateError } = await supabase
       .from('therapists')
       .update(updateData)
-      .eq('user_id', edit.therapist_id);
+      .eq('id', edit.therapist_id);
 
     if (updateError) throw updateError;
 
@@ -270,7 +270,7 @@ export function useAdminEdits() {
       therapist_id: edit.therapist_id,
       edit_id: editId,
       type: 'approved',
-      message: 'Suas edições foram aprovadas e publicadas no seu perfil!'
+      message: 'Your edits were approved and published on your profile.'
     });
 
     loadAllEdits();
@@ -302,7 +302,7 @@ export function useAdminEdits() {
       therapist_id: edit.therapist_id,
       edit_id: editId,
       type: 'rejected',
-      message: `Suas edições foram rejeitadas. Motivo: ${reason}`
+      message: `Your edits were rejected. Reason: ${reason}`
     });
 
     loadAllEdits();
